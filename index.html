@@ -1,1 +1,114 @@
-index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Iniciar Sesión - King's Pizza</title>
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <!-- Header -->
+            <div class="login-header">
+                <div class="login-logo">
+                    �
+                </div>
+                <h1 class="login-title">King's Pizza</h1>
+                <p class="login-subtitle">Sistema de Gestión de Pizzería</p>
+            </div>
+
+            <!-- Body -->
+            <div class="login-body">
+                <!-- Alerta de error (oculta por defecto) -->
+                <div id="loginAlert" class="login-alert error" style="display: none;">
+                    <span>⚠️</span>
+                    <span id="alertMessage">Usuario o contraseña incorrectos</span>
+                </div>
+
+                <!-- Formulario de Login -->
+                <form id="loginForm" class="login-form" novalidate>
+                    <!-- Campo de Usuario -->
+                    <div class="form-group">
+                        <label for="username" class="form-label">Usuario</label>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                class="form-control" 
+                                placeholder="Ingrese su usuario"
+                                required
+                                autocomplete="username"
+                                autofocus
+                                minlength="3"
+                                maxlength="50"
+                            >
+                            <span class="input-icon">👤</span>
+                        </div>
+                        <div class="form-error" id="usernameError"></div>
+                    </div>
+
+                    <!-- Campo de Contraseña -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-control" 
+                                placeholder="Ingrese su contraseña"
+                                required
+                                autocomplete="current-password"
+                                minlength="6"
+                                maxlength="50"
+                            >
+                            <span class="input-icon">🔒</span>
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Mostrar contraseña">
+                                👁️
+                            </button>
+                        </div>
+                        <div class="form-error" id="passwordError"></div>
+                    </div>
+
+                    <!-- Recordar y Olvidó contraseña -->
+                    <div class="remember-forgot">
+                        <div class="remember-me">
+                            <input 
+                                type="checkbox" 
+                                id="rememberMe" 
+                                name="rememberMe"
+                            >
+                            <label for="rememberMe">Recordarme</label>
+                        </div>
+                        <a href="#" class="forgot-password" id="forgotPassword">¿Olvidó su contraseña?</a>
+                    </div>
+
+                    <!-- Botón de Login -->
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        Iniciar Sesión
+                    </button>
+                </form>
+
+                <!-- Divider (opcional para futuras opciones) -->
+                <!-- <div class="login-divider">
+                    <span>O continuar con</span>
+                </div> -->
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>&copy; 2025 King's Pizza. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/login.js"></script>
+</body>
+</html>
