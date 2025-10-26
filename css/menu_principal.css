@@ -129,6 +129,17 @@ body {
 .nav-icon {
     font-size: 1.5rem;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+}
+
+.nav-icon i {
+    font-size: 1.2rem;
+    color: inherit;
 }
 
 .nav-text {
