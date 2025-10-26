@@ -3,6 +3,59 @@
    Dashboard con barra lateral izquierda
    ============================================ */
 
+/* Custom Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Sidebar specific scrollbar */
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox scrollbar */
+.sidebar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+}
+
+/* Main content scrollbar */
+.main-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) rgba(255, 255, 255, 0.1);
+}
+
 /* Layout principal */
 body {
     display: flex;
@@ -32,6 +85,18 @@ body {
     width: 80px;
 }
 
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: var(--spacing-md);
+}
+
+.sidebar.collapsed .sidebar-toggle {
+    margin-left: 0;
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-sm);
+}
+
 /* Header del sidebar */
 .sidebar-header {
     padding: var(--spacing-lg);
@@ -40,6 +105,7 @@ body {
     gap: var(--spacing-md);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
+    min-height: 70px;
 }
 
 .sidebar-logo {
@@ -68,10 +134,12 @@ body {
     height: 35px;
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    transition: all var(--transition-fast);
     margin-left: auto;
     flex-shrink: 0;
     font-size: 1.2rem;
+    z-index: 10;
+    position: relative;
 }
 
 .sidebar-toggle:hover {
@@ -178,7 +246,7 @@ body {
 }
 
 .has-submenu.open .submenu {
-    max-height: 500px;
+    max-height: 800px;
 }
 
 .submenu-item {
