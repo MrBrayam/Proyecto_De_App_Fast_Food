@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dashboard - King's Pizza</title>
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                🍕
+            </div>
+            <h2 class="sidebar-title">King's Pizza</h2>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">
+                ☰
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="menu_principal.html" class="nav-link active">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="ventas.html" class="nav-link">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-text">Ventas</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="inventario.html" class="nav-link">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-text">Inventario</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="clientes.html" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">Clientes</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="delivery.html" class="nav-link">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-text">Delivery</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="reportes.html" class="nav-link">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text">Reportes</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <p class="user-name">Usuario Admin</p>
+                    <p class="user-role">Administrador</p>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
+                <span class="logout-icon">🚪</span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    ☰
+                </button>
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        🔔
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="content-wrapper">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card stat-card-primary">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 class="stat-title">Ventas Hoy</h3>
+                        <p class="stat-value">S/ 2,450.00</p>
+                        <p class="stat-change positive">+12% vs ayer</p>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-success">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <h3 class="stat-title">Pedidos</h3>
+                        <p class="stat-value">48</p>
+                        <p class="stat-change positive">+8 nuevos</p>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-warning">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 class="stat-title">Clientes</h3>
+                        <p class="stat-value">234</p>
+                        <p class="stat-change positive">+15 esta semana</p>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-info">
+                    <div class="stat-icon">🍕</div>
+                    <div class="stat-info">
+                        <h3 class="stat-title">Productos</h3>
+                        <p class="stat-value">28</p>
+                        <p class="stat-change neutral">En inventario</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="dashboard-row">
+                <div class="dashboard-col-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Pedidos Recientes</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Pedido</th>
+                                            <th>Cliente</th>
+                                            <th>Producto</th>
+                                            <th>Total</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#001</td>
+                                            <td>Juan Pérez</td>
+                                            <td>Pizza Hawaiana</td>
+                                            <td>S/ 35.00</td>
+                                            <td><span class="badge badge-success">Entregado</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#002</td>
+                                            <td>María González</td>
+                                            <td>Pizza Pepperoni</td>
+                                            <td>S/ 40.00</td>
+                                            <td><span class="badge badge-warning">En camino</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#003</td>
+                                            <td>Carlos Ramírez</td>
+                                            <td>Pizza Vegetariana</td>
+                                            <td>S/ 38.00</td>
+                                            <td><span class="badge badge-info">Preparando</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#004</td>
+                                            <td>Ana Torres</td>
+                                            <td>Pizza Margherita</td>
+                                            <td>S/ 32.00</td>
+                                            <td><span class="badge badge-info">Preparando</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Accesos Rápidos</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <a href="ventas.html" class="quick-action-btn">
+                                    <span class="quick-action-icon">➕</span>
+                                    <span class="quick-action-text">Nueva Venta</span>
+                                </a>
+                                <a href="clientes.html" class="quick-action-btn">
+                                    <span class="quick-action-icon">👤</span>
+                                    <span class="quick-action-text">Nuevo Cliente</span>
+                                </a>
+                                <a href="inventario.html" class="quick-action-btn">
+                                    <span class="quick-action-icon">📦</span>
+                                    <span class="quick-action-text">Ver Inventario</span>
+                                </a>
+                                <a href="reportes.html" class="quick-action-btn">
+                                    <span class="quick-action-icon">📊</span>
+                                    <span class="quick-action-text">Generar Reporte</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h2>Alertas</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert-list">
+                                <div class="alert-item alert-warning">
+                                    <span class="alert-icon">⚠️</span>
+                                    <span class="alert-text">Stock bajo de queso mozzarella</span>
+                                </div>
+                                <div class="alert-item alert-info">
+                                    <span class="alert-icon">ℹ️</span>
+                                    <span class="alert-text">3 pedidos pendientes de entrega</span>
+                                </div>
+                                <div class="alert-item alert-success">
+                                    <span class="alert-icon">✅</span>
+                                    <span class="alert-text">Sistema actualizado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/menu_principal.js"></script>
+</body>
+</html>

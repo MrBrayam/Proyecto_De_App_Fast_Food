@@ -4,7 +4,7 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del DOM
+
     const loginForm = document.getElementById('loginForm');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginAlert = document.getElementById('loginAlert');
     const alertMessage = document.getElementById('alertMessage');
     
-    // Errores
+
     const usernameError = document.getElementById('usernameError');
     const passwordError = document.getElementById('passwordError');
 
-    // Usuarios de prueba (en producción esto vendría de una base de datos)
+
     const users = [
         {
             username: 'admin',
@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
         togglePassword.setAttribute('aria-label', type === 'password' ? 'Mostrar contraseña' : 'Ocultar contraseña');
     });
 
-    // Manejar el link de "Olvidó su contraseña"
+    // Manejar el link de "Olvidó su contraseña" - DESHABILITADO POR SEGURIDAD
     forgotPassword.addEventListener('click', function(e) {
         e.preventDefault();
-        showAlert('Contacte al administrador del sistema para recuperar su contraseña.', 'warning');
+        showAlert('Por motivos de seguridad, la recuperación de contraseña no está disponible. Contacte al administrador del sistema.', 'warning');
     });
 
     // Validación en tiempo real
@@ -141,6 +141,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         localStorage.setItem('userSession', JSON.stringify(sessionData));
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(sessionData));
 
         // Si el usuario marcó "Recordarme", guardar preferencia
         if (rememberMe.checked) {
@@ -154,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mostrar mensaje de éxito
         showAlert(`¡Bienvenido, ${user.name}!`, 'success');
 
-        // Redirigir según el rol
+        // Redirigir al menú principal
         setTimeout(() => {
             redirectToDashboard(user.role);
         }, 1000);
@@ -175,20 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Redirigir según el rol del usuario
     function redirectToDashboard(role) {
-        // En producción, redirigir a diferentes dashboards según el rol
-        switch(role) {
-            case 'administrador':
-                window.location.href = 'index.html';
-                break;
-            case 'cajero':
-                window.location.href = 'ventas.html';
-                break;
-            case 'delivery':
-                window.location.href = 'delivery.html';
-                break;
-            default:
-                window.location.href = 'index.html';
-        }
+        // Todos los usuarios van al menú principal
+        window.location.href = 'html/menu_principal.html';
     }
 
     // Verificar sesión recordada
