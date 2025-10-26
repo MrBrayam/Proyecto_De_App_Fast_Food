@@ -214,6 +214,13 @@ body {
 /* Submenús nivel 2 */
 .submenu.level-2 {
     background: rgba(0, 0, 0, 0.3);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-normal);
+}
+
+.submenu-item.has-submenu.open .submenu.level-2 {
+    max-height: 300px;
 }
 
 .submenu.level-2 .submenu-link {

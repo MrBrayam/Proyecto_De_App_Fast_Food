@@ -40,16 +40,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejar clicks en items con submenú
     const navItemsWithSubmenu = document.querySelectorAll('.nav-item.has-submenu > .nav-link');
     
-    navItemsWithSubmenu.forEach(link => {
+    navItemsWithSubmenu.forEach((link, index) => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             // No hacer nada si el sidebar está colapsado
-            if (sidebar.classList.contains('collapsed')) {
+            if (sidebar && sidebar.classList.contains('collapsed')) {
                 return;
             }
             
             const parentItem = this.parentElement;
+            if (!parentItem) {
+                return;
+            }
+            
             const isOpen = parentItem.classList.contains('open');
             
             // Cerrar otros items del mismo nivel
@@ -66,11 +71,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejar clicks en submenu items con submenu (nivel 2)
     const submenuItemsWithSubmenu = document.querySelectorAll('.submenu-item.has-submenu > .submenu-link');
     
-    submenuItemsWithSubmenu.forEach(link => {
+    submenuItemsWithSubmenu.forEach((link, index) => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const parentItem = this.parentElement;
+            if (!parentItem) {
+                return;
+            }
+            
             const isOpen = parentItem.classList.contains('open');
             
             // Cerrar otros items del mismo nivel
