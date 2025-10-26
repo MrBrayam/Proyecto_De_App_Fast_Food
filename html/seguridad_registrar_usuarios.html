@@ -8,20 +8,25 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">🍕</div>
+            <div class="sidebar-logo">
+                <i class="fas fa-pizza-slice"></i>
+            </div>
             <h2 class="sidebar-title">King's Pizza</h2>
-            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">☰</button>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
 
         <nav class="sidebar-nav">
             <ul class="nav-list">
                 <li class="nav-item" data-title="Dashboard">
                     <a href="menu_principal.html" class="nav-link">
-                        <span class="nav-icon">📊</span>
+                        <span class="nav-icon"><i class="fas fa-home"></i></span>
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
@@ -29,7 +34,7 @@
                 <!-- 1. Ventas -->
                 <li class="nav-item has-submenu" data-title="Ventas">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">💰</span>
+                        <span class="nav-icon"><i class="fas fa-dollar-sign"></i></span>
                         <span class="nav-text">Ventas</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -111,7 +116,7 @@
                 <!-- 2. Compras -->
                 <li class="nav-item has-submenu" data-title="Compras">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">🛒</span>
+                        <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
                         <span class="nav-text">Compras</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -130,7 +135,7 @@
                 <!-- 3. Usuarios -->
                 <li class="nav-item has-submenu" data-title="Usuarios">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">👥</span>
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
                         <span class="nav-text">Usuarios</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -154,7 +159,7 @@
                 <!-- 4. Proveedores -->
                 <li class="nav-item has-submenu" data-title="Proveedores">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">🏢</span>
+                        <span class="nav-icon"><i class="fas fa-truck"></i></span>
                         <span class="nav-text">Proveedores</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -167,7 +172,7 @@
                 <!-- 5. Clientes -->
                 <li class="nav-item has-submenu" data-title="Clientes">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">👨‍👩‍👧‍👦</span>
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
                         <span class="nav-text">Clientes</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -180,7 +185,7 @@
                 <!-- 6. Reportes -->
                 <li class="nav-item has-submenu" data-title="Reportes">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">📈</span>
+                        <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
                         <span class="nav-text">Reportes</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -196,7 +201,7 @@
                 <!-- 7. Seguridad -->
                 <li class="nav-item has-submenu open" data-title="Seguridad">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon">🔒</span>
+                        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
                         <span class="nav-text">Seguridad</span>
                         <span class="nav-arrow">▼</span>
                     </a>
@@ -228,14 +233,14 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">👤</div>
+                <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
                 <div class="user-details">
                     <p class="user-name">Usuario Admin</p>
                     <p class="user-role">Administrador</p>
                 </div>
             </div>
             <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
-                <span class="logout-icon">🚪</span>
+                <span class="logout-icon"><i class="fas fa-sign-out-alt"></i></span>
                 <span class="logout-text">Cerrar Sesión</span>
             </button>
         </div>
@@ -244,7 +249,9 @@
     <main class="main-content" id="mainContent">
         <header class="top-bar">
             <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">☰</button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <h1 class="page-title">Registrar Usuario del Sistema</h1>
             </div>
             <div class="top-bar-right">
@@ -351,13 +358,13 @@
 
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
-                                <span>💾</span> Registrar Usuario
+                                <i class="fas fa-save"></i> Registrar Usuario
                             </button>
                             <button type="reset" class="btn btn-secondary">
-                                <span>🔄</span> Limpiar Formulario
+                                <i class="fas fa-undo"></i> Limpiar Formulario
                             </button>
                             <a href="seguridad_visualizar_usuarios.html" class="btn btn-outline">
-                                <span>👁️</span> Ver Usuarios
+                                <i class="fas fa-eye"></i> Ver Usuarios
                             </a>
                         </div>
                     </form>
