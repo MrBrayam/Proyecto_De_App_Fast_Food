@@ -15,8 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // TOGGLE SIDEBAR (Desktop)
     // ============================================
     if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             sidebar.classList.toggle('collapsed');
+            
+            // Si se colapsa, cerrar todos los submenús abiertos
+            if (sidebar.classList.contains('collapsed')) {
+                const openItems = document.querySelectorAll('.nav-item.open, .submenu-item.open');
+                openItems.forEach(item => item.classList.remove('open'));
+            }
             
             // Guardar estado en localStorage
             const isCollapsed = sidebar.classList.contains('collapsed');
@@ -25,11 +34,106 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ============================================
+    // MENÚ DESPLEGABLE (ACCORDION)
+    // ============================================
+    
+    // Manejar clicks en items con submenú
+    const navItemsWithSubmenu = document.querySelectorAll('.nav-item.has-submenu > .nav-link');
+    
+    navItemsWithSubmenu.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // No hacer nada si el sidebar está colapsado
+            if (sidebar.classList.contains('collapsed')) {
+                return;
+            }
+            
+            const parentItem = this.parentElement;
+            const isOpen = parentItem.classList.contains('open');
+            
+            // Cerrar otros items del mismo nivel
+            const siblings = Array.from(parentItem.parentElement.children).filter(
+                item => item !== parentItem && item.classList.contains('has-submenu')
+            );
+            siblings.forEach(sibling => sibling.classList.remove('open'));
+            
+            // Toggle del item actual
+            parentItem.classList.toggle('open');
+        });
+    });
+    
+    // Manejar clicks en submenu items con submenu (nivel 2)
+    const submenuItemsWithSubmenu = document.querySelectorAll('.submenu-item.has-submenu > .submenu-link');
+    
+    submenuItemsWithSubmenu.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const parentItem = this.parentElement;
+            const isOpen = parentItem.classList.contains('open');
+            
+            // Cerrar otros items del mismo nivel
+            const siblings = Array.from(parentItem.parentElement.children).filter(
+                item => item !== parentItem && item.classList.contains('has-submenu')
+            );
+            siblings.forEach(sibling => sibling.classList.remove('open'));
+            
+            // Toggle del item actual
+            parentItem.classList.toggle('open');
+        });
+    });
+    
+    // Marcar como activo el enlace actual
+    const currentPath = window.location.pathname;
+    const allLinks = document.querySelectorAll('.nav-link, .submenu-link');
+    
+    allLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && currentPath.includes(href)) {
+            link.classList.add('active');
+            
+            // Abrir todos los padres
+            let parent = link.closest('.submenu-item');
+            while (parent) {
+                const parentNavItem = parent.closest('.nav-item, .submenu-item');
+                if (parentNavItem) {
+                    parentNavItem.classList.add('open');
+                }
+                parent = parentNavItem?.parentElement?.closest('.submenu-item');
+            }
+            
+            // Abrir el nav-item principal
+            const mainNavItem = link.closest('.nav-item');
+            if (mainNavItem) {
+                mainNavItem.classList.add('open');
+            }
+        }
+        
+        // Cerrar sidebar en móvil al hacer clic en un enlace real
+        if (href && href !== '#') {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        }
+    });
+    
+    // ============================================
     // TOGGLE SIDEBAR (Mobile)
     // ============================================
     if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', function() {
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             sidebar.classList.toggle('active');
+            
+            // En móviles, asegurar que no esté colapsado
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed');
+            }
         });
     }
     
@@ -37,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(event) {
         if (window.innerWidth <= 768) {
             const isClickInsideSidebar = sidebar.contains(event.target);
-            const isClickOnToggle = mobileMenuToggle.contains(event.target);
+            const isClickOnToggle = mobileMenuToggle && mobileMenuToggle.contains(event.target);
             
             if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
@@ -163,6 +267,17 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
             sidebar.classList.remove('active');
+            
+            // Restaurar estado colapsado si estaba guardado
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed');
+            if (sidebarCollapsed === 'true') {
+                sidebar.classList.add('collapsed');
+            }
+        } else {
+            // En móviles, remover collapsed si está activo
+            if (sidebar.classList.contains('active')) {
+                sidebar.classList.remove('collapsed');
+            }
         }
     });
     

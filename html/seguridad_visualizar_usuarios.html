@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Usuarios - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🍕</div>
+            <h2 class="sidebar-title">King's Pizza</h2>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">☰</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" data-title="Dashboard">
+                    <a href="menu_principal.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item has-submenu" data-title="Seguridad">
+                    <a href="#" class="nav-link active">
+                        <span class="nav-icon">🔒</span>
+                        <span class="nav-text">Seguridad</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Usuarios</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
+                                <li class="submenu-item"><a href="seguridad_visualizar_usuarios.html" class="submenu-link active">Visualizar Usuarios</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Tipo de Perfil</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_perfil.html" class="submenu-link">Registrar Tipo de Perfil</a></li>
+                                <li class="submenu-item"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <p class="user-name">Usuario Admin</p>
+                    <p class="user-role">Administrador</p>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
+                <span class="logout-icon">🚪</span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">☰</button>
+                <h1 class="page-title">Usuarios del Sistema</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="current-date" id="currentDate"></div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>Lista de Usuarios Registrados</h2>
+                    <a href="seguridad_registrar_usuarios.html" class="btn btn-primary">
+                        <span>➕</span> Nuevo Usuario
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="search-filter-bar">
+                        <div class="form-group">
+                            <input type="text" id="buscarUsuario" class="form-control" placeholder="🔍 Buscar por nombre, DNI o usuario...">
+                        </div>
+                        <div class="form-group">
+                            <select id="filtrarPerfil" class="form-control">
+                                <option value="">Todos los perfiles</option>
+                                <option value="administrador">Administrador</option>
+                                <option value="cajero">Cajero</option>
+                                <option value="mesero">Mesero</option>
+                                <option value="repartidor">Repartidor</option>
+                                <option value="supervisor">Supervisor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="filtrarEstado" class="form-control">
+                                <option value="">Todos los estados</option>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="tablaUsuarios">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th>DNI</th>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th>Perfil</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyUsuarios">
+                                <!-- Datos cargados dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="noDataMessage" class="alert alert-info" style="display: none;">
+                        No hay usuarios registrados. <a href="seguridad_registrar_usuarios.html">Registrar el primero</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modalEditarUsuario" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Usuario</h3>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarUsuario">
+                    <input type="hidden" id="editIndex">
+                    <div class="form-group">
+                        <label for="editNombre" class="form-label">Nombre Completo</label>
+                        <input type="text" id="editNombre" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" id="editEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPerfil" class="form-label">Perfil</label>
+                        <select id="editPerfil" class="form-control" required>
+                            <option value="administrador">Administrador</option>
+                            <option value="cajero">Cajero</option>
+                            <option value="mesero">Mesero</option>
+                            <option value="repartidor">Repartidor</option>
+                            <option value="supervisor">Supervisor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEstado" class="form-label">Estado</label>
+                        <select id="editEstado" class="form-control" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/seguridad_visualizar_usuarios.js"></script>
+</body>
+</html>

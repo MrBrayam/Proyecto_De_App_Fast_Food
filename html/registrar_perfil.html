@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Perfil - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🍕</div>
+            <h2 class="sidebar-title">King's Pizza</h2>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">☰</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" data-title="Dashboard">
+                    <a href="menu_principal.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item has-submenu" data-title="Seguridad">
+                    <a href="#" class="nav-link active">
+                        <span class="nav-icon">🔒</span>
+                        <span class="nav-text">Seguridad</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Usuarios</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
+                                <li class="submenu-item"><a href="seguridad_visualizar_usuarios.html" class="submenu-link">Visualizar Usuarios</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Tipo de Perfil</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_perfil.html" class="submenu-link active">Registrar Tipo de Perfil</a></li>
+                                <li class="submenu-item"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <p class="user-name">Usuario Admin</p>
+                    <p class="user-role">Administrador</p>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
+                <span class="logout-icon">🚪</span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">☰</button>
+                <h1 class="page-title">Registrar Tipo de Perfil</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="current-date" id="currentDate"></div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Formulario de Registro de Perfil</h2>
+                </div>
+                <div class="card-body">
+                    <form id="formRegistrarPerfil">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nombrePerfil" class="form-label">Nombre del Perfil *</label>
+                                <input type="text" id="nombrePerfil" name="nombrePerfil" class="form-control" placeholder="Ej: Gerente, Cocinero, etc." required>
+                                <div class="form-error" id="nombrePerfilError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea id="descripcion" name="descripcion" class="form-control" rows="3" placeholder="Descripción del perfil y sus responsabilidades"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Permisos del Perfil *</label>
+                            <div class="permissions-grid">
+                                <div class="permission-category">
+                                    <h4>Ventas</h4>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_ventas_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Ventas</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_ventas_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Ventas</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_ventas_modificar" class="form-check-input">
+                                        <span class="form-check-label">Modificar Ventas</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_ventas_eliminar" class="form-check-input">
+                                        <span class="form-check-label">Eliminar Ventas</span>
+                                    </label>
+                                </div>
+
+                                <div class="permission-category">
+                                    <h4>Compras</h4>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_compras_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Compras</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_compras_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Compras</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_inventario_gestionar" class="form-check-input">
+                                        <span class="form-check-label">Gestionar Inventario</span>
+                                    </label>
+                                </div>
+
+                                <div class="permission-category">
+                                    <h4>Usuarios</h4>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_usuarios_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Usuarios</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_usuarios_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Usuarios</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_usuarios_modificar" class="form-check-input">
+                                        <span class="form-check-label">Modificar Usuarios</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_usuarios_eliminar" class="form-check-input">
+                                        <span class="form-check-label">Eliminar Usuarios</span>
+                                    </label>
+                                </div>
+
+                                <div class="permission-category">
+                                    <h4>Reportes</h4>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_reportes_ventas" class="form-check-input">
+                                        <span class="form-check-label">Reportes de Ventas</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_reportes_compras" class="form-check-input">
+                                        <span class="form-check-label">Reportes de Compras</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_reportes_financieros" class="form-check-input">
+                                        <span class="form-check-label">Reportes Financieros</span>
+                                    </label>
+                                </div>
+
+                                <div class="permission-category">
+                                    <h4>Clientes y Proveedores</h4>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_clientes_gestionar" class="form-check-input">
+                                        <span class="form-check-label">Gestionar Clientes</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_proveedores_gestionar" class="form-check-input">
+                                        <span class="form-check-label">Gestionar Proveedores</span>
+                                    </label>
+                                </div>
+
+                                <div class="permission-category">
+                                    <h4>Seguridad</h4>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_perfiles_gestionar" class="form-check-input">
+                                        <span class="form-check-label">Gestionar Perfiles</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_acceso_completo" class="form-check-input">
+                                        <span class="form-check-label">Acceso Completo</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="estadoPerfil" class="form-label">Estado *</label>
+                                <select id="estadoPerfil" name="estadoPerfil" class="form-control" required>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nivelAcceso" class="form-label">Nivel de Acceso *</label>
+                                <select id="nivelAcceso" name="nivelAcceso" class="form-control" required>
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="1">Nivel 1 - Básico</option>
+                                    <option value="2">Nivel 2 - Intermedio</option>
+                                    <option value="3">Nivel 3 - Avanzado</option>
+                                    <option value="4">Nivel 4 - Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span>💾</span> Registrar Perfil
+                            </button>
+                            <button type="reset" class="btn btn-secondary">
+                                <span>🔄</span> Limpiar
+                            </button>
+                            <a href="visualizar_perfil.html" class="btn btn-outline">
+                                <span>👁️</span> Ver Perfiles
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_perfil.js"></script>
+</body>
+</html>
