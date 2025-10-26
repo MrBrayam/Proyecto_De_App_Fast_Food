@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Clientes - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-pizza-slice"></i>
+            </div>
+            <h2 class="sidebar-title">King's Pizza</h2>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <!-- Dashboard -->
+                <li class="nav-item" data-title="Dashboard">
+                    <a href="menu_principal.html" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-home"></i></span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <!-- 1. Ventas -->
+                <li class="nav-item has-submenu" data-title="Ventas">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-dollar-sign"></i></span>
+                        <span class="nav-text">Ventas</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Venta</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_venta.html" class="submenu-link">Registrar Venta</a></li>
+                                <li class="submenu-item"><a href="visualizar_venta.html" class="submenu-link">Visualizar Venta</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Impresoras</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_impresoras.html" class="submenu-link">Registrar Impresoras</a></li>
+                                <li class="submenu-item"><a href="visualizar_impresoras.html" class="submenu-link">Visualizar Impresoras</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Promociones</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_promociones.html" class="submenu-link">Registrar Promociones</a></li>
+                                <li class="submenu-item"><a href="visualizar_promociones.html" class="submenu-link">Visualizar Promociones</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Mesas</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_mesa.html" class="submenu-link">Registrar Mesa</a></li>
+                                <li class="submenu-item"><a href="visualizar_mesa.html" class="submenu-link">Visualizar Mesa</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Pedidos</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_pedidos.html" class="submenu-link">Registrar Pedidos</a></li>
+                                <li class="submenu-item"><a href="visualizar_pedidos.html" class="submenu-link">Visualizar Pedidos</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Platos</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_platos.html" class="submenu-link">Registrar Platos</a></li>
+                                <li class="submenu-item"><a href="visualizar_platos.html" class="submenu-link">Visualizar Platos</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Caja</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="apertura_caja.html" class="submenu-link">Apertura Caja</a></li>
+                                <li class="submenu-item"><a href="visualizar_cajas.html" class="submenu-link">Visualizar Cajas</a></li>
+                                <li class="submenu-item"><a href="cerrar_caja.html" class="submenu-link">Cerrar Caja</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 2. Compras -->
+                <li class="nav-item has-submenu" data-title="Compras">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
+                        <span class="nav-text">Compras</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Compras</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_compras.html" class="submenu-link">Registrar Compras</a></li>
+                                <li class="submenu-item"><a href="visualizar_compras.html" class="submenu-link">Visualizar Compras</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Inventario</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="visualizar_inventario.html" class="submenu-link">Visualizar Inventario</a></li>
+                                <li class="submenu-item"><a href="registrar_insumo.html" class="submenu-link">Registrar Insumo</a></li>
+                                <li class="submenu-item"><a href="registrar_suministro.html" class="submenu-link">Registrar Suministro</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Proveedores</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedor</a></li>
+                                <li class="submenu-item"><a href="visualizar_proveedor.html" class="submenu-link">Visualizar Proveedor</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Productos</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_producto.html" class="submenu-link">Registrar Producto</a></li>
+                                <li class="submenu-item"><a href="visualizar_producto.html" class="submenu-link">Visualizar Producto</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 3. Usuarios -->
+                <li class="nav-item has-submenu" data-title="Usuarios">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
+                        <span class="nav-text">Usuarios</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="registrar_usuario.html" class="submenu-link">Registrar Usuario</a></li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Visualizar Usuarios</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="ver_administradores.html" class="submenu-link">Ver Administradores</a></li>
+                                <li class="submenu-item"><a href="ver_meseros.html" class="submenu-link">Ver Meseros</a></li>
+                                <li class="submenu-item"><a href="ver_cajero.html" class="submenu-link">Ver Cajero</a></li>
+                                <li class="submenu-item"><a href="ver_repartidores.html" class="submenu-link">Ver Repartidores</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 4. Proveedores -->
+                <li class="nav-item has-submenu" data-title="Proveedores">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-truck"></i></span>
+                        <span class="nav-text">Proveedores</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="registrar_proveedores.html" class="submenu-link">Registrar Proveedores</a></li>
+                        <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedores</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 5. Clientes -->
+                <li class="nav-item has-submenu open" data-title="Clientes">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
+                        <span class="nav-text">Clientes</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="registrar_clientes.html" class="submenu-link active">Registrar Clientes</a></li>
+                        <li class="submenu-item"><a href="visualizar_clientes.html" class="submenu-link">Visualizar Clientes</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 6. Reportes -->
+                <li class="nav-item has-submenu" data-title="Reportes">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+                        <span class="nav-text">Reportes</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="reporte_compras.html" class="submenu-link">Visualizar Reporte de Compras</a></li>
+                        <li class="submenu-item"><a href="visualizar_ganancias.html" class="submenu-link">Visualizar Ganancias</a></li>
+                        <li class="submenu-item"><a href="reporte_ventas.html" class="submenu-link">Visualizar Reporte de Ventas</a></li>
+                        <li class="submenu-item"><a href="rendimiento_trabajador.html" class="submenu-link">Visualizar Rendimiento de Trabajador</a></li>
+                        <li class="submenu-item"><a href="generar_reportes.html" class="submenu-link">Generar Reportes de Ventas</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 7. Seguridad -->
+                <li class="nav-item has-submenu" data-title="Seguridad">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
+                        <span class="nav-text">Seguridad</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Usuarios</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
+                                <li class="submenu-item"><a href="seguridad_visualizar_usuarios.html" class="submenu-link">Visualizar Usuarios</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Tipo de Perfil</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_perfil.html" class="submenu-link">Registrar Tipo de Perfil</a></li>
+                                <li class="submenu-item"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+                <div class="user-details">
+                    <p class="user-name">Usuario Admin</p>
+                    <p class="user-role">Administrador</p>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
+                <span class="logout-icon"><i class="fas fa-sign-out-alt"></i></span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Registrar Clientes</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Nuevo Cliente</h2>
+                </div>
+                <div class="card-body">
+                    <form id="formRegistrarCliente" class="formulario-registro">
+                        <div class="row">
+                            <!-- Información Personal -->
+                            <div class="col-lg-6">
+                                <div class="form-section">
+                                    <h3 class="section-title">
+                                        <i class="fas fa-user"></i> Información Personal
+                                    </h3>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="tipoDocumento">Tipo de Documento *</label>
+                                                <select id="tipoDocumento" name="tipoDocumento" class="form-control" required>
+                                                    <option value="">Seleccionar tipo</option>
+                                                    <option value="DNI">DNI</option>
+                                                    <option value="CE">Carnet de Extranjería</option>
+                                                    <option value="RUC">RUC</option>
+                                                    <option value="PASAPORTE">Pasaporte</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="numeroDocumento">Número de Documento *</label>
+                                                <input type="text" id="numeroDocumento" name="numeroDocumento" class="form-control" required placeholder="Ej: 12345678">
+                                                <small class="form-text text-muted">Ingrese sin espacios ni guiones</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="nombres">Nombres *</label>
+                                                <input type="text" id="nombres" name="nombres" class="form-control" required placeholder="Ej: Juan Carlos">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="apellidos">Apellidos *</label>
+                                                <input type="text" id="apellidos" name="apellidos" class="form-control" required placeholder="Ej: Pérez García">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="telefono">Teléfono *</label>
+                                                <input type="tel" id="telefono" name="telefono" class="form-control" required placeholder="Ej: 987654321">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="email">Correo Electrónico</label>
+                                                <input type="email" id="email" name="email" class="form-control" placeholder="cliente@email.com">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Género</label>
+                                        <div class="form-check-group">
+                                            <div class="form-check">
+                                                <input type="radio" id="generoM" name="genero" value="M" class="form-check-input">
+                                                <label for="generoM" class="form-check-label">Masculino</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="radio" id="generoF" name="genero" value="F" class="form-check-input">
+                                                <label for="generoF" class="form-check-label">Femenino</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="radio" id="generoO" name="genero" value="O" class="form-check-input">
+                                                <label for="generoO" class="form-check-label">Otro</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Información de Dirección -->
+                            <div class="col-lg-6">
+                                <div class="form-section">
+                                    <h3 class="section-title">
+                                        <i class="fas fa-map-marker-alt"></i> Información de Dirección
+                                    </h3>
+
+                                    <div class="form-group">
+                                        <label for="direccion">Dirección *</label>
+                                        <textarea id="direccion" name="direccion" class="form-control" rows="3" required placeholder="Av. Principal 123, Urb. San Martín"></textarea>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="distrito">Distrito *</label>
+                                                <select id="distrito" name="distrito" class="form-control" required>
+                                                    <option value="">Seleccionar distrito</option>
+                                                    <option value="Lima">Lima</option>
+                                                    <option value="Miraflores">Miraflores</option>
+                                                    <option value="San Isidro">San Isidro</option>
+                                                    <option value="Barranco">Barranco</option>
+                                                    <option value="Surco">Surco</option>
+                                                    <option value="Chorrillos">Chorrillos</option>
+                                                    <option value="San Borja">San Borja</option>
+                                                    <option value="La Victoria">La Victoria</option>
+                                                    <option value="Lince">Lince</option>
+                                                    <option value="Jesus Maria">Jesús María</option>
+                                                    <option value="Pueblo Libre">Pueblo Libre</option>
+                                                    <option value="Magdalena">Magdalena</option>
+                                                    <option value="San Miguel">San Miguel</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="provincia">Provincia</label>
+                                                <input type="text" id="provincia" name="provincia" class="form-control" value="Lima" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="referencia">Referencia de Dirección</label>
+                                        <input type="text" id="referencia" name="referencia" class="form-control" placeholder="Frente al parque, al lado de la farmacia">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="codigoPostal">Código Postal</label>
+                                        <input type="text" id="codigoPostal" name="codigoPostal" class="form-control" placeholder="15001">
+                                    </div>
+                                </div>
+
+                                <!-- Información Adicional -->
+                                <div class="form-section mt-4">
+                                    <h3 class="section-title">
+                                        <i class="fas fa-info-circle"></i> Información Adicional
+                                    </h3>
+
+                                    <div class="form-group">
+                                        <label for="tipoCliente">Tipo de Cliente</label>
+                                        <select id="tipoCliente" name="tipoCliente" class="form-control">
+                                            <option value="Regular">Regular</option>
+                                            <option value="VIP">VIP</option>
+                                            <option value="Corporativo">Corporativo</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="delivery" name="delivery" class="form-check-input">
+                                            <label for="delivery" class="form-check-label">Cliente solicita delivery frecuentemente</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="promociones" name="promociones" class="form-check-input" checked>
+                                            <label for="promociones" class="form-check-label">Acepta recibir promociones por email/SMS</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="observaciones">Observaciones</label>
+                                        <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Notas adicionales sobre el cliente..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Registrar Cliente
+                            </button>
+                            <a href="visualizar_clientes.html" class="btn btn-outline">
+                                <i class="fas fa-list"></i> Ver Lista de Clientes
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/menu_principal.js"></script>
+    <script>
+        // Validación de tipo de documento
+        document.getElementById('tipoDocumento').addEventListener('change', function() {
+            const tipo = this.value;
+            const numeroInput = document.getElementById('numeroDocumento');
+            
+            switch(tipo) {
+                case 'DNI':
+                    numeroInput.maxLength = 8;
+                    numeroInput.placeholder = '12345678';
+                    break;
+                case 'RUC':
+                    numeroInput.maxLength = 11;
+                    numeroInput.placeholder = '20123456789';
+                    break;
+                case 'CE':
+                    numeroInput.maxLength = 12;
+                    numeroInput.placeholder = '001234567890';
+                    break;
+                case 'PASAPORTE':
+                    numeroInput.maxLength = 20;
+                    numeroInput.placeholder = 'AB1234567';
+                    break;
+                default:
+                    numeroInput.maxLength = 20;
+                    numeroInput.placeholder = '';
+            }
+        });
+
+        // Validación solo números para DNI y RUC
+        document.getElementById('numeroDocumento').addEventListener('input', function() {
+            const tipo = document.getElementById('tipoDocumento').value;
+            if (tipo === 'DNI' || tipo === 'RUC') {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            }
+        });
+
+        // Validación solo números para teléfono
+        document.getElementById('telefono').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Envío del formulario
+        document.getElementById('formRegistrarCliente').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validación básica
+            const requiredFields = this.querySelectorAll('[required]');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    valid = false;
+                } else {
+                    field.classList.remove('error');
+                }
+            });
+            
+            if (!valid) {
+                alert('Por favor, complete todos los campos obligatorios');
+                return;
+            }
+            
+            // Simular guardado
+            const formData = new FormData(this);
+            const cliente = Object.fromEntries(formData);
+            
+            console.log('Registrando cliente:', cliente);
+            
+            // Guardar en localStorage (simulación)
+            const clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
+            cliente.id = Date.now();
+            cliente.fechaRegistro = new Date().toISOString().split('T')[0];
+            clientes.push(cliente);
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            
+            alert('Cliente registrado exitosamente');
+            limpiarFormulario();
+        });
+
+        function limpiarFormulario() {
+            document.getElementById('formRegistrarCliente').reset();
+            // Remover clases de error
+            document.querySelectorAll('.error').forEach(field => {
+                field.classList.remove('error');
+            });
+        }
+    </script>
+</body>
+</html>

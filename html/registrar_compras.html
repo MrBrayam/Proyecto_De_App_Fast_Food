@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Compra - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-pizza-slice"></i>
+            </div>
+            <h2 class="sidebar-title">King's Pizza</h2>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <!-- Dashboard -->
+                <li class="nav-item" data-title="Dashboard">
+                    <a href="menu_principal.html" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-home"></i></span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <!-- 1. Ventas -->
+                <li class="nav-item has-submenu" data-title="Ventas">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-dollar-sign"></i></span>
+                        <span class="nav-text">Ventas</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Venta</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_venta.html" class="submenu-link">Registrar Venta</a></li>
+                                <li class="submenu-item"><a href="visualizar_venta.html" class="submenu-link">Visualizar Venta</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Impresoras</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_impresoras.html" class="submenu-link">Registrar Impresoras</a></li>
+                                <li class="submenu-item"><a href="visualizar_impresoras.html" class="submenu-link">Visualizar Impresoras</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Promociones</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_promociones.html" class="submenu-link">Registrar Promociones</a></li>
+                                <li class="submenu-item"><a href="visualizar_promociones.html" class="submenu-link">Visualizar Promociones</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Mesas</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_mesa.html" class="submenu-link">Registrar Mesa</a></li>
+                                <li class="submenu-item"><a href="visualizar_mesa.html" class="submenu-link">Visualizar Mesa</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Pedidos</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_pedidos.html" class="submenu-link">Registrar Pedidos</a></li>
+                                <li class="submenu-item"><a href="visualizar_pedidos.html" class="submenu-link">Visualizar Pedidos</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Platos</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_platos.html" class="submenu-link">Registrar Platos</a></li>
+                                <li class="submenu-item"><a href="visualizar_platos.html" class="submenu-link">Visualizar Platos</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Caja</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="apertura_caja.html" class="submenu-link">Apertura Caja</a></li>
+                                <li class="submenu-item"><a href="visualizar_cajas.html" class="submenu-link">Visualizar Cajas</a></li>
+                                <li class="submenu-item"><a href="cerrar_caja.html" class="submenu-link">Cerrar Caja</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 2. Compras -->
+                <li class="nav-item has-submenu open" data-title="Compras">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
+                        <span class="nav-text">Compras</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu open">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Compras</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_compras.html" class="submenu-link active">Registrar Compras</a></li>
+                                <li class="submenu-item"><a href="visualizar_compras.html" class="submenu-link">Visualizar Compras</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Inventario</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="visualizar_inventario.html" class="submenu-link">Visualizar Inventario</a></li>
+                                <li class="submenu-item"><a href="registrar_insumo.html" class="submenu-link">Registrar Insumo</a></li>
+                                <li class="submenu-item"><a href="registrar_suministro.html" class="submenu-link">Registrar Suministro</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Proveedores</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedor</a></li>
+                                <li class="submenu-item"><a href="visualizar_proveedor.html" class="submenu-link">Visualizar Proveedor</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Productos</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_producto.html" class="submenu-link">Registrar Producto</a></li>
+                                <li class="submenu-item"><a href="visualizar_producto.html" class="submenu-link">Visualizar Producto</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 3. Usuarios -->
+                <li class="nav-item has-submenu" data-title="Usuarios">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
+                        <span class="nav-text">Usuarios</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="registrar_usuario.html" class="submenu-link">Registrar Usuario</a></li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Visualizar Usuarios</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="ver_administradores.html" class="submenu-link">Ver Administradores</a></li>
+                                <li class="submenu-item"><a href="ver_meseros.html" class="submenu-link">Ver Meseros</a></li>
+                                <li class="submenu-item"><a href="ver_cajero.html" class="submenu-link">Ver Cajero</a></li>
+                                <li class="submenu-item"><a href="ver_repartidores.html" class="submenu-link">Ver Repartidores</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 4. Proveedores -->
+                <li class="nav-item has-submenu" data-title="Proveedores">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-truck"></i></span>
+                        <span class="nav-text">Proveedores</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="registrar_proveedores.html" class="submenu-link">Registrar Proveedores</a></li>
+                        <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedores</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 5. Clientes -->
+                <li class="nav-item has-submenu" data-title="Clientes">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
+                        <span class="nav-text">Clientes</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="registrar_clientes.html" class="submenu-link">Registrar Clientes</a></li>
+                        <li class="submenu-item"><a href="visualizar_clientes.html" class="submenu-link">Visualizar Clientes</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 6. Reportes -->
+                <li class="nav-item has-submenu" data-title="Reportes">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+                        <span class="nav-text">Reportes</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="reporte_compras.html" class="submenu-link">Visualizar Reporte de Compras</a></li>
+                        <li class="submenu-item"><a href="visualizar_ganancias.html" class="submenu-link">Visualizar Ganancias</a></li>
+                        <li class="submenu-item"><a href="reporte_ventas.html" class="submenu-link">Visualizar Reporte de Ventas</a></li>
+                        <li class="submenu-item"><a href="rendimiento_trabajador.html" class="submenu-link">Visualizar Rendimiento de Trabajador</a></li>
+                        <li class="submenu-item"><a href="generar_reportes.html" class="submenu-link">Generar Reportes de Ventas</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 7. Seguridad -->
+                <li class="nav-item has-submenu" data-title="Seguridad">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
+                        <span class="nav-text">Seguridad</span>
+                        <span class="nav-arrow">▼</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Usuarios</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
+                                <li class="submenu-item"><a href="seguridad_visualizar_usuarios.html" class="submenu-link">Visualizar Usuarios</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu-item has-submenu">
+                            <a href="#" class="submenu-link">
+                                <span class="submenu-text">Tipo de Perfil</span>
+                                <span class="nav-arrow">▼</span>
+                            </a>
+                            <ul class="submenu level-2">
+                                <li class="submenu-item"><a href="registrar_perfil.html" class="submenu-link">Registrar Tipo de Perfil</a></li>
+                                <li class="submenu-item"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+                <div class="user-details">
+                    <p class="user-name">Usuario Admin</p>
+                    <p class="user-role">Administrador</p>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
+                <span class="logout-icon"><i class="fas fa-sign-out-alt"></i></span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Registrar Compra</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Formulario de Registro de Compra</h2>
+                </div>
+                <div class="card-body">
+                    <form id="formRegistrarCompra" class="form-grid">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="proveedor" class="form-label">Proveedor *</label>
+                                <select id="proveedor" name="proveedor" class="form-control" required>
+                                    <option value="">Seleccione un proveedor</option>
+                                    <option value="proveedor1">Distribuidora La Esperanza</option>
+                                    <option value="proveedor2">Mercado Central SAC</option>
+                                    <option value="proveedor3">Alimentos Frescos EIRL</option>
+                                </select>
+                                <div class="form-error" id="proveedorError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numeroFactura" class="form-label">Número de Factura *</label>
+                                <input type="text" id="numeroFactura" name="numeroFactura" class="form-control" placeholder="F001-00001234" required>
+                                <div class="form-error" id="numeroFacturaError"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fechaCompra" class="form-label">Fecha de Compra *</label>
+                                <input type="date" id="fechaCompra" name="fechaCompra" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="metodoPago" class="form-label">Método de Pago *</label>
+                                <select id="metodoPago" name="metodoPago" class="form-control" required>
+                                    <option value="">Seleccione método</option>
+                                    <option value="efectivo">Efectivo</option>
+                                    <option value="transferencia">Transferencia Bancaria</option>
+                                    <option value="credito">Crédito</option>
+                                    <option value="cheque">Cheque</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productos" class="form-label">Productos Comprados *</label>
+                                <div class="productos-container">
+                                    <div class="producto-item">
+                                        <select name="producto[]" class="form-control">
+                                            <option value="">Seleccione un producto</option>
+                                            <option value="queso_mozzarella">Queso Mozzarella - Kg</option>
+                                            <option value="pepperoni">Pepperoni - Kg</option>
+                                            <option value="harina">Harina de Trigo - Kg</option>
+                                            <option value="tomate">Salsa de Tomate - Lt</option>
+                                        </select>
+                                        <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" min="1" step="0.01">
+                                        <input type="number" name="precio[]" class="form-control" placeholder="Precio unitario" min="0" step="0.01">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline mt-2" onclick="agregarProducto()">
+                                    <i class="fas fa-plus"></i> Agregar Producto
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="observaciones" class="form-label">Observaciones</label>
+                                <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Notas adicionales sobre la compra"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Resumen de Compra</label>
+                                <div class="compra-resumen">
+                                    <div class="resumen-item">
+                                        <span>Subtotal:</span>
+                                        <span id="subtotal">S/ 0.00</span>
+                                    </div>
+                                    <div class="resumen-item">
+                                        <span>IGV (18%):</span>
+                                        <span id="igv">S/ 0.00</span>
+                                    </div>
+                                    <div class="resumen-item total">
+                                        <span>Total:</span>
+                                        <span id="total">S/ 0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Registrar Compra
+                            </button>
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-undo"></i> Limpiar
+                            </button>
+                            <a href="visualizar_compras.html" class="btn btn-outline">
+                                <i class="fas fa-eye"></i> Ver Compras
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/menu_principal.js"></script>
+    <script>
+        // Set today's date as default
+        document.getElementById('fechaCompra').value = new Date().toISOString().split('T')[0];
+
+        function agregarProducto() {
+            const container = document.querySelector('.productos-container');
+            const newItem = container.querySelector('.producto-item').cloneNode(true);
+            newItem.querySelectorAll('select, input').forEach(el => el.value = '');
+            container.appendChild(newItem);
+        }
+
+        function eliminarProducto(btn) {
+            const container = document.querySelector('.productos-container');
+            if (container.children.length > 1) {
+                btn.closest('.producto-item').remove();
+                calcularTotales();
+            }
+        }
+
+        function calcularTotales() {
+            let subtotal = 0;
+            const productos = document.querySelectorAll('.producto-item');
+            
+            productos.forEach(item => {
+                const cantidad = parseFloat(item.querySelector('input[name="cantidad[]"]').value) || 0;
+                const precio = parseFloat(item.querySelector('input[name="precio[]"]').value) || 0;
+                subtotal += cantidad * precio;
+            });
+            
+            const igv = subtotal * 0.18;
+            const total = subtotal + igv;
+            
+            document.getElementById('subtotal').textContent = `S/ ${subtotal.toFixed(2)}`;
+            document.getElementById('igv').textContent = `S/ ${igv.toFixed(2)}`;
+            document.getElementById('total').textContent = `S/ ${total.toFixed(2)}`;
+        }
+
+        // Event listeners para cálculo automático
+        document.addEventListener('input', function(e) {
+            if (e.target.name === 'cantidad[]' || e.target.name === 'precio[]') {
+                calcularTotales();
+            }
+        });
+    </script>
+</body>
+</html>
