@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Promociones - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_promociones.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="promocion-visualizar-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="promocion-visualizar-header">
+                <div class="promocion-visualizar-header-left">
+                    <h1 class="promocion-visualizar-titulo">Visualizar Promociones</h1>
+                </div>
+                <div class="promocion-visualizar-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Búsqueda -->
+            <div class="busqueda-section">
+                <form class="busqueda-form" onsubmit="return false;">
+                    <div class="campo-tipo-busqueda">
+                        <label for="tipoBusqueda"><i class="fas fa-filter"></i> Filtrar por:</label>
+                        <select id="tipoBusqueda" class="select-tipo-busqueda">
+                            <option value="nombre">Nombre</option>
+                            <option value="tipo">Tipo</option>
+                            <option value="descuento">Descuento</option>
+                            <option value="estado">Estado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="campo-busqueda">
+                        <label for="busqueda"><i class="fas fa-search"></i> Buscar:</label>
+                        <input 
+                            type="text" 
+                            id="busqueda" 
+                            class="input-busqueda" 
+                            placeholder="Ingrese término de búsqueda..."
+                        >
+                    </div>
+                    
+                    <button type="button" class="btn-buscar-principal" onclick="buscarPromocion()">
+                        <i class="fas fa-search"></i>
+                        BUSCAR
+                    </button>
+                    
+                    <button type="button" class="btn-detalle-principal" onclick="verDetalle()" id="btnDetalle" disabled>
+                        <i class="fas fa-info-circle"></i>
+                        DETALLE
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sección de Tabla -->
+            <div class="tabla-promociones-section">
+                <div class="tabla-promociones-wrapper">
+                    <table class="tabla-promociones" id="tablaPromociones">
+                        <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>TIPO</th>
+                                <th>DESCUENTO</th>
+                                <th>VIGENCIA</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>2x1 en Pizzas Familiares</td>
+                                <td>2x1</td>
+                                <td>50%</td>
+                                <td>01/10/2025 - 31/10/2025</td>
+                                <td><span class="badge badge-activa">Activa</span></td>
+                            </tr>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>Descuento Estudiantes</td>
+                                <td>Porcentaje</td>
+                                <td>15%</td>
+                                <td>01/09/2025 - 31/12/2025</td>
+                                <td><span class="badge badge-activa">Activa</span></td>
+                            </tr>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>Happy Hour</td>
+                                <td>Horario</td>
+                                <td>20%</td>
+                                <td>Permanente</td>
+                                <td><span class="badge badge-activa">Activa</span></td>
+                            </tr>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>Black Friday</td>
+                                <td>Especial</td>
+                                <td>40%</td>
+                                <td>24/11/2025 - 24/11/2025</td>
+                                <td><span class="badge badge-inactiva">Inactiva</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="acciones-promociones">
+                    <button class="btn-exportar-promociones" onclick="exportarPromociones()">
+                        <i class="fas fa-file-excel"></i>
+                        Exportar
+                    </button>
+                    <button class="btn-salir-promociones" onclick="salirModulo()">
+                        <i class="fas fa-times-circle"></i>
+                        Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Detalle -->
+    <div class="modal" id="modalDetalle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-tags"></i> Detalles de la Promoción</h2>
+                <button class="modal-close" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Información General -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-info-circle"></i>
+                        Información General
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item">
+                            <label>Nombre:</label>
+                            <span id="detalle-nombre">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Tipo de Promoción:</label>
+                            <span id="detalle-tipo">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Descuento:</label>
+                            <span id="detalle-descuento">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Estado:</label>
+                            <span id="detalle-estado">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vigencia -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-calendar-alt"></i>
+                        Periodo de Vigencia
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item">
+                            <label>Fecha de Inicio:</label>
+                            <span id="detalle-inicio">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Fecha de Fin:</label>
+                            <span id="detalle-fin">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Días Aplicables:</label>
+                            <span id="detalle-dias">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Horario:</label>
+                            <span id="detalle-horario">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Condiciones -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-clipboard-list"></i>
+                        Condiciones de Aplicación
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item">
+                            <label>Monto Mínimo:</label>
+                            <span id="detalle-monto">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Cantidad Máxima de Usos:</label>
+                            <span id="detalle-usos">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Usos por Cliente:</label>
+                            <span id="detalle-usos-cliente">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Acumulable:</label>
+                            <span id="detalle-acumulable">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productos Aplicables -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-pizza-slice"></i>
+                        Productos Aplicables
+                    </h3>
+                    <div class="productos-box">
+                        <p id="detalle-productos">Todos los productos</p>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-comment-alt"></i>
+                        Descripción
+                    </h3>
+                    <div class="descripcion-box">
+                        <p id="detalle-descripcion">Sin descripción</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-modal btn-editar" onclick="editarPromocion()">
+                    <i class="fas fa-edit"></i>
+                    Editar
+                </button>
+                <button class="btn-modal btn-cerrar" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_promociones.js"></script>
+</body>
+</html>
