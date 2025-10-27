@@ -76,8 +76,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_mesa.html" class="submenu-link">Registrar Mesa</a></li>
-                                <li class="submenu-item"><a href="visualizar_mesa.html" class="submenu-link">Visualizar Mesa</a></li>
+                                <li class="submenu-item"><a href="registrar_mesas.html" class="submenu-link">Registrar Mesas</a></li>
+                                <li class="submenu-item"><a href="visualizar_mesas.html" class="submenu-link">Visualizar Mesas</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
