@@ -26,7 +26,7 @@ function cargarSidebar() {
             <ul class="nav-list">
                 <!-- Dashboard -->
                 <li class="nav-item" data-title="Dashboard">
-                    <a href="../index.html" class="nav-link">
+                    <a href="menu_principal.html" class="nav-link">
                         <span class="nav-icon"><i class="fas fa-home"></i></span>
                         <span class="nav-text">Dashboard</span>
                     </a>
