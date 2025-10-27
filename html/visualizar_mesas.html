@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Mesas - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_mesas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="mesas-visualizar-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="mesas-header">
+                <div class="mesas-header-left">
+                    <h1 class="mesas-titulo">
+                        <i class="fas fa-th-large"></i>
+                        Visualizar Mesas
+                    </h1>
+                </div>
+                <div class="mesas-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fecha-actual">Cargando...</span>
+                        <span id="hora-actual">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros y Búsqueda -->
+            <section class="filtros-section">
+                <div class="filtros-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchMesa" placeholder="Buscar por número, ubicación...">
+                    </div>
+
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-estado="todos">
+                            <i class="fas fa-list"></i>
+                            Todas (<span id="count-todas">0</span>)
+                        </button>
+                        <button class="filter-btn filter-disponible" data-estado="disponible">
+                            <i class="fas fa-check-circle"></i>
+                            Disponibles (<span id="count-disponibles">0</span>)
+                        </button>
+                        <button class="filter-btn filter-ocupada" data-estado="ocupada">
+                            <i class="fas fa-users"></i>
+                            Ocupadas (<span id="count-ocupadas">0</span>)
+                        </button>
+                        <button class="filter-btn filter-reservada" data-estado="reservada">
+                            <i class="fas fa-calendar-check"></i>
+                            Reservadas (<span id="count-reservadas">0</span>)
+                        </button>
+                        <button class="filter-btn filter-mantenimiento" data-estado="mantenimiento">
+                            <i class="fas fa-tools"></i>
+                            Mantenimiento (<span id="count-mantenimiento">0</span>)
+                        </button>
+                    </div>
+
+                    <div class="view-options">
+                        <select id="sortMesas" class="sort-select">
+                            <option value="numero">Ordenar por Número</option>
+                            <option value="capacidad">Ordenar por Capacidad</option>
+                            <option value="ubicacion">Ordenar por Ubicación</option>
+                            <option value="estado">Ordenar por Estado</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grid de Tarjetas de Mesas -->
+            <section class="mesas-grid-section">
+                <div id="mesasGrid" class="mesas-grid">
+                    <!-- Las tarjetas se cargarán dinámicamente aquí -->
+                </div>
+
+                <!-- Mensaje cuando no hay resultados -->
+                <div id="noResultados" class="no-resultados" style="display: none;">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No se encontraron mesas</h3>
+                    <p>Intenta con otros filtros de búsqueda</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal de Detalles de Mesa -->
+        <div id="modalDetalles" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-info-circle"></i> Detalles de la Mesa</h2>
+                    <button class="modal-close" onclick="cerrarModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="detalle-grid">
+                        <!-- Información Básica -->
+                        <div class="detalle-section">
+                            <h3><i class="fas fa-table"></i> Información Básica</h3>
+                            <div class="detalle-item">
+                                <span class="detalle-label">Número de Mesa:</span>
+                                <span class="detalle-value" id="detalle-numero">-</span>
+                            </div>
+                            <div class="detalle-item">
+                                <span class="detalle-label">Capacidad:</span>
+                                <span class="detalle-value" id="detalle-capacidad">-</span>
+                            </div>
+                            <div class="detalle-item">
+                                <span class="detalle-label">Ubicación:</span>
+                                <span class="detalle-value" id="detalle-ubicacion">-</span>
+                            </div>
+                            <div class="detalle-item">
+                                <span class="detalle-label">Tipo de Mesa:</span>
+                                <span class="detalle-value" id="detalle-tipo">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Estado y Prioridad -->
+                        <div class="detalle-section">
+                            <h3><i class="fas fa-flag"></i> Estado y Prioridad</h3>
+                            <div class="detalle-item">
+                                <span class="detalle-label">Estado Actual:</span>
+                                <span class="detalle-value" id="detalle-estado">-</span>
+                            </div>
+                            <div class="detalle-item">
+                                <span class="detalle-label">Prioridad:</span>
+                                <span class="detalle-value" id="detalle-prioridad">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Características -->
+                        <div class="detalle-section full-width">
+                            <h3><i class="fas fa-list-check"></i> Características</h3>
+                            <div class="caracteristicas-badges" id="detalle-caracteristicas">
+                                <!-- Se llenarán dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Observaciones -->
+                        <div class="detalle-section full-width">
+                            <h3><i class="fas fa-comment-dots"></i> Observaciones</h3>
+                            <p class="detalle-observaciones" id="detalle-observaciones">Sin observaciones</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-modal btn-editar" onclick="editarMesa()">
+                        <i class="fas fa-edit"></i> Editar Mesa
+                    </button>
+                    <button class="btn-modal btn-cerrar" onclick="cerrarModal()">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Fin del Contenedor de Mesas -->
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_mesas.js"></script>
+</body>
+</html>
