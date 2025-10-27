@@ -1,0 +1,557 @@
+/* ============================================
+   ESTILOS PARA REGISTRAR IMPRESORAS
+   Tema oscuro matching Registrar Venta
+   ============================================ */
+
+/* Contenedor Principal */
+.impresora-container {
+    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Patrón de fondo con burbujas y formas suaves */
+.impresora-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 87, 51, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 200, 87, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(255, 140, 0, 0.07) 0%, transparent 45%);
+    background-size: 100% 100%;
+    animation: floatBubbles 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes floatBubbles {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-20px); }
+}
+
+/* Header */
+.impresora-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: rgba(44, 47, 62, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 87, 51, 0.3);
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.impresora-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.menu-hamburger {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.menu-hamburger:hover {
+    color: #ff5733;
+    transform: scale(1.1);
+}
+
+.impresora-titulo {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Fecha y Hora */
+.impresora-header-right {
+    display: flex;
+    gap: 20px;
+}
+
+.fecha-hora-display {
+    display: flex;
+    gap: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.fecha-hora-display span {
+    background: rgba(255, 87, 51, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.4);
+}
+
+/* Contenedor del Formulario */
+.impresora-form-container {
+    padding: 30px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Card del Formulario */
+.form-card {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.section-title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title::before {
+    content: '';
+    width: 5px;
+    height: 30px;
+    background: linear-gradient(180deg, #ff5733, #ffc857);
+    border-radius: 3px;
+}
+
+/* Grid del Formulario */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    color: #ffc857;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.form-input,
+.form-select,
+.form-textarea {
+    background: rgba(26, 29, 46, 0.6);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 10px;
+    padding: 12px 15px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #ff5733;
+    background: rgba(26, 29, 46, 0.8);
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
+}
+
+.form-select {
+    cursor: pointer;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+/* Configuración Avanzada */
+.form-section-advanced {
+    background: rgba(26, 29, 46, 0.4);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 200, 87, 0.2);
+}
+
+.subsection-title {
+    color: #ffc857;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-grid-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #ff5733;
+}
+
+.checkbox-group label {
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Botones de Acción */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 87, 51, 0.3);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-guardar {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.btn-guardar:hover {
+    background: linear-gradient(135deg, #20c997, #28a745);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-limpiar {
+    background: linear-gradient(135deg, #ffc857, #ff8c42);
+    color: white;
+}
+
+.btn-limpiar:hover {
+    background: linear-gradient(135deg, #ff8c42, #ffc857);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 200, 87, 0.4);
+}
+
+.btn-probar {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+}
+
+.btn-probar:hover {
+    background: linear-gradient(135deg, #0056b3, #007bff);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+}
+
+.btn-cancelar {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background: linear-gradient(135deg, #c82333, #dc3545);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* Lista de Impresoras */
+.impresoras-lista-card {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    max-height: calc(100vh - 150px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.lista-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.3);
+}
+
+.lista-titulo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.lista-search {
+    position: relative;
+    width: 300px;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(26, 29, 46, 0.6);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 25px;
+    padding: 10px 40px 10px 20px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #ff5733;
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
+}
+
+.lista-search i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffc857;
+    pointer-events: none;
+}
+
+/* Tabla */
+.tabla-container {
+    overflow-y: auto;
+    flex: 1;
+    border-radius: 12px;
+}
+
+.tabla-impresoras {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.tabla-impresoras thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.tabla-impresoras thead th {
+    background: rgba(26, 29, 46, 0.9);
+    color: #ffc857;
+    padding: 15px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.tabla-impresoras tbody tr {
+    background: rgba(26, 29, 46, 0.4);
+    transition: all 0.3s ease;
+}
+
+.tabla-impresoras tbody tr:hover {
+    background: rgba(255, 87, 51, 0.15);
+    transform: scale(1.01);
+}
+
+.tabla-impresoras tbody td {
+    padding: 15px;
+    color: white;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+    font-size: 14px;
+}
+
+/* Badges de Estado */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-activa {
+    background: rgba(40, 167, 69, 0.3);
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+.badge-inactiva {
+    background: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.badge-mantenimiento {
+    background: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+    border: 1px solid #ffc107;
+}
+
+/* Botones de Acción de Tabla */
+.acciones-cell {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-icon {
+    background: rgba(255, 87, 51, 0.2);
+    border: 1px solid rgba(255, 87, 51, 0.4);
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-icon:hover {
+    transform: scale(1.1);
+}
+
+.btn-edit:hover {
+    background: rgba(0, 123, 255, 0.4);
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-test:hover {
+    background: rgba(40, 167, 69, 0.4);
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.btn-delete:hover {
+    background: rgba(220, 53, 69, 0.4);
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+/* Scrollbar personalizado */
+.tabla-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.tabla-container::-webkit-scrollbar-track {
+    background: rgba(26, 29, 46, 0.4);
+    border-radius: 10px;
+}
+
+.tabla-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 87, 51, 0.5);
+    border-radius: 10px;
+}
+
+.tabla-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 87, 51, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .impresora-form-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-grid,
+    .form-grid-options {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .lista-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .lista-search {
+        width: 100%;
+    }
+
+    .tabla-container {
+        overflow-x: auto;
+    }
+}
