@@ -3,284 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Visualizar Ventas - King's Pizza</title>
-    
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/visualizar_venta.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class="fas fa-pizza-slice"></i>
-            </div>
-            <h2 class="sidebar-title">King's Pizza</h2>
-            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Contraer menú">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-
-        <nav class="sidebar-nav">
-            <ul class="nav-list">
-                <!-- Dashboard -->
-                <li class="nav-item" data-title="Dashboard">
-                    <a href="menu_principal.html" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-home"></i></span>
-                        <span class="nav-text">Dashboard</span>
-                    </a>
-                </li>
-                
-                <!-- 1. Ventas -->
-                <li class="nav-item has-submenu open" data-title="Ventas">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-dollar-sign"></i></span>
-                        <span class="nav-text">Ventas</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item has-submenu open">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Venta</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_venta.html" class="submenu-link">Registrar Venta</a></li>
-                                <li class="submenu-item"><a href="visualizar_venta.html" class="submenu-link active">Visualizar Venta</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Impresoras</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_impresoras.html" class="submenu-link">Registrar Impresoras</a></li>
-                                <li class="submenu-item"><a href="visualizar_impresoras.html" class="submenu-link">Visualizar Impresoras</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Promociones</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_promociones.html" class="submenu-link">Registrar Promociones</a></li>
-                                <li class="submenu-item"><a href="visualizar_promociones.html" class="submenu-link">Visualizar Promociones</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Mesas</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_mesa.html" class="submenu-link">Registrar Mesa</a></li>
-                                <li class="submenu-item"><a href="visualizar_mesa.html" class="submenu-link">Visualizar Mesa</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Pedidos</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_pedidos.html" class="submenu-link">Registrar Pedidos</a></li>
-                                <li class="submenu-item"><a href="visualizar_pedidos.html" class="submenu-link">Visualizar Pedidos</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Platos</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_platos.html" class="submenu-link">Registrar Platos</a></li>
-                                <li class="submenu-item"><a href="visualizar_platos.html" class="submenu-link">Visualizar Platos</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Caja</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="apertura_caja.html" class="submenu-link">Apertura Caja</a></li>
-                                <li class="submenu-item"><a href="visualizar_cajas.html" class="submenu-link">Visualizar Cajas</a></li>
-                                <li class="submenu-item"><a href="cerrar_caja.html" class="submenu-link">Cerrar Caja</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                
-                <!-- 2. Compras -->
-                <li class="nav-item has-submenu" data-title="Compras">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
-                        <span class="nav-text">Compras</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Compras</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_compras.html" class="submenu-link">Registrar Compras</a></li>
-                                <li class="submenu-item"><a href="visualizar_compras.html" class="submenu-link">Visualizar Compras</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Inventario</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="visualizar_inventario.html" class="submenu-link">Visualizar Inventario</a></li>
-                                <li class="submenu-item"><a href="registrar_insumo.html" class="submenu-link">Registrar Insumo</a></li>
-                                <li class="submenu-item"><a href="registrar_suministro.html" class="submenu-link">Registrar Suministro</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Proveedores</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedor</a></li>
-                                <li class="submenu-item"><a href="visualizar_proveedor.html" class="submenu-link">Visualizar Proveedor</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Productos</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_producto.html" class="submenu-link">Registrar Producto</a></li>
-                                <li class="submenu-item"><a href="visualizar_producto.html" class="submenu-link">Visualizar Producto</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                
-                <!-- 3. Usuarios -->
-                <li class="nav-item has-submenu" data-title="Usuarios">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-users"></i></span>
-                        <span class="nav-text">Usuarios</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_usuario.html" class="submenu-link">Registrar Usuario</a></li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Visualizar Usuarios</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="ver_administradores.html" class="submenu-link">Ver Administradores</a></li>
-                                <li class="submenu-item"><a href="ver_meseros.html" class="submenu-link">Ver Meseros</a></li>
-                                <li class="submenu-item"><a href="ver_cajero.html" class="submenu-link">Ver Cajero</a></li>
-                                <li class="submenu-item"><a href="ver_repartidores.html" class="submenu-link">Ver Repartidores</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                
-                <!-- 4. Proveedores -->
-                <li class="nav-item has-submenu" data-title="Proveedores">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-truck"></i></span>
-                        <span class="nav-text">Proveedores</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_proveedores.html" class="submenu-link">Registrar Proveedores</a></li>
-                        <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedores</a></li>
-                    </ul>
-                </li>
-                
-                <!-- 5. Clientes -->
-                <li class="nav-item has-submenu" data-title="Clientes">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-users"></i></span>
-                        <span class="nav-text">Clientes</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_clientes.html" class="submenu-link">Registrar Clientes</a></li>
-                        <li class="submenu-item"><a href="visualizar_clientes.html" class="submenu-link">Visualizar Clientes</a></li>
-                    </ul>
-                </li>
-                
-                <!-- 6. Reportes -->
-                <li class="nav-item has-submenu" data-title="Reportes">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-                        <span class="nav-text">Reportes</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="reporte_compras.html" class="submenu-link">Visualizar Reporte de Compras</a></li>
-                        <li class="submenu-item"><a href="visualizar_ganancias.html" class="submenu-link">Visualizar Ganancias</a></li>
-                        <li class="submenu-item"><a href="reporte_ventas.html" class="submenu-link">Visualizar Reporte de Ventas</a></li>
-                        <li class="submenu-item"><a href="rendimiento_trabajador.html" class="submenu-link">Visualizar Rendimiento de Trabajador</a></li>
-                        <li class="submenu-item"><a href="generar_reportes.html" class="submenu-link">Generar Reportes de Ventas</a></li>
-                    </ul>
-                </li>
-                
-                <!-- 7. Seguridad -->
-                <li class="nav-item has-submenu" data-title="Seguridad">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
-                        <span class="nav-text">Seguridad</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Usuarios</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
-                                <li class="submenu-item"><a href="seguridad_visualizar_usuarios.html" class="submenu-link">Visualizar Usuarios</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
-                                <span class="submenu-text">Tipo de Perfil</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_perfil.html" class="submenu-link">Registrar Tipo de Perfil</a></li>
-                                <li class="submenu-item"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
-                <div class="user-details">
-                    <p class="user-name">Usuario Admin</p>
-                    <p class="user-role">Administrador</p>
-                </div>
-            </div>
-            <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
-                <span class="logout-icon"><i class="fas fa-sign-out-alt"></i></span>
-                <span class="logout-text">Cerrar Sesión</span>
-            </button>
-        </div>
-    </aside>
-
+    <!-- El sidebar se cargará automáticamente con load_sidebar.js -->
+    
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
         <!-- Top Bar -->
@@ -304,157 +35,156 @@
 
         <!-- Page Content -->
         <div class="content-wrapper">
+            <!-- Búsqueda de Ventas -->
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2>Lista de Ventas Registradas</h2>
-                    <a href="registrar_venta.html" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Nueva Venta
-                    </a>
-                </div>
                 <div class="card-body">
-                    <div class="search-filter-bar">
-                        <div class="form-group">
-                            <input type="text" id="buscarVenta" class="form-control" placeholder="🔍 Buscar por cliente, mesa o número de venta...">
-                        </div>
-                        <div class="form-group">
-                            <select id="filtrarEstado" class="form-control">
-                                <option value="">Todos los estados</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="entregado">Entregado</option>
-                                <option value="cancelado">Cancelado</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="date" id="fechaDesde" class="form-control" title="Fecha desde">
-                        </div>
-                        <div class="form-group">
-                            <input type="date" id="fechaHasta" class="form-control" title="Fecha hasta">
-                        </div>
+                    <div class="busqueda-form">
+                        <input 
+                            type="text" 
+                            id="campoBusqueda" 
+                            class="form-control input-busqueda-principal" 
+                            placeholder=""
+                        >
+                        
+                        <button class="btn btn-light btn-buscar-principal" onclick="buscarVenta()">
+                            BUSCAR
+                        </button>
+                        
+                        <button class="btn btn-light btn-detalle-principal" onclick="mostrarDetalle()" disabled id="btnDetalle">
+                            DETALLE
+                        </button>
                     </div>
+                </div>
+            </div>
 
+            <!-- Tabla de Ventas -->
+            <div class="card">
+                <div class="card-body">
                     <div class="table-responsive">
-                        <table class="data-table" id="tablaVentas">
+                        <table class="tabla-ventas-principal">
                             <thead>
                                 <tr>
-                                    <th>N° Venta</th>
-                                    <th>Cliente</th>
-                                    <th>Mesa</th>
-                                    <th>Productos</th>
-                                    <th>Total</th>
-                                    <th>Método Pago</th>
-                                    <th>Estado</th>
-                                    <th>Fecha</th>
-                                    <th>Acciones</th>
+                                    <th>Nro COMPROBANTE</th>
+                                    <th>FECHA</th>
+                                    <th>CLIENTE</th>
+                                    <th>TOTAL</th>
+                                    <th>Tipo Pago</th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyVentas">
-                                <tr>
-                                    <td>#001</td>
-                                    <td>Juan Pérez</td>
-                                    <td>Mesa 1</td>
-                                    <td>Pizza Hawaiana x2</td>
-                                    <td>S/ 70.00</td>
-                                    <td>Efectivo</td>
-                                    <td><span class="badge badge-success">Entregado</span></td>
-                                    <td>26/10/2025 14:30</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(1)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="imprimirTicket(1)" title="Imprimir ticket">
-                                            <i class="fas fa-print"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#002</td>
-                                    <td>María González</td>
-                                    <td>Para llevar</td>
-                                    <td>Pizza Pepperoni x1</td>
-                                    <td>S/ 40.00</td>
-                                    <td>Tarjeta</td>
-                                    <td><span class="badge badge-warning">Preparando</span></td>
-                                    <td>26/10/2025 15:15</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(2)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-success" onclick="marcarEntregado(2)" title="Marcar como entregado">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#003</td>
-                                    <td>Carlos Ramírez</td>
-                                    <td>Mesa 3</td>
-                                    <td>Pizza Vegetariana x1</td>
-                                    <td>S/ 38.00</td>
-                                    <td>Transferencia</td>
-                                    <td><span class="badge badge-info">Pendiente</span></td>
-                                    <td>26/10/2025 15:45</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(3)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="cancelarVenta(3)" title="Cancelar venta">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <!-- Las filas se cargarán dinámicamente -->
                             </tbody>
                         </table>
                     </div>
-
-                    <div id="noDataMessage" class="alert alert-info" style="display: none;">
-                        No hay ventas registradas. <a href="registrar_venta.html">Registrar la primera</a>
-                    </div>
                 </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="acciones-principales">
+                <button class="btn btn-info btn-exportar-principal" onclick="exportarVentas()">
+                    Exportar
+                </button>
+                <button class="btn btn-danger btn-salir-principal" onclick="salir()">
+                    Salir
+                </button>
             </div>
         </div>
     </main>
 
-    <!-- Modal Detalle Venta -->
-    <div id="modalDetalleVenta" class="modal" style="display: none;">
+    <!-- Modal de detalle de venta -->
+    <div id="modalDetalle" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Detalle de Venta #<span id="modalNumeroVenta"></span></h3>
-                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+                <h2><i class="fas fa-file-invoice"></i> Comprobante de Pago</h2>
+                <button class="btn-close" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="modal-body">
-                <div id="detalleVentaContent">
-                    <!-- Contenido dinámico -->
+            
+            <div class="comprobante">
+                <div class="comprobante-header">
+                    <div class="empresa-info">
+                        <h3><i class="fas fa-pizza-slice"></i> KING'S PIZZA</h3>
+                        <p>RUC: 20123456789</p>
+                        <p>Av. Principal 123, Lima - Perú</p>
+                        <p>Tel: (01) 234-5678</p>
+                    </div>
+                    <div class="comprobante-numero">
+                        <h4>BOLETA DE VENTA</h4>
+                        <p>N° <span id="detalleNroComprobante">001-0001</span></p>
+                    </div>
+                </div>
+
+                <div class="comprobante-info">
+                    <div class="info-row">
+                        <span class="label">Fecha:</span>
+                        <span id="detalleFecha" class="value">--/--/----</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Hora:</span>
+                        <span id="detalleHora" class="value">--:--:--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cliente:</span>
+                        <span id="detalleCliente" class="value">-----------</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Tipo de Pago:</span>
+                        <span id="detalleTipoPago" class="value">-----------</span>
+                    </div>
+                </div>
+
+                <div class="comprobante-productos">
+                    <table class="tabla-detalle">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaDetalleProductos">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="comprobante-totales">
+                    <div class="total-row">
+                        <span class="label">Subtotal:</span>
+                        <span id="detalleSubtotal" class="value">S/ 0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="label">IGV (18%):</span>
+                        <span id="detalleIGV" class="value">S/ 0.00</span>
+                    </div>
+                    <div class="total-row total-final">
+                        <span class="label">TOTAL:</span>
+                        <span id="detalleTotal" class="value">S/ 0.00</span>
+                    </div>
+                </div>
+
+                <div class="comprobante-footer">
+                    <p>¡Gracias por su compra!</p>
+                    <p>Vuelva pronto</p>
+                </div>
+
+                <div class="modal-acciones">
+                    <button class="btn btn-primary" onclick="imprimirComprobante()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                    <button class="btn btn-danger" onclick="descargarPDF()">
+                        <i class="fas fa-file-pdf"></i> Descargar PDF
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script>
-        function verDetalle(ventaId) {
-            // Implementar vista de detalle
-            console.log('Ver detalle de venta:', ventaId);
-        }
-
-        function imprimirTicket(ventaId) {
-            // Implementar impresión de ticket
-            console.log('Imprimir ticket de venta:', ventaId);
-        }
-
-        function marcarEntregado(ventaId) {
-            // Implementar marcar como entregado
-            console.log('Marcar como entregado venta:', ventaId);
-        }
-
-        function cancelarVenta(ventaId) {
-            // Implementar cancelación de venta
-            console.log('Cancelar venta:', ventaId);
-        }
-
-        function cerrarModal() {
-            document.getElementById('modalDetalleVenta').style.display = 'none';
-        }
-    </script>
+    <script src="../js/visualizar_venta.js"></script>
 </body>
 </html>
