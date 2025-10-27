@@ -8,6 +8,7 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_venta.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -283,156 +284,127 @@
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Registrar Venta</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
-                <div class="notifications">
-                    <button class="notification-btn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
+        <!-- Contenedor Principal de Venta -->
+        <div class="venta-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="venta-header">
+                <div class="venta-header-left">
+                    <button class="menu-hamburger" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
                     </button>
+                    <h1 class="venta-titulo">Registrar Venta</h1>
+                </div>
+                <div class="venta-header-right">
+                    <div class="fecha-hora-group">
+                        <div class="input-group">
+                            <label for="fecha">FECHA</label>
+                            <input type="date" id="fecha" class="input-fecha" value="2025-10-30">
+                        </div>
+                        <div class="input-group">
+                            <label for="hora">HORA</label>
+                            <input type="time" id="hora" class="input-hora" value="08:40:16">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <!-- Page Content -->
-        <div class="content-wrapper">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Formulario de Registro de Venta</h2>
+            <!-- Sección Cliente y Tipo de Pago -->
+            <div class="venta-info-bar">
+                <div class="cliente-section">
+                    <label for="clienteBuscar">CLIENTE</label>
+                    <div class="cliente-input-group">
+                        <input type="text" id="clienteBuscar" class="input-cliente" placeholder="Buscar">
+                        <button class="btn-buscar" onclick="buscarCliente()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="btn-nuevo-cliente" onclick="nuevoCliente()">Nuevo Cliente</button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form id="formRegistrarVenta" class="form-grid">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="cliente" class="form-label">Cliente *</label>
-                                <select id="cliente" name="cliente" class="form-control" required>
-                                    <option value="">Seleccione un cliente</option>
-                                    <option value="cliente_ocasional">Cliente Ocasional</option>
-                                    <option value="juan_perez">Juan Pérez</option>
-                                    <option value="maria_gonzalez">María González</option>
-                                </select>
-                                <div class="form-error" id="clienteError"></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="mesa" class="form-label">Mesa</label>
-                                <select id="mesa" name="mesa" class="form-control">
-                                    <option value="">Para llevar</option>
-                                    <option value="mesa_1">Mesa 1</option>
-                                    <option value="mesa_2">Mesa 2</option>
-                                    <option value="mesa_3">Mesa 3</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="productos" class="form-label">Productos *</label>
-                                <div class="productos-container">
-                                    <div class="producto-item">
-                                        <select name="producto[]" class="form-control">
-                                            <option value="">Seleccione un producto</option>
-                                            <option value="pizza_hawaiana">Pizza Hawaiana - S/ 35.00</option>
-                                            <option value="pizza_pepperoni">Pizza Pepperoni - S/ 40.00</option>
-                                            <option value="pizza_vegetariana">Pizza Vegetariana - S/ 38.00</option>
-                                        </select>
-                                        <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" min="1" value="1">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(this)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-outline mt-2" onclick="agregarProducto()">
-                                    <i class="fas fa-plus"></i> Agregar Producto
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="descuento" class="form-label">Descuento (%)</label>
-                                <input type="number" id="descuento" name="descuento" class="form-control" min="0" max="100" value="0">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="metodoPago" class="form-label">Método de Pago *</label>
-                                <select id="metodoPago" name="metodoPago" class="form-control" required>
-                                    <option value="">Seleccione método</option>
-                                    <option value="efectivo">Efectivo</option>
-                                    <option value="tarjeta">Tarjeta</option>
-                                    <option value="transferencia">Transferencia</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Resumen de Venta</label>
-                                <div class="venta-resumen">
-                                    <div class="resumen-item">
-                                        <span>Subtotal:</span>
-                                        <span id="subtotal">S/ 0.00</span>
-                                    </div>
-                                    <div class="resumen-item">
-                                        <span>Descuento:</span>
-                                        <span id="descuentoTotal">S/ 0.00</span>
-                                    </div>
-                                    <div class="resumen-item total">
-                                        <span>Total:</span>
-                                        <span id="total">S/ 0.00</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Registrar Venta
-                            </button>
-                            <button type="reset" class="btn btn-secondary">
-                                <i class="fas fa-undo"></i> Limpiar
-                            </button>
-                            <a href="visualizar_venta.html" class="btn btn-outline">
-                                <i class="fas fa-eye"></i> Ver Ventas
-                            </a>
-                        </div>
-                    </form>
+                <div class="tipo-pago-section">
+                    <label for="tipoPago">TIPO DE PAGO</label>
+                    <select id="tipoPago" class="select-tipo-pago">
+                        <option value="">Seleccionar</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="yape">Yape</option>
+                        <option value="plin">Plin</option>
+                    </select>
                 </div>
+            </div>
+
+            <!-- Formulario de Productos -->
+            <div class="venta-productos-form">
+                <div class="productos-header-row">
+                    <div class="header-col col-codigo">Codigo</div>
+                    <div class="header-col col-linea">Linea de Producto</div>
+                    <div class="header-col col-descripcion">Descripción</div>
+                    <div class="header-col col-precio">Precio</div>
+                    <div class="header-col col-btn"></div>
+                </div>
+                <div class="productos-input-row">
+                    <input type="text" id="inputCodigo" class="input-codigo" placeholder="Buscar__">
+                    <input type="text" id="inputLinea" class="input-linea" placeholder="Buscar__">
+                    <input type="text" id="inputDescripcion" class="input-descripcion" disabled>
+                    <input type="text" id="inputPrecio" class="input-precio" placeholder="S/" disabled>
+                    <button class="btn-añadir" onclick="añadirProducto()">Añadir</button>
+                </div>
+            </div>
+
+            <!-- Tabla de Productos Agregados -->
+            <div class="venta-tabla-container">
+                <table class="venta-tabla">
+                    <thead>
+                        <tr>
+                            <th class="th-producto">Producto</th>
+                            <th class="th-cantidad">Cantidad</th>
+                            <th class="th-precio">Precio</th>
+                            <th class="th-total">Total</th>
+                            <th class="th-acciones"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos">
+                        <tr>
+                            <td>PRODUCTO 1</td>
+                            <td>1</td>
+                            <td>S/10</td>
+                            <td>S/10</td>
+                            <td>
+                                <button class="btn-scroll-up" onclick="moverArriba(this)"><i class="fas fa-chevron-up"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PRODUCTO 2</td>
+                            <td>2</td>
+                            <td>S/10</td>
+                            <td>S/20</td>
+                            <td>
+                                <button class="btn-scroll-up" onclick="moverArriba(this)"><i class="fas fa-chevron-up"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PRODUCTO 3</td>
+                            <td>3</td>
+                            <td>S/10</td>
+                            <td>S/30</td>
+                            <td>
+                                <button class="btn-scroll-down" onclick="moverAbajo(this)"><i class="fas fa-chevron-down"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="venta-actions">
+                <button class="btn-eliminar" onclick="eliminarVenta()">Eliminar</button>
+                <button class="btn-registrar" onclick="registrarVenta()">Registrar</button>
+                <button class="btn-salir" onclick="salirVenta()">Salir</button>
             </div>
         </div>
     </main>
 
     <!-- JavaScript -->
     <script src="../js/menu_principal.js"></script>
-    <script>
-        // Función para agregar producto
-        function agregarProducto() {
-            const container = document.querySelector('.productos-container');
-            const newItem = container.querySelector('.producto-item').cloneNode(true);
-            newItem.querySelectorAll('select, input').forEach(el => el.value = el.type === 'number' ? '1' : '');
-            container.appendChild(newItem);
-        }
-
-        // Función para eliminar producto
-        function eliminarProducto(btn) {
-            const container = document.querySelector('.productos-container');
-            if (container.children.length > 1) {
-                btn.closest('.producto-item').remove();
-            }
-        }
-
-        // Calcular totales
-        function calcularTotales() {
-            // Implementar cálculo de totales
-        }
-    </script>
+    <script src="../js/registrar_venta.js"></script>
 </body>
 </html>
