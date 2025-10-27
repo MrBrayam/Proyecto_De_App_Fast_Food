@@ -3,89 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Visualizar Ventas - King's Pizza</title>
+    
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/visualizar_venta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- El sidebar se cargará automáticamente con load_sidebar.js -->
-    
+
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Visualizar Ventas</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
-                <div class="notifications">
-                    <button class="notification-btn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
+        <!-- Contenedor Principal -->
+        <div class="venta-visualizar-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="venta-visualizar-header">
+                <div class="venta-visualizar-header-left">
+                    <h1 class="venta-visualizar-titulo">Visualizar Ventas</h1>
+                </div>
+                <div class="venta-visualizar-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <!-- Page Content -->
-        <div class="content-wrapper">
             <!-- Búsqueda de Ventas -->
-            <div class="card">
-                <div class="card-body">
-                    <div class="busqueda-form">
-                        <input 
-                            type="text" 
-                            id="campoBusqueda" 
-                            class="form-control input-busqueda-principal" 
-                            placeholder=""
-                        >
-                        
-                        <button class="btn btn-light btn-buscar-principal" onclick="buscarVenta()">
-                            BUSCAR
-                        </button>
-                        
-                        <button class="btn btn-light btn-detalle-principal" onclick="mostrarDetalle()" disabled id="btnDetalle">
-                            DETALLE
-                        </button>
-                    </div>
+            <div class="busqueda-section">
+                <div class="busqueda-form">
+                    <input 
+                        type="text" 
+                        id="campoBusqueda" 
+                        class="input-busqueda-principal" 
+                        placeholder="Buscar venta..."
+                    >
+                    
+                    <button class="btn-buscar-principal" onclick="buscarVenta()">
+                        BUSCAR
+                    </button>
+                    
+                    <button class="btn-detalle-principal" onclick="mostrarDetalle()" disabled id="btnDetalle">
+                        DETALLE
+                    </button>
                 </div>
             </div>
 
             <!-- Tabla de Ventas -->
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="tabla-ventas-principal">
-                            <thead>
-                                <tr>
-                                    <th>Nro COMPROBANTE</th>
-                                    <th>FECHA</th>
-                                    <th>CLIENTE</th>
-                                    <th>TOTAL</th>
-                                    <th>Tipo Pago</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyVentas">
-                                <!-- Las filas se cargarán dinámicamente -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="tabla-ventas-section">
+                <div class="tabla-ventas-wrapper">
+                    <table class="tabla-ventas-principal">
+                        <thead>
+                            <tr>
+                                <th>Nro COMPROBANTE</th>
+                                <th>FECHA</th>
+                                <th>CLIENTE</th>
+                                <th>TOTAL</th>
+                                <th>Tipo Pago</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyVentas">
+                            <!-- Las filas se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Botones de acción -->
+            <!-- Botones de Acción -->
             <div class="acciones-principales">
-                <button class="btn btn-info btn-exportar-principal" onclick="exportarVentas()">
-                    Exportar
+                <button class="btn-action btn-exportar" onclick="exportarVentas()">
+                    <i class="fas fa-file-export"></i> Exportar
                 </button>
-                <button class="btn btn-danger btn-salir-principal" onclick="salir()">
-                    Salir
+                <button class="btn-action btn-salir" onclick="salir()">
+                    <i class="fas fa-times"></i> Salir
                 </button>
             </div>
         </div>
@@ -171,10 +162,10 @@
                 </div>
 
                 <div class="modal-acciones">
-                    <button class="btn btn-primary" onclick="imprimirComprobante()">
+                    <button class="btn-modal btn-imprimir" onclick="imprimirComprobante()">
                         <i class="fas fa-print"></i> Imprimir
                     </button>
-                    <button class="btn btn-danger" onclick="descargarPDF()">
+                    <button class="btn-modal btn-pdf" onclick="descargarPDF()">
                         <i class="fas fa-file-pdf"></i> Descargar PDF
                     </button>
                 </div>

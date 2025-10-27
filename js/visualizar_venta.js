@@ -8,9 +8,33 @@ let todasLasVentas = [];
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 1000);
     cargarVentas();
     configurarEventos();
 });
+
+// Actualizar fecha y hora en tiempo real
+function actualizarFechaHora() {
+    const ahora = new Date();
+    
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
+    
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    document.getElementById('fechaActual').textContent = fechaFormateada;
+    document.getElementById('horaActual').textContent = horaFormateada;
+}
 
 // Configurar eventos
 function configurarEventos() {
@@ -204,17 +228,13 @@ function mostrarDetalle() {
     
     // Mostrar modal
     const modal = document.getElementById('modalDetalle');
-    modal.classList.add('show');
-    modal.style.display = 'flex';
+    modal.classList.add('active');
 }
 
 // Cerrar modal
 function cerrarModal() {
     const modal = document.getElementById('modalDetalle');
-    modal.classList.remove('show');
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
+    modal.classList.remove('active');
 }
 
 // Imprimir comprobante

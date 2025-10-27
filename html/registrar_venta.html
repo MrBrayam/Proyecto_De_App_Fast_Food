@@ -20,21 +20,12 @@
             <!-- Header con Título y Fecha/Hora -->
             <div class="venta-header">
                 <div class="venta-header-left">
-                    <button class="menu-hamburger" onclick="toggleSidebar()">
-                        <i class="fas fa-bars"></i>
-                    </button>
                     <h1 class="venta-titulo">Registrar Venta</h1>
                 </div>
                 <div class="venta-header-right">
-                    <div class="fecha-hora-group">
-                        <div class="input-group">
-                            <label for="fecha">FECHA</label>
-                            <input type="date" id="fecha" class="input-fecha" value="2025-10-30">
-                        </div>
-                        <div class="input-group">
-                            <label for="hora">HORA</label>
-                            <input type="time" id="hora" class="input-hora" value="08:40:16">
-                        </div>
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
                     </div>
                 </div>
             </div>

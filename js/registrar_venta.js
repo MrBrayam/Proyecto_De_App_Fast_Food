@@ -4,34 +4,32 @@
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
-    inicializarFechaHora();
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 1000);
     inicializarEventos();
     cargarProductosEjemplo();
 });
 
-// Configurar fecha y hora actual
-function inicializarFechaHora() {
+// Actualizar fecha y hora en tiempo real
+function actualizarFechaHora() {
     const ahora = new Date();
     
-    // Formato fecha: YYYY-MM-DD
-    const año = ahora.getFullYear();
-    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-    const dia = String(ahora.getDate()).padStart(2, '0');
-    document.getElementById('fecha').value = `${año}-${mes}-${dia}`;
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    // Formato hora: HH:MM:SS
-    actualizarHora();
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
     
-    // Actualizar hora cada segundo
-    setInterval(actualizarHora, 1000);
-}
-
-function actualizarHora() {
-    const ahora = new Date();
-    const horas = String(ahora.getHours()).padStart(2, '0');
-    const minutos = String(ahora.getMinutes()).padStart(2, '0');
-    const segundos = String(ahora.getSeconds()).padStart(2, '0');
-    document.getElementById('hora').value = `${horas}:${minutos}:${segundos}`;
+    document.getElementById('fechaActual').textContent = fechaFormateada;
+    document.getElementById('horaActual').textContent = horaFormateada;
 }
 
 // Inicializar eventos
