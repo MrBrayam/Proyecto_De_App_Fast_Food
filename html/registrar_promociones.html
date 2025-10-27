@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Promociones - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_promociones.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="promocion-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="promocion-header">
+                <div class="promocion-header-left">
+                    <h1 class="promocion-titulo">Registrar Promociones</h1>
+                </div>
+                <div class="promocion-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor de dos columnas -->
+            <div class="promocion-contenido">
+                <!-- Columna izquierda: Formulario -->
+                <div class="promocion-form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-tags"></i> Datos de la Promoción</h2>
+                    </div>
+
+                    <form id="formPromocion" class="promocion-form">
+                        <!-- Información Básica -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle"></i>
+                                Información Básica
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="nombre">
+                                        <i class="fas fa-tag"></i>
+                                        Nombre de la Promoción *
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="nombre" 
+                                        class="form-input" 
+                                        placeholder="Ej: 2x1 en Pizzas Familiares"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tipo">
+                                        <i class="fas fa-list"></i>
+                                        Tipo de Promoción *
+                                    </label>
+                                    <select id="tipo" class="form-select" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="2x1">2x1</option>
+                                        <option value="porcentaje">Porcentaje</option>
+                                        <option value="monto">Monto Fijo</option>
+                                        <option value="horario">Horario Especial</option>
+                                        <option value="combo">Combo</option>
+                                        <option value="especial">Evento Especial</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="descuento">
+                                        <i class="fas fa-percent"></i>
+                                        Descuento *
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="descuento" 
+                                        class="form-input" 
+                                        placeholder="Ej: 20% o S/10"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="estado">
+                                        <i class="fas fa-toggle-on"></i>
+                                        Estado *
+                                    </label>
+                                    <select id="estado" class="form-select" required>
+                                        <option value="activa">Activa</option>
+                                        <option value="inactiva">Inactiva</option>
+                                        <option value="programada">Programada</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vigencia -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-calendar-alt"></i>
+                                Periodo de Vigencia
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fechaInicio">
+                                        <i class="fas fa-calendar-day"></i>
+                                        Fecha de Inicio *
+                                    </label>
+                                    <input 
+                                        type="date" 
+                                        id="fechaInicio" 
+                                        class="form-input"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fechaFin">
+                                        <i class="fas fa-calendar-day"></i>
+                                        Fecha de Fin *
+                                    </label>
+                                    <input 
+                                        type="date" 
+                                        id="fechaFin" 
+                                        class="form-input"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="diasAplicables">
+                                        <i class="fas fa-calendar-week"></i>
+                                        Días Aplicables
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="diasAplicables" 
+                                        class="form-input" 
+                                        placeholder="Ej: Todos los días"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="horario">
+                                        <i class="fas fa-clock"></i>
+                                        Horario
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="horario" 
+                                        class="form-input" 
+                                        placeholder="Ej: 14:00 - 17:00"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Condiciones -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-clipboard-list"></i>
+                                Condiciones de Aplicación
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="montoMinimo">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        Monto Mínimo
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="montoMinimo" 
+                                        class="form-input" 
+                                        placeholder="0.00"
+                                        step="0.01"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="usosMaximos">
+                                        <i class="fas fa-hashtag"></i>
+                                        Usos Máximos
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="usosMaximos" 
+                                        class="form-input" 
+                                        placeholder="Ilimitado"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="usosPorCliente">
+                                        <i class="fas fa-user"></i>
+                                        Usos por Cliente
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="usosPorCliente" 
+                                        class="form-input" 
+                                        placeholder="1"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="acumulable">
+                                        <i class="fas fa-layer-group"></i>
+                                        Acumulable
+                                    </label>
+                                    <select id="acumulable" class="form-select">
+                                        <option value="no">No</option>
+                                        <option value="si">Sí</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Productos Aplicables -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-pizza-slice"></i>
+                                Productos Aplicables
+                            </h3>
+                            
+                            <div class="form-group-full">
+                                <label for="productos">
+                                    <i class="fas fa-list"></i>
+                                    Productos
+                                </label>
+                                <textarea 
+                                    id="productos" 
+                                    class="form-textarea" 
+                                    rows="3"
+                                    placeholder="Ej: Pizzas Familiares, Combos, etc. (Dejar vacío para aplicar a todos)"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-comment-alt"></i>
+                                Descripción
+                            </h3>
+                            
+                            <div class="form-group-full">
+                                <label for="descripcion">
+                                    <i class="fas fa-align-left"></i>
+                                    Detalles de la Promoción
+                                </label>
+                                <textarea 
+                                    id="descripcion" 
+                                    class="form-textarea" 
+                                    rows="4"
+                                    placeholder="Ingrese los términos y condiciones de la promoción..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn-action btn-guardar">
+                                <i class="fas fa-save"></i>
+                                Guardar
+                            </button>
+                            <button type="button" class="btn-action btn-limpiar" onclick="limpiarFormulario()">
+                                <i class="fas fa-eraser"></i>
+                                Limpiar
+                            </button>
+                            <button type="button" class="btn-action btn-cancelar" onclick="cancelar()">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Columna derecha: Lista de Promociones -->
+                <div class="promociones-lista-card">
+                    <div class="lista-header">
+                        <h2 class="lista-titulo">
+                            <i class="fas fa-list"></i>
+                            Promociones Registradas
+                        </h2>
+                        <div class="lista-search">
+                            <input 
+                                type="text" 
+                                id="buscarPromocion" 
+                                class="search-input" 
+                                placeholder="Buscar promoción..."
+                                onkeyup="filtrarPromociones()"
+                            >
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="tabla-container">
+                        <table class="tabla-promociones" id="tablaPromociones">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Descuento</th>
+                                    <th>Vigencia</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Las promociones se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_promociones.js"></script>
+</body>
+</html>

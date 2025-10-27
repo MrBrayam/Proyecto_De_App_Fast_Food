@@ -1,0 +1,552 @@
+/* ============================================
+   ESTILOS PARA REGISTRAR PROMOCIONES
+   ============================================ */
+
+/* Contenedor Principal */
+.promocion-container {
+    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Patrón de fondo con burbujas y formas suaves */
+.promocion-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 87, 51, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 200, 87, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(255, 140, 0, 0.07) 0%, transparent 45%);
+    background-size: 100% 100%;
+    animation: floatBubbles 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes floatBubbles {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-20px); }
+}
+
+/* Header */
+.promocion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: rgba(44, 47, 62, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 87, 51, 0.3);
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.promocion-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.promocion-titulo {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Fecha y Hora */
+.promocion-header-right {
+    display: flex;
+    gap: 20px;
+}
+
+.fecha-hora-display {
+    display: flex;
+    gap: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.fecha-hora-display span {
+    background: rgba(255, 87, 51, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.4);
+}
+
+/* Contenido de dos columnas */
+.promocion-contenido {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 30px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Card del Formulario */
+.promocion-form-card {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+/* Scrollbar del formulario */
+.promocion-form-card::-webkit-scrollbar {
+    width: 10px;
+}
+
+.promocion-form-card::-webkit-scrollbar-track {
+    background: rgba(26, 29, 46, 0.3);
+    border-radius: 10px;
+}
+
+.promocion-form-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff5733 0%, #ffc857 100%);
+    border-radius: 10px;
+    border: 2px solid rgba(44, 47, 62, 0.3);
+}
+
+.promocion-form-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff6b6b 0%, #ffd700 100%);
+}
+
+.form-header {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.3);
+}
+
+.form-header h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.form-header h2 i {
+    color: #ffc857;
+}
+
+/* Secciones del formulario */
+.form-section {
+    margin-bottom: 25px;
+}
+
+.section-title {
+    color: #ffc857;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.form-group,
+.form-group-full {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group label,
+.form-group-full label {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-group label i,
+.form-group-full label i {
+    color: #ffc857;
+    font-size: 14px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    background: rgba(26, 29, 46, 0.6);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 10px;
+    padding: 12px 15px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #ff5733;
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
+    background: rgba(26, 29, 46, 0.8);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.form-select {
+    cursor: pointer;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Botones de Acción */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 87, 51, 0.3);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-guardar {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.btn-guardar:hover {
+    background: linear-gradient(135deg, #20c997, #28a745);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-limpiar {
+    background: linear-gradient(135deg, #ffc857, #ff8c42);
+    color: white;
+}
+
+.btn-limpiar:hover {
+    background: linear-gradient(135deg, #ff8c42, #ffc857);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 200, 87, 0.4);
+}
+
+.btn-cancelar {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background: linear-gradient(135deg, #c82333, #dc3545);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* Lista de Promociones */
+.promociones-lista-card {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    max-height: calc(100vh - 150px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.lista-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.3);
+}
+
+.lista-titulo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.lista-titulo i {
+    color: #ffc857;
+}
+
+.lista-search {
+    position: relative;
+}
+
+.search-input {
+    background: rgba(26, 29, 46, 0.6);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 25px;
+    padding: 10px 40px 10px 20px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #ff5733;
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
+}
+
+.lista-search i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffc857;
+    pointer-events: none;
+}
+
+/* Tabla */
+.tabla-container {
+    overflow-y: auto;
+    flex: 1;
+    border-radius: 12px;
+}
+
+.tabla-promociones {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.tabla-promociones thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.tabla-promociones thead th {
+    background: rgba(26, 29, 46, 0.9);
+    color: #ffc857;
+    padding: 15px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.tabla-promociones tbody tr {
+    background: rgba(26, 29, 46, 0.4);
+    transition: all 0.3s ease;
+}
+
+.tabla-promociones tbody tr:hover {
+    background: rgba(255, 87, 51, 0.15);
+    transform: scale(1.01);
+}
+
+.tabla-promociones tbody td {
+    padding: 15px;
+    color: white;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+    font-size: 14px;
+}
+
+/* Badges de Estado */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-activa {
+    background: rgba(40, 167, 69, 0.3);
+    color: #90EE90;
+    border: 1px solid #28a745;
+}
+
+.badge-inactiva {
+    background: rgba(220, 53, 69, 0.3);
+    color: #FF6B6B;
+    border: 1px solid #dc3545;
+}
+
+.badge-programada {
+    background: rgba(255, 193, 7, 0.3);
+    color: #FFD54F;
+    border: 1px solid #ffc107;
+}
+
+/* Botones de acciones en la tabla */
+.btn-table-action {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    color: #ffc857;
+}
+
+.btn-edit:hover {
+    background: rgba(255, 200, 87, 0.2);
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    color: #FF6B6B;
+}
+
+.btn-delete:hover {
+    background: rgba(220, 53, 69, 0.2);
+    transform: scale(1.1);
+}
+
+/* Scrollbar de la tabla */
+.tabla-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.tabla-container::-webkit-scrollbar-track {
+    background: rgba(26, 29, 46, 0.3);
+    border-radius: 10px;
+}
+
+.tabla-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff5733 0%, #ffc857 100%);
+    border-radius: 10px;
+    border: 2px solid rgba(44, 47, 62, 0.3);
+}
+
+.tabla-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff6b6b 0%, #ffd700 100%);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .promocion-contenido {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .promocion-header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .promocion-titulo {
+        font-size: 24px;
+    }
+
+    .fecha-hora-display {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .fecha-hora-display span {
+        width: 100%;
+        text-align: center;
+    }
+
+    .promocion-contenido {
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .promocion-form-card,
+    .promociones-lista-card {
+        padding: 20px;
+    }
+
+    .lista-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .tabla-promociones {
+        font-size: 12px;
+    }
+
+    .tabla-promociones th,
+    .tabla-promociones td {
+        padding: 10px 8px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+}
