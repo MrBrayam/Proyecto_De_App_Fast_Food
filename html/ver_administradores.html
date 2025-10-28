@@ -8,62 +8,55 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/ver_administradores.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Sidebar -->
+    <div id="sidebarContainer"></div>
 
     <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Ver Administradores</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
-                <div class="notifications">
-                    <button class="notification-btn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Page Content -->
-        <div class="content-wrapper">
-            <!-- Navegación de tipos de usuario -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="user-type-tabs">
-                        <a href="ver_administradores.html" class="tab-link active">
-                            <i class="fas fa-user-shield"></i> Administradores
-                        </a>
-                        <a href="ver_meseros.html" class="tab-link">
-                            <i class="fas fa-utensils"></i> Meseros
-                        </a>
-                        <a href="ver_cajero.html" class="tab-link">
-                            <i class="fas fa-cash-register"></i> Cajeros
-                        </a>
-                        <a href="ver_repartidores.html" class="tab-link">
-                            <i class="fas fa-motorcycle"></i> Repartidores
-                        </a>
-                    </div>
+    <main class="main-content">
+        <div class="module-container">
+            <!-- Header del módulo -->
+            <div class="module-header">
+                <h1 class="module-title">
+                    <i class="fas fa-user-shield"></i> Ver Administradores
+                </h1>
+                <div class="fecha-hora-box">
+                    <span id="fechaActual">Cargando fecha...</span>
+                    <span id="horaActual">Cargando hora...</span>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2>Lista de Administradores</h2>
-                    <a href="registrar_usuario.html" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Nuevo Administrador
+            <!-- Contenido del módulo -->
+            <div class="module-contenido">
+                <!-- Navegación de tipos de usuario -->
+                <div class="user-type-tabs">
+                    <a href="ver_administradores.html" class="tab-link active">
+                        <i class="fas fa-user-shield"></i> Administradores
+                    </a>
+                    <a href="ver_meseros.html" class="tab-link">
+                        <i class="fas fa-utensils"></i> Meseros
+                    </a>
+                    <a href="ver_cajero.html" class="tab-link">
+                        <i class="fas fa-cash-register"></i> Cajeros
+                    </a>
+                    <a href="ver_repartidores.html" class="tab-link">
+                        <i class="fas fa-motorcycle"></i> Repartidores
                     </a>
                 </div>
-                <div class="card-body">
+
+                <!-- Card principal -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h2>Lista de Administradores</h2>
+                        <a href="registrar_usuario.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Nuevo Administrador
+                        </a>
+                    </div>
+
+                    <!-- Barra de búsqueda y filtros -->
                     <div class="search-filter-bar">
                         <div class="form-group">
                             <input type="text" id="buscarAdmin" class="form-control" placeholder="🔍 Buscar por nombre, documento o usuario...">
@@ -89,6 +82,7 @@
                         </button>
                     </div>
 
+                    <!-- Tabla de administradores -->
                     <div class="table-responsive">
                         <table class="data-table" id="tablaAdministradores">
                             <thead>
@@ -103,228 +97,29 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyAdministradores">
-                                <tr>
-                                    <td>
-                                        <div class="user-info">
-                                            <div class="user-avatar-small">
-                                                <i class="fas fa-user-circle"></i>
-                                            </div>
-                                            <div>
-                                                <strong>admin_principal</strong>
-                                                <br><small class="text-muted">Super Admin</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <strong>Carlos Alberto Rodríguez</strong>
-                                        <br><small class="text-muted">DNI: 12345678</small>
-                                        <br><small class="text-muted">Ingreso: 15/01/2024</small>
-                                    </td>
-                                    <td>
-                                        987654321
-                                        <br><small class="text-muted">carlos.admin@kingspizza.com</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-primary">Principal</span>
-                                        <br><small class="text-muted">Tiempo Completo</small>
-                                    </td>
-                                    <td>
-                                        26/10/2025 14:30
-                                        <br><small class="text-success">En línea</small>
-                                    </td>
-                                    <td><span class="badge badge-success">Activo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verPerfil(1)" title="Ver perfil">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarUsuario(1)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-warning" onclick="resetearPassword(1)" title="Resetear contraseña">
-                                            <i class="fas fa-key"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-info" onclick="verPermisos(1)" title="Ver permisos">
-                                            <i class="fas fa-shield-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="user-info">
-                                            <div class="user-avatar-small">
-                                                <i class="fas fa-user-circle"></i>
-                                            </div>
-                                            <div>
-                                                <strong>admin_miraflores</strong>
-                                                <br><small class="text-muted">Admin Sucursal</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <strong>María Elena González</strong>
-                                        <br><small class="text-muted">DNI: 87654321</small>
-                                        <br><small class="text-muted">Ingreso: 20/03/2024</small>
-                                    </td>
-                                    <td>
-                                        912345678
-                                        <br><small class="text-muted">maria.admin@kingspizza.com</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-info">Miraflores</span>
-                                        <br><small class="text-muted">Tiempo Completo</small>
-                                    </td>
-                                    <td>
-                                        26/10/2025 12:15
-                                        <br><small class="text-warning">Desconectado</small>
-                                    </td>
-                                    <td><span class="badge badge-success">Activo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verPerfil(2)" title="Ver perfil">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarUsuario(2)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-warning" onclick="resetearPassword(2)" title="Resetear contraseña">
-                                            <i class="fas fa-key"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-info" onclick="verPermisos(2)" title="Ver permisos">
-                                            <i class="fas fa-shield-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="user-info">
-                                            <div class="user-avatar-small">
-                                                <i class="fas fa-user-circle"></i>
-                                            </div>
-                                            <div>
-                                                <strong>admin_sanisidro</strong>
-                                                <br><small class="text-muted">Admin Sucursal</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <strong>Jorge Luis Mendoza</strong>
-                                        <br><small class="text-muted">DNI: 11223344</small>
-                                        <br><small class="text-muted">Ingreso: 10/05/2024</small>
-                                    </td>
-                                    <td>
-                                        965432187
-                                        <br><small class="text-muted">jorge.admin@kingspizza.com</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-warning">San Isidro</span>
-                                        <br><small class="text-muted">Tiempo Completo</small>
-                                    </td>
-                                    <td>
-                                        25/10/2025 18:45
-                                        <br><small class="text-warning">Desconectado</small>
-                                    </td>
-                                    <td><span class="badge badge-success">Activo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verPerfil(3)" title="Ver perfil">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarUsuario(3)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-warning" onclick="resetearPassword(3)" title="Resetear contraseña">
-                                            <i class="fas fa-key"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-info" onclick="verPermisos(3)" title="Ver permisos">
-                                            <i class="fas fa-shield-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="user-info">
-                                            <div class="user-avatar-small">
-                                                <i class="fas fa-user-circle"></i>
-                                            </div>
-                                            <div>
-                                                <strong>admin_sistemas</strong>
-                                                <br><small class="text-muted">Admin IT</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <strong>Ana Patricia Vega</strong>
-                                        <br><small class="text-muted">DNI: 55667788</small>
-                                        <br><small class="text-muted">Ingreso: 01/08/2024</small>
-                                    </td>
-                                    <td>
-                                        954321876
-                                        <br><small class="text-muted">ana.sistemas@kingspizza.com</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-primary">Principal</span>
-                                        <br><small class="text-muted">Tiempo Completo</small>
-                                    </td>
-                                    <td>
-                                        23/10/2025 16:20
-                                        <br><small class="text-warning">Desconectado</small>
-                                    </td>
-                                    <td><span class="badge badge-danger">Inactivo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verPerfil(4)" title="Ver perfil">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarUsuario(4)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-success" onclick="activarUsuario(4)" title="Activar usuario">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-info" onclick="verPermisos(4)" title="Ver permisos">
-                                            <i class="fas fa-shield-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <!-- Los datos se cargarán dinámicamente -->
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                    <div id="noDataMessage" class="alert alert-info" style="display: none;">
-                        No hay administradores registrados. <a href="registrar_usuario.html">Registrar el primero</a>
+                <!-- Estadísticas de Administradores -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="totalAdmins">4</h3>
+                        <p>Total Administradores</p>
                     </div>
-                </div>
-            </div>
-
-            <!-- Estadísticas de Administradores -->
-            <div class="row mt-4">
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-primary">4</h3>
-                            <p class="text-muted">Total Administradores</p>
-                        </div>
+                    <div class="stat-card">
+                        <h3 id="adminsActivos">3</h3>
+                        <p>Activos</p>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-success">3</h3>
-                            <p class="text-muted">Activos</p>
-                        </div>
+                    <div class="stat-card">
+                        <h3 id="adminsEnLinea">1</h3>
+                        <p>En línea ahora</p>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-warning">1</h3>
-                            <p class="text-muted">En línea ahora</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-info">2</h3>
-                            <p class="text-muted">Nuevos este mes</p>
-                        </div>
+                    <div class="stat-card">
+                        <h3 id="adminsNuevos">2</h3>
+                        <p>Nuevos este mes</p>
                     </div>
                 </div>
             </div>
@@ -334,46 +129,6 @@
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script>
-        function verPerfil(userId) {
-            console.log('Ver perfil del usuario:', userId);
-        }
-
-        function editarUsuario(userId) {
-            console.log('Editar usuario:', userId);
-        }
-
-        function resetearPassword(userId) {
-            if (confirm('¿Está seguro de que desea resetear la contraseña de este usuario?')) {
-                console.log('Resetear contraseña del usuario:', userId);
-                alert('Se ha enviado una nueva contraseña temporal al email del usuario');
-            }
-        }
-
-        function activarUsuario(userId) {
-            console.log('Activar usuario:', userId);
-        }
-
-        function verPermisos(userId) {
-            console.log('Ver permisos del usuario:', userId);
-        }
-
-        function exportarAdministradores() {
-            console.log('Exportar lista de administradores');
-        }
-
-        // Filtros de búsqueda
-        document.getElementById('buscarAdmin').addEventListener('input', function() {
-            console.log('Buscar:', this.value);
-        });
-
-        document.getElementById('filtrarSucursal').addEventListener('change', function() {
-            console.log('Filtrar por sucursal:', this.value);
-        });
-
-        document.getElementById('filtrarEstado').addEventListener('change', function() {
-            console.log('Filtrar por estado:', this.value);
-        });
-    </script>
+    <script src="../js/ver_administradores.js"></script>
 </body>
 </html>
