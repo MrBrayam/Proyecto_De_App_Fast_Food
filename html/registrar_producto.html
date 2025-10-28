@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Producto - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_producto.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="producto-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="producto-header">
+                <div class="producto-header-left">
+                    <h1 class="producto-titulo">Registrar Producto</h1>
+                </div>
+                <div class="producto-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="producto-contenido">
+                <!-- Sección de Información del Producto -->
+                <div class="seccion-producto">
+                    <h2 class="seccion-titulo">Información del Producto</h2>
+                    
+                    <form id="formProducto" class="form-producto">
+                        <div class="form-row-producto">
+                            <!-- Nombre del Producto -->
+                            <div class="form-group">
+                                <label for="nombreProducto">
+                                    <i class="fas fa-pizza-slice"></i>
+                                    Nombre del Producto
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="nombreProducto" 
+                                    class="form-input"
+                                    placeholder="Ej: Pizza Hawaiana Grande"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Categoría -->
+                            <div class="form-group">
+                                <label for="categoria">
+                                    <i class="fas fa-list"></i>
+                                    Categoría
+                                </label>
+                                <select id="categoria" class="form-select" required>
+                                    <option value="">Seleccionar categoría...</option>
+                                    <option value="pizzas">Pizzas</option>
+                                    <option value="pastas">Pastas</option>
+                                    <option value="ensaladas">Ensaladas</option>
+                                    <option value="bebidas">Bebidas</option>
+                                    <option value="postres">Postres</option>
+                                    <option value="extras">Extras</option>
+                                    <option value="promociones">Promociones</option>
+                                </select>
+                            </div>
+
+                            <!-- Tamaño -->
+                            <div class="form-group">
+                                <label for="tamano">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                    Tamaño
+                                </label>
+                                <select id="tamano" class="form-select">
+                                    <option value="">Seleccionar tamaño...</option>
+                                    <option value="personal">Personal</option>
+                                    <option value="mediana">Mediana</option>
+                                    <option value="grande">Grande</option>
+                                    <option value="familiar">Familiar</option>
+                                    <option value="xl">Extra Grande (XL)</option>
+                                    <option value="na">No aplica</option>
+                                </select>
+                            </div>
+
+                            <!-- Precio -->
+                            <div class="form-group">
+                                <label for="precio">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    Precio (S/)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="precio" 
+                                    class="form-input"
+                                    placeholder="Ej: 25.90"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Costo -->
+                            <div class="form-group">
+                                <label for="costo">
+                                    <i class="fas fa-coins"></i>
+                                    Costo (S/)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="costo" 
+                                    class="form-input"
+                                    placeholder="Ej: 15.50"
+                                    min="0"
+                                    step="0.01"
+                                >
+                            </div>
+
+                            <!-- Stock Inicial -->
+                            <div class="form-group">
+                                <label for="stock">
+                                    <i class="fas fa-boxes"></i>
+                                    Stock Inicial
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="stock" 
+                                    class="form-input"
+                                    placeholder="Ej: 50"
+                                    min="0"
+                                >
+                            </div>
+
+                            <!-- Stock Mínimo -->
+                            <div class="form-group">
+                                <label for="stockMinimo">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Stock Mínimo
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="stockMinimo" 
+                                    class="form-input"
+                                    placeholder="Ej: 10"
+                                    min="0"
+                                >
+                            </div>
+
+                            <!-- Tiempo de Preparación -->
+                            <div class="form-group">
+                                <label for="tiempoPreparacion">
+                                    <i class="fas fa-clock"></i>
+                                    Tiempo de Preparación (min)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="tiempoPreparacion" 
+                                    class="form-input"
+                                    placeholder="Ej: 15"
+                                    min="0"
+                                >
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="form-group">
+                                <label for="estado">
+                                    <i class="fas fa-toggle-on"></i>
+                                    Estado
+                                </label>
+                                <select id="estado" class="form-select" required>
+                                    <option value="disponible">Disponible</option>
+                                    <option value="no_disponible">No Disponible</option>
+                                    <option value="agotado">Agotado</option>
+                                </select>
+                            </div>
+
+                            <!-- Código de Barras -->
+                            <div class="form-group">
+                                <label for="codigoBarras">
+                                    <i class="fas fa-barcode"></i>
+                                    Código de Barras
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="codigoBarras" 
+                                    class="form-input"
+                                    placeholder="Ej: 7501234567890"
+                                >
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="form-group full-width">
+                                <label for="descripcion">
+                                    <i class="fas fa-align-left"></i>
+                                    Descripción
+                                </label>
+                                <textarea 
+                                    id="descripcion" 
+                                    class="form-textarea"
+                                    rows="3"
+                                    placeholder="Descripción detallada del producto, ingredientes, etc."
+                                ></textarea>
+                            </div>
+
+                            <!-- Ingredientes -->
+                            <div class="form-group full-width">
+                                <label for="ingredientes">
+                                    <i class="fas fa-list-ul"></i>
+                                    Ingredientes
+                                </label>
+                                <textarea 
+                                    id="ingredientes" 
+                                    class="form-textarea"
+                                    rows="2"
+                                    placeholder="Queso mozzarella, jamón, piña, salsa de tomate..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="acciones-section">
+                            <button type="submit" class="btn-accion btn-registrar">
+                                <i class="fas fa-save"></i>
+                                REGISTRAR
+                            </button>
+                            <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
+                                <i class="fas fa-times"></i>
+                                SALIR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_producto.js"></script>
+</body>
+</html>

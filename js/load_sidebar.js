@@ -150,7 +150,7 @@ function cargarSidebar() {
                             </a>
                             <ul class="submenu level-2">
                                 <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedor</a></li>
-                                <li class="submenu-item"><a href="visualizar_proveedor.html" class="submenu-link">Visualizar Proveedor</a></li>
+                                <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedor</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -160,7 +160,7 @@ function cargarSidebar() {
                             </a>
                             <ul class="submenu level-2">
                                 <li class="submenu-item"><a href="registrar_producto.html" class="submenu-link">Registrar Producto</a></li>
-                                <li class="submenu-item"><a href="visualizar_producto.html" class="submenu-link">Visualizar Producto</a></li>
+                                <li class="submenu-item"><a href="visualizar_productos.html" class="submenu-link">Visualizar Producto</a></li>
                             </ul>
                         </li>
                     </ul>
