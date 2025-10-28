@@ -8,29 +8,27 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/seguridad_registrar_usuarios.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <main class="main-content" id="mainContent">
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Registrar Usuario del Sistema</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
+        <div class="registrar-usuarios-container">
+        <header class="registrar-usuarios-header">
+            <h1>
+                <i class="fas fa-user-plus"></i>
+                Registrar Usuario del Sistema
+            </h1>
+            <div class="fecha-hora-box">
+                <span id="fechaActual"></span>
+                <span id="horaActual"></span>
             </div>
         </header>
 
-        <div class="content-wrapper">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Formulario de Registro de Usuario</h2>
-                </div>
-                <div class="card-body">
+        <div class="registrar-usuarios-contenido">
+            <div class="formulario-card">
+                <h2>Formulario de Registro de Usuario</h2>
                     <form id="formRegistrarUsuario" class="form-grid">
                         <div class="form-row">
                             <div class="form-group">
@@ -134,10 +132,10 @@
                             </a>
                         </div>
                     </form>
-                </div>
             </div>
         </div>
     </main>
+
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/seguridad_registrar_usuarios.js"></script>

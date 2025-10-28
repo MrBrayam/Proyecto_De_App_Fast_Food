@@ -7,32 +7,32 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/seguridad_visualizar_usuarios.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <main class="main-content" id="mainContent">
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Usuarios del Sistema</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
+        <div class="visualizar-usuarios-container">
+        <header class="visualizar-usuarios-header">
+            <h1>
+                <i class="fas fa-users"></i>
+                Usuarios del Sistema
+            </h1>
+            <div class="fecha-hora-box">
+                <span id="fechaActual"></span>
+                <span id="horaActual"></span>
             </div>
         </header>
 
-        <div class="content-wrapper">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="visualizar-usuarios-contenido">
+            <div class="tabla-card">
+                <div class="tabla-card-header">
                     <h2>Lista de Usuarios Registrados</h2>
                     <a href="seguridad_registrar_usuarios.html" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Nuevo Usuario
                     </a>
                 </div>
-                <div class="card-body">
                     <div class="search-filter-bar">
                         <div class="form-group">
                             <input type="text" id="buscarUsuario" class="form-control" placeholder="🔍 Buscar por nombre, DNI o usuario...">
@@ -80,10 +80,9 @@
                     <div id="noDataMessage" class="alert alert-info" style="display: none;">
                         No hay usuarios registrados. <a href="seguridad_registrar_usuarios.html">Registrar el primero</a>
                     </div>
-                </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <div id="modalEditarUsuario" class="modal" style="display: none;">
         <div class="modal-content">
@@ -126,7 +125,8 @@
                 </form>
             </div>
         </div>
-    </div>
+    </main>
+
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/seguridad_visualizar_usuarios.js"></script>

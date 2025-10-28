@@ -2,6 +2,9 @@
 let usuarios = [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 1000);
+    
     cargarUsuarios();
     
     // Event listeners para filtros
@@ -78,27 +81,19 @@ function mostrarUsuarios(data) {
             <td>${usuario.dni}</td>
             <td>${usuario.usuario}</td>
             <td>${usuario.email}</td>
-            <td><span class="badge badge-${getBadgeClass(usuario.perfil)}">${usuario.perfil}</span></td>
-            <td><span class="badge badge-${usuario.estado === 'activo' ? 'success' : 'danger'}">${usuario.estado}</span></td>
+            <td><span class="badge badge-perfil">${usuario.perfil}</span></td>
+            <td><span class="badge badge-${usuario.estado}">${usuario.estado}</span></td>
             <td>${formatearFecha(usuario.fechaRegistro)}</td>
             <td>
-                <button class="btn btn-sm btn-primary" onclick="editarUsuario(${index})" title="Editar">✏️</button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${index})" title="Eliminar">🗑️</button>
-                <button class="btn btn-sm btn-info" onclick="verDetalles(${index})" title="Ver detalles">👁️</button>
+                <button class="btn-action btn-edit" onclick="editarUsuario(${index})" title="Editar">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-action btn-delete" onclick="eliminarUsuario(${index})" title="Eliminar">
+                    <i class="fas fa-trash"></i>
+                </button>
             </td>
         </tr>
     `).join('');
-}
-
-function getBadgeClass(perfil) {
-    const classes = {
-        'administrador': 'danger',
-        'supervisor': 'warning',
-        'cajero': 'info',
-        'mesero': 'success',
-        'repartidor': 'primary'
-    };
-    return classes[perfil] || 'info';
 }
 
 function formatearFecha(fecha) {
@@ -164,19 +159,28 @@ function eliminarUsuario(index) {
     }
 }
 
-function verDetalles(index) {
-    const usuario = usuarios[index];
-    alert(`Detalles del Usuario:\n\n` +
-          `Nombre: ${usuario.nombre}\n` +
-          `DNI: ${usuario.dni}\n` +
-          `Usuario: ${usuario.usuario}\n` +
-          `Email: ${usuario.email}\n` +
-          `Teléfono: ${usuario.telefono || 'No registrado'}\n` +
-          `Perfil: ${usuario.perfil}\n` +
-          `Estado: ${usuario.estado}\n` +
-          `Fecha Registro: ${formatearFecha(usuario.fechaRegistro)}`);
-}
-
 function cerrarModal() {
     document.getElementById('modalEditarUsuario').style.display = 'none';
+}
+
+// Actualizar fecha y hora
+function actualizarFechaHora() {
+    const ahora = new Date();
+    
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
+    
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    document.getElementById('fechaActual').textContent = fechaFormateada;
+    document.getElementById('horaActual').textContent = horaFormateada;
 }
