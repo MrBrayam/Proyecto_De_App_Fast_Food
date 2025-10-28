@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Pedidos - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_pedidos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="visualizar-pedidos-container">
+            <!-- Header con Título -->
+            <div class="pedidos-header">
+                <h1 class="pedidos-titulo">
+                    <i class="fas fa-receipt"></i>
+                    Visualizar Pedidos
+                </h1>
+                <div class="fecha-hora-display">
+                    <span id="fecha-actual">Cargando...</span>
+                    <span id="hora-actual">--:--:--</span>
+                </div>
+            </div>
+
+            <!-- Sección de Filtros -->
+            <section class="filtros-section">
+                <div class="filtros-container">
+                    <!-- Filtro por Mesa -->
+                    <div class="filtro-item">
+                        <label for="filtroMesa">
+                            <i class="fas fa-table"></i>
+                            MESA
+                        </label>
+                        <select id="filtroMesa" class="filtro-select">
+                            <option value="">Todas las mesas</option>
+                            <option value="1">Mesa 1</option>
+                            <option value="2">Mesa 2</option>
+                            <option value="3">Mesa 3</option>
+                            <option value="4">Mesa 4</option>
+                            <option value="5">Mesa 5</option>
+                        </select>
+                    </div>
+
+                    <!-- Búsqueda General -->
+                    <div class="filtro-item filtro-buscar">
+                        <label for="buscarPedido">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </label>
+                        <input type="text" id="buscarPedido" class="filtro-input" placeholder="Buscar por cliente, DNI, producto...">
+                    </div>
+
+                    <!-- Filtro por Fecha -->
+                    <div class="filtro-item">
+                        <label for="filtroFecha">
+                            <i class="fas fa-calendar"></i>
+                            Filtrar por:
+                        </label>
+                        <select id="filtroFecha" class="filtro-select">
+                            <option value="fecha">Fecha</option>
+                            <option value="cliente">Cliente</option>
+                            <option value="mesa">Mesa</option>
+                            <option value="estado">Estado</option>
+                        </select>
+                    </div>
+
+                    <!-- Botón Buscar -->
+                    <div class="filtro-item">
+                        <button type="button" id="btnBuscar" class="btn-buscar">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabla de Pedidos -->
+            <section class="tabla-pedidos-section">
+                <div class="tabla-container">
+                    <table class="tabla-pedidos">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>DNI</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Información</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPedidosBody">
+                            <!-- Datos de prueba -->
+                            <tr>
+                                <td>001</td>
+                                <td>72345678</td>
+                                <td>María González</td>
+                                <td>27/10/2025</td>
+                                <td>2 Pizzas, 1 Bebida</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>002</td>
+                                <td>85647392</td>
+                                <td>Carlos Ramírez</td>
+                                <td>27/10/2025</td>
+                                <td>1 Pizza, 2 Entradas, 1 Postre</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>003</td>
+                                <td>91234567</td>
+                                <td>Ana Torres</td>
+                                <td>26/10/2025</td>
+                                <td>3 Pizzas, 2 Bebidas</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>004</td>
+                                <td>78912345</td>
+                                <td>Luis Mendoza</td>
+                                <td>26/10/2025</td>
+                                <td>1 Promoción Familiar</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>005</td>
+                                <td>65498732</td>
+                                <td>Patricia Flores</td>
+                                <td>25/10/2025</td>
+                                <td>2 Pizzas, 3 Bebidas, 1 Entrada</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <section class="acciones-pedidos">
+                <button type="button" id="btnEliminar" class="btn-main btn-eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                    Eliminar
+                </button>
+                <button type="button" id="btnGuardar" class="btn-main btn-guardar">
+                    <i class="fas fa-save"></i>
+                    Guardar
+                </button>
+                <button type="button" onclick="window.location.href='menu_principal.html'" class="btn-main btn-salir">
+                    <i class="fas fa-times-circle"></i>
+                    Salir
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Detalles del Pedido -->
+    <div id="modalDetalle" class="modal">
+        <div class="modal-content modal-detalle">
+            <div class="modal-header">
+                <h2><i class="fas fa-receipt"></i> Detalles del Pedido</h2>
+                <button class="modal-close" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Info General -->
+                <div class="detalle-info">
+                    <div class="info-row">
+                        <div class="info-col">
+                            <label><i class="fas fa-hashtag"></i> Pedido N°:</label>
+                            <span id="detallePedidoNum">001</span>
+                        </div>
+                        <div class="info-col">
+                            <label><i class="fas fa-table"></i> Mesa:</label>
+                            <span id="detalleMesa">5</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-col">
+                            <label><i class="fas fa-user"></i> Cliente:</label>
+                            <span id="detalleCliente">María González</span>
+                        </div>
+                        <div class="info-col">
+                            <label><i class="fas fa-id-card"></i> DNI:</label>
+                            <span id="detalleDNI">72345678</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-col">
+                            <label><i class="fas fa-calendar"></i> Fecha:</label>
+                            <span id="detalleFecha">27/10/2025</span>
+                        </div>
+                        <div class="info-col">
+                            <label><i class="fas fa-clock"></i> Hora:</label>
+                            <span id="detalleHora">14:30:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Productos -->
+                <div class="detalle-productos">
+                    <h3><i class="fas fa-pizza-slice"></i> Productos del Pedido</h3>
+                    <table class="tabla-detalle">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detalleProductosBody">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>TOTAL:</strong></td>
+                                <td class="total-detalle"><strong>S/ <span id="detalleTotal">0.00</span></strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_pedidos.js"></script>
+</body>
+</html>
