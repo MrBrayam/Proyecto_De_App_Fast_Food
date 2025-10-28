@@ -2,6 +2,9 @@
 let perfiles = [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 1000);
+    
     cargarPerfiles();
     
     document.getElementById('buscarPerfil').addEventListener('input', filtrarPerfiles);
@@ -17,10 +20,19 @@ function cargarPerfiles() {
         perfiles = [
             {
                 nombre: 'Administrador',
-                descripcion: 'Acceso completo al sistema',
+                descripcion: 'Acceso completo al sistema con todos los permisos administrativos',
                 estado: 'activo',
                 nivelAcceso: '4',
-                permisos: { accesoCompleto: true },
+                permisos: { 
+                    accesoCompleto: true,
+                    ventas: { registrar: true, visualizar: true, modificar: true, eliminar: true },
+                    compras: { registrar: true, visualizar: true, inventario: true },
+                    usuarios: { registrar: true, visualizar: true, modificar: true, eliminar: true },
+                    reportes: { ventas: true, compras: true, financieros: true },
+                    clientes: true,
+                    proveedores: true,
+                    perfiles: true
+                },
                 fechaCreacion: '2025-10-01T10:00:00'
             },
             {
@@ -77,50 +89,48 @@ function mostrarPerfiles(data) {
     container.innerHTML = data.map((perfil, index) => `
         <div class="profile-card">
             <div class="profile-header">
-                <div class="profile-icon">${getIconoPerfil(perfil.nivelAcceso)}</div>
-                <h3 class="profile-title">${perfil.nombre}</h3>
-                <span class="badge badge-${perfil.estado === 'activo' ? 'success' : 'danger'}">${perfil.estado}</span>
+                <div class="profile-title">
+                    <div class="profile-info">
+                        <h3>${perfil.nombre}</h3>
+                        <div class="profile-nivel">Nivel ${perfil.nivelAcceso} - ${getNivelNombre(perfil.nivelAcceso)}</div>
+                    </div>
+                </div>
+                <span class="profile-status status-${perfil.estado}">${perfil.estado}</span>
             </div>
-            <div class="profile-body">
-                <p class="profile-description">${perfil.descripcion || 'Sin descripción'}</p>
-                <div class="profile-info">
-                    <div class="info-item">
-                        <span class="info-label">Nivel de Acceso:</span>
-                        <span class="info-value">Nivel ${perfil.nivelAcceso}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Fecha Creación:</span>
-                        <span class="info-value">${formatearFecha(perfil.fechaCreacion)}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Permisos:</span>
-                        <span class="info-value">${contarPermisos(perfil.permisos)} configurados</span>
-                    </div>
+            <p class="profile-description">${perfil.descripcion || 'Sin descripción'}</p>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">${contarPermisos(perfil.permisos)}</div>
+                    <div class="stat-label">Permisos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${perfil.nivelAcceso}</div>
+                    <div class="stat-label">Nivel</div>
                 </div>
             </div>
             <div class="profile-actions">
-                <button class="btn btn-sm btn-info" onclick="verPermisos(${index})">
-                    <span>👁️</span> Ver Permisos
+                <button class="btn-action btn-view" onclick="verPermisos(${index})">
+                    <i class="fas fa-eye"></i> Ver
                 </button>
-                <button class="btn btn-sm btn-primary" onclick="editarPerfil(${index})">
-                    <span>✏️</span> Editar
+                <button class="btn-action btn-edit" onclick="editarPerfil(${index})">
+                    <i class="fas fa-edit"></i> Editar
                 </button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarPerfil(${index})">
-                    <span>🗑️</span> Eliminar
+                <button class="btn-action btn-delete" onclick="return false;">
+                    <i class="fas fa-trash"></i>
                 </button>
             </div>
         </div>
     `).join('');
 }
 
-function getIconoPerfil(nivel) {
-    const iconos = {
-        '1': '👤',
-        '2': '👨‍💼',
-        '3': '👨‍💻',
-        '4': '👑'
+function getNivelNombre(nivel) {
+    const niveles = {
+        '1': 'Básico',
+        '2': 'Intermedio',
+        '3': 'Avanzado',
+        '4': 'Administrador'
     };
-    return iconos[nivel] || '👤';
+    return niveles[nivel] || 'Desconocido';
 }
 
 function formatearFecha(fecha) {
@@ -233,15 +243,28 @@ function editarPerfil(index) {
     alert('Funcionalidad de edición en desarrollo');
 }
 
-function eliminarPerfil(index) {
-    if (confirm('¿Está seguro de eliminar este perfil?')) {
-        perfiles.splice(index, 1);
-        localStorage.setItem('perfiles_sistema', JSON.stringify(perfiles));
-        cargarPerfiles();
-        alert('Perfil eliminado correctamente');
-    }
-}
-
 function cerrarModal() {
     document.getElementById('modalPermisos').style.display = 'none';
+}
+
+// Actualizar fecha y hora
+function actualizarFechaHora() {
+    const ahora = new Date();
+    
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
+    
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    document.getElementById('fechaActual').textContent = fechaFormateada;
+    document.getElementById('horaActual').textContent = horaFormateada;
 }
