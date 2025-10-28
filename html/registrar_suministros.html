@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Suministros - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_suministros.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="suministros-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="suministros-header">
+                <div class="suministros-header-left">
+                    <h1 class="suministros-titulo">Registrar Suministros</h1>
+                </div>
+                <div class="suministros-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="suministros-contenido">
+                <!-- Sección de Información del Suministro -->
+                <div class="seccion-suministro">
+                    <h2 class="seccion-titulo">Información del Suministro</h2>
+                    
+                    <form id="formSuministros" class="form-suministros">
+                        <div class="form-row-suministro">
+                            <!-- Tipo de Suministro -->
+                            <div class="form-group">
+                                <label for="tipoSuministro">
+                                    <i class="fas fa-boxes"></i>
+                                    Tipo de Suministro
+                                </label>
+                                <select id="tipoSuministro" class="form-select" required>
+                                    <option value="">Seleccionar tipo...</option>
+                                    <option value="limpieza">Productos de Limpieza</option>
+                                    <option value="embalaje">Material de Embalaje</option>
+                                    <option value="oficina">Artículos de Oficina</option>
+                                    <option value="equipamiento">Equipamiento</option>
+                                    <option value="uniformes">Uniformes</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <!-- Nombre del Suministro -->
+                            <div class="form-group">
+                                <label for="nombreSuministro">
+                                    <i class="fas fa-tag"></i>
+                                    Nombre del Suministro
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="nombreSuministro" 
+                                    class="form-input"
+                                    placeholder="Ej: Cajas de pizza grandes"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Proveedor -->
+                            <div class="form-group">
+                                <label for="proveedor">
+                                    <i class="fas fa-truck"></i>
+                                    Proveedor
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="proveedor" 
+                                    class="form-input"
+                                    placeholder="Nombre del proveedor"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Cantidad -->
+                            <div class="form-group">
+                                <label for="cantidad">
+                                    <i class="fas fa-sort-numeric-up"></i>
+                                    Cantidad
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="cantidad" 
+                                    class="form-input"
+                                    placeholder="Ej: 500"
+                                    min="1"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Unidad de Medida -->
+                            <div class="form-group">
+                                <label for="unidadMedida">
+                                    <i class="fas fa-balance-scale"></i>
+                                    Unidad de Medida
+                                </label>
+                                <select id="unidadMedida" class="form-select" required>
+                                    <option value="">Seleccionar unidad...</option>
+                                    <option value="unidad">Unidad</option>
+                                    <option value="caja">Caja</option>
+                                    <option value="paquete">Paquete</option>
+                                    <option value="bolsa">Bolsa</option>
+                                    <option value="rollo">Rollo</option>
+                                    <option value="kg">Kilogramo (kg)</option>
+                                    <option value="lt">Litro (lt)</option>
+                                </select>
+                            </div>
+
+                            <!-- Precio Unitario -->
+                            <div class="form-group">
+                                <label for="precioUnitario">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    Precio Unitario (S/)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="precioUnitario" 
+                                    class="form-input"
+                                    placeholder="Ej: 15.50"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Fecha de Compra -->
+                            <div class="form-group">
+                                <label for="fechaCompra">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Fecha de Compra
+                                </label>
+                                <input 
+                                    type="date" 
+                                    id="fechaCompra" 
+                                    class="form-input"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Número de Factura -->
+                            <div class="form-group">
+                                <label for="numeroFactura">
+                                    <i class="fas fa-file-invoice"></i>
+                                    Número de Factura
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="numeroFactura" 
+                                    class="form-input"
+                                    placeholder="Ej: F001-00012345"
+                                >
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="form-group">
+                                <label for="estado">
+                                    <i class="fas fa-info-circle"></i>
+                                    Estado
+                                </label>
+                                <select id="estado" class="form-select" required>
+                                    <option value="">Seleccionar estado...</option>
+                                    <option value="disponible">Disponible</option>
+                                    <option value="en_uso">En Uso</option>
+                                    <option value="agotado">Agotado</option>
+                                    <option value="pedido">Pedido</option>
+                                </select>
+                            </div>
+
+                            <!-- Ubicación en Almacén -->
+                            <div class="form-group">
+                                <label for="ubicacion">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Ubicación en Almacén
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="ubicacion" 
+                                    class="form-input"
+                                    placeholder="Ej: Estante B - Nivel 3"
+                                >
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="form-group full-width">
+                                <label for="observaciones">
+                                    <i class="fas fa-comment"></i>
+                                    Observaciones
+                                </label>
+                                <textarea 
+                                    id="observaciones" 
+                                    class="form-textarea"
+                                    rows="3"
+                                    placeholder="Notas adicionales sobre el suministro..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="acciones-section">
+                            <button type="submit" class="btn-accion btn-registrar">
+                                <i class="fas fa-save"></i>
+                                REGISTRAR
+                            </button>
+                            <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
+                                <i class="fas fa-times"></i>
+                                SALIR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_suministros.js"></script>
+</body>
+</html>

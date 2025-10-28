@@ -1,4 +1,4 @@
-// ===== REGISTRAR PROVEEDOR - JAVASCRIPT BÁSICO =====
+// ===== REGISTRAR SUMINISTROS - JAVASCRIPT BÁSICO =====
 
 // Inicializar al cargar el DOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,5 +23,12 @@ function actualizarFechaHora() {
         const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
         horaElement.textContent = horaFormateada;
+    }
+}
+
+// Función para salir del módulo
+function salirModulo() {
+    if (confirm('¿Está seguro de salir? Los datos no guardados se perderán.')) {
+        window.history.back();
     }
 }
