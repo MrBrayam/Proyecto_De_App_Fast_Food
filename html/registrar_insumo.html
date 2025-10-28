@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Insumo - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_insumo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="insumo-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="insumo-header">
+                <div class="insumo-header-left">
+                    <h1 class="insumo-titulo">Registrar Insumo</h1>
+                </div>
+                <div class="insumo-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="insumo-contenido">
+                <!-- Formulario de Registro -->
+                <div class="form-section">
+                    <form id="formRegistrarInsumo" class="form-insumo">
+                        <div class="form-grid">
+                            <!-- Nombre del insumo -->
+                            <div class="form-group">
+                                <label for="nombreInsumo">
+                                    Nombre del insumo
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="nombreInsumo" 
+                                    class="form-input"
+                                    placeholder="Ejemplo: Salsa de tomate"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Cantidad inicial -->
+                            <div class="form-group">
+                                <label for="cantidadInicial">
+                                    Cantidad inicial
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="cantidadInicial" 
+                                    class="form-input"
+                                    placeholder="Ejemplo: 100"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Unidad de medida -->
+                            <div class="form-group">
+                                <label for="unidadMedida">
+                                    Unidad de medida
+                                </label>
+                                <select 
+                                    id="unidadMedida" 
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="">Seleccionar unidad...</option>
+                                    <option value="kg">Kilogramos (kg)</option>
+                                    <option value="g">Gramos (g)</option>
+                                    <option value="lt">Litros (lt)</option>
+                                    <option value="ml">Mililitros (ml)</option>
+                                    <option value="unidad">Unidad</option>
+                                    <option value="caja">Caja</option>
+                                    <option value="paquete">Paquete</option>
+                                    <option value="bolsa">Bolsa</option>
+                                </select>
+                            </div>
+
+                            <!-- Categoría -->
+                            <div class="form-group">
+                                <label for="categoria">
+                                    Categoría
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="categoria" 
+                                    class="form-input"
+                                    placeholder="Ejemplo: Salsas"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Proveedor -->
+                            <div class="form-group">
+                                <label for="proveedor">
+                                    Proveedor
+                                </label>
+                                <select 
+                                    id="proveedor" 
+                                    class="form-select"
+                                >
+                                    <option value="">Seleccionar proveedor...</option>
+                                    <option value="distribuidora_esperanza">Distribuidora La Esperanza</option>
+                                    <option value="mercado_central">Mercado Central SAC</option>
+                                    <option value="alimentos_frescos">Alimentos Frescos EIRL</option>
+                                    <option value="grupo_alimentario">Grupo Alimentario del Norte</option>
+                                    <option value="otro">Otro proveedor</option>
+                                </select>
+                            </div>
+
+                            <!-- Precio unitario -->
+                            <div class="form-group">
+                                <label for="precioUnitario">
+                                    Precio unitario (S/)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="precioUnitario" 
+                                    class="form-input"
+                                    placeholder="Ejemplo: 25.50"
+                                    min="0"
+                                    step="0.01"
+                                >
+                            </div>
+
+                            <!-- Stock mínimo -->
+                            <div class="form-group">
+                                <label for="stockMinimo">
+                                    Stock mínimo
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="stockMinimo" 
+                                    class="form-input"
+                                    placeholder="Ejemplo: 10"
+                                    min="0"
+                                    step="0.01"
+                                >
+                            </div>
+
+                            <!-- Fecha de vencimiento -->
+                            <div class="form-group">
+                                <label for="fechaVencimiento">
+                                    Fecha de vencimiento
+                                </label>
+                                <input 
+                                    type="date" 
+                                    id="fechaVencimiento" 
+                                    class="form-input"
+                                >
+                            </div>
+
+                            <!-- Ubicación en almacén -->
+                            <div class="form-group full-width">
+                                <label for="ubicacion">
+                                    Ubicación en almacén
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="ubicacion" 
+                                    class="form-input"
+                                    placeholder="Ejemplo: Estante A - Nivel 2"
+                                >
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="form-group full-width">
+                                <label for="observaciones">
+                                    Observaciones
+                                </label>
+                                <textarea 
+                                    id="observaciones" 
+                                    class="form-textarea"
+                                    rows="3"
+                                    placeholder="Notas adicionales sobre el insumo..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="acciones-section">
+                            <button type="submit" class="btn-accion btn-guardar">
+                                <i class="fas fa-save"></i>
+                                GUARDAR
+                            </button>
+                            <button type="button" class="btn-accion btn-cancelar" onclick="cancelarRegistro()">
+                                <i class="fas fa-times"></i>
+                                CANCELAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_insumo.js"></script>
+</body>
+</html>

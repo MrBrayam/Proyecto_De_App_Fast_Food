@@ -140,7 +140,7 @@ function cargarSidebar() {
                             <ul class="submenu level-2">
                                 <li class="submenu-item"><a href="visualizar_inventario.html" class="submenu-link">Visualizar Inventario</a></li>
                                 <li class="submenu-item"><a href="registrar_insumo.html" class="submenu-link">Registrar Insumo</a></li>
-                                <li class="submenu-item"><a href="registrar_suministro.html" class="submenu-link">Registrar Suministro</a></li>
+                                <li class="submenu-item"><a href="registrar_suministros.html" class="submenu-link">Registrar Suministro</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">

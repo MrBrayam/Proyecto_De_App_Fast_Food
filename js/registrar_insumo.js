@@ -1,4 +1,4 @@
-// ===== VISUALIZAR INVENTARIO - JAVASCRIPT BÁSICO =====
+// ===== REGISTRAR INSUMO - SCRIPT BÁSICO =====
 
 // Inicializar al cargar el DOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -26,13 +26,11 @@ function actualizarFechaHora() {
     }
 }
 
-// Función para volver
-function volverModulo() {
-    window.history.back();
+// Función para cancelar el registro
+function cancelarRegistro() {
+    if (confirm('¿Está seguro de cancelar el registro? Se perderán los datos ingresados.')) {
+        document.getElementById('formRegistrarInsumo').reset();
+        window.history.back();
+    }
 }
 
-// Función para actualizar inventario
-function actualizarInventario() {
-    alert('Inventario actualizado');
-    location.reload();
-}
