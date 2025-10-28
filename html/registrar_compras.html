@@ -8,192 +8,149 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_compras.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sidebar -->
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Registrar Compra</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
-                <div class="notifications">
-                    <button class="notification-btn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
+        <!-- Contenedor Principal -->
+        <div class="compras-container">
+            <!-- Header con Título y Fecha -->
+            <div class="compras-header">
+                <div class="compras-header-left">
+                    <h1 class="compras-titulo">
+                        <i class="fas fa-shopping-cart"></i>
+                        Registrar Compra
+                    </h1>
+                </div>
+                <div class="compras-header-right">
+                    <div class="fecha-display">
+                        <span>FECHA</span>
+                        <span id="fechaActual">31 / 10 / 2025</span>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <!-- Page Content -->
-        <div class="content-wrapper">
+            <!-- Contenido -->
+            <div class="compras-contenido">
             <div class="card">
-                <div class="card-header">
-                    <h2>Formulario de Registro de Compra</h2>
-                </div>
-                <div class="card-body">
-                    <form id="formRegistrarCompra" class="form-grid">
-                        <div class="form-row">
+                <!-- Datos del Proveedor -->
+                <div class="seccion-proveedor">
+                    <h2 class="seccion-titulo">DATOS DEL PROVEEDOR:</h2>
+                    <form id="formRegistrarCompra" class="form-proveedor">
                             <div class="form-group">
-                                <label for="proveedor" class="form-label">Proveedor *</label>
-                                <select id="proveedor" name="proveedor" class="form-control" required>
-                                    <option value="">Seleccione un proveedor</option>
-                                    <option value="proveedor1">Distribuidora La Esperanza</option>
-                                    <option value="proveedor2">Mercado Central SAC</option>
-                                    <option value="proveedor3">Alimentos Frescos EIRL</option>
-                                </select>
-                                <div class="form-error" id="proveedorError"></div>
+                        <div class="form-row-proveedor">
+                            <div class="form-group">
+                                <label for="ruc">
+                                    <i class="fas fa-id-card"></i>
+                                    RUC:
+                                </label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="ruc" placeholder="20123456789">
+                                    <button type="button" class="btn-search">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="numeroFactura" class="form-label">Número de Factura *</label>
-                                <input type="text" id="numeroFactura" name="numeroFactura" class="form-control" placeholder="F001-00001234" required>
-                                <div class="form-error" id="numeroFacturaError"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="fechaCompra" class="form-label">Fecha de Compra *</label>
-                                <input type="date" id="fechaCompra" name="fechaCompra" class="form-control" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="metodoPago" class="form-label">Método de Pago *</label>
-                                <select id="metodoPago" name="metodoPago" class="form-control" required>
-                                    <option value="">Seleccione método</option>
-                                    <option value="efectivo">Efectivo</option>
-                                    <option value="transferencia">Transferencia Bancaria</option>
-                                    <option value="credito">Crédito</option>
-                                    <option value="cheque">Cheque</option>
+                                <label for="tipoComprobante">TIPO DE COMPROBANTE</label>
+                                <select id="tipoComprobante">
+                                    <option value="">Seleccionar</option>
+                                    <option value="factura">Factura</option>
+                                    <option value="boleta">Boleta</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="form-row">
+                        <div class="form-row-proveedor">
                             <div class="form-group">
-                                <label for="productos" class="form-label">Productos Comprados *</label>
-                                <div class="productos-container">
-                                    <div class="producto-item">
-                                        <select name="producto[]" class="form-control">
-                                            <option value="">Seleccione un producto</option>
-                                            <option value="queso_mozzarella">Queso Mozzarella - Kg</option>
-                                            <option value="pepperoni">Pepperoni - Kg</option>
-                                            <option value="harina">Harina de Trigo - Kg</option>
-                                            <option value="tomate">Salsa de Tomate - Lt</option>
-                                        </select>
-                                        <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" min="1" step="0.01">
-                                        <input type="number" name="precio[]" class="form-control" placeholder="Precio unitario" min="0" step="0.01">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(this)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-outline mt-2" onclick="agregarProducto()">
-                                    <i class="fas fa-plus"></i> Agregar Producto
-                                </button>
+                                <label for="razonSocial">RAZON SOCIAL</label>
+                                <input type="text" id="razonSocial" placeholder="Nombre del proveedor">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefono">TELEFONO</label>
+                                <input type="tel" id="telefono" placeholder="999 999 999">
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="observaciones" class="form-label">Observaciones</label>
-                                <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Notas adicionales sobre la compra"></textarea>
+                        <div class="form-row-proveedor">
+                            <div class="form-group full-width">
+                                <label for="direccion">DIRECCION</label>
+                                <input type="text" id="direccion" placeholder="Dirección del proveedor">
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Resumen de Compra</label>
-                                <div class="compra-resumen">
-                                    <div class="resumen-item">
-                                        <span>Subtotal:</span>
-                                        <span id="subtotal">S/ 0.00</span>
-                                    </div>
-                                    <div class="resumen-item">
-                                        <span>IGV (18%):</span>
-                                        <span id="igv">S/ 0.00</span>
-                                    </div>
-                                    <div class="resumen-item total">
-                                        <span>Total:</span>
-                                        <span id="total">S/ 0.00</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Registrar Compra
-                            </button>
-                            <button type="reset" class="btn btn-secondary">
-                                <i class="fas fa-undo"></i> Limpiar
-                            </button>
-                            <a href="visualizar_compras.html" class="btn btn-outline">
-                                <i class="fas fa-eye"></i> Ver Compras
-                            </a>
                         </div>
                     </form>
                 </div>
-            </div>
+
+                <!-- Tabla de Productos -->
+                <div class="seccion-productos">
+                    <div class="tabla-container">
+                        <table class="tabla-productos">
+                            <thead>
+                                <tr>
+                                    <th>Nro</th>
+                                    <th>Codigo</th>
+                                    <th>Descripcion</th>
+                                    <th>Empaque</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaProductosBody">
+                                <tr>
+                                    <td>1</td>
+                                    <td>12345678</td>
+                                    <td>Leche</td>
+                                    <td>Caja</td>
+                                    <td>2</td>
+                                    <td>S/55</td>
+                                    <td>S/110</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>10203040</td>
+                                    <td>Harina</td>
+                                    <td>Unidad</td>
+                                    <td>10</td>
+                                    <td>S/7</td>
+                                    <td>S/70</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>87654321</td>
+                                    <td>Tomate</td>
+                                    <td>Caja</td>
+                                    <td>3</td>
+                                    <td>S/24</td>
+                                    <td>S/72</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="acciones-section">
+                    <button type="button" class="btn-accion btn-registrar">
+                        <i class="fas fa-save"></i>
+                        Registrar
+                    </button>
+                    <button type="button" class="btn-accion btn-salir" id="btnSalir">
+                        <i class="fas fa-sign-out-alt"></i>
         </div>
     </main>
 
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script>
-        // Set today's date as default
-        document.getElementById('fechaCompra').value = new Date().toISOString().split('T')[0];
-
-        function agregarProducto() {
-            const container = document.querySelector('.productos-container');
-            const newItem = container.querySelector('.producto-item').cloneNode(true);
-            newItem.querySelectorAll('select, input').forEach(el => el.value = '');
-            container.appendChild(newItem);
-        }
-
-        function eliminarProducto(btn) {
-            const container = document.querySelector('.productos-container');
-            if (container.children.length > 1) {
-                btn.closest('.producto-item').remove();
-                calcularTotales();
-            }
-        }
-
-        function calcularTotales() {
-            let subtotal = 0;
-            const productos = document.querySelectorAll('.producto-item');
-            
-            productos.forEach(item => {
-                const cantidad = parseFloat(item.querySelector('input[name="cantidad[]"]').value) || 0;
-                const precio = parseFloat(item.querySelector('input[name="precio[]"]').value) || 0;
-                subtotal += cantidad * precio;
-            });
-            
-            const igv = subtotal * 0.18;
-            const total = subtotal + igv;
-            
-            document.getElementById('subtotal').textContent = `S/ ${subtotal.toFixed(2)}`;
-            document.getElementById('igv').textContent = `S/ ${igv.toFixed(2)}`;
-            document.getElementById('total').textContent = `S/ ${total.toFixed(2)}`;
-        }
-
-        // Event listeners para cálculo automático
-        document.addEventListener('input', function(e) {
-            if (e.target.name === 'cantidad[]' || e.target.name === 'precio[]') {
-                calcularTotales();
-            }
-        });
-    </script>
+    <script src="../js/registrar_compras.js"></script>
+    <script src="../funcionalidades/registrar_compras_funcionalidades.js"></script>
+</body>
+</html>cript>
 </body>
 </html>
