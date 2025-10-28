@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Inventario - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_inventario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="inventario-visualizar-container">
+            <!-- Header con Título -->
+            <div class="inventario-visualizar-header">
+                <div class="inventario-visualizar-header-left">
+                    <h1 class="inventario-visualizar-titulo">Visualizar Inventario</h1>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="inventario-contenido">
+                <!-- Sección de Búsqueda -->
+                <div class="busqueda-section">
+                    <form class="busqueda-form" onsubmit="return false;">
+                        <div class="campo-fecha">
+                            <label for="fechaInicio">Fecha Inicio</label>
+                            <input 
+                                type="text" 
+                                id="fechaInicio" 
+                                class="input-fecha" 
+                                placeholder="dd/mm/aaaa"
+                            >
+                        </div>
+
+                        <div class="campo-fecha">
+                            <label for="fechaFin">Fecha Fin</label>
+                            <input 
+                                type="text" 
+                                id="fechaFin" 
+                                class="input-fecha" 
+                                placeholder="dd/mm/aaaa"
+                            >
+                        </div>
+                        
+                        <button type="button" class="btn-buscar">
+                            Buscar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Sección de Tabla -->
+                <div class="tabla-inventario-section">
+                    <div class="tabla-inventario-wrapper">
+                        <table class="tabla-inventario" id="tablaInventario">
+                            <thead>
+                                <tr>
+                                    <th>NOMBRE</th>
+                                    <th>CANTIDAD DISPONIBLE</th>
+                                    <th>UNIDAD</th>
+                                    <th>CATEGORÍA</th>
+                                    <th>FECHA DE ACTUALIZACIÓN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Queso mozzarella</td>
+                                    <td>50</td>
+                                    <td>kg</td>
+                                    <td>Alimentos</td>
+                                    <td>15/03/2025</td>
+                                </tr>
+                                <tr>
+                                    <td>Salsa de tomate</td>
+                                    <td>30</td>
+                                    <td>lt</td>
+                                    <td>Alimentos</td>
+                                    <td>10/04/2025</td>
+                                </tr>
+                                <tr>
+                                    <td>Harina</td>
+                                    <td>20</td>
+                                    <td>kg</td>
+                                    <td>Alimentos</td>
+                                    <td>01/04/2025</td>
+                                </tr>
+                                <tr>
+                                    <td>Vaso</td>
+                                    <td>100</td>
+                                    <td>con</td>
+                                    <td>Suministros</td>
+                                    <td>05/04/2025</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="acciones-inventario">
+                        <button class="btn-volver" onclick="volverModulo()">
+                            <i class="fas fa-arrow-left"></i>
+                            Volver
+                        </button>
+                        <button class="btn-actualizar" onclick="actualizarInventario()">
+                            <i class="fas fa-sync-alt"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_inventario.js"></script>
+</body>
+</html>
