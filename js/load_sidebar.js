@@ -183,7 +183,7 @@ function cargarSidebar() {
                             <ul class="submenu level-2">
                                 <li class="submenu-item"><a href="ver_administradores.html" class="submenu-link">Ver Administradores</a></li>
                                 <li class="submenu-item"><a href="ver_meseros.html" class="submenu-link">Ver Meseros</a></li>
-                                <li class="submenu-item"><a href="ver_cajero.html" class="submenu-link">Ver Cajero</a></li>
+                                <li class="submenu-item"><a href="ver_cajeros.html" class="submenu-link">Ver Cajero</a></li>
                                 <li class="submenu-item"><a href="ver_repartidores.html" class="submenu-link">Ver Repartidores</a></li>
                             </ul>
                         </li>
