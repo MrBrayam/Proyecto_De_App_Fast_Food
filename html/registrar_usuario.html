@@ -8,269 +8,106 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_usuario.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sidebar -->
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Registrar Usuario</h1>
-            </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
-                <div class="notifications">
-                    <button class="notification-btn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
+        <!-- Contenedor Principal -->
+        <div class="usuario-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="usuario-header">
+                <div class="usuario-header-left">
+                    <h1 class="usuario-titulo">Registrar Usuario</h1>
+                </div>
+                <div class="usuario-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <!-- Page Content -->
-        <div class="content-wrapper">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Nuevo Usuario del Sistema</h2>
-                </div>
-                <div class="card-body">
-                    <form id="formRegistrarUsuario" class="formulario-registro">
-                        <div class="row">
-                            <!-- Información Personal -->
-                            <div class="col-lg-6">
-                                <div class="form-section">
-                                    <h3 class="section-title">
-                                        <i class="fas fa-user"></i> Información Personal
-                                    </h3>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="tipoDocumento">Tipo de Documento *</label>
-                                                <select id="tipoDocumento" name="tipoDocumento" class="form-control" required>
-                                                    <option value="">Seleccionar tipo</option>
-                                                    <option value="DNI">DNI</option>
-                                                    <option value="CE">Carnet de Extranjería</option>
-                                                    <option value="PASAPORTE">Pasaporte</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="numeroDocumento">Número de Documento *</label>
-                                                <input type="text" id="numeroDocumento" name="numeroDocumento" class="form-control" required placeholder="Ej: 12345678">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="nombres">Nombres *</label>
-                                                <input type="text" id="nombres" name="nombres" class="form-control" required placeholder="Ej: Juan Carlos">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="apellidos">Apellidos *</label>
-                                                <input type="text" id="apellidos" name="apellidos" class="form-control" required placeholder="Ej: Pérez García">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="telefono">Teléfono *</label>
-                                                <input type="tel" id="telefono" name="telefono" class="form-control" required placeholder="Ej: 987654321">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="email">Correo Electrónico *</label>
-                                                <input type="email" id="email" name="email" class="form-control" required placeholder="usuario@email.com">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                                                <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Género</label>
-                                                <div class="form-check-group">
-                                                    <div class="form-check">
-                                                        <input type="radio" id="generoM" name="genero" value="M" class="form-check-input">
-                                                        <label for="generoM" class="form-check-label">Masculino</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="radio" id="generoF" name="genero" value="F" class="form-check-input">
-                                                        <label for="generoF" class="form-check-label">Femenino</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="direccion">Dirección</label>
-                                        <textarea id="direccion" name="direccion" class="form-control" rows="3" placeholder="Av. Principal 123, Urb. San Martín"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Información del Sistema -->
-                            <div class="col-lg-6">
-                                <div class="form-section">
-                                    <h3 class="section-title">
-                                        <i class="fas fa-cog"></i> Configuración del Sistema
-                                    </h3>
-
-                                    <div class="form-group">
-                                        <label for="nombreUsuario">Nombre de Usuario *</label>
-                                        <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control" required placeholder="usuario123">
-                                        <small class="form-text text-muted">Solo letras, números y guiones bajos. Mínimo 4 caracteres.</small>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Contraseña *</label>
-                                                <div class="password-input-group">
-                                                    <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
-                                                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                </div>
-                                                <small class="form-text text-muted">Mínimo 8 caracteres con mayúsculas, minúsculas y números.</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="confirmarPassword">Confirmar Contraseña *</label>
-                                                <div class="password-input-group">
-                                                    <input type="password" id="confirmarPassword" name="confirmarPassword" class="form-control" required placeholder="••••••••">
-                                                    <button type="button" class="password-toggle" onclick="togglePassword('confirmarPassword')">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="tipoUsuario">Tipo de Usuario *</label>
-                                        <select id="tipoUsuario" name="tipoUsuario" class="form-control" required>
-                                            <option value="">Seleccionar tipo</option>
-                                            <option value="administrador">Administrador</option>
-                                            <option value="mesero">Mesero</option>
-                                            <option value="cajero">Cajero</option>
-                                            <option value="repartidor">Repartidor</option>
-                                            <option value="cocinero">Cocinero</option>
-                                            <option value="supervisor">Supervisor</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="sucursal">Sucursal *</label>
-                                        <select id="sucursal" name="sucursal" class="form-control" required>
-                                            <option value="">Seleccionar sucursal</option>
-                                            <option value="principal">Sucursal Principal - Centro</option>
-                                            <option value="miraflores">Sucursal Miraflores</option>
-                                            <option value="sanisidro">Sucursal San Isidro</option>
-                                            <option value="surco">Sucursal Surco</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="horarioTrabajo">Horario de Trabajo</label>
-                                        <select id="horarioTrabajo" name="horarioTrabajo" class="form-control">
-                                            <option value="">Seleccionar horario</option>
-                                            <option value="mañana">Mañana (06:00 - 14:00)</option>
-                                            <option value="tarde">Tarde (14:00 - 22:00)</option>
-                                            <option value="noche">Noche (22:00 - 06:00)</option>
-                                            <option value="completo">Tiempo Completo (08:00 - 17:00)</option>
-                                            <option value="medio">Medio Tiempo (08:00 - 12:00)</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="salario">Salario Mensual</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">S/</span>
-                                            </div>
-                                            <input type="number" id="salario" name="salario" class="form-control" placeholder="1000.00" step="0.01" min="0">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="fechaIngreso">Fecha de Ingreso</label>
-                                        <input type="date" id="fechaIngreso" name="fechaIngreso" class="form-control" value="2025-10-26">
-                                    </div>
-                                </div>
-
-                                <!-- Permisos y Configuraciones -->
-                                <div class="form-section mt-4">
-                                    <h3 class="section-title">
-                                        <i class="fas fa-shield-alt"></i> Permisos y Configuraciones
-                                    </h3>
-
-                                    <div class="form-group">
-                                        <div class="form-check">
-                                            <input type="checkbox" id="estadoActivo" name="estadoActivo" class="form-check-input" checked>
-                                            <label for="estadoActivo" class="form-check-label">Usuario activo (puede iniciar sesión)</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="form-check">
-                                            <input type="checkbox" id="cambiarPasswordPrimerLogin" name="cambiarPasswordPrimerLogin" class="form-check-input" checked>
-                                            <label for="cambiarPasswordPrimerLogin" class="form-check-label">Forzar cambio de contraseña en primer login</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="form-check">
-                                            <input type="checkbox" id="accesRemoto" name="accesRemoto" class="form-check-input">
-                                            <label for="accesRemoto" class="form-check-label">Permitir acceso remoto al sistema</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="observaciones">Observaciones</label>
-                                        <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Notas adicionales sobre el usuario..."></textarea>
-                                    </div>
-                                </div>
+            <!-- Contenido -->
+            <div class="usuario-contenido">
+                <form id="formRegistrarUsuario" class="formulario-usuario">
+                    <!-- Sección: Información Personal -->
+                    <div class="seccion-formulario">
+                        <h2 class="subtitulo-seccion">
+                            <i class="fas fa-user"></i> Información Personal
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="perfil">Perfil *</label>
+                                <select id="perfil" name="perfil" class="form-control" required>
+                                    <option value="">Administrador</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="mesero">Mesero</option>
+                                    <option value="cajero">Cajero</option>
+                                    <option value="repartidor">Repartidor</option>
+                                    <option value="cocinero">Cocinero</option>
+                                </select>
+                                <button type="button" class="btn-nuevo-perfil">
+                                    Nuevo Perfil
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Botones -->
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">
-                                <i class="fas fa-eraser"></i> Limpiar
-                            </button>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save"></i> Registrar Usuario
-                            </button>
-                            <button type="button" class="btn btn-outline" onclick="verListaUsuarios()">
-                                <i class="fas fa-list"></i> Ver Lista de Usuarios
-                            </button>
+                        <div class="form-grid grid-2">
+                            <div class="form-group">
+                                <label for="nombres">Nombres *</label>
+                                <input type="text" id="nombres" name="nombres" class="form-control" required placeholder="Jose Alonso">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos *</label>
+                                <input type="text" id="apellidos" name="apellidos" class="form-control" required placeholder="Iberico Meza">
+                            </div>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="form-grid grid-2">
+                            <div class="form-group">
+                                <label for="telefono">Teléfono *</label>
+                                <input type="tel" id="telefono" name="telefono" class="form-control" required placeholder="946587524">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" class="form-control" required placeholder="ja.ibericome@unsm.edu.pe">
+                            </div>
+                        </div>
+
+                        <div class="form-grid grid-2">
+                            <div class="form-group">
+                                <label for="nombreUsuario">Nombre de Usuario *</label>
+                                <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control" required placeholder="Tiolberio">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contrasena">Contraseña *</label>
+                                <div class="password-input">
+                                    <input type="password" id="contrasena" name="contrasena" class="form-control" required placeholder="************">
+                                    <button type="button" class="btn-toggle-password" onclick="togglePassword('contrasena')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="acciones-section">
+                        <button type="submit" class="btn-accion btn-registrar">
+                            <i class="fas fa-save"></i> Registrar
+                        </button>
+                        <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
+                            <i class="fas fa-arrow-left"></i> Salir
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
@@ -278,180 +115,6 @@
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script>
-        // Generar nombre de usuario automáticamente
-        function generarNombreUsuario() {
-            const nombres = document.getElementById('nombres').value.trim();
-            const apellidos = document.getElementById('apellidos').value.trim();
-            
-            if (nombres && apellidos) {
-                const nombreArray = nombres.split(' ');
-                const apellidoArray = apellidos.split(' ');
-                
-                const usuario = (nombreArray[0] + apellidoArray[0]).toLowerCase()
-                    .replace(/[áàäâ]/g, 'a')
-                    .replace(/[éèëê]/g, 'e')
-                    .replace(/[íìïî]/g, 'i')
-                    .replace(/[óòöô]/g, 'o')
-                    .replace(/[úùüû]/g, 'u')
-                    .replace(/ñ/g, 'n');
-                
-                document.getElementById('nombreUsuario').value = usuario;
-            }
-        }
-
-        // Eventos para generar usuario automáticamente
-        document.getElementById('nombres').addEventListener('blur', generarNombreUsuario);
-        document.getElementById('apellidos').addEventListener('blur', generarNombreUsuario);
-
-        // Validación de tipo de documento
-        document.getElementById('tipoDocumento').addEventListener('change', function() {
-            const tipo = this.value;
-            const numeroInput = document.getElementById('numeroDocumento');
-            
-            switch(tipo) {
-                case 'DNI':
-                    numeroInput.maxLength = 8;
-                    numeroInput.placeholder = '12345678';
-                    break;
-                case 'CE':
-                    numeroInput.maxLength = 12;
-                    numeroInput.placeholder = '001234567890';
-                    break;
-                case 'PASAPORTE':
-                    numeroInput.maxLength = 20;
-                    numeroInput.placeholder = 'AB1234567';
-                    break;
-                default:
-                    numeroInput.maxLength = 20;
-                    numeroInput.placeholder = '';
-            }
-        });
-
-        // Validación solo números para DNI
-        document.getElementById('numeroDocumento').addEventListener('input', function() {
-            const tipo = document.getElementById('tipoDocumento').value;
-            if (tipo === 'DNI') {
-                this.value = this.value.replace(/[^0-9]/g, '');
-            }
-        });
-
-        // Validación solo números para teléfono
-        document.getElementById('telefono').addEventListener('input', function() {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
-        // Validación de contraseñas
-        document.getElementById('confirmarPassword').addEventListener('blur', function() {
-            const password = document.getElementById('password').value;
-            const confirmar = this.value;
-            
-            if (password !== confirmar) {
-                this.setCustomValidity('Las contraseñas no coinciden');
-                this.classList.add('error');
-            } else {
-                this.setCustomValidity('');
-                this.classList.remove('error');
-            }
-        });
-
-        // Mostrar/ocultar contraseña
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const button = field.nextElementSibling;
-            const icon = button.querySelector('i');
-            
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                field.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
-        }
-
-        // Envío del formulario
-        document.getElementById('formRegistrarUsuario').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validación básica
-            const requiredFields = this.querySelectorAll('[required]');
-            let valid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add('error');
-                    valid = false;
-                } else {
-                    field.classList.remove('error');
-                }
-            });
-            
-            if (!valid) {
-                alert('Por favor, complete todos los campos obligatorios');
-                return;
-            }
-            
-            // Validar contraseñas
-            const password = document.getElementById('password').value;
-            const confirmar = document.getElementById('confirmarPassword').value;
-            
-            if (password !== confirmar) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-            
-            // Simular guardado
-            const formData = new FormData(this);
-            const usuario = Object.fromEntries(formData);
-            
-            console.log('Registrando usuario:', usuario);
-            
-            // Guardar en localStorage (simulación)
-            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-            usuario.id = Date.now();
-            usuario.fechaCreacion = new Date().toISOString();
-            delete usuario.confirmarPassword; // No guardar confirmación
-            usuarios.push(usuario);
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-            
-            alert('Usuario registrado exitosamente');
-            limpiarFormulario();
-        });
-
-        function limpiarFormulario() {
-            document.getElementById('formRegistrarUsuario').reset();
-            document.getElementById('fechaIngreso').value = '2025-10-26';
-            document.getElementById('estadoActivo').checked = true;
-            document.getElementById('cambiarPasswordPrimerLogin').checked = true;
-            
-            // Remover clases de error
-            document.querySelectorAll('.error').forEach(field => {
-                field.classList.remove('error');
-            });
-        }
-
-        function verListaUsuarios() {
-            // Redirigir a la lista correspondiente según el tipo seleccionado
-            const tipo = document.getElementById('tipoUsuario').value;
-            
-            switch(tipo) {
-                case 'administrador':
-                    window.location.href = 'ver_administradores.html';
-                    break;
-                case 'mesero':
-                    window.location.href = 'ver_meseros.html';
-                    break;
-                case 'cajero':
-                    window.location.href = 'ver_cajero.html';
-                    break;
-                case 'repartidor':
-                    window.location.href = 'ver_repartidores.html';
-                    break;
-                default:
-                    window.location.href = 'ver_administradores.html';
-            }
-        }
-    </script>
+    <script src="../js/registrar_usuario.js"></script>
 </body>
 </html>
