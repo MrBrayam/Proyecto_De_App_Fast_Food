@@ -1,6 +1,6 @@
-// ===== VISUALIZAR REPORTES DE COMPRAS - JAVASCRIPT =====
+// ===== VISUALIZAR REPORTES DE VENTAS - JAVASCRIPT =====
 
-let chartCategorias, chartProveedores, chartEstadoOrdenes;
+let chartCategorias, chartMetodosPago, chartTipoServicio;
 
 // Actualizar fecha y hora
 function actualizarFechaHora() {
@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Función para inicializar gráficos
 function inicializarGraficos() {
-    // Gráfico de Compras por Categoría
+    // Gráfico de Ventas por Categoría
     const ctxCategorias = document.getElementById('chartCategorias');
     if (ctxCategorias) {
         chartCategorias = new Chart(ctxCategorias, {
             type: 'pie',
             data: {
-                labels: ['Insumos', 'Suministros', 'Productos', 'Otros'],
+                labels: ['Pizzas', 'Bebidas', 'Complementos', 'Postres'],
                 datasets: [{
-                    data: [3510, 1170, 2340, 780],
+                    data: [7500, 2000, 2000, 1000],
                     backgroundColor: [
                         '#ff5733',
                         '#ffc857',
@@ -84,19 +84,18 @@ function inicializarGraficos() {
         });
     }
 
-    // Gráfico de Top Proveedores
-    const ctxProveedores = document.getElementById('chartProveedores');
-    if (ctxProveedores) {
-        chartProveedores = new Chart(ctxProveedores, {
+    // Gráfico de Métodos de Pago
+    const ctxMetodosPago = document.getElementById('chartMetodosPago');
+    if (ctxMetodosPago) {
+        chartMetodosPago = new Chart(ctxMetodosPago, {
             type: 'pie',
             data: {
-                labels: ['Distribuidora ABC', 'Alimentos XYZ', 'Suministros DEF', 'Otros'],
+                labels: ['Efectivo', 'Tarjeta', 'Transferencia'],
                 datasets: [{
-                    data: [2730, 1950, 1560, 1560],
+                    data: [5625, 4375, 2500],
                     backgroundColor: [
                         '#27ae60',
                         '#3498db',
-                        '#ff5733',
                         '#9b59b6'
                     ],
                     borderColor: 'rgba(26, 29, 46, 0.8)',
@@ -140,19 +139,19 @@ function inicializarGraficos() {
         });
     }
 
-    // Gráfico de Estado de Órdenes
-    const ctxEstadoOrdenes = document.getElementById('chartEstadoOrdenes');
-    if (ctxEstadoOrdenes) {
-        chartEstadoOrdenes = new Chart(ctxEstadoOrdenes, {
+    // Gráfico de Tipo de Servicio
+    const ctxTipoServicio = document.getElementById('chartTipoServicio');
+    if (ctxTipoServicio) {
+        chartTipoServicio = new Chart(ctxTipoServicio, {
             type: 'pie',
             data: {
-                labels: ['Completadas', 'Pendientes', 'Canceladas'],
+                labels: ['Delivery', 'Para llevar', 'En local'],
                 datasets: [{
-                    data: [32, 9, 4],
+                    data: [6875, 3750, 1875],
                     backgroundColor: [
-                        '#27ae60',
+                        '#ff5733',
                         '#ffc857',
-                        '#e74c3c'
+                        '#3498db'
                     ],
                     borderColor: 'rgba(26, 29, 46, 0.8)',
                     borderWidth: 2
@@ -179,7 +178,7 @@ function inicializarGraficos() {
                                 if (label) {
                                     label += ': ';
                                 }
-                                label += context.parsed + ' órdenes';
+                                label += 'S/. ' + context.parsed.toLocaleString('es-PE', {minimumFractionDigits: 2});
                                 
                                 // Calcular porcentaje
                                 const total = context.dataset.data.reduce((a, b) => a + b, 0);

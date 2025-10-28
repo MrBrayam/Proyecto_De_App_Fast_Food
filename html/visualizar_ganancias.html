@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Ganancias - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_ganancias.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="ganancias-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="ganancias-header">
+                <div class="ganancias-header-left">
+                    <h1 class="ganancias-titulo">Visualizar ganancias</h1>
+                </div>
+                <div class="ganancias-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="ganancias-contenido">
+                <!-- Filtros de Periodo -->
+                <div class="filtros-periodo">
+                    <div class="grupo-filtro-periodo">
+                        <label for="filtroPeriodo">Periodo:</label>
+                        <select id="filtroPeriodo" class="select-periodo">
+                            <option value="mensual">Este Mes</option>
+                            <option value="semanal">Esta Semana</option>
+                            <option value="diario">Hoy</option>
+                            <option value="anual">Este Año</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Resumen de Totales -->
+                <div class="resumen-totales">
+                    <div class="card-total ventas">
+                        <div class="icono-total">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Ventas Totales</h3>
+                            <p class="monto">S/. <span id="totalVentas">12,500.00</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total gastos">
+                        <div class="icono-total">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Gastos Totales</h3>
+                            <p class="monto">S/. <span id="totalGastos">7,800.00</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total ganancias">
+                        <div class="icono-total">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Ganancia Neta</h3>
+                            <p class="monto">S/. <span id="gananciaNeta">4,700.00</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total margen">
+                        <div class="icono-total">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Margen</h3>
+                            <p class="monto"><span id="margenPorcentaje">37.6</span>%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Gráficos -->
+                <div class="graficos-container">
+                    <!-- Gráfico de Distribución de Gastos -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Distribución de Gastos</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartGastos"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ff5733;"></span>
+                                <span>Compras de Insumos</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ffc857;"></span>
+                                <span>Suministros</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>Salarios</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #27ae60;"></span>
+                                <span>Servicios</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #9b59b6;"></span>
+                                <span>Otros</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Ventas vs Gastos -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Ventas vs Gastos</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartVentasGastos"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #27ae60;"></span>
+                                <span>Ventas</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #e74c3c;"></span>
+                                <span>Gastos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Categorías de Productos -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Ventas por Categoría</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartCategorias"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ff5733;"></span>
+                                <span>Pizzas</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ffc857;"></span>
+                                <span>Bebidas</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>Complementos</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #9b59b6;"></span>
+                                <span>Postres</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="acciones-section">
+                    <button type="button" class="btn-accion btn-exportar">
+                        Exportar Reporte
+                    </button>
+                    <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
+                        Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_ganancias.js"></script>
+</body>
+</html>

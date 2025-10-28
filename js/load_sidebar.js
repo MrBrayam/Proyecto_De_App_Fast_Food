@@ -213,7 +213,7 @@ function cargarSidebar() {
                     <ul class="submenu">
                         <li class="submenu-item"><a href="visualizar_reportes_de_compras.html" class="submenu-link">Visualizar Reporte de Compras</a></li>
                         <li class="submenu-item"><a href="visualizar_ganancias.html" class="submenu-link">Visualizar Ganancias</a></li>
-                        <li class="submenu-item"><a href="reporte_ventas.html" class="submenu-link">Visualizar Reporte de Ventas</a></li>
+                        <li class="submenu-item"><a href="visualizar_reportes_de_ventas.html" class="submenu-link">Visualizar Reporte de Ventas</a></li>
                         <li class="submenu-item"><a href="rendimiento_trabajador.html" class="submenu-link">Visualizar Rendimiento de Trabajador</a></li>
                         <li class="submenu-item"><a href="generar_reportes.html" class="submenu-link">Generar Reportes de Ventas</a></li>
                     </ul>

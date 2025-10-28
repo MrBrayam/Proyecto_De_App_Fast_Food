@@ -1,4 +1,4 @@
-/* ===== DARK BLUE THEME - VISUALIZAR REPORTES DE COMPRAS ===== */
+/* ===== DARK BLUE THEME - VISUALIZAR REPORTES DE VENTAS ===== */
 
 /* Contenedor Principal */
 .reportes-container {
@@ -55,7 +55,7 @@
 }
 
 .reportes-titulo {
-    color: #ffffff;
+    color: #ffc857;
     font-size: 28px;
     font-weight: 600;
     margin: 0;
@@ -81,7 +81,7 @@
     border: 1px solid rgba(255, 87, 51, 0.3);
     border-radius: 8px;
     padding: 8px 16px;
-    color: #ffffff;
+    color: #ffc857;
     font-size: 14px;
     font-weight: 500;
 }
@@ -176,24 +176,24 @@
     font-size: 28px;
 }
 
-.card-total.compras .icono-total {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+.card-total.ventas .icono-total {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
     color: #ffffff;
 }
 
-.card-total.proveedores .icono-total {
+.card-total.productos .icono-total {
+    background: linear-gradient(135deg, #ff5733 0%, #ff764a 100%);
+    color: #ffffff;
+}
+
+.card-total.clientes .icono-total {
     background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
     color: #ffffff;
 }
 
-.card-total.ordenes .icono-total {
+.card-total.ticket .icono-total {
     background: linear-gradient(135deg, #ffc857 0%, #ffb347 100%);
     color: #1a1d2e;
-}
-
-.card-total.promedio .icono-total {
-    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-    color: #ffffff;
 }
 
 .info-total h3 {

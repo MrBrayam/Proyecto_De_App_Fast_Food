@@ -32,94 +32,140 @@
 
             <!-- Contenido -->
             <div class="reportes-contenido">
-                <!-- Barra de Búsqueda y Filtros -->
-                <div class="barra-busqueda">
-                    <div class="grupo-busqueda">
-                        <input 
-                            type="text" 
-                            id="buscarReporte" 
-                            class="input-busqueda"
-                            placeholder="Buscar"
-                        >
-                    </div>
-                    <div class="grupo-filtro">
-                        <label for="filtroFecha">Filtrar por:</label>
-                        <select id="filtroFecha" class="select-filtro">
-                            <option value="">Fecha</option>
-                            <option value="hoy">Hoy</option>
-                            <option value="semana">Esta semana</option>
-                            <option value="mes">Este mes</option>
-                            <option value="año">Este año</option>
+                <!-- Filtros de Periodo -->
+                <div class="filtros-periodo">
+                    <div class="grupo-filtro-periodo">
+                        <label for="filtroPeriodo">Periodo:</label>
+                        <select id="filtroPeriodo" class="select-periodo">
+                            <option value="mensual">Este Mes</option>
+                            <option value="semanal">Esta Semana</option>
+                            <option value="diario">Hoy</option>
+                            <option value="anual">Este Año</option>
                         </select>
                     </div>
-                    <button class="btn-buscar">
-                        Buscar
-                    </button>
                 </div>
 
-                <!-- Sección de Tabla -->
-                <div class="seccion-tabla">
-                    <h2 class="subtitulo-tabla">Tabla de reportes de compras:</h2>
-                    
-                    <div class="tabla-container">
-                        <table class="tabla-reportes">
-                            <thead>
-                                <tr>
-                                    <th>Nº</th>
-                                    <th>Fecha</th>
-                                    <th>Proveedor</th>
-                                    <th>Total Compra</th>
-                                    <th>Productos</th>
-                                    <th>Estado</th>
-                                    <th>Usuario</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyReportes">
-                                <tr>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- Resumen de Totales -->
+                <div class="resumen-totales">
+                    <div class="card-total compras">
+                        <div class="icono-total">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Total Compras</h3>
+                            <p class="monto">S/. <span id="totalCompras">7,800.00</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total proveedores">
+                        <div class="icono-total">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Proveedores</h3>
+                            <p class="monto"><span id="totalProveedores">12</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total ordenes">
+                        <div class="icono-total">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Órdenes de Compra</h3>
+                            <p class="monto"><span id="totalOrdenes">45</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total promedio">
+                        <div class="icono-total">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Compra Promedio</h3>
+                            <p class="monto">S/. <span id="compraPromedio">173.33</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Gráficos -->
+                <div class="graficos-container">
+                    <!-- Gráfico de Compras por Categoría -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Compras por Categoría</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartCategorias"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ff5733;"></span>
+                                <span>Insumos - 45%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ffc857;"></span>
+                                <span>Suministros - 15%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>Productos - 30%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #9b59b6;"></span>
+                                <span>Otros - 10%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Proveedores -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Top Proveedores</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartProveedores"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #27ae60;"></span>
+                                <span>Distribuidora ABC - 35%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>Alimentos XYZ - 25%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ff5733;"></span>
+                                <span>Suministros DEF - 20%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #9b59b6;"></span>
+                                <span>Otros - 20%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Estado de Órdenes -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Estado de Órdenes</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartEstadoOrdenes"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #27ae60;"></span>
+                                <span>Completadas - 70%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ffc857;"></span>
+                                <span>Pendientes - 20%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #e74c3c;"></span>
+                                <span>Canceladas - 10%</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Botones de Acción -->
                 <div class="acciones-section">
                     <button type="button" class="btn-accion btn-exportar">
-                        Exportar
+                        Exportar Reporte
                     </button>
                     <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
                         Salir
@@ -130,6 +176,7 @@
     </main>
 
     <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/visualizar_reportes_de_compras.js"></script>

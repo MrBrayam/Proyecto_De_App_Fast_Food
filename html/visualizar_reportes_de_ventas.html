@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Reportes de Ventas - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_reportes_de_ventas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="reportes-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="reportes-header">
+                <div class="reportes-header-left">
+                    <h1 class="reportes-titulo">Visualizar reportes de ventas</h1>
+                </div>
+                <div class="reportes-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="reportes-contenido">
+                <!-- Filtros de Periodo -->
+                <div class="filtros-periodo">
+                    <div class="grupo-filtro-periodo">
+                        <label for="filtroPeriodo">Periodo:</label>
+                        <select id="filtroPeriodo" class="select-periodo">
+                            <option value="mensual">Este Mes</option>
+                            <option value="semanal">Esta Semana</option>
+                            <option value="diario">Hoy</option>
+                            <option value="anual">Este Año</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Resumen de Totales -->
+                <div class="resumen-totales">
+                    <div class="card-total ventas">
+                        <div class="icono-total">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Total Ventas</h3>
+                            <p class="monto">S/. <span id="totalVentas">12,500.00</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total productos">
+                        <div class="icono-total">
+                            <i class="fas fa-pizza-slice"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Productos Vendidos</h3>
+                            <p class="monto"><span id="productosVendidos">345</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total clientes">
+                        <div class="icono-total">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Clientes Atendidos</h3>
+                            <p class="monto"><span id="clientesAtendidos">128</span></p>
+                        </div>
+                    </div>
+                    <div class="card-total ticket">
+                        <div class="icono-total">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="info-total">
+                            <h3>Ticket Promedio</h3>
+                            <p class="monto">S/. <span id="ticketPromedio">97.66</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Gráficos -->
+                <div class="graficos-container">
+                    <!-- Gráfico de Ventas por Categoría -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Ventas por Categoría</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartCategorias"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ff5733;"></span>
+                                <span>Pizzas - 60%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ffc857;"></span>
+                                <span>Bebidas - 16%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>Complementos - 16%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #9b59b6;"></span>
+                                <span>Postres - 8%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Métodos de Pago -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Métodos de Pago</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartMetodosPago"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #27ae60;"></span>
+                                <span>Efectivo - 45%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>Tarjeta - 35%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #9b59b6;"></span>
+                                <span>Transferencia - 20%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Tipo de Servicio -->
+                    <div class="grafico-card">
+                        <h2 class="titulo-grafico">Tipo de Servicio</h2>
+                        <div class="grafico-wrapper">
+                            <canvas id="chartTipoServicio"></canvas>
+                        </div>
+                        <div class="leyenda-grafico">
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ff5733;"></span>
+                                <span>Delivery - 55%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #ffc857;"></span>
+                                <span>Para llevar - 30%</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="color-box" style="background: #3498db;"></span>
+                                <span>En local - 15%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="acciones-section">
+                    <button type="button" class="btn-accion btn-exportar">
+                        Exportar Reporte
+                    </button>
+                    <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
+                        Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_reportes_de_ventas.js"></script>
+</body>
+</html>

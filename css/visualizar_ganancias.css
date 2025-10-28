@@ -1,7 +1,7 @@
-/* ===== DARK BLUE THEME - VISUALIZAR REPORTES DE COMPRAS ===== */
+/* ===== DARK BLUE THEME - VISUALIZAR GANANCIAS ===== */
 
 /* Contenedor Principal */
-.reportes-container {
+.ganancias-container {
     background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
     min-height: 100vh;
     padding: 0;
@@ -10,7 +10,7 @@
 }
 
 /* Fondo animado con burbujas */
-.reportes-container::before {
+.ganancias-container::before {
     content: '';
     position: absolute;
     top: 0;
@@ -38,7 +38,7 @@
 }
 
 /* Header */
-.reportes-header {
+.ganancias-header {
     background: rgba(44, 47, 62, 0.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 87, 51, 0.3);
@@ -50,12 +50,12 @@
     z-index: 1;
 }
 
-.reportes-header-left {
+.ganancias-header-left {
     flex: 1;
 }
 
-.reportes-titulo {
-    color: #ffffff;
+.ganancias-titulo {
+    color: #ffc857;
     font-size: 28px;
     font-weight: 600;
     margin: 0;
@@ -63,7 +63,7 @@
     letter-spacing: 1px;
 }
 
-.reportes-header-right {
+.ganancias-header-right {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -81,13 +81,13 @@
     border: 1px solid rgba(255, 87, 51, 0.3);
     border-radius: 8px;
     padding: 8px 16px;
-    color: #ffffff;
+    color: #ffc857;
     font-size: 14px;
     font-weight: 500;
 }
 
 /* Contenido */
-.reportes-contenido {
+.ganancias-contenido {
     padding: 30px;
     position: relative;
     z-index: 1;
@@ -176,24 +176,24 @@
     font-size: 28px;
 }
 
-.card-total.compras .icono-total {
+.card-total.ventas .icono-total {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    color: #ffffff;
+}
+
+.card-total.gastos .icono-total {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     color: #ffffff;
 }
 
-.card-total.proveedores .icono-total {
+.card-total.ganancias .icono-total {
     background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
     color: #ffffff;
 }
 
-.card-total.ordenes .icono-total {
+.card-total.margen .icono-total {
     background: linear-gradient(135deg, #ffc857 0%, #ffb347 100%);
     color: #1a1d2e;
-}
-
-.card-total.promedio .icono-total {
-    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-    color: #ffffff;
 }
 
 .info-total h3 {
@@ -335,13 +335,13 @@
 }
 
 @media (max-width: 768px) {
-    .reportes-header {
+    .ganancias-header {
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
     }
 
-    .reportes-titulo {
+    .ganancias-titulo {
         font-size: 24px;
     }
 
@@ -356,7 +356,7 @@
         text-align: center;
     }
 
-    .reportes-contenido {
+    .ganancias-contenido {
         padding: 20px 15px;
     }
 
