@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Pedido - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_pedidos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="pedido-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="pedido-header">
+                <div class="pedido-header-left">
+                    <h1 class="pedido-titulo">
+                        <i class="fas fa-utensils"></i>
+                        Registrar Pedido
+                    </h1>
+                </div>
+                <div class="pedido-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fecha-actual">Cargando...</span>
+                        <span id="hora-actual">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Cliente y Mesa -->
+            <section class="info-cliente-mesa">
+                <div class="info-card">
+                    <div class="info-item">
+                        <label for="numeroMesa">
+                            <i class="fas fa-table"></i>
+                            MESA
+                        </label>
+                        <input type="text" id="numeroMesa" class="info-input" placeholder="Número de mesa">
+                    </div>
+                    <div class="info-item">
+                        <label for="nombreCliente">
+                            <i class="fas fa-user"></i>
+                            CLIENTE
+                        </label>
+                        <input type="text" id="nombreCliente" class="info-input" placeholder="Nombre del cliente">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Búsqueda de Productos -->
+            <section class="busqueda-productos">
+                <div class="busqueda-grid">
+                    <div class="busqueda-item">
+                        <label for="searchCodigo">
+                            <i class="fas fa-barcode"></i>
+                            Código
+                        </label>
+                        <input type="text" id="searchCodigo" class="search-input" placeholder="Buscar por código">
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchLinea">
+                            <i class="fas fa-list"></i>
+                            Línea de Producto
+                        </label>
+                        <select id="searchLinea" class="search-select">
+                            <option value="">Todas las líneas</option>
+                            <option value="pizzas">Pizzas</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="entradas">Entradas</option>
+                            <option value="postres">Postres</option>
+                            <option value="promociones">Promociones</option>
+                        </select>
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchDescripcion">
+                            <i class="fas fa-search"></i>
+                            Descripción
+                        </label>
+                        <input type="text" id="searchDescripcion" class="search-input" placeholder="Buscar por descripción">
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="cantidad">
+                            <i class="fas fa-sort-numeric-up"></i>
+                            Cantidad
+                        </label>
+                        <input type="number" id="cantidad" class="search-input" value="1" min="1">
+                    </div>
+                </div>
+                <div class="busqueda-actions">
+                    <button type="button" id="btnAgregar" class="btn-action btn-agregar">
+                        <i class="fas fa-plus-circle"></i>
+                        Añadir
+                    </button>
+                </div>
+            </section>
+
+            <!-- Tabla de Productos del Pedido -->
+            <section class="tabla-pedido-section">
+                <div class="tabla-container">
+                    <table class="tabla-pedido">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPedidoBody">
+                            <!-- Datos de prueba -->
+                            <tr>
+                                <td>1</td>
+                                <td>27/10/2025</td>
+                                <td>PIZ001</td>
+                                <td>Pizza Margarita - Familiar</td>
+                                <td>2</td>
+                                <td>S/ 32.00</td>
+                                <td>S/ 64.00</td>
+                                <td>
+                                    <button class="btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>27/10/2025</td>
+                                <td>BEB002</td>
+                                <td>Chicha Morada - 1L</td>
+                                <td>1</td>
+                                <td>S/ 10.00</td>
+                                <td>S/ 10.00</td>
+                                <td>
+                                    <button class="btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>27/10/2025</td>
+                                <td>ENT001</td>
+                                <td>Pan al Ajo con Queso - 6 unidades</td>
+                                <td>1</td>
+                                <td>S/ 12.00</td>
+                                <td>S/ 12.00</td>
+                                <td>
+                                    <button class="btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>27/10/2025</td>
+                                <td>PIZ004</td>
+                                <td>Pizza BBQ - Mediana</td>
+                                <td>1</td>
+                                <td>S/ 40.00</td>
+                                <td>S/ 40.00</td>
+                                <td>
+                                    <button class="btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>27/10/2025</td>
+                                <td>POS001</td>
+                                <td>Cheesecake de Fresa</td>
+                                <td>2</td>
+                                <td>S/ 15.00</td>
+                                <td>S/ 30.00</td>
+                                <td>
+                                    <button class="btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="6" class="text-right">
+                                    <strong>TOTAL DEL PEDIDO:</strong>
+                                </td>
+                                <td colspan="2" class="total-amount">
+                                    <strong>S/ <span id="totalPedido">156.00</span></strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <section class="acciones-pedido">
+                <button type="button" id="btnEliminar" class="btn-main btn-eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                    Eliminar
+                </button>
+                <button type="button" id="btnRegistrar" class="btn-main btn-registrar">
+                    <i class="fas fa-check-circle"></i>
+                    Registrar
+                </button>
+                <button type="button" onclick="window.location.href='menu_principal.html'" class="btn-main btn-salir">
+                    <i class="fas fa-times-circle"></i>
+                    Salir
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Búsqueda de Productos -->
+    <div id="modalProductos" class="modal">
+        <div class="modal-content modal-productos">
+            <div class="modal-header">
+                <h2><i class="fas fa-pizza-slice"></i> Seleccionar Producto</h2>
+                <button class="modal-close" onclick="cerrarModalProductos()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="productos-grid" id="productosGrid">
+                    <!-- Productos se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_pedidos.js"></script>
+</body>
+</html>
