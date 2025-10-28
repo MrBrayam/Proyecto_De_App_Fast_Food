@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Proveedor - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_proveedor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="proveedor-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="proveedor-header">
+                <div class="proveedor-header-left">
+                    <h1><i class="fas fa-truck"></i> Registrar Proveedor</h1>
+                </div>
+                <div class="proveedor-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual">Cargando...</span>
+                        <span id="horaActual">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor de dos columnas -->
+            <div class="proveedor-contenido">
+                <!-- Columna izquierda: Formulario -->
+                <div class="proveedor-form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-file-alt"></i> Datos del Proveedor</h2>
+                    </div>
+
+                    <form id="formProveedor" class="proveedor-form">
+                        <!-- Información Básica -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle"></i>
+                                Información Básica
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="tipoDocumento">
+                                        <i class="fas fa-id-card"></i>
+                                        Tipo de Documento *
+                                    </label>
+                                    <select id="tipoDocumento" class="form-select" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="RUC">RUC</option>
+                                        <option value="DNI">DNI</option>
+                                        <option value="CE">Carnet de Extranjería</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="numeroDocumento">
+                                        <i class="fas fa-hashtag"></i>
+                                        Número de Documento *
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="numeroDocumento" 
+                                        class="form-input" 
+                                        placeholder="Ej: 20123456789"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="razonSocial">
+                                        <i class="fas fa-building"></i>
+                                        Razón Social / Nombre *
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="razonSocial" 
+                                        class="form-input" 
+                                        placeholder="Ej: Distribuidora Alimentaria S.A.C."
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nombreComercial">
+                                        <i class="fas fa-store"></i>
+                                        Nombre Comercial
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="nombreComercial" 
+                                        class="form-input" 
+                                        placeholder="Ej: Deli Foods"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="categoria">
+                                        <i class="fas fa-tags"></i>
+                                        Categoría *
+                                    </label>
+                                    <select id="categoria" class="form-select" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="Alimentos">Alimentos</option>
+                                        <option value="Bebidas">Bebidas</option>
+                                        <option value="Empaques">Empaques</option>
+                                        <option value="Lácteos">Lácteos</option>
+                                        <option value="Carnes">Carnes</option>
+                                        <option value="Vegetales">Vegetales</option>
+                                        <option value="Limpieza">Limpieza</option>
+                                        <option value="Equipos">Equipos</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="estado">
+                                        <i class="fas fa-toggle-on"></i>
+                                        Estado *
+                                    </label>
+                                    <select id="estado" class="form-select" required>
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de Contacto -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-address-book"></i>
+                                Información de Contacto
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="telefono">
+                                        <i class="fas fa-phone"></i>
+                                        Teléfono *
+                                    </label>
+                                    <input 
+                                        type="tel" 
+                                        id="telefono" 
+                                        class="form-input" 
+                                        placeholder="Ej: 987654321"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="telefonoSecundario">
+                                        <i class="fas fa-phone-alt"></i>
+                                        Teléfono Secundario
+                                    </label>
+                                    <input 
+                                        type="tel" 
+                                        id="telefonoSecundario" 
+                                        class="form-input" 
+                                        placeholder="Ej: 014567890"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">
+                                        <i class="fas fa-envelope"></i>
+                                        Correo Electrónico *
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        class="form-input" 
+                                        placeholder="proveedor@empresa.com"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sitioWeb">
+                                        <i class="fas fa-globe"></i>
+                                        Sitio Web
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        id="sitioWeb" 
+                                        class="form-input" 
+                                        placeholder="www.empresa.com"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="personaContacto">
+                                        <i class="fas fa-user-tie"></i>
+                                        Persona de Contacto *
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="personaContacto" 
+                                        class="form-input" 
+                                        placeholder="Ej: Juan Pérez"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cargoContacto">
+                                        <i class="fas fa-briefcase"></i>
+                                        Cargo
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="cargoContacto" 
+                                        class="form-input" 
+                                        placeholder="Ej: Gerente de Ventas"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Dirección
+                            </h3>
+                            
+                            <div class="form-group-full">
+                                <label for="direccion">
+                                    <i class="fas fa-location-arrow"></i>
+                                    Dirección Completa *
+                                </label>
+                                <textarea 
+                                    id="direccion" 
+                                    class="form-textarea" 
+                                    rows="3"
+                                    placeholder="Av. Industrial 456, Urb. Los Rosales"
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="distrito">
+                                        <i class="fas fa-map"></i>
+                                        Distrito
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="distrito" 
+                                        class="form-input" 
+                                        placeholder="Ej: Lima"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ciudad">
+                                        <i class="fas fa-city"></i>
+                                        Ciudad
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="ciudad" 
+                                        class="form-input" 
+                                        placeholder="Ej: Lima"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Comercial -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-dollar-sign"></i>
+                                Información Comercial
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="condicionPago">
+                                        <i class="fas fa-credit-card"></i>
+                                        Condición de Pago
+                                    </label>
+                                    <select id="condicionPago" class="form-select">
+                                        <option value="Contado">Contado</option>
+                                        <option value="15 días">15 días</option>
+                                        <option value="30 días">30 días</option>
+                                        <option value="45 días">45 días</option>
+                                        <option value="60 días">60 días</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tiempoEntrega">
+                                        <i class="fas fa-clock"></i>
+                                        Tiempo de Entrega
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="tiempoEntrega" 
+                                        class="form-input" 
+                                        placeholder="Ej: 24 horas"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="montoMinimo">
+                                        <i class="fas fa-coins"></i>
+                                        Monto Mínimo de Compra
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="montoMinimo" 
+                                        class="form-input" 
+                                        placeholder="0.00"
+                                        step="0.01"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="descuento">
+                                        <i class="fas fa-percent"></i>
+                                        Descuento
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="descuento" 
+                                        class="form-input" 
+                                        placeholder="0"
+                                        min="0"
+                                        max="100"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Observaciones -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-comment-alt"></i>
+                                Observaciones
+                            </h3>
+                            
+                            <div class="form-group-full">
+                                <label for="observaciones">
+                                    <i class="fas fa-align-left"></i>
+                                    Notas adicionales
+                                </label>
+                                <textarea 
+                                    id="observaciones" 
+                                    class="form-textarea" 
+                                    rows="4"
+                                    placeholder="Ingrese cualquier observación sobre el proveedor..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn-action btn-guardar">
+                                <i class="fas fa-save"></i>
+                                Guardar
+                            </button>
+                            <button type="button" class="btn-action btn-limpiar">
+                                <i class="fas fa-eraser"></i>
+                                Limpiar
+                            </button>
+                            <button type="button" class="btn-action btn-cancelar" onclick="window.location.href='menu_principal.html'">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Columna derecha: Lista de Proveedores -->
+                <div class="proveedores-lista-card">
+                    <div class="lista-header">
+                        <h2 class="lista-titulo">
+                            <i class="fas fa-list"></i>
+                            Proveedores Registrados
+                        </h2>
+                        <div class="lista-search">
+                            <input 
+                                type="text" 
+                                id="buscarProveedor" 
+                                class="search-input" 
+                                placeholder="Buscar proveedor..."
+                            >
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="tabla-container">
+                        <table class="tabla-proveedores" id="tablaProveedores">
+                            <thead>
+                                <tr>
+                                    <th>RUC/Doc</th>
+                                    <th>Razón Social</th>
+                                    <th>Categoría</th>
+                                    <th>Contacto</th>
+                                    <th>Teléfono</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Datos de prueba -->
+                                <tr>
+                                    <td>20456789123</td>
+                                    <td>Distribuidora Alimentaria S.A.C.</td>
+                                    <td>Alimentos</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td>987654321</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20567890234</td>
+                                    <td>Lácteos del Valle E.I.R.L.</td>
+                                    <td>Lácteos</td>
+                                    <td>María Torres</td>
+                                    <td>976543210</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20678901345</td>
+                                    <td>Carnes Premium del Norte S.A.</td>
+                                    <td>Carnes</td>
+                                    <td>Roberto Sánchez</td>
+                                    <td>965432109</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20789012456</td>
+                                    <td>Fresh Vegetables Import S.A.C.</td>
+                                    <td>Vegetales</td>
+                                    <td>Ana Rodríguez</td>
+                                    <td>954321098</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20890123567</td>
+                                    <td>Bebidas y Licores del Sur E.I.R.L.</td>
+                                    <td>Bebidas</td>
+                                    <td>Luis Fernández</td>
+                                    <td>943210987</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20901234678</td>
+                                    <td>Pack Master Empaques S.A.</td>
+                                    <td>Empaques</td>
+                                    <td>Patricia García</td>
+                                    <td>932109876</td>
+                                    <td><span class="badge-estado badge-inactivo">Inactivo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20012345789</td>
+                                    <td>Limpieza Total Productos S.A.C.</td>
+                                    <td>Limpieza</td>
+                                    <td>Jorge Paredes</td>
+                                    <td>921098765</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>20123456890</td>
+                                    <td>Equipos de Cocina Industrial S.A.</td>
+                                    <td>Equipos</td>
+                                    <td>Miguel Castro</td>
+                                    <td>910987654</td>
+                                    <td><span class="badge-estado badge-activo">Activo</span></td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <button class="btn-icono btn-editar" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icono btn-eliminar" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_proveedor.js"></script>
+</body>
+</html>

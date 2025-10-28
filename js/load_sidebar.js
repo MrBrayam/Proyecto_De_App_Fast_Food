@@ -198,7 +198,7 @@ function cargarSidebar() {
                         <span class="nav-arrow">▼</span>
                     </a>
                     <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_proveedores.html" class="submenu-link">Registrar Proveedores</a></li>
+                        <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedores</a></li>
                         <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedores</a></li>
                     </ul>
                 </li>
