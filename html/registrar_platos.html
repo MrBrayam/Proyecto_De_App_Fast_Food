@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registrar Plato - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/registrar_platos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="plato-container">
+            <!-- Header -->
+            <div class="plato-header">
+                <h1 class="plato-titulo">
+                    <i class="fas fa-pizza-slice"></i>
+                    Registrar Plato
+                </h1>
+                <div class="fecha-hora-display">
+                    <span id="fecha-actual">Cargando...</span>
+                    <span id="hora-actual">--:--:--</span>
+                </div>
+            </div>
+
+            <!-- Sección de Búsqueda -->
+            <section class="busqueda-section">
+                <div class="busqueda-grid">
+                    <div class="busqueda-item">
+                        <label for="searchCodigo">Código</label>
+                        <input type="text" id="searchCodigo" class="search-input" placeholder="Buscar...">
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchNombre">Nombre</label>
+                        <input type="text" id="searchNombre" class="search-input" placeholder="Buscar...">
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchTamano">Tamaño</label>
+                        <select id="searchTamano" class="search-select">
+                            <option value="">Todos</option>
+                            <option value="personal">Personal</option>
+                            <option value="mediana">Mediana</option>
+                            <option value="familiar">Familiar</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchCantidad">Cantidad</label>
+                        <input type="number" id="searchCantidad" class="search-input" placeholder="0" min="0">
+                    </div>
+                    <div class="busqueda-item busqueda-btn">
+                        <button type="button" id="btnAnadir" class="btn-anadir">
+                            <i class="fas fa-plus-circle"></i>
+                            Añadir
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabla de Platos -->
+            <section class="tabla-platos-section">
+                <div class="tabla-container">
+                    <table class="tabla-platos">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Imagen Referencial</th>
+                                <th>Descripción</th>
+                                <th>Ingredientes</th>
+                                <th>Tamaño</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPlatosBody">
+                            <!-- Datos de prueba -->
+                            <tr>
+                                <td>204568</td>
+                                <td>Pizza Americana</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/ff5733/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Pizza con base de masa, salsa de tomate y queso mozzarella, acompañada de pepperoni y jamón.</td>
+                                <td>Salsa de tomate, queso mozzarella, pepperoni, jamón, orégano.</td>
+                                <td>Familiar</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>204569</td>
+                                <td>Pizza Hawaiana</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/ffc857/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Pizza con base de masa, salsa de tomate, queso mozzarella, jamón y piña.</td>
+                                <td>Salsa de tomate, queso mozzarella, jamón, piña, orégano.</td>
+                                <td>Mediana</td>
+                                <td>20</td>
+                            </tr>
+                            <tr>
+                                <td>204570</td>
+                                <td>Pizza Vegetariana</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/27ae60/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Pizza con verduras frescas, champiñones, pimientos y aceitunas.</td>
+                                <td>Salsa de tomate, queso, champiñones, pimientos, aceitunas, cebolla.</td>
+                                <td>Grande</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>204571</td>
+                                <td>Pizza BBQ</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/e74c3c/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Pizza con salsa BBQ, pollo, cebolla morada y queso mozzarella.</td>
+                                <td>Salsa BBQ, pollo, cebolla morada, queso mozzarella, cilantro.</td>
+                                <td>Familiar</td>
+                                <td>18</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <section class="acciones-platos">
+                <button type="button" id="btnEliminar" class="btn-main btn-eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                    Eliminar
+                </button>
+                <button type="button" id="btnGuardar" class="btn-main btn-guardar">
+                    <i class="fas fa-save"></i>
+                    Guardar
+                </button>
+                <button type="button" onclick="window.location.href='menu_principal.html'" class="btn-main btn-salir">
+                    <i class="fas fa-times-circle"></i>
+                    Salir
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/registrar_platos.js"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+/* ===== REGISTRAR PLATOS - KING'S PIZZA ===== */
+
+/* Contenedor Principal */
+.plato-container {
+    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
+    min-height: 100vh;
+    padding: 0 30px 30px 30px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Patrón de fondo con burbujas */
+.plato-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 87, 51, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 200, 87, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%);
+    background-size: 100% 100%;
+    animation: floatBubbles 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes floatBubbles {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-20px); }
+}
+
+/* Header */
+.plato-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    background: rgba(44, 47, 62, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 87, 51, 0.3);
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin: 0 -30px 30px -30px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.plato-titulo {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.plato-titulo i {
+    color: #ffc857;
+}
+
+.fecha-hora-display {
+    display: flex;
+    gap: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.fecha-hora-display span {
+    background: rgba(255, 87, 51, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.4);
+}
+
+/* Sección de Búsqueda */
+.busqueda-section {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 10;
+}
+
+.busqueda-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    gap: 20px;
+    align-items: end;
+}
+
+.busqueda-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.busqueda-item label {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.search-input,
+.search-select {
+    background: rgba(26, 29, 46, 0.6);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.search-input:focus,
+.search-select:focus {
+    border-color: #ff5733;
+    background: rgba(26, 29, 46, 0.8);
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.search-select option {
+    background: #2c2f3e;
+    color: #fff;
+}
+
+.btn-anadir {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+    text-transform: uppercase;
+}
+
+.btn-anadir:hover {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4);
+}
+
+.btn-anadir:active {
+    transform: translateY(0);
+}
+
+/* Tabla de Platos */
+.tabla-platos-section {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 10;
+}
+
+.tabla-container {
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+.tabla-platos {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(26, 29, 46, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabla-platos thead tr th {
+    background: rgba(200, 200, 200, 0.95);
+    color: #2c2f3e;
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabla-platos tbody tr {
+    border-bottom: 1px solid rgba(255, 87, 51, 0.1);
+    transition: all 0.3s ease;
+    background: rgba(44, 47, 62, 0.4);
+}
+
+.tabla-platos tbody tr:hover {
+    background: rgba(255, 87, 51, 0.1);
+}
+
+.tabla-platos tbody tr td {
+    padding: 15px 20px;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    vertical-align: middle;
+}
+
+.tabla-platos tbody tr td:first-child {
+    color: #ffc857;
+    font-weight: 700;
+}
+
+/* Imagen del Plato */
+.imagen-plato {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagen-plato img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 200, 87, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Botones de Acción */
+.acciones-platos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.btn-main {
+    padding: 15px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.btn-eliminar {
+    background: linear-gradient(135deg, #ff5733 0%, #c0392b 100%);
+    color: #fff;
+}
+
+.btn-eliminar:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 87, 51, 0.4);
+}
+
+.btn-guardar {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: #fff;
+}
+
+.btn-guardar:hover {
+    background: linear-gradient(135deg, #357abd 0%, #2868a8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+}
+
+.btn-salir {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: #fff;
+}
+
+.btn-salir:hover {
+    background: linear-gradient(135deg, #ee5a6f 0%, #e84a5f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+}
+
+.btn-main:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .busqueda-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .busqueda-btn {
+        grid-column: span 2;
+    }
+
+    .btn-anadir {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .plato-container {
+        padding: 0 15px 15px 15px;
+    }
+
+    .plato-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 15px;
+        margin: 0 -15px 20px -15px;
+    }
+
+    .plato-titulo {
+        font-size: 24px;
+    }
+
+    .fecha-hora-display {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .busqueda-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .busqueda-btn {
+        grid-column: span 1;
+    }
+
+    .tabla-container {
+        overflow-x: scroll;
+    }
+
+    .tabla-platos {
+        min-width: 900px;
+    }
+
+    .acciones-platos {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn-main {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .plato-titulo {
+        font-size: 20px;
+    }
+
+    .tabla-platos thead tr th,
+    .tabla-platos tbody tr td {
+        padding: 10px;
+        font-size: 11px;
+    }
+
+    .imagen-plato img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-main {
+        padding: 12px 25px;
+        font-size: 14px;
+    }
+}

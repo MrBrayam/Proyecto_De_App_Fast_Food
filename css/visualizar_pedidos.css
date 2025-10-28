@@ -2,8 +2,33 @@
 
 /* Contenedor Principal */
 .visualizar-pedidos-container {
-    padding: 0 30px 30px 30px;
+    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
     min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Patrón de fondo con burbujas */
+.visualizar-pedidos-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 87, 51, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 200, 87, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%);
+    background-size: 100% 100%;
+    animation: floatBubbles 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes floatBubbles {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-20px); }
 }
 
 /* Header */
@@ -11,56 +36,60 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 100%);
     padding: 20px 30px;
-    margin: 0 -30px 30px -30px;
-    border-bottom: 3px solid #ffc857;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: rgba(44, 47, 62, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 87, 51, 0.3);
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .pedidos-titulo {
-    font-size: 28px;
-    font-weight: 700;
-    color: #ffc857;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
     margin: 0;
     display: flex;
     align-items: center;
     gap: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 .pedidos-titulo i {
+    color: #ffc857;
     font-size: 32px;
 }
 
 .fecha-hora-display {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-}
-
-.fecha-hora-display span {
-    color: #fff;
-    font-size: 14px;
+    gap: 20px;
+    color: white;
+    font-size: 16px;
     font-weight: 500;
 }
 
-#hora-actual {
-    color: #ffc857;
-    font-size: 18px;
-    font-weight: 700;
+.fecha-hora-display span {
+    background: rgba(255, 87, 51, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.4);
+    color: white;
 }
 
 /* Sección de Filtros */
 .filtros-section {
-    background: linear-gradient(135deg, rgba(26, 29, 46, 0.95) 0%, rgba(44, 47, 62, 0.95) 100%);
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 200, 87, 0.2);
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    margin: 30px;
+    margin-top: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 2px dashed rgba(255, 87, 51, 0.3);
+    position: relative;
+    z-index: 10;
 }
 
 .filtros-container {
@@ -95,8 +124,8 @@
 .filtro-input {
     width: 100%;
     padding: 12px 15px;
-    background: rgba(58, 61, 78, 0.6);
-    border: 1px solid rgba(255, 200, 87, 0.3);
+    background: rgba(26, 29, 46, 0.6);
+    border: 2px solid rgba(255, 87, 51, 0.3);
     border-radius: 8px;
     color: #fff;
     font-size: 14px;
@@ -107,9 +136,9 @@
 
 .filtro-select:focus,
 .filtro-input:focus {
-    border-color: #ffc857;
-    background: rgba(58, 61, 78, 0.8);
-    box-shadow: 0 0 10px rgba(255, 200, 87, 0.3);
+    border-color: #ff5733;
+    background: rgba(26, 29, 46, 0.8);
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
 }
 
 .filtro-select option {
@@ -153,12 +182,15 @@
 
 /* Tabla de Pedidos */
 .tabla-pedidos-section {
-    background: linear-gradient(135deg, rgba(26, 29, 46, 0.95) 0%, rgba(44, 47, 62, 0.95) 100%);
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 200, 87, 0.2);
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    margin: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 2px dashed rgba(255, 87, 51, 0.3);
+    position: relative;
+    z-index: 10;
 }
 
 .tabla-container {
@@ -169,29 +201,33 @@
 .tabla-pedidos {
     width: 100%;
     border-collapse: collapse;
-    background: rgba(58, 61, 78, 0.4);
-    border-radius: 8px;
+    background: rgba(26, 29, 46, 0.5);
+    border-radius: 0;
     overflow: hidden;
 }
 
 .tabla-pedidos thead {
-    background: linear-gradient(135deg, #ffc857 0%, #ffb347 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .tabla-pedidos thead tr th {
+    background: rgba(26, 29, 46, 0.9);
+    color: #ffc857;
     padding: 15px 20px;
     text-align: left;
-    font-size: 13px;
-    font-weight: 700;
-    color: #1a1d2e;
+    font-size: 14px;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 2px solid rgba(26, 29, 46, 0.3);
+    border-bottom: 2px solid rgba(255, 87, 51, 0.5);
 }
 
 .tabla-pedidos tbody tr {
     border-bottom: 1px solid rgba(255, 200, 87, 0.1);
     transition: all 0.3s ease;
+    background: rgba(44, 47, 62, 0.4);
 }
 
 .tabla-pedidos tbody tr:hover {
@@ -244,7 +280,9 @@
     justify-content: center;
     align-items: center;
     gap: 20px;
-    padding: 20px 0;
+    padding: 30px;
+    position: relative;
+    z-index: 10;
 }
 
 .btn-main {
