@@ -2,18 +2,26 @@
 
 // Inicializar al cargar el DOM
 document.addEventListener('DOMContentLoaded', function() {
-    actualizarFecha();
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 1000);
 });
 
-// Actualizar fecha
-function actualizarFecha() {
+// Actualizar fecha y hora
+function actualizarFechaHora() {
     const ahora = new Date();
-    const dia = String(ahora.getDate()).padStart(2, '0');
-    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-    const anio = ahora.getFullYear();
     
     const fechaElement = document.getElementById('fechaActual');
+    const horaElement = document.getElementById('horaActual');
+    
     if (fechaElement) {
-        fechaElement.textContent = `${dia} / ${mes} / ${anio}`;
+        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
+        fechaElement.textContent = fechaFormateada;
+    }
+    
+    if (horaElement) {
+        const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
+        horaElement.textContent = horaFormateada;
     }
 }

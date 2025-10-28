@@ -30,91 +30,92 @@
                 </div>
             </div>
 
-        <!-- Sección de Búsqueda -->
-        <div class="busqueda-section">
-            <form class="busqueda-form" onsubmit="return false;">
-                <div class="campo-tipo-busqueda">
-                    <label for="tipoBusqueda"><i class="fas fa-filter"></i> Filtrar por:</label>
-                    <select id="tipoBusqueda" class="select-tipo-busqueda">
-                        <option value="nombre">Nombre</option>
-                        <option value="marca">Marca</option>
-                        <option value="tipo">Tipo</option>
-                        <option value="ubicacion">Ubicación</option>
-                        <option value="estado">Estado</option>
-                    </select>
-                </div>
-                
-                <div class="campo-busqueda">
-                    <label for="busqueda"><i class="fas fa-search"></i> Buscar:</label>
-                    <input 
-                        type="text" 
-                        id="busqueda" 
-                        class="input-busqueda" 
-                        placeholder="Ingrese término de búsqueda..."
-                    >
-                </div>
-                
-                <button type="button" class="btn-buscar-principal" onclick="buscarImpresora()">
-                    <i class="fas fa-search"></i>
-                    BUSCAR
-                </button>
-                
-                <button type="button" class="btn-detalle-principal" onclick="verDetalle()" id="btnDetalle" disabled>
-                    <i class="fas fa-info-circle"></i>
-                    DETALLE
-                </button>
-            </form>
-        </div>
-
-        <!-- Sección de Tabla -->
-        <div class="tabla-impresoras-section">
-            <div class="tabla-impresoras-wrapper">
-                <table class="tabla-impresoras" id="tablaImpresoras">
-                    <thead>
-                        <tr>
-                            <th>NOMBRE</th>
-                            <th>MARCA</th>
-                            <th>TIPO</th>
-                            <th>UBICACIÓN</th>
-                            <th>ESTADO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr onclick="seleccionarFila(this)">
-                            <td>Impresora Principal</td>
-                            <td>Epson</td>
-                            <td>Térmica</td>
-                            <td>Caja Principal</td>
-                            <td><span class="badge badge-activa">Activa</span></td>
-                        </tr>
-                        <tr onclick="seleccionarFila(this)">
-                            <td>Impresora Cocina</td>
-                            <td>Star Micronics</td>
-                            <td>Térmica</td>
-                            <td>Cocina</td>
-                            <td><span class="badge badge-activa">Activa</span></td>
-                        </tr>
-                        <tr onclick="seleccionarFila(this)">
-                            <td>Impresora Backup</td>
-                            <td>HP</td>
-                            <td>Láser</td>
-                            <td>Almacén</td>
-                            <td><span class="badge badge-inactiva">Inactiva</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Sección de Búsqueda -->
+            <div class="busqueda-section">
+                <form class="busqueda-form" onsubmit="return false;">
+                    <div class="campo-tipo-busqueda">
+                        <label for="tipoBusqueda"><i class="fas fa-filter"></i> Filtrar por:</label>
+                        <select id="tipoBusqueda" class="select-tipo-busqueda">
+                            <option value="nombre">Nombre</option>
+                            <option value="marca">Marca</option>
+                            <option value="tipo">Tipo</option>
+                            <option value="ubicacion">Ubicación</option>
+                            <option value="estado">Estado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="campo-busqueda">
+                        <label for="busqueda"><i class="fas fa-search"></i> Buscar:</label>
+                        <input 
+                            type="text" 
+                            id="busqueda" 
+                            class="input-busqueda" 
+                            placeholder="Ingrese término de búsqueda..."
+                        >
+                    </div>
+                    
+                    <button type="button" class="btn-buscar-principal" onclick="buscarImpresora()">
+                        <i class="fas fa-search"></i>
+                        BUSCAR
+                    </button>
+                    
+                    <button type="button" class="btn-detalle-principal" onclick="verDetalle()" id="btnDetalle" disabled>
+                        <i class="fas fa-info-circle"></i>
+                        DETALLE
+                    </button>
+                </form>
             </div>
 
-            <!-- Botones de Acción -->
-            <div class="acciones-impresoras">
-                <button class="btn-exportar-impresoras" onclick="exportarImpresoras()">
-                    <i class="fas fa-file-excel"></i>
-                    Exportar
-                </button>
-                <button class="btn-salir-impresoras" onclick="salirModulo()">
-                    <i class="fas fa-times-circle"></i>
-                    Salir
-                </button>
+            <!-- Sección de Tabla -->
+            <div class="tabla-impresoras-section">
+                <div class="tabla-impresoras-wrapper">
+                    <table class="tabla-impresoras" id="tablaImpresoras">
+                        <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>MARCA</th>
+                                <th>TIPO</th>
+                                <th>UBICACIÓN</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>Impresora Principal</td>
+                                <td>Epson</td>
+                                <td>Térmica</td>
+                                <td>Caja Principal</td>
+                                <td><span class="badge badge-activa">Activa</span></td>
+                            </tr>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>Impresora Cocina</td>
+                                <td>Star Micronics</td>
+                                <td>Térmica</td>
+                                <td>Cocina</td>
+                                <td><span class="badge badge-activa">Activa</span></td>
+                            </tr>
+                            <tr onclick="seleccionarFila(this)">
+                                <td>Impresora Backup</td>
+                                <td>HP</td>
+                                <td>Láser</td>
+                                <td>Almacén</td>
+                                <td><span class="badge badge-inactiva">Inactiva</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="acciones-impresoras">
+                    <button class="btn-exportar-impresoras" onclick="exportarImpresoras()">
+                        <i class="fas fa-file-excel"></i>
+                        Exportar
+                    </button>
+                    <button class="btn-salir-impresoras" onclick="salirModulo()">
+                        <i class="fas fa-times-circle"></i>
+                        Salir
+                    </button>
+                </div>
             </div>
         </div>
     </main>
@@ -248,9 +249,8 @@
                     Cerrar
                 </button>
             </div>
-            </div>
         </div>
-    </main>
+    </div>
 
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>

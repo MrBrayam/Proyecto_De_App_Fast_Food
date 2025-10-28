@@ -27,20 +27,18 @@
                 </div>
                 <div class="compras-header-right">
                     <div class="fecha-display">
-                        <span>FECHA</span>
-                        <span id="fechaActual">31 / 10 / 2025</span>
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
                     </div>
                 </div>
             </div>
 
             <!-- Contenido -->
             <div class="compras-contenido">
-            <div class="card">
                 <!-- Datos del Proveedor -->
                 <div class="seccion-proveedor">
                     <h2 class="seccion-titulo">DATOS DEL PROVEEDOR:</h2>
                     <form id="formRegistrarCompra" class="form-proveedor">
-                            <div class="form-group">
                         <div class="form-row-proveedor">
                             <div class="form-group">
                                 <label for="ruc">
@@ -92,13 +90,13 @@
                         <table class="tabla-productos">
                             <thead>
                                 <tr>
-                                    <th>Nro</th>
-                                    <th>Codigo</th>
-                                    <th>Descripcion</th>
-                                    <th>Empaque</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Total</th>
+                                    <th>NRO</th>
+                                    <th>CODIGO</th>
+                                    <th>DESCRIPCION</th>
+                                    <th>EMPAQUE</th>
+                                    <th>CANTIDAD</th>
+                                    <th>PRECIO UNITARIO</th>
+                                    <th>TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaProductosBody">
@@ -142,6 +140,10 @@
                     </button>
                     <button type="button" class="btn-accion btn-salir" id="btnSalir">
                         <i class="fas fa-sign-out-alt"></i>
+                        Salir
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -150,7 +152,5 @@
     <script src="../js/menu_principal.js"></script>
     <script src="../js/registrar_compras.js"></script>
     <script src="../funcionalidades/registrar_compras_funcionalidades.js"></script>
-</body>
-</html>cript>
 </body>
 </html>
