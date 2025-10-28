@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Apertura de Caja - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/apertura_caja.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="apertura-container">
+        <!-- Header -->
+        <div class="apertura-header">
+            <div class="apertura-header-left">
+                <h1 class="apertura-titulo">
+                    <i class="fas fa-cash-register"></i>
+                    Apertura de Caja
+                </h1>
+            </div>
+            <div class="apertura-header-right">
+                <div class="fecha-hora-display">
+                    <span id="fechaActual"></span>
+                    <span id="horaActual"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="apertura-contenido">
+            <div class="apertura-form-card">
+                <form id="formAperturaCaja" class="form-apertura">
+                    <div class="form-group">
+                        <label for="codigoCaja">
+                            <i class="fas fa-barcode"></i>
+                            Código de Caja
+                        </label>
+                        <input 
+                            type="text" 
+                            id="codigoCaja" 
+                            name="codigoCaja"
+                            value="CAJ001"
+                            readonly
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha">
+                            <i class="fas fa-calendar-alt"></i>
+                            Fecha
+                        </label>
+                        <input 
+                            type="text" 
+                            id="fecha" 
+                            name="fecha"
+                            value="27/10/2025"
+                            readonly
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="montoInicial">
+                            <i class="fas fa-money-bill-wave"></i>
+                            Monto Inicial
+                        </label>
+                        <input 
+                            type="number" 
+                            id="montoInicial" 
+                            name="montoInicial"
+                            placeholder="100.00"
+                            step="0.01"
+                            min="0"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="turno">
+                            <i class="fas fa-clock"></i>
+                            Turno
+                        </label>
+                        <select id="turno" name="turno">
+                            <option value="">Seleccionar turno</option>
+                            <option value="Mañana" selected>Mañana</option>
+                            <option value="Tarde">Tarde</option>
+                            <option value="Noche">Noche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-guardar">
+                            <i class="fas fa-save"></i>
+                            Guardar
+                        </button>
+                        <button type="button" class="btn btn-salir" id="btnSalir">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Salir
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/apertura_caja.js"></script>
+    <script src="../funcionalidades/apertura_caja_funcionalidades.js"></script>
+</body>
+</html>
