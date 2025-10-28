@@ -8,314 +8,128 @@
     
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_clientes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sidebar -->
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 class="page-title">Visualizar Clientes</h1>
+        <!-- Contenedor Principal -->
+        <div class="clientes-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="clientes-header">
+                <div class="clientes-header-left">
+                    <h1 class="clientes-titulo">Visualizar clientes</h1>
+                </div>
+                <div class="clientes-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
             </div>
-            <div class="top-bar-right">
-                <div class="current-date" id="currentDate"></div>
-                <div class="notifications">
-                    <button class="notification-btn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
+
+            <!-- Contenido -->
+            <div class="clientes-contenido">
+                <!-- Barra de Búsqueda y Filtros -->
+                <div class="barra-busqueda">
+                    <div class="grupo-busqueda">
+                        <input 
+                            type="text" 
+                            id="buscarCliente" 
+                            class="input-busqueda"
+                            placeholder="Buscar"
+                        >
+                    </div>
+                    <div class="grupo-filtro">
+                        <label for="filtroMontoGastado">Filtrar por:</label>
+                        <select id="filtroMontoGastado" class="select-filtro">
+                            <option value="">Monto Gastado</option>
+                            <option value="bajo">Bajo (0-100)</option>
+                            <option value="medio">Medio (101-500)</option>
+                            <option value="alto">Alto (501+)</option>
+                        </select>
+                    </div>
+                    <button class="btn-buscar">
+                        Buscar
                     </button>
                 </div>
-            </div>
-        </header>
 
-        <!-- Page Content -->
-        <div class="content-wrapper">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2>Lista de Clientes</h2>
-                    <a href="registrar_clientes.html" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Nuevo Cliente
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="search-filter-bar">
-                        <div class="form-group">
-                            <input type="text" id="buscarCliente" class="form-control" placeholder="🔍 Buscar por nombre, documento o teléfono...">
-                        </div>
-                        <div class="form-group">
-                            <select id="filtrarTipoCliente" class="form-control">
-                                <option value="">Todos los tipos</option>
-                                <option value="Regular">Regular</option>
-                                <option value="VIP">VIP</option>
-                                <option value="Corporativo">Corporativo</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select id="filtrarDistrito" class="form-control">
-                                <option value="">Todos los distritos</option>
-                                <option value="Lima">Lima</option>
-                                <option value="Miraflores">Miraflores</option>
-                                <option value="San Isidro">San Isidro</option>
-                                <option value="Barranco">Barranco</option>
-                                <option value="Surco">Surco</option>
-                                <option value="Chorrillos">Chorrillos</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-outline" onclick="exportarClientes()">
-                            <i class="fas fa-download"></i> Exportar Excel
-                        </button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="data-table" id="tablaClientes">
+                <!-- Sección de Tabla -->
+                <div class="seccion-tabla">
+                    <h2 class="subtitulo-tabla">Tabla de clientes:</h2>
+                    
+                    <div class="tabla-container">
+                        <table class="tabla-clientes">
                             <thead>
                                 <tr>
-                                    <th>Documento</th>
-                                    <th>Cliente</th>
-                                    <th>Teléfono</th>
+                                    <th>Nº</th>
+                                    <th>DNI</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
                                     <th>Email</th>
-                                    <th>Distrito</th>
-                                    <th>Tipo</th>
-                                    <th>Registro</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
+                                    <th>Telefono</th>
+                                    <th>Monto Gastado</th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyClientes">
                                 <tr>
-                                    <td>DNI: 12345678</td>
-                                    <td>
-                                        <div class="cliente-info">
-                                            <strong>Juan Carlos Pérez</strong>
-                                            <br><small class="text-muted">VIP</small>
-                                        </div>
-                                    </td>
-                                    <td>987654321</td>
-                                    <td>juan.perez@email.com</td>
-                                    <td>Miraflores</td>
-                                    <td><span class="badge badge-warning">VIP</span></td>
-                                    <td>20/10/2025</td>
-                                    <td><span class="badge badge-success">Activo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(1)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarCliente(1)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente(1)" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-success" onclick="verHistorial(1)" title="Ver historial">
-                                            <i class="fas fa-history"></i>
-                                        </button>
-                                    </td>
+                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td>DNI: 87654321</td>
-                                    <td>
-                                        <div class="cliente-info">
-                                            <strong>María Elena García</strong>
-                                            <br><small class="text-muted">Regular</small>
-                                        </div>
-                                    </td>
-                                    <td>912345678</td>
-                                    <td>maria.garcia@email.com</td>
-                                    <td>San Isidro</td>
-                                    <td><span class="badge badge-info">Regular</span></td>
-                                    <td>22/10/2025</td>
-                                    <td><span class="badge badge-success">Activo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(2)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarCliente(2)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente(2)" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-success" onclick="verHistorial(2)" title="Ver historial">
-                                            <i class="fas fa-history"></i>
-                                        </button>
-                                    </td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td>RUC: 20123456789</td>
-                                    <td>
-                                        <div class="cliente-info">
-                                            <strong>Empresas Unidos SAC</strong>
-                                            <br><small class="text-muted">Corporativo</small>
-                                        </div>
-                                    </td>
-                                    <td>965432178</td>
-                                    <td>ventas@empresasunidos.com</td>
-                                    <td>Lima</td>
-                                    <td><span class="badge badge-primary">Corporativo</span></td>
-                                    <td>25/10/2025</td>
-                                    <td><span class="badge badge-success">Activo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(3)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarCliente(3)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente(3)" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-success" onclick="verHistorial(3)" title="Ver historial">
-                                            <i class="fas fa-history"></i>
-                                        </button>
-                                    </td>
+                                    <td>3</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td>DNI: 11223344</td>
-                                    <td>
-                                        <div class="cliente-info">
-                                            <strong>Carlos Eduardo López</strong>
-                                            <br><small class="text-muted">Regular</small>
-                                        </div>
-                                    </td>
-                                    <td>954321876</td>
-                                    <td>carlos.lopez@email.com</td>
-                                    <td>Barranco</td>
-                                    <td><span class="badge badge-info">Regular</span></td>
-                                    <td>26/10/2025</td>
-                                    <td><span class="badge badge-warning">Inactivo</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="verDetalle(4)" title="Ver detalle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editarCliente(4)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-success" onclick="activarCliente(4)" title="Activar cliente">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline" onclick="verHistorial(4)" title="Ver historial">
-                                            <i class="fas fa-history"></i>
-                                        </button>
-                                    </td>
+                                    <td>4</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                    <div id="noDataMessage" class="alert alert-info" style="display: none;">
-                        No hay clientes registrados. <a href="registrar_clientes.html">Registrar el primero</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Estadísticas de Clientes -->
-            <div class="row mt-4">
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-primary">125</h3>
-                            <p class="text-muted">Total Clientes</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-warning">15</h3>
-                            <p class="text-muted">Clientes VIP</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-success">110</h3>
-                            <p class="text-muted">Clientes Activos</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h3 class="text-info">8</h3>
-                            <p class="text-muted">Nuevos este mes</p>
-                        </div>
-                    </div>
+                <!-- Botones de Acción -->
+                <div class="acciones-section">
+                    <button type="button" class="btn-accion btn-guardar">
+                        Guardar
+                    </button>
+                    <button type="button" class="btn-accion btn-salir" onclick="salirModulo()">
+                        Salir
+                    </button>
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- Modal Detalle Cliente -->
-    <div id="modalDetalleCliente" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Detalle del Cliente</h3>
-                <button class="modal-close" onclick="cerrarModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="detalleClienteContent">
-                    <!-- Contenido dinámico -->
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script>
-        function verDetalle(clienteId) {
-            console.log('Ver detalle del cliente:', clienteId);
-            document.getElementById('modalDetalleCliente').style.display = 'block';
-        }
-
-        function editarCliente(clienteId) {
-            console.log('Editar cliente:', clienteId);
-            // Redirigir a formulario de edición
-        }
-
-        function eliminarCliente(clienteId) {
-            if (confirm('¿Está seguro de que desea eliminar este cliente?')) {
-                console.log('Eliminar cliente:', clienteId);
-            }
-        }
-
-        function activarCliente(clienteId) {
-            console.log('Activar cliente:', clienteId);
-        }
-
-        function verHistorial(clienteId) {
-            console.log('Ver historial de compras del cliente:', clienteId);
-        }
-
-        function exportarClientes() {
-            console.log('Exportar lista de clientes');
-        }
-
-        function cerrarModal() {
-            document.getElementById('modalDetalleCliente').style.display = 'none';
-        }
-
-        // Filtros de búsqueda
-        document.getElementById('buscarCliente').addEventListener('input', function() {
-            // Implementar búsqueda en tiempo real
-            console.log('Buscar:', this.value);
-        });
-
-        document.getElementById('filtrarTipoCliente').addEventListener('change', function() {
-            console.log('Filtrar por tipo:', this.value);
-        });
-
-        document.getElementById('filtrarDistrito').addEventListener('change', function() {
-            console.log('Filtrar por distrito:', this.value);
-        });
-    </script>
+    <script src="../js/visualizar_clientes.js"></script>
 </body>
 </html>
