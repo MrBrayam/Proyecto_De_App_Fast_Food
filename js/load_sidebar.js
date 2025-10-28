@@ -190,19 +190,6 @@ function cargarSidebar() {
                     </ul>
                 </li>
                 
-                <!-- 4. Proveedores -->
-                <li class="nav-item has-submenu" data-title="Proveedores">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon"><i class="fas fa-truck"></i></span>
-                        <span class="nav-text">Proveedores</span>
-                        <span class="nav-arrow">▼</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedores</a></li>
-                        <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedores</a></li>
-                    </ul>
-                </li>
-                
                 <!-- 5. Clientes -->
                 <li class="nav-item has-submenu" data-title="Clientes">
                     <a href="#" class="nav-link">
