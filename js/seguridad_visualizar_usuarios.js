@@ -105,64 +105,6 @@ function formatearFecha(fecha) {
     });
 }
 
-function filtrarUsuarios() {
-    const busqueda = document.getElementById('buscarUsuario').value.toLowerCase();
-    const perfilFiltro = document.getElementById('filtrarPerfil').value;
-    const estadoFiltro = document.getElementById('filtrarEstado').value;
-    
-    let usuariosFiltrados = usuarios.filter(usuario => {
-        const coincideBusqueda = usuario.nombre.toLowerCase().includes(busqueda) ||
-                                 usuario.dni.includes(busqueda) ||
-                                 usuario.usuario.toLowerCase().includes(busqueda);
-        
-        const coincidePerfil = !perfilFiltro || usuario.perfil === perfilFiltro;
-        const coincideEstado = !estadoFiltro || usuario.estado === estadoFiltro;
-        
-        return coincideBusqueda && coincidePerfil && coincideEstado;
-    });
-    
-    mostrarUsuarios(usuariosFiltrados);
-}
-
-function editarUsuario(index) {
-    const usuario = usuarios[index];
-    document.getElementById('editIndex').value = index;
-    document.getElementById('editNombre').value = usuario.nombre;
-    document.getElementById('editEmail').value = usuario.email;
-    document.getElementById('editPerfil').value = usuario.perfil;
-    document.getElementById('editEstado').value = usuario.estado;
-    
-    document.getElementById('modalEditarUsuario').style.display = 'flex';
-}
-
-function guardarEdicion(e) {
-    e.preventDefault();
-    
-    const index = document.getElementById('editIndex').value;
-    usuarios[index].nombre = document.getElementById('editNombre').value;
-    usuarios[index].email = document.getElementById('editEmail').value;
-    usuarios[index].perfil = document.getElementById('editPerfil').value;
-    usuarios[index].estado = document.getElementById('editEstado').value;
-    
-    localStorage.setItem('usuarios_sistema', JSON.stringify(usuarios));
-    cerrarModal();
-    cargarUsuarios();
-    alert('Usuario actualizado correctamente');
-}
-
-function eliminarUsuario(index) {
-    if (confirm('¿Está seguro de eliminar este usuario?')) {
-        usuarios.splice(index, 1);
-        localStorage.setItem('usuarios_sistema', JSON.stringify(usuarios));
-        cargarUsuarios();
-        alert('Usuario eliminado correctamente');
-    }
-}
-
-function cerrarModal() {
-    document.getElementById('modalEditarUsuario').style.display = 'none';
-}
-
 // Actualizar fecha y hora
 function actualizarFechaHora() {
     const ahora = new Date();
