@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Proveedores - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_proveedores.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="proveedores-visualizar-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="proveedores-header">
+                <div class="proveedores-header-left">
+                    <h1 class="proveedores-titulo">
+                        <i class="fas fa-truck-loading"></i>
+                        Visualizar Proveedores
+                    </h1>
+                </div>
+                <div class="proveedores-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual">Cargando...</span>
+                        <span id="horaActual">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Búsqueda y Filtros -->
+            <section class="busqueda-section">
+                <div class="busqueda-container">
+                    <div class="busqueda-input-wrapper">
+                        <label for="inputBuscar">Buscar</label>
+                        <input type="text" id="inputBuscar" class="input-buscar" placeholder="Buscar por RUC, razón social, contacto...">
+                    </div>
+                    <div class="filtro-wrapper">
+                        <label for="selectFiltro">Filtrar por:</label>
+                        <select id="selectFiltro" class="select-filtro">
+                            <option value="razonSocial">Razón Social</option>
+                            <option value="ruc">RUC/DNI/CE</option>
+                            <option value="categoria">Categoría</option>
+                            <option value="contacto">Contacto</option>
+                            <option value="estado">Estado</option>
+                        </select>
+                    </div>
+                    <div class="buscar-btn-wrapper">
+                        <button type="button" id="btnBuscar" class="btn-buscar">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabla de Proveedores -->
+            <section class="tabla-proveedores-section">
+                <div class="tabla-container">
+                    <table class="tabla-proveedores">
+                        <thead>
+                            <tr>
+                                <th>RUC/DNI/CE</th>
+                                <th>Razón Social</th>
+                                <th>Categoría</th>
+                                <th>Contacto</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProveedoresBody">
+                            <!-- Datos de prueba -->
+                            <tr>
+                                <td>20541236987</td>
+                                <td>Distribuidora Alimentaria S.A.C.</td>
+                                <td><span class="badge badge-alimentos">Alimentos</span></td>
+                                <td>Carlos Mendoza</td>
+                                <td>01-4567890</td>
+                                <td>contacto@distribuidora.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20589654123</td>
+                                <td>Lácteos del Valle E.I.R.L.</td>
+                                <td><span class="badge badge-lacteos">Lácteos</span></td>
+                                <td>María García</td>
+                                <td>987-654-321</td>
+                                <td>ventas@lacteosvalle.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20478523698</td>
+                                <td>Carnes Premium S.A.</td>
+                                <td><span class="badge badge-carnes">Carnes</span></td>
+                                <td>Roberto Sánchez</td>
+                                <td>01-7894561</td>
+                                <td>info@carnespremium.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20654789321</td>
+                                <td>Frutas y Verduras La Cosecha S.R.L.</td>
+                                <td><span class="badge badge-vegetales">Frutas y Verduras</span></td>
+                                <td>Ana Rodríguez</td>
+                                <td>965-478-123</td>
+                                <td>pedidos@lacosecha.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20123456789</td>
+                                <td>Bebidas y Gaseosas del Norte S.A.C.</td>
+                                <td><span class="badge badge-bebidas">Bebidas</span></td>
+                                <td>Luis Torres</td>
+                                <td>01-2345678</td>
+                                <td>ventas@bebidasnorte.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20987456321</td>
+                                <td>Empaques y Envases Perú E.I.R.L.</td>
+                                <td><span class="badge badge-empaques">Empaques</span></td>
+                                <td>Patricia Vega</td>
+                                <td>952-147-852</td>
+                                <td>contacto@empaquesperu.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20741852963</td>
+                                <td>Productos de Limpieza Industrial S.A.</td>
+                                <td><span class="badge badge-limpieza">Limpieza</span></td>
+                                <td>Jorge Castro</td>
+                                <td>01-8527419</td>
+                                <td>ventas@limpiezaindustrial.com</td>
+                                <td><span class="badge badge-activo">Activo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20369852147</td>
+                                <td>Equipamiento Gastronómico Profesional S.R.L.</td>
+                                <td><span class="badge badge-equipamiento">Equipamiento</span></td>
+                                <td>Carmen López</td>
+                                <td>963-852-741</td>
+                                <td>info@equipgastro.com</td>
+                                <td><span class="badge badge-inactivo">Inactivo</span></td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="acciones-proveedores">
+                    <button type="button" id="btnRegistrar" class="btn-main btn-registrar">
+                        <i class="fas fa-plus-circle"></i>
+                        Registrar
+                    </button>
+                    <button type="button" id="btnExportar" class="btn-main btn-exportar">
+                        <i class="fas fa-file-excel"></i>
+                        Exportar
+                    </button>
+                    <button type="button" onclick="window.location.href='menu_principal.html'" class="btn-main btn-salir">
+                        <i class="fas fa-times-circle"></i>
+                        Salir
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Detalles -->
+    <div id="modalDetalle" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Detalles del Proveedor</h2>
+                <button class="modal-close" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Información General -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-building"></i>
+                        Información General
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item">
+                            <label>RUC/DNI/CE:</label>
+                            <span id="detalle-ruc">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Razón Social:</label>
+                            <span id="detalle-razon">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Categoría:</label>
+                            <span id="detalle-categoria">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Estado:</label>
+                            <span id="detalle-estado">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Contacto -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-address-book"></i>
+                        Información de Contacto
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item">
+                            <label>Persona de Contacto:</label>
+                            <span id="detalle-contacto">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Teléfono:</label>
+                            <span id="detalle-telefono">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Email:</label>
+                            <span id="detalle-email">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Sitio Web:</label>
+                            <span id="detalle-web">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="detalle-section detalle-full">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Ubicación
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item detalle-full">
+                            <label>Dirección:</label>
+                            <span id="detalle-direccion">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Distrito:</label>
+                            <span id="detalle-distrito">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Ciudad:</label>
+                            <span id="detalle-ciudad">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Comercial -->
+                <div class="detalle-section">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-handshake"></i>
+                        Información Comercial
+                    </h3>
+                    <div class="detalle-grid">
+                        <div class="detalle-item">
+                            <label>Días de Entrega:</label>
+                            <span id="detalle-dias">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Horario de Atención:</label>
+                            <span id="detalle-horario">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Forma de Pago:</label>
+                            <span id="detalle-pago">-</span>
+                        </div>
+                        <div class="detalle-item">
+                            <label>Calificación:</label>
+                            <span id="detalle-calificacion">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="detalle-section detalle-full">
+                    <h3 class="section-titulo">
+                        <i class="fas fa-comment-dots"></i>
+                        Observaciones
+                    </h3>
+                    <div class="observaciones-box">
+                        <p id="detalle-observaciones">Sin observaciones</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-modal btn-editar" onclick="editarProveedor()">
+                    <i class="fas fa-edit"></i>
+                    Editar
+                </button>
+                <button class="btn-modal btn-cerrar" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_proveedores.js"></script>
+</body>
+</html>
