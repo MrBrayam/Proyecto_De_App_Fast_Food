@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Cajas - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_caja.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="caja-visualizar-container">
+            <!-- Header con Título y Fecha/Hora -->
+            <div class="caja-header">
+                <div class="caja-header-left">
+                    <h1 class="caja-titulo">
+                        <i class="fas fa-cash-register"></i>
+                        Visualizar Cajas
+                    </h1>
+                </div>
+                <div class="caja-header-right">
+                    <div class="fecha-hora-display">
+                        <span id="fechaActual"></span>
+                        <span id="horaActual"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Búsqueda -->
+            <section class="busqueda-section">
+                <div class="busqueda-container">
+                    <div class="search-box">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="fechaBusqueda" placeholder="Buscar por fecha">
+                    </div>
+                    <button class="btn-buscar">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </section>
+
+            <!-- Tabla de Cajas -->
+            <section class="tabla-section">
+                <div class="tabla-container">
+                    <table class="tabla-cajas">
+                        <thead>
+                            <tr>
+                                <th>Código de Caja</th>
+                                <th>Usuario Responsable</th>
+                                <th>Monto Inicial</th>
+                                <th>Monto Final</th>
+                                <th>Fecha de Apertura</th>
+                                <th>Hora de Apertura</th>
+                                <th>Estado de Caja</th>
+                                <th>Turno</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaCajasBody">
+                            <tr>
+                                <td>0001</td>
+                                <td>Pedro</td>
+                                <td>S/ 150.00</td>
+                                <td>-</td>
+                                <td>30/04/2025</td>
+                                <td>08:00</td>
+                                <td><span class="estado-badge estado-abierta">Abierta</span></td>
+                                <td>Mañana</td>
+                            </tr>
+                            <tr>
+                                <td>0002</td>
+                                <td>Mónica</td>
+                                <td>S/ 200.00</td>
+                                <td>S/ 200.00</td>
+                                <td>30/04/2025</td>
+                                <td>15:00</td>
+                                <td><span class="estado-badge estado-cerrada">Cerrada</span></td>
+                                <td>Tarde</td>
+                            </tr>
+                            <tr>
+                                <td>0003</td>
+                                <td>Manuel</td>
+                                <td>S/ 400.00</td>
+                                <td>S/ 300.00</td>
+                                <td>30/04/2025</td>
+                                <td>20:00</td>
+                                <td><span class="estado-badge estado-cerrada">Cerrada</span></td>
+                                <td>Noche</td>
+                            </tr>
+                            <tr>
+                                <td>0004</td>
+                                <td>Camila</td>
+                                <td>S/ 100.00</td>
+                                <td>-</td>
+                                <td>30/04/2025</td>
+                                <td>23:00</td>
+                                <td><span class="estado-badge estado-abierta">Abierta</span></td>
+                                <td>Noche</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <section class="acciones-section">
+                <div class="acciones-container">
+                    <button class="btn-accion btn-editar">
+                        <i class="fas fa-edit"></i>
+                        Editar
+                    </button>
+                    <button class="btn-accion btn-eliminar">
+                        <i class="fas fa-trash-alt"></i>
+                        Eliminar
+                    </button>
+                    <button class="btn-accion btn-volver" id="btnVolver">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_caja.js"></script>
+    <script src="../funcionalidades/visualizar_caja_funcionalidades.js"></script>
+</body>
+</html>

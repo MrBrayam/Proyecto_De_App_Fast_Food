@@ -107,7 +107,7 @@ function cargarSidebar() {
                             </a>
                             <ul class="submenu level-2">
                                 <li class="submenu-item"><a href="apertura_caja.html" class="submenu-link">Apertura Caja</a></li>
-                                <li class="submenu-item"><a href="visualizar_cajas.html" class="submenu-link">Visualizar Cajas</a></li>
+                                <li class="submenu-item"><a href="visualizar_caja.html" class="submenu-link">Visualizar Cajas</a></li>
                                 <li class="submenu-item"><a href="cerrar_caja.html" class="submenu-link">Cerrar Caja</a></li>
                             </ul>
                         </li>
