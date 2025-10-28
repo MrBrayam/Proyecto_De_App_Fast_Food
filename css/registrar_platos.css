@@ -193,15 +193,22 @@
     overflow: hidden;
 }
 
+.tabla-platos thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
 .tabla-platos thead tr th {
-    background: rgba(200, 200, 200, 0.95);
-    color: #2c2f3e;
+    background: rgba(26, 29, 46, 0.9);
+    color: #ffc857;
     padding: 15px 20px;
     text-align: left;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.5);
+    letter-spacing: 0.5px;
 }
 
 .tabla-platos tbody tr {

@@ -19,10 +19,16 @@ function actualizarFechaHora() {
         month: 'long', 
         day: 'numeric' 
     };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    const fecha = ahora.toLocaleDateString('es-ES', opciones);
-    const hora = ahora.toLocaleTimeString('es-ES');
+    const opcionesHora = { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false 
+    };
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
     
-    document.getElementById('fecha-actual').textContent = fecha;
-    document.getElementById('hora-actual').textContent = hora;
+    document.getElementById('fecha-actual').textContent = fechaFormateada;
+    document.getElementById('hora-actual').textContent = horaFormateada;
 }

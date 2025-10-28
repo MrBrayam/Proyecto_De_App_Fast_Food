@@ -12,16 +12,20 @@ function actualizarFechaHora() {
     const ahora = new Date();
     
     const opciones = { 
+        weekday: 'long', 
         year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit' 
+        month: 'long', 
+        day: 'numeric' 
     };
-    const fechaFormateada = ahora.toLocaleDateString('es-PE', opciones);
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    const horas = String(ahora.getHours()).padStart(2, '0');
-    const minutos = String(ahora.getMinutes()).padStart(2, '0');
-    const segundos = String(ahora.getSeconds()).padStart(2, '0');
-    const horaFormateada = `${horas}:${minutos}:${segundos}`;
+    const opcionesHora = { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false 
+    };
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
     
     document.getElementById('fecha-actual').textContent = fechaFormateada;
     document.getElementById('hora-actual').textContent = horaFormateada;
