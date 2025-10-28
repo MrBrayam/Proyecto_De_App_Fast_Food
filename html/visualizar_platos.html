@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizar Platos - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/visualizar_platos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="platos-visualizar-container">
+            <!-- Header -->
+            <div class="platos-header">
+                <h1 class="platos-titulo">
+                    <i class="fas fa-pizza-slice"></i>
+                    Visualizar Plato
+                </h1>
+                <div class="fecha-hora-display">
+                    <span id="fechaActual">Cargando...</span>
+                    <span id="horaActual">--:--:--</span>
+                </div>
+            </div>
+
+            <!-- Sección de Búsqueda y Filtros -->
+            <section class="busqueda-section">
+                <div class="busqueda-container">
+                    <div class="busqueda-input-wrapper">
+                        <label for="inputBuscar">Buscar</label>
+                        <input type="text" id="inputBuscar" class="input-buscar" placeholder="Buscar...">
+                    </div>
+                    <div class="filtro-wrapper">
+                        <label for="selectFiltro">Filtrar por:</label>
+                        <select id="selectFiltro" class="select-filtro">
+                            <option value="cantidad">Cantidad Disponible</option>
+                            <option value="codigo">Código</option>
+                            <option value="nombre">Nombre</option>
+                            <option value="tamano">Tamaño</option>
+                            <option value="precio">Precio</option>
+                        </select>
+                    </div>
+                    <div class="buscar-btn-wrapper">
+                        <button type="button" id="btnBuscar" class="btn-buscar">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabla de Platos -->
+            <section class="tabla-platos-section">
+                <div class="tabla-container">
+                    <table class="tabla-platos">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Imagen Referencial</th>
+                                <th>Tamaño</th>
+                                <th>Precio</th>
+                                <th>Cantidad Disponible</th>
+                                <th>Información</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPlatosBody">
+                            <!-- Datos de prueba -->
+                            <tr>
+                                <td>204568</td>
+                                <td>Pizza Americana</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/ff5733/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Familiar</td>
+                                <td>S/40</td>
+                                <td>2</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>204569</td>
+                                <td>Pizza Hawaiana</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/ffc857/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Mediana</td>
+                                <td>S/35</td>
+                                <td>5</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>204570</td>
+                                <td>Pizza Vegetariana</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/27ae60/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Grande</td>
+                                <td>S/38</td>
+                                <td>3</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>204571</td>
+                                <td>Pizza BBQ</td>
+                                <td>
+                                    <div class="imagen-plato">
+                                        <img src="https://via.placeholder.com/60/e74c3c/ffffff?text=🍕" alt="Pizza">
+                                    </div>
+                                </td>
+                                <td>Familiar</td>
+                                <td>S/42</td>
+                                <td>4</td>
+                                <td>
+                                    <button class="btn-info" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <section class="acciones-platos">
+                <button type="button" id="btnRegistrar" class="btn-main btn-registrar">
+                    <i class="fas fa-plus-circle"></i>
+                    Registrar
+                </button>
+                <button type="button" onclick="window.location.href='menu_principal.html'" class="btn-main btn-salir">
+                    <i class="fas fa-times-circle"></i>
+                    Salir
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Detalles -->
+    <div id="modalDetalle" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Detalles del Plato</h2>
+                <button class="modal-close" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detalle-grid">
+                    <div class="detalle-item">
+                        <label>Código:</label>
+                        <span id="detalleCodigo">-</span>
+                    </div>
+                    <div class="detalle-item">
+                        <label>Nombre:</label>
+                        <span id="detalleNombre">-</span>
+                    </div>
+                    <div class="detalle-item">
+                        <label>Tamaño:</label>
+                        <span id="detalleTamano">-</span>
+                    </div>
+                    <div class="detalle-item">
+                        <label>Precio:</label>
+                        <span id="detallePrecio">-</span>
+                    </div>
+                    <div class="detalle-item detalle-full">
+                        <label>Descripción:</label>
+                        <span id="detalleDescripcion">-</span>
+                    </div>
+                    <div class="detalle-item detalle-full">
+                        <label>Ingredientes:</label>
+                        <span id="detalleIngredientes">-</span>
+                    </div>
+                    <div class="detalle-item">
+                        <label>Cantidad Disponible:</label>
+                        <span id="detalleCantidad">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_platos.js"></script>
+</body>
+</html>
