@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - Fast Food</title>
+    <link rel="stylesheet" href="../css/tienda.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Barra superior con carrito -->
+    <header class="tienda-header">
+        <div class="container-header">
+            <div class="logo-tienda">
+                <i class="fas fa-utensils"></i>
+                <h1>Fast Food</h1>
+            </div>
+            
+            <nav class="nav-categorias">
+                <a href="#" class="nav-cat-link active" data-categoria="todos">
+                    <i class="fas fa-th"></i> Todos
+                </a>
+                <a href="#" class="nav-cat-link" data-categoria="pizzas">
+                    <i class="fas fa-pizza-slice"></i> Pizzas
+                </a>
+                <a href="#" class="nav-cat-link" data-categoria="hamburguesas">
+                    <i class="fas fa-hamburger"></i> Hamburguesas
+                </a>
+                <a href="#" class="nav-cat-link" data-categoria="bebidas">
+                    <i class="fas fa-glass-cheers"></i> Bebidas
+                </a>
+                <a href="#" class="nav-cat-link" data-categoria="postres">
+                    <i class="fas fa-ice-cream"></i> Postres
+                </a>
+                <a href="#" class="nav-cat-link" data-categoria="entradas">
+                    <i class="fas fa-drumstick-bite"></i> Entradas
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar productos...">
+                </div>
+                
+                <button class="btn-carrito">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="carrito-count">0</span>
+                    <span class="carrito-total">S/. 0.00</span>
+                </button>
+
+                <button class="btn-usuario">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner de promociones -->
+    <section class="banner-promociones">
+        <div class="container-banner">
+            <div class="slider-promociones">
+                <div class="slide-promo active">
+                    <div class="promo-content">
+                        <span class="promo-badge">¡Oferta del día!</span>
+                        <h2>2x1 en Pizzas Familiares</h2>
+                        <p>Válido hasta las 6:00 PM</p>
+                        <button class="btn-promo">Ver más</button>
+                    </div>
+                    <div class="promo-image">
+                        <i class="fas fa-pizza-slice"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido principal -->
+    <main class="tienda-main">
+        <div class="container-tienda">
+            <!-- Sidebar con filtros -->
+            <aside class="sidebar-filtros">
+                <div class="filtro-box">
+                    <h3><i class="fas fa-filter"></i> Filtros</h3>
+                    
+                    <div class="filtro-group">
+                        <h4>Precio</h4>
+                        <div class="precio-range">
+                            <input type="range" min="0" max="100" value="100" class="range-slider">
+                            <div class="precio-labels">
+                                <span>S/. 0</span>
+                                <span>S/. 100+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filtro-group">
+                        <h4>Disponibilidad</h4>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            <span>En stock</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>Con promoción</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>Nuevo</span>
+                        </label>
+                    </div>
+
+                    <div class="filtro-group">
+                        <h4>Tiempo de preparación</h4>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>Menos de 15 min</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>15-30 min</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>Más de 30 min</span>
+                        </label>
+                    </div>
+
+                    <button class="btn-limpiar-filtros">
+                        <i class="fas fa-redo"></i> Limpiar filtros
+                    </button>
+                </div>
+
+                <div class="banner-lateral">
+                    <div class="banner-content">
+                        <i class="fas fa-percentage"></i>
+                        <h4>Descuento especial</h4>
+                        <p>20% OFF en tu primera compra</p>
+                        <span class="codigo-descuento">Código: BIENVENIDO20</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Grid de productos -->
+            <section class="productos-section">
+                <div class="productos-header">
+                    <div class="productos-info">
+                        <h2>Nuestro Menú</h2>
+                        <span class="productos-count">24 productos disponibles</span>
+                    </div>
+                    
+                    <div class="productos-controls">
+                        <select class="select-ordenar">
+                            <option>Ordenar por: Destacados</option>
+                            <option>Precio: Menor a Mayor</option>
+                            <option>Precio: Mayor a Menor</option>
+                            <option>Más vendidos</option>
+                            <option>Nuevos</option>
+                        </select>
+
+                        <div class="view-toggle">
+                            <button class="btn-view active" data-view="grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="btn-view" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="productos-grid">
+                    <!-- Producto 1 -->
+                    <div class="producto-card" data-categoria="pizzas">
+                        <div class="producto-badges">
+                            <span class="badge badge-nuevo">Nuevo</span>
+                            <span class="badge badge-descuento">-15%</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-pizza-slice"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Pizza Hawaiana</h3>
+                            <p class="producto-descripcion">Deliciosa pizza con piña, jamón y queso mozzarella</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(127)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 20 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 850 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-anterior">S/. 40.00</span>
+                                    <span class="precio-actual">S/. 35.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 2 -->
+                    <div class="producto-card" data-categoria="pizzas">
+                        <div class="producto-badges">
+                            <span class="badge badge-popular">Popular</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-pizza-slice"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Pizza Pepperoni</h3>
+                            <p class="producto-descripcion">Pizza clásica con pepperoni premium y extra queso</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(203)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 20 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 920 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 40.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 3 -->
+                    <div class="producto-card" data-categoria="pizzas">
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-pizza-slice"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Pizza Vegetariana</h3>
+                            <p class="producto-descripcion">Pizza con vegetales frescos de temporada</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(89)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 20 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 680 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 38.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 4 -->
+                    <div class="producto-card" data-categoria="hamburguesas">
+                        <div class="producto-badges">
+                            <span class="badge badge-popular">Popular</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-hamburger"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Hamburguesa Clásica</h3>
+                            <p class="producto-descripcion">Hamburguesa con carne premium, lechuga, tomate y queso</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(156)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 15 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 720 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 25.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 5 -->
+                    <div class="producto-card" data-categoria="hamburguesas">
+                        <div class="producto-badges">
+                            <span class="badge badge-descuento">-20%</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-hamburger"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Hamburguesa BBQ</h3>
+                            <p class="producto-descripcion">Con salsa BBQ casera y aros de cebolla crujientes</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(98)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 15 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 780 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-anterior">S/. 35.00</span>
+                                    <span class="precio-actual">S/. 28.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 6 -->
+                    <div class="producto-card" data-categoria="hamburguesas">
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-hamburger"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Hamburguesa Doble</h3>
+                            <p class="producto-descripcion">Doble carne, doble queso, sabor inigualable</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(175)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 18 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 950 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 32.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 7 -->
+                    <div class="producto-card" data-categoria="bebidas">
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Coca Cola 500ml</h3>
+                            <p class="producto-descripcion">Bebida gaseosa refrescante</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(412)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 0 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 210 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 5.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 8 -->
+                    <div class="producto-card" data-categoria="bebidas">
+                        <div class="producto-badges">
+                            <span class="badge badge-nuevo">Nuevo</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-glass-martini"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Limonada Natural</h3>
+                            <p class="producto-descripcion">Limonada fresca preparada al momento</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(145)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 5 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 120 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 8.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 9 -->
+                    <div class="producto-card" data-categoria="postres">
+                        <div class="producto-badges">
+                            <span class="badge badge-popular">Popular</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-ice-cream"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Helado de Chocolate</h3>
+                            <p class="producto-descripcion">Delicioso helado cremoso de chocolate belga</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(234)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 2 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 320 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 12.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 10 -->
+                    <div class="producto-card" data-categoria="entradas">
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-drumstick-bite"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Alitas Picantes</h3>
+                            <p class="producto-descripcion">Alitas de pollo crujientes con salsa BBQ o picante</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(187)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 12 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 580 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 18.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 11 -->
+                    <div class="producto-card" data-categoria="entradas">
+                        <div class="producto-badges">
+                            <span class="badge badge-descuento">-10%</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-cheese"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Tequeños de Queso</h3>
+                            <p class="producto-descripcion">Tequeños crujientes rellenos de queso</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(92)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 10 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 420 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-anterior">S/. 15.00</span>
+                                    <span class="precio-actual">S/. 13.50</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Producto 12 -->
+                    <div class="producto-card" data-categoria="postres">
+                        <div class="producto-badges">
+                            <span class="badge badge-nuevo">Nuevo</span>
+                        </div>
+                        <button class="btn-favorito">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="producto-imagen">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <div class="producto-info">
+                            <h3>Cheesecake de Fresa</h3>
+                            <p class="producto-descripcion">Tarta de queso con coulis de fresas frescas</p>
+                            <div class="producto-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(67)</span>
+                            </div>
+                            <div class="producto-meta">
+                                <span class="tiempo"><i class="far fa-clock"></i> 5 min</span>
+                                <span class="calorias"><i class="fas fa-fire"></i> 380 kcal</span>
+                            </div>
+                            <div class="producto-footer">
+                                <div class="precio-box">
+                                    <span class="precio-actual">S/. 16.00</span>
+                                </div>
+                                <button class="btn-agregar">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paginación -->
+                <div class="paginacion">
+                    <button class="btn-pag" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn-pag active">1</button>
+                    <button class="btn-pag">2</button>
+                    <button class="btn-pag">3</button>
+                    <button class="btn-pag">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Panel lateral del carrito (oculto por defecto) -->
+    <div class="carrito-panel">
+        <div class="carrito-header">
+            <h3><i class="fas fa-shopping-cart"></i> Mi Carrito</h3>
+            <button class="btn-cerrar-carrito">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="carrito-contenido">
+            <div class="carrito-vacio">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+                <span>Agrega productos para comenzar</span>
+            </div>
+
+            <div class="carrito-items" style="display: none;">
+                <!-- Item de ejemplo -->
+                <div class="carrito-item">
+                    <div class="item-imagen">
+                        <i class="fas fa-pizza-slice"></i>
+                    </div>
+                    <div class="item-info">
+                        <h4>Pizza Hawaiana</h4>
+                        <p>Grande - Masa tradicional</p>
+                        <span class="item-precio">S/. 35.00</span>
+                    </div>
+                    <div class="item-cantidad">
+                        <button class="btn-cantidad"><i class="fas fa-minus"></i></button>
+                        <span>1</span>
+                        <button class="btn-cantidad"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <button class="btn-eliminar-item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="carrito-footer">
+            <div class="carrito-resumen">
+                <div class="resumen-linea">
+                    <span>Subtotal:</span>
+                    <span>S/. 0.00</span>
+                </div>
+                <div class="resumen-linea">
+                    <span>Descuento:</span>
+                    <span class="text-descuento">-S/. 0.00</span>
+                </div>
+                <div class="resumen-linea">
+                    <span>Delivery:</span>
+                    <span>S/. 5.00</span>
+                </div>
+                <div class="resumen-linea total">
+                    <span>Total:</span>
+                    <span>S/. 0.00</span>
+                </div>
+            </div>
+
+            <div class="carrito-codigo">
+                <input type="text" placeholder="Código de descuento">
+                <button class="btn-aplicar">Aplicar</button>
+            </div>
+
+            <button class="btn-finalizar">
+                <i class="fas fa-check-circle"></i> Finalizar Pedido
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay del carrito -->
+    <div class="carrito-overlay"></div>
+
+    <!-- Footer -->
+    <footer class="tienda-footer">
+        <div class="container-footer">
+            <div class="footer-col">
+                <h4>Acerca de Nosotros</h4>
+                <ul>
+                    <li><a href="#">Nuestra Historia</a></li>
+                    <li><a href="#">Misión y Visión</a></li>
+                    <li><a href="#">Sucursales</a></li>
+                    <li><a href="#">Trabaja con Nosotros</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Atención al Cliente</h4>
+                <ul>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Política de Devoluciones</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contáctanos</h4>
+                <ul>
+                    <li><i class="fas fa-phone"></i> (01) 234-5678</li>
+                    <li><i class="fas fa-envelope"></i> info@fastfood.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Lima</li>
+                </ul>
+                <div class="redes-sociales">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Horarios</h4>
+                <ul>
+                    <li>Lunes a Jueves: 8:00 AM - 11:00 PM</li>
+                    <li>Viernes a Sábado: 8:00 AM - 12:00 AM</li>
+                    <li>Domingo: 9:00 AM - 10:00 PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Fast Food. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
