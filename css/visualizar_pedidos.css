@@ -274,6 +274,37 @@
     font-size: 16px;
 }
 
+/* Badges para Tipo de Servicio */
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    min-width: 70px;
+    text-align: center;
+}
+
+.badge-local {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
+}
+
+.badge-delivery {
+    background: linear-gradient(135deg, #3498db, #5dade2);
+    color: white;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+.badge-para-llevar {
+    background: linear-gradient(135deg, #f39c12, #f7dc6f);
+    color: #1a1d2e;
+    box-shadow: 0 2px 4px rgba(243, 156, 18, 0.3);
+}
+
 /* Botones de Acción */
 .acciones-pedidos {
     display: flex;

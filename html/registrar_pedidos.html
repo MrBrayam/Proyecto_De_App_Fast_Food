@@ -37,6 +37,17 @@
             <section class="info-cliente-mesa">
                 <div class="info-card">
                     <div class="info-item">
+                        <label for="tipoServicio">
+                            <i class="fas fa-concierge-bell"></i>
+                            TIPO DE SERVICIO
+                        </label>
+                        <select id="tipoServicio" class="info-input">
+                            <option value="local">Local</option>
+                            <option value="delivery">Delivery</option>
+                            <option value="para-llevar">Para Llevar</option>
+                        </select>
+                    </div>
+                    <div class="info-item" id="mesaSection">
                         <label for="numeroMesa">
                             <i class="fas fa-table"></i>
                             MESA
@@ -49,6 +60,20 @@
                             CLIENTE
                         </label>
                         <input type="text" id="nombreCliente" class="info-input" placeholder="Nombre del cliente">
+                    </div>
+                    <div class="info-item" id="direccionSection" style="display: none;">
+                        <label for="direccionCliente">
+                            <i class="fas fa-map-marker-alt"></i>
+                            DIRECCIÓN
+                        </label>
+                        <input type="text" id="direccionCliente" class="info-input" placeholder="Dirección de entrega">
+                    </div>
+                    <div class="info-item" id="telefonoSection" style="display: none;">
+                        <label for="telefonoCliente">
+                            <i class="fas fa-phone"></i>
+                            TELÉFONO
+                        </label>
+                        <input type="text" id="telefonoCliente" class="info-input" placeholder="Número de teléfono">
                     </div>
                 </div>
             </section>

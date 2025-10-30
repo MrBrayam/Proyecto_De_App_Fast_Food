@@ -32,19 +32,17 @@
             <!-- Sección de Filtros -->
             <section class="filtros-section">
                 <div class="filtros-container">
-                    <!-- Filtro por Mesa -->
+                    <!-- Filtro por Tipo de Servicio -->
                     <div class="filtro-item">
-                        <label for="filtroMesa">
-                            <i class="fas fa-table"></i>
-                            MESA
+                        <label for="filtroTipoServicio">
+                            <i class="fas fa-concierge-bell"></i>
+                            TIPO DE SERVICIO
                         </label>
-                        <select id="filtroMesa" class="filtro-select">
-                            <option value="">Todas las mesas</option>
-                            <option value="1">Mesa 1</option>
-                            <option value="2">Mesa 2</option>
-                            <option value="3">Mesa 3</option>
-                            <option value="4">Mesa 4</option>
-                            <option value="5">Mesa 5</option>
+                        <select id="filtroTipoServicio" class="filtro-select">
+                            <option value="">Todos los tipos</option>
+                            <option value="local">Local</option>
+                            <option value="delivery">Delivery</option>
+                            <option value="para-llevar">Para Llevar</option>
                         </select>
                     </div>
 
@@ -66,7 +64,7 @@
                         <select id="filtroFecha" class="filtro-select">
                             <option value="fecha">Fecha</option>
                             <option value="cliente">Cliente</option>
-                            <option value="mesa">Mesa</option>
+                            <option value="tipo">Tipo de Servicio</option>
                             <option value="estado">Estado</option>
                         </select>
                     </div>
@@ -91,6 +89,7 @@
                                 <th>DNI</th>
                                 <th>Cliente</th>
                                 <th>Fecha</th>
+                                <th>Tipo Servicio</th>
                                 <th>Producto</th>
                                 <th>Información</th>
                             </tr>
@@ -102,6 +101,7 @@
                                 <td>72345678</td>
                                 <td>María González</td>
                                 <td>27/10/2025</td>
+                                <td><span class="badge badge-local">Local</span></td>
                                 <td>2 Pizzas, 1 Bebida</td>
                                 <td>
                                     <button class="btn-info" title="Ver detalles">
@@ -114,6 +114,7 @@
                                 <td>85647392</td>
                                 <td>Carlos Ramírez</td>
                                 <td>27/10/2025</td>
+                                <td><span class="badge badge-delivery">Delivery</span></td>
                                 <td>1 Pizza, 2 Entradas, 1 Postre</td>
                                 <td>
                                     <button class="btn-info" title="Ver detalles">
@@ -126,6 +127,7 @@
                                 <td>91234567</td>
                                 <td>Ana Torres</td>
                                 <td>26/10/2025</td>
+                                <td><span class="badge badge-para-llevar">Para Llevar</span></td>
                                 <td>3 Pizzas, 2 Bebidas</td>
                                 <td>
                                     <button class="btn-info" title="Ver detalles">
@@ -138,6 +140,7 @@
                                 <td>78912345</td>
                                 <td>Luis Mendoza</td>
                                 <td>26/10/2025</td>
+                                <td><span class="badge badge-local">Local</span></td>
                                 <td>1 Promoción Familiar</td>
                                 <td>
                                     <button class="btn-info" title="Ver detalles">
@@ -150,6 +153,7 @@
                                 <td>65498732</td>
                                 <td>Patricia Flores</td>
                                 <td>25/10/2025</td>
+                                <td><span class="badge badge-delivery">Delivery</span></td>
                                 <td>2 Pizzas, 3 Bebidas, 1 Entrada</td>
                                 <td>
                                     <button class="btn-info" title="Ver detalles">
@@ -198,8 +202,8 @@
                             <span id="detallePedidoNum">001</span>
                         </div>
                         <div class="info-col">
-                            <label><i class="fas fa-table"></i> Mesa:</label>
-                            <span id="detalleMesa">5</span>
+                            <label><i class="fas fa-concierge-bell"></i> Tipo Servicio:</label>
+                            <span id="detalleTipoServicio">Local</span>
                         </div>
                     </div>
                     <div class="info-row">
