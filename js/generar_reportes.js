@@ -145,6 +145,8 @@ let vistaActual = 'grafico';
 let chartPrincipal = null;
 let chartSecundario = null;
 let chartTendencias = null;
+let chartProductos = null;
+let chartProductosMenos = null;
 
 // Función de inicialización
 function init() {
@@ -250,10 +252,37 @@ function cargarTipoReporteDefault() {
 // Actualizar contenido del reporte según el tipo y período seleccionado
 function actualizarContenidoReporte() {
     const datos = obtenerDatosReporte();
+    actualizarTituloVisualizacion();
     actualizarEstadisticas(datos);
     actualizarTabla(datos);
     actualizarResumen(datos);
     actualizarGraficos();
+}
+
+// Actualizar título de visualización según el tipo de reporte
+function actualizarTituloVisualizacion() {
+    const titulos = {
+        'ventas': 'Visualización de Reportes de Ventas',
+        'compras': 'Visualización de Reportes de Compras',
+        'inventario': 'Visualización de Reportes de Inventario',
+        'clientes': 'Visualización de Reportes de Clientes',
+        'empleados': 'Visualización de Reportes de Empleados',
+        'financiero': 'Visualización de Reportes Financieros'
+    };
+    
+    const iconos = {
+        'ventas': 'fa-dollar-sign',
+        'compras': 'fa-shopping-cart',
+        'inventario': 'fa-boxes',
+        'clientes': 'fa-users',
+        'empleados': 'fa-user-tie',
+        'financiero': 'fa-chart-pie'
+    };
+    
+    const tituloElement = document.querySelector('.visualizacion-header h2');
+    if (tituloElement) {
+        tituloElement.innerHTML = `<i class="fas ${iconos[tipoReporteActual]}"></i> ${titulos[tipoReporteActual]}`;
+    }
 }
 
 // Obtener datos del reporte actual
@@ -675,6 +704,8 @@ function actualizarGraficos() {
     if (chartPrincipal) chartPrincipal.destroy();
     if (chartSecundario) chartSecundario.destroy();
     if (chartTendencias) chartTendencias.destroy();
+    if (chartProductos) chartProductos.destroy();
+    if (chartProductosMenos) chartProductosMenos.destroy();
     
     // Crear nuevos gráficos según el tipo de reporte
     switch (tipoReporteActual) {
@@ -703,10 +734,16 @@ function actualizarGraficos() {
 
 // Gráficos de Ventas
 function crearGraficosVentas() {
+    // Mostrar todos los gráficos para ventas
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'block';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'block';
+    
     // Actualizar títulos
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Ventas por Categoría';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Métodos de Pago';
     document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Tipo de Servicio';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4) .titulo-grafico').textContent = 'Productos Más Vendidos';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5) .titulo-grafico').textContent = 'Productos Menos Vendidos';
     
     // Gráfico Principal: Ventas por Categoría
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
@@ -792,10 +829,136 @@ function crearGraficosVentas() {
         <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Para llevar - 30%</span></div>
         <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>En local - 15%</span></div>
     `;
+
+    // Gráfico de Productos Específicos Más Vendidos
+    const ctxProductos = document.getElementById('chartProductos').getContext('2d');
+    chartProductos = new Chart(ctxProductos, {
+        type: 'bar',
+        data: {
+            labels: ['Pizza Hawaiana', 'Pizza Pepperoni', 'Pizza Margherita', 'Coca Cola 500ml', 'Hamburguesa Clásica', 'Papas Fritas', 'Brownie'],
+            datasets: [{
+                label: 'Unidades Vendidas',
+                data: [125, 98, 87, 156, 64, 78, 45],
+                backgroundColor: [
+                    '#ff5733',
+                    '#ff6b47', 
+                    '#ff7f5b',
+                    '#ffc857',
+                    '#3498db',
+                    '#5dade2',
+                    '#9b59b6'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 11 }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 10 },
+                        maxRotation: 45
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Actualizar leyenda de productos
+    document.getElementById('leyendaProductos').innerHTML = `
+        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Pizza Hawaiana - 125 unidades</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Coca Cola 500ml - 156 unidades</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ff6b47;"></span><span>Pizza Pepperoni - 98 unidades</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ff7f5b;"></span><span>Pizza Margherita - 87 unidades</span></div>
+    `;
+
+    // Gráfico de Productos Menos Vendidos
+    const ctxProductosMenos = document.getElementById('chartProductosMenos').getContext('2d');
+    chartProductosMenos = new Chart(ctxProductosMenos, {
+        type: 'bar',
+        data: {
+            labels: ['Ensalada César', 'Agua Mineral', 'Helado Vainilla', 'Café Americano', 'Salsa Extra', 'Pan de Ajo'],
+            datasets: [{
+                label: 'Unidades Vendidas',
+                data: [8, 12, 15, 18, 22, 25],
+                backgroundColor: [
+                    '#e74c3c',
+                    '#ec7063', 
+                    '#f1948a',
+                    '#f5b7b1',
+                    '#fadbd8',
+                    '#fdeaea'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 30,
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 11 }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 10 },
+                        maxRotation: 45
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Actualizar leyenda de productos menos vendidos
+    document.getElementById('leyendaProductosMenos').innerHTML = `
+        <div class="leyenda-item"><span class="color-box" style="background: #e74c3c;"></span><span>Ensalada César - 8 unidades</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ec7063;"></span><span>Agua Mineral - 12 unidades</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #f1948a;"></span><span>Helado Vainilla - 15 unidades</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #f5b7b1;"></span><span>Café Americano - 18 unidades</span></div>
+    `;
 }
 
 // Gráficos de Compras
 function crearGraficosCompras() {
+    // Ocultar el cuarto y quinto gráfico para este tipo de reporte
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    
     // Actualizar títulos
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Compras por Categoría';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Top Proveedores';
@@ -887,6 +1050,10 @@ function crearGraficosCompras() {
 
 // Gráficos de Empleados
 function crearGraficosEmpleados() {
+    // Ocultar el cuarto y quinto gráfico para este tipo de reporte
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    
     // Actualizar títulos
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Top Empleados por Rendimiento';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Distribución por Turno';
@@ -979,6 +1146,10 @@ function crearGraficosEmpleados() {
 
 // Gráficos de Inventario
 function crearGraficosInventario() {
+    // Ocultar el cuarto y quinto gráfico para este tipo de reporte
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Estado del Stock';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Categorías de Productos';
     document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Productos Críticos';
@@ -1049,6 +1220,10 @@ function crearGraficosInventario() {
 
 // Gráficos de Clientes
 function crearGraficosClientes() {
+    // Ocultar el cuarto y quinto gráfico para este tipo de reporte
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Clasificación de Clientes';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Frecuencia de Compras';
     document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Métodos de Contacto';
@@ -1119,6 +1294,9 @@ function crearGraficosClientes() {
 
 // Gráficos Financieros
 function crearGraficosFinanciero() {
+    // Ocultar el cuarto y quinto gráfico para este tipo de reporte
+    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Distribución de Ingresos';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Estructura de Gastos';
     document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Rentabilidad por Sucursal';
