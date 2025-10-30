@@ -213,7 +213,7 @@
 
 .productos-header-row {
     display: grid;
-    grid-template-columns: 150px 200px 1fr 120px 100px;
+    grid-template-columns: 130px 180px 1fr 100px 120px 100px;
     gap: 10px;
     margin-bottom: 10px;
 }
@@ -234,13 +234,14 @@
 
 .productos-input-row {
     display: grid;
-    grid-template-columns: 150px 200px 1fr 120px 100px;
+    grid-template-columns: 130px 180px 1fr 100px 120px 100px;
     gap: 10px;
 }
 
 .input-codigo,
 .input-linea,
 .input-descripcion,
+.input-cantidad,
 .input-precio {
     background: rgba(255, 255, 255, 0.95);
     border: 2px solid rgba(255, 87, 51, 0.3);
@@ -252,7 +253,8 @@
 }
 
 .input-codigo:focus,
-.input-linea:focus {
+.input-linea:focus,
+.input-cantidad:focus {
     outline: none;
     border-color: #ff5733;
     background: white;
@@ -261,6 +263,7 @@
 
 .input-codigo::placeholder,
 .input-linea::placeholder,
+.input-cantidad::placeholder,
 .input-precio::placeholder {
     color: #999;
 }
@@ -270,6 +273,23 @@
     background: rgba(240, 240, 255, 0.8);
     cursor: not-allowed;
     border-color: rgba(255, 87, 51, 0.2);
+}
+
+/* Estilos específicos para el input de cantidad */
+.input-cantidad {
+    text-align: center;
+    font-weight: 600;
+}
+
+.input-cantidad::-webkit-outer-spin-button,
+.input-cantidad::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-cantidad[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .btn-añadir {
@@ -375,19 +395,30 @@
 .th-acciones { width: 80px; }
 
 .btn-scroll-up,
-.btn-scroll-down {
+.btn-scroll-down,
+.btn-eliminar-item {
     background: transparent;
     border: none;
     color: #ffc857;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 5px 8px;
     transition: all 0.3s ease;
+    margin: 0 2px;
 }
 
 .btn-scroll-up:hover,
 .btn-scroll-down:hover {
     color: #ff5733;
+    transform: scale(1.2);
+}
+
+.btn-eliminar-item {
+    color: #e74c3c;
+}
+
+.btn-eliminar-item:hover {
+    color: #c0392b;
     transform: scale(1.2);
 }
 
@@ -486,7 +517,7 @@
 @media (max-width: 1200px) {
     .productos-header-row,
     .productos-input-row {
-        grid-template-columns: 120px 180px 1fr 100px 90px;
+        grid-template-columns: 110px 160px 1fr 80px 100px 90px;
     }
 }
 
