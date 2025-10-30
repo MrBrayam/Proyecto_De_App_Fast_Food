@@ -30,3 +30,56 @@ function actualizarFechaHora() {
     document.getElementById('fecha-actual').textContent = fechaFormateada;
     document.getElementById('hora-actual').textContent = horaFormateada;
 }
+
+// Función para editar plato
+function editarPlato(codigo) {
+    alert(`Función de editar plato con código: ${codigo}\nEsta funcionalidad se implementará en la versión completa.`);
+}
+
+// Función para eliminar plato
+function eliminarPlato(codigo) {
+    if(confirm(`¿Está seguro de que desea eliminar el plato con código ${codigo}?`)) {
+        // Aquí iría la lógica para eliminar el plato
+        alert(`Plato con código ${codigo} eliminado correctamente.\nEsta funcionalidad se implementará en la versión completa.`);
+    }
+}
+
+// Función para registrar nuevo plato
+function registrarPlato() {
+    const nombre = document.getElementById('searchNombre').value;
+    const categoria = document.getElementById('searchCategoria').value;
+    const descripcion = document.getElementById('searchDescripcion').value;
+    const ingredientes = document.getElementById('searchIngredientes').value;
+    const disponibilidad = document.getElementById('searchDisponibilidad').value;
+    const precio = document.getElementById('searchPrecio').value;
+    
+    // Validación básica
+    if (!nombre || !categoria || !descripcion || !ingredientes || !disponibilidad || !precio) {
+        alert('Por favor, complete todos los campos obligatorios.');
+        return;
+    }
+    
+    if (parseFloat(precio) <= 0) {
+        alert('El precio debe ser mayor a 0.');
+        return;
+    }
+    
+    // Simulación de registro exitoso
+    alert(`Plato registrado correctamente:\n
+Nombre: ${nombre}
+Categoría: ${categoria}
+Descripción: ${descripcion}
+Ingredientes: ${ingredientes}
+Disponibilidad: ${disponibilidad}
+Precio: S/. ${precio}
+
+Esta funcionalidad se implementará completamente en la versión final.`);
+    
+    // Limpiar formulario
+    document.getElementById('searchNombre').value = '';
+    document.getElementById('searchCategoria').value = '';
+    document.getElementById('searchDescripcion').value = '';
+    document.getElementById('searchIngredientes').value = '';
+    document.getElementById('searchDisponibilidad').value = '';
+    document.getElementById('searchPrecio').value = '';
+}

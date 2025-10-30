@@ -34,16 +34,24 @@
                 <div class="busqueda-grid">
                     <div class="busqueda-item">
                         <label for="searchCodigo">Código</label>
-                        <input type="text" id="searchCodigo" class="search-input" placeholder="Buscar...">
+                        <input type="text" id="searchCodigo" class="search-input" placeholder="Ej: 204568">
                     </div>
                     <div class="busqueda-item">
                         <label for="searchNombre">Nombre</label>
-                        <input type="text" id="searchNombre" class="search-input" placeholder="Buscar...">
+                        <input type="text" id="searchNombre" class="search-input" placeholder="Ej: Pizza Hawaiana">
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchDescripcion">Descripción</label>
+                        <textarea id="searchDescripcion" class="search-textarea" placeholder="Descripción del plato..." rows="3"></textarea>
+                    </div>
+                    <div class="busqueda-item">
+                        <label for="searchIngredientes">Ingredientes</label>
+                        <textarea id="searchIngredientes" class="search-textarea" placeholder="Lista de ingredientes..." rows="3"></textarea>
                     </div>
                     <div class="busqueda-item">
                         <label for="searchTamano">Tamaño</label>
                         <select id="searchTamano" class="search-select">
-                            <option value="">Todos</option>
+                            <option value="">Seleccionar</option>
                             <option value="personal">Personal</option>
                             <option value="mediana">Mediana</option>
                             <option value="familiar">Familiar</option>
@@ -51,11 +59,15 @@
                         </select>
                     </div>
                     <div class="busqueda-item">
+                        <label for="searchPrecio">Precio (S/)</label>
+                        <input type="number" id="searchPrecio" class="search-input" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="busqueda-item">
                         <label for="searchCantidad">Cantidad</label>
                         <input type="number" id="searchCantidad" class="search-input" placeholder="0" min="0">
                     </div>
                     <div class="busqueda-item busqueda-btn">
-                        <button type="button" id="btnAnadir" class="btn-anadir">
+                        <button type="button" id="btnAnadir" class="btn-anadir" onclick="registrarPlato()">
                             <i class="fas fa-plus-circle"></i>
                             Añadir
                         </button>
@@ -75,7 +87,9 @@
                                 <th>Descripción</th>
                                 <th>Ingredientes</th>
                                 <th>Tamaño</th>
+                                <th>Precio (S/)</th>
                                 <th>Cantidad</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaPlatosBody">
@@ -91,7 +105,16 @@
                                 <td>Pizza con base de masa, salsa de tomate y queso mozzarella, acompañada de pepperoni y jamón.</td>
                                 <td>Salsa de tomate, queso mozzarella, pepperoni, jamón, orégano.</td>
                                 <td>Familiar</td>
+                                <td class="precio">S/. 35.90</td>
                                 <td>15</td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>204569</td>
@@ -104,7 +127,16 @@
                                 <td>Pizza con base de masa, salsa de tomate, queso mozzarella, jamón y piña.</td>
                                 <td>Salsa de tomate, queso mozzarella, jamón, piña, orégano.</td>
                                 <td>Mediana</td>
+                                <td class="precio">S/. 28.50</td>
                                 <td>20</td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>204570</td>
@@ -117,7 +149,16 @@
                                 <td>Pizza con verduras frescas, champiñones, pimientos y aceitunas.</td>
                                 <td>Salsa de tomate, queso, champiñones, pimientos, aceitunas, cebolla.</td>
                                 <td>Grande</td>
+                                <td class="precio">S/. 32.00</td>
                                 <td>12</td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>204571</td>
@@ -130,7 +171,16 @@
                                 <td>Pizza con salsa BBQ, pollo, cebolla morada y queso mozzarella.</td>
                                 <td>Salsa BBQ, pollo, cebolla morada, queso mozzarella, cilantro.</td>
                                 <td>Familiar</td>
+                                <td class="precio">S/. 38.90</td>
                                 <td>18</td>
+                                <td>
+                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
