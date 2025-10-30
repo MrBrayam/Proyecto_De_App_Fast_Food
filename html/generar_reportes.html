@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Generar Reportes - King's Pizza</title>
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/menu_principal.css">
+    <link rel="stylesheet" href="../css/generar_reportes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Contenedor Principal -->
+        <div class="module-container">
+            <!-- Header del Módulo -->
+            <div class="module-header">
+                <div class="module-title">
+                    <h1><i class="fas fa-chart-line"></i> Generar Reportes</h1>
+                </div>
+                <div class="fecha-hora-box">
+                    <span id="fechaActual"></span>
+                    <span id="horaActual"></span>
+                </div>
+            </div>
+
+            <!-- Contenido del Módulo -->
+            <div class="module-contenido">
+                <!-- Selector de Tipo de Reporte -->
+                <div class="selector-reporte-section">
+                    <div class="selector-header">
+                        <h2><i class="fas fa-clipboard-list"></i> Seleccionar Tipo de Reporte</h2>
+                    </div>
+                    
+                    <div class="tipos-reporte-grid">
+                        <div class="tipo-reporte-card active" data-tipo="ventas">
+                            <div class="tipo-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <h3>Reportes de Ventas</h3>
+                            <p>Análisis de ingresos, productos más vendidos y tendencias de ventas</p>
+                        </div>
+
+                        <div class="tipo-reporte-card" data-tipo="compras">
+                            <div class="tipo-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <h3>Reportes de Compras</h3>
+                            <p>Control de compras, proveedores y gastos operacionales</p>
+                        </div>
+
+                        <div class="tipo-reporte-card" data-tipo="inventario">
+                            <div class="tipo-icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <h3>Reportes de Inventario</h3>
+                            <p>Stock actual, productos agotados y movimientos de inventario</p>
+                        </div>
+
+                        <div class="tipo-reporte-card" data-tipo="clientes">
+                            <div class="tipo-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Reportes de Clientes</h3>
+                            <p>Base de clientes, frecuencia de compras y análisis demográfico</p>
+                        </div>
+
+                        <div class="tipo-reporte-card" data-tipo="empleados">
+                            <div class="tipo-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h3>Reportes de Empleados</h3>
+                            <p>Rendimiento, asistencia y productividad del personal</p>
+                        </div>
+
+                        <div class="tipo-reporte-card" data-tipo="financiero">
+                            <div class="tipo-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h3>Reportes Financieros</h3>
+                            <p>Estados financieros, costos operativos y rentabilidad</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtros y Configuración -->
+                <div class="filtros-section">
+                    <div class="filtros-header">
+                        <h2><i class="fas fa-filter"></i> Configurar Filtros</h2>
+                    </div>
+                    
+                    <div class="filtros-container">
+                        <div class="filtro-group">
+                            <label for="periodo">Período de Tiempo:</label>
+                            <select id="periodo" class="form-control">
+                                <option value="hoy">Hoy</option>
+                                <option value="semana">Esta Semana</option>
+                                <option value="mes" selected>Este Mes</option>
+                                <option value="trimestre">Este Trimestre</option>
+                                <option value="anio">Este Año</option>
+                                <option value="personalizado">Personalizado</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-group fecha-personalizada" style="display: none;">
+                            <div class="fecha-range">
+                                <div class="fecha-input">
+                                    <label for="fechaInicio">Fecha Inicio:</label>
+                                    <input type="date" id="fechaInicio" class="form-control">
+                                </div>
+                                <div class="fecha-input">
+                                    <label for="fechaFin">Fecha Fin:</label>
+                                    <input type="date" id="fechaFin" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filtro-group">
+                            <label for="sucursal">Sucursal:</label>
+                            <select id="sucursal" class="form-control">
+                                <option value="todas">Todas las Sucursales</option>
+                                <option value="miraflores">Miraflores</option>
+                                <option value="san-isidro">San Isidro</option>
+                                <option value="surco">Surco</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-group formato-group">
+                            <label>Formato de Exportación:</label>
+                            <div class="formato-opciones">
+                                <label class="radio-label">
+                                    <input type="radio" name="formato" value="pdf" checked>
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="formato" value="excel">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="formato" value="csv">
+                                    <i class="fas fa-file-csv"></i> CSV
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filtros-acciones">
+                            <button class="btn-generar" id="btnGenerar">
+                                <i class="fas fa-play"></i> Generar Reporte
+                            </button>
+                            <button class="btn-limpiar" id="btnLimpiar">
+                                <i class="fas fa-redo"></i> Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Área de Visualización Dinámica -->
+                <div class="visualizacion-section">
+                    <div class="visualizacion-header">
+                        <h2><i class="fas fa-chart-area"></i> Visualización del Reporte</h2>
+                        <div class="visualizacion-controles">
+                            <button class="btn-vista active" data-vista="grafico">
+                                <i class="fas fa-chart-bar"></i> Gráfico
+                            </button>
+                            <button class="btn-vista" data-vista="tabla">
+                                <i class="fas fa-table"></i> Tabla
+                            </button>
+                            <button class="btn-vista" data-vista="resumen">
+                                <i class="fas fa-list-alt"></i> Resumen
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Gráfico -->
+                    <div class="vista-content vista-grafico active">
+                        <div class="estadisticas-cards">
+                            <div class="stat-card primary">
+                                <div class="stat-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Total del Período</h3>
+                                    <p class="stat-value" id="totalPeriodo">S/. 0.00</p>
+                                    <span class="stat-change positive">+12.5%</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card success">
+                                <div class="stat-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Promedio Diario</h3>
+                                    <p class="stat-value" id="promedioDiario">S/. 0.00</p>
+                                    <span class="stat-change positive">+8.3%</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card warning">
+                                <div class="stat-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Variación</h3>
+                                    <p class="stat-value" id="variacion">0%</p>
+                                    <span class="stat-change neutral">vs período anterior</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card info">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Días Analizados</h3>
+                                    <p class="stat-value" id="diasAnalizados">0</p>
+                                    <span class="stat-change neutral">días</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grafico-container">
+                            <div class="graficos-grid" id="graficosGrid">
+                                <!-- Gráficos dinámicos se cargarán aquí según el tipo de reporte -->
+                                <div class="grafico-card">
+                                    <h3 class="titulo-grafico">Distribución Principal</h3>
+                                    <div class="grafico-wrapper">
+                                        <canvas id="chartPrincipal"></canvas>
+                                    </div>
+                                    <div class="leyenda-grafico" id="leyendaPrincipal">
+                                        <!-- Leyenda dinámica -->
+                                    </div>
+                                </div>
+
+                                <div class="grafico-card">
+                                    <h3 class="titulo-grafico">Análisis Secundario</h3>
+                                    <div class="grafico-wrapper">
+                                        <canvas id="chartSecundario"></canvas>
+                                    </div>
+                                    <div class="leyenda-grafico" id="leyendaSecundario">
+                                        <!-- Leyenda dinámica -->
+                                    </div>
+                                </div>
+
+                                <div class="grafico-card">
+                                    <h3 class="titulo-grafico">Tendencias</h3>
+                                    <div class="grafico-wrapper">
+                                        <canvas id="chartTendencias"></canvas>
+                                    </div>
+                                    <div class="leyenda-grafico" id="leyendaTendencias">
+                                        <!-- Leyenda dinámica -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Tabla -->
+                    <div class="vista-content vista-tabla">
+                        <div class="tabla-controles">
+                            <div class="tabla-buscar">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar en la tabla..." id="buscarTabla">
+                            </div>
+                            <div class="tabla-acciones">
+                                <button class="btn-accion" id="exportarTabla">
+                                    <i class="fas fa-download"></i> Exportar
+                                </button>
+                                <button class="btn-accion" id="imprimirTabla">
+                                    <i class="fas fa-print"></i> Imprimir
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tabla-responsive">
+                            <table class="data-table" id="tablaReporte">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Concepto</th>
+                                        <th>Cantidad</th>
+                                        <th>Monto</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" class="no-data">
+                                            <i class="fas fa-info-circle"></i>
+                                            No hay datos para mostrar. Genera un reporte para ver la información.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tabla-paginacion">
+                            <div class="paginacion-info">
+                                Mostrando <span id="registrosDesde">0</span> - <span id="registrosHasta">0</span> de <span id="totalRegistros">0</span> registros
+                            </div>
+                            <div class="paginacion-controles">
+                                <button class="btn-pag" id="anteriorPag" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="pag-numeros">
+                                    <button class="btn-pag active">1</button>
+                                </span>
+                                <button class="btn-pag" id="siguientePag" disabled>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Resumen -->
+                    <div class="vista-content vista-resumen">
+                        <div class="resumen-container">
+                            <div class="resumen-seccion">
+                                <h3><i class="fas fa-chart-pie"></i> Resumen Ejecutivo</h3>
+                                <div class="resumen-items">
+                                    <div class="resumen-item">
+                                        <span class="resumen-label">Período Analizado:</span>
+                                        <span class="resumen-valor" id="periodoResumen">-</span>
+                                    </div>
+                                    <div class="resumen-item">
+                                        <span class="resumen-label">Total de Registros:</span>
+                                        <span class="resumen-valor" id="totalRegistrosResumen">0</span>
+                                    </div>
+                                    <div class="resumen-item">
+                                        <span class="resumen-label">Valor Máximo:</span>
+                                        <span class="resumen-valor" id="valorMaximo">S/. 0.00</span>
+                                    </div>
+                                    <div class="resumen-item">
+                                        <span class="resumen-label">Valor Mínimo:</span>
+                                        <span class="resumen-valor" id="valorMinimo">S/. 0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="resumen-seccion">
+                                <h3><i class="fas fa-trophy"></i> Top 5 Elementos</h3>
+                                <div class="top-elementos">
+                                    <div class="top-item">
+                                        <span class="top-posicion">1</span>
+                                        <span class="top-nombre">Pizza Hawaiana</span>
+                                        <span class="top-valor">S/. 1,250.00</span>
+                                    </div>
+                                    <div class="top-item">
+                                        <span class="top-posicion">2</span>
+                                        <span class="top-nombre">Pizza Pepperoni</span>
+                                        <span class="top-valor">S/. 980.00</span>
+                                    </div>
+                                    <div class="top-item">
+                                        <span class="top-posicion">3</span>
+                                        <span class="top-nombre">Hamburguesa Clásica</span>
+                                        <span class="top-valor">S/. 750.00</span>
+                                    </div>
+                                    <div class="top-item">
+                                        <span class="top-posicion">4</span>
+                                        <span class="top-nombre">Bebidas Variadas</span>
+                                        <span class="top-valor">S/. 420.00</span>
+                                    </div>
+                                    <div class="top-item">
+                                        <span class="top-posicion">5</span>
+                                        <span class="top-nombre">Postres</span>
+                                        <span class="top-valor">S/. 285.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="resumen-seccion">
+                                <h3><i class="fas fa-exclamation-triangle"></i> Observaciones</h3>
+                                <div class="observaciones-lista">
+                                    <div class="observacion-item">
+                                        <i class="fas fa-info-circle text-info"></i>
+                                        <span>Los datos mostrados corresponden al período seleccionado</span>
+                                    </div>
+                                    <div class="observacion-item">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <span>Todos los cálculos incluyen impuestos</span>
+                                    </div>
+                                    <div class="observacion-item">
+                                        <i class="fas fa-clock text-warning"></i>
+                                        <span>Reporte generado en tiempo real</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial de Reportes -->
+                <div class="historial-section">
+                    <div class="historial-header">
+                        <h2><i class="fas fa-history"></i> Historial de Reportes</h2>
+                        <button class="btn-limpiar-historial" id="btnLimpiarHistorial">
+                            <i class="fas fa-trash"></i> Limpiar Historial
+                        </button>
+                    </div>
+                    
+                    <div class="historial-lista">
+                        <div class="historial-item">
+                            <div class="historial-info">
+                                <div class="historial-tipo">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span>Reporte de Ventas</span>
+                                </div>
+                                <div class="historial-detalles">
+                                    <span class="historial-fecha">29/10/2025 - 14:30</span>
+                                    <span class="historial-periodo">Octubre 2025</span>
+                                    <span class="historial-sucursal">Todas las sucursales</span>
+                                </div>
+                            </div>
+                            <div class="historial-acciones">
+                                <button class="btn-historial-accion" title="Ver">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-historial-accion" title="Descargar">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn-historial-accion eliminar" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="historial-item">
+                            <div class="historial-info">
+                                <div class="historial-tipo">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span>Reporte de Compras</span>
+                                </div>
+                                <div class="historial-detalles">
+                                    <span class="historial-fecha">28/10/2025 - 09:15</span>
+                                    <span class="historial-periodo">Esta Semana</span>
+                                    <span class="historial-sucursal">Miraflores</span>
+                                </div>
+                            </div>
+                            <div class="historial-acciones">
+                                <button class="btn-historial-accion" title="Ver">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-historial-accion" title="Descargar">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn-historial-accion eliminar" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="historial-item">
+                            <div class="historial-info">
+                                <div class="historial-tipo">
+                                    <i class="fas fa-boxes"></i>
+                                    <span>Reporte de Inventario</span>
+                                </div>
+                                <div class="historial-detalles">
+                                    <span class="historial-fecha">27/10/2025 - 16:45</span>
+                                    <span class="historial-periodo">Hoy</span>
+                                    <span class="historial-sucursal">San Isidro</span>
+                                </div>
+                            </div>
+                            <div class="historial-acciones">
+                                <button class="btn-historial-accion" title="Ver">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-historial-accion" title="Descargar">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn-historial-accion eliminar" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../funcionalidades/generar_reportes_funcionalidades.js"></script>
+    <script src="../js/generar_reportes.js"></script>
+</body>
+</html>

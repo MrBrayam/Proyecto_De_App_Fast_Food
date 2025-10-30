@@ -204,18 +204,11 @@ function cargarSidebar() {
                 </li>
                 
                 <!-- 6. Reportes -->
-                <li class="nav-item has-submenu" data-title="Reportes">
-                    <a href="#" class="nav-link">
+                <li class="nav-item" data-title="Reportes">
+                    <a href="generar_reportes.html" class="nav-link">
                         <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-                        <span class="nav-text">Reportes</span>
-                        <span class="nav-arrow">▼</span>
+                        <span class="nav-text">Generar Reportes</span>
                     </a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="visualizar_reportes_de_compras.html" class="submenu-link">Visualizar Reporte de Compras</a></li>
-                        <li class="submenu-item"><a href="visualizar_ganancias.html" class="submenu-link">Visualizar Ganancias</a></li>
-                        <li class="submenu-item"><a href="visualizar_reportes_de_ventas.html" class="submenu-link">Visualizar Reporte de Ventas</a></li>
-                        <li class="submenu-item"><a href="visualizar_rendimiento_de_trabajador.html" class="submenu-link">Visualizar Rendimiento de Trabajador</a></li>
-                    </ul>
                 </li>
                 
                 <!-- 7. Seguridad -->
