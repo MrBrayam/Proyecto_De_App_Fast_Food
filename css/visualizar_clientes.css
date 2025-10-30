@@ -100,10 +100,11 @@
     border-radius: 15px;
     padding: 20px 25px;
     margin-bottom: 25px;
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
     gap: 20px;
-    align-items: center;
+    flex-wrap: wrap;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 87, 51, 0.2);
 }
@@ -113,12 +114,14 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-width: 250px;
 }
 
 .grupo-filtro label {
     color: #ffc857;
     font-size: 14px;
     font-weight: 500;
+    text-align: center;
 }
 
 .input-busqueda,
@@ -131,6 +134,9 @@
     font-size: 14px;
     transition: all 0.3s ease;
     outline: none;
+    width: 100%;
+    height: 46px;
+    box-sizing: border-box;
 }
 
 .input-busqueda::placeholder {
@@ -166,6 +172,11 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 15px rgba(255, 200, 87, 0.3);
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
 }
 
 .btn-buscar:hover {
@@ -244,6 +255,38 @@
     font-weight: 600;
 }
 
+/* Sortable Column Styles */
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.sortable:hover {
+    background-color: #4d73b8 !important;
+    transform: translateY(-1px);
+}
+
+.sortable::after {
+    content: '↕';
+    margin-left: 8px;
+    opacity: 0.6;
+    font-size: 12px;
+}
+
+.sortable.asc::after {
+    content: '↑';
+    opacity: 1;
+    color: #90ee90;
+}
+
+.sortable.desc::after {
+    content: '↓';
+    opacity: 1;
+    color: #ffb6c1;
+}
+
 /* Botones de Acción */
 .acciones-section {
     display: flex;
@@ -290,7 +333,14 @@
 /* Responsive */
 @media (max-width: 1024px) {
     .barra-busqueda {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .grupo-busqueda,
+    .grupo-filtro {
+        min-width: 100%;
+        max-width: 400px;
     }
     
     .tabla-container {
@@ -322,6 +372,23 @@
 
     .clientes-contenido {
         padding: 20px 15px;
+    }
+
+    .barra-busqueda {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .grupo-busqueda,
+    .grupo-filtro {
+        min-width: 100%;
+    }
+
+    .btn-buscar {
+        align-self: center;
+        width: 100%;
+        max-width: 200px;
     }
 
     .seccion-tabla {
