@@ -83,10 +83,10 @@
     border: 1px solid rgba(255, 87, 51, 0.4);
 }
 
-/* Contenido de dos columnas */
+/* Contenido principal */
 .promocion-contenido {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 30px;
     padding: 30px;
     position: relative;
@@ -103,6 +103,8 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     max-height: calc(100vh - 150px);
     overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Scrollbar del formulario */
@@ -164,7 +166,7 @@
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
 }
 
