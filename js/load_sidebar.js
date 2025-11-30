@@ -52,16 +52,6 @@ function cargarSidebar() {
                         </li>
                         <li class="submenu-item has-submenu">
                             <a href="#" class="submenu-link">
-                                <span class="submenu-text">Impresoras</span>
-                                <span class="nav-arrow">▼</span>
-                            </a>
-                            <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_impresoras.html" class="submenu-link">Registrar Impresoras</a></li>
-                                <li class="submenu-item"><a href="visualizar_impresoras.html" class="submenu-link">Visualizar Impresoras</a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu-item has-submenu">
-                            <a href="#" class="submenu-link">
                                 <span class="submenu-text">Promociones</span>
                                 <span class="nav-arrow">▼</span>
                             </a>

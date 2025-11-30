@@ -436,8 +436,8 @@ textarea:focus {
    ============================================ */
 
 body.modo-claro .sidebar {
-    background: linear-gradient(180deg, var(--fondo-principal) 0%, rgba(248, 250, 252, 0.95) 100%);
-    border-right: 1px solid var(--borde-principal);
+    background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    border-right: 1px solid #cbd5e1;
     box-shadow: 
         var(--sombra-media),
         inset -1px 0 0 rgba(37, 99, 235, 0.1);
@@ -498,9 +498,9 @@ body.modo-claro .nav-item a {
     display: flex;
     align-items: center;
     padding: 12px 16px;
-    color: var(--texto-secundario);
+    color: #475569;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.3s ease;
     border-radius: 12px;
     position: relative;
@@ -516,8 +516,9 @@ body.modo-claro .nav-item a i {
 
 /* Estados hover y active */
 body.modo-claro .nav-item:hover {
-    background: rgba(37, 99, 235, 0.05);
+    background: rgba(37, 99, 235, 0.08);
     transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
 }
 
 body.modo-claro .nav-item:hover::before {
@@ -525,33 +526,35 @@ body.modo-claro .nav-item:hover::before {
 }
 
 body.modo-claro .nav-item:hover a {
-    color: var(--color-principal);
+    color: #2563eb;
     padding-left: 24px;
+    font-weight: 700;
 }
 
 body.modo-claro .nav-item:hover a i {
-    color: var(--color-acento);
+    color: #3b82f6;
     transform: scale(1.1);
 }
 
 body.modo-claro .nav-item.active {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-    border: 1px solid rgba(37, 99, 235, 0.2);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 body.modo-claro .nav-item.active::before {
     transform: scaleY(1);
+    background: #2563eb;
 }
 
 body.modo-claro .nav-item.active a {
-    color: var(--color-principal);
+    color: #1e40af;
     font-weight: 700;
     padding-left: 24px;
 }
 
 body.modo-claro .nav-item.active a i {
-    color: var(--color-acento);
+    color: #2563eb;
     transform: scale(1.1);
 }
 
@@ -562,14 +565,16 @@ body.modo-claro .nav-group {
 }
 
 body.modo-claro .nav-group-title {
-    color: var(--texto-secundario);
+    color: #475569;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 12px;
     padding: 0 16px;
-    opacity: 0.7;
+    opacity: 0.8;
+    border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+    padding-bottom: 8px;
 }
 
 /* Separadores */
@@ -578,6 +583,108 @@ body.modo-claro .nav-separator {
     background: var(--borde-principal);
     margin: 16px 24px;
     border-radius: 1px;
+}
+
+/* Submenús en modo claro */
+body.modo-claro .submenu {
+    background: rgba(37, 99, 235, 0.03);
+    border-left: 2px solid rgba(37, 99, 235, 0.1);
+    margin-left: 16px;
+    border-radius: 0 8px 8px 0;
+}
+
+body.modo-claro .submenu-link {
+    color: #64748b;
+    padding: 10px 16px;
+    padding-left: 32px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-radius: 6px;
+    margin: 2px 8px;
+}
+
+body.modo-claro .submenu-link:hover {
+    background: rgba(37, 99, 235, 0.08);
+    color: #2563eb;
+    padding-left: 36px;
+    font-weight: 600;
+}
+
+body.modo-claro .submenu-link.active {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+body.modo-claro .nav-arrow {
+    color: #94a3b8;
+    transition: all 0.3s ease;
+}
+
+body.modo-claro .nav-item:hover .nav-arrow {
+    color: #2563eb;
+}
+
+body.modo-claro .nav-item.active .nav-arrow {
+    color: #1e40af;
+}
+
+/* Sidebar Footer y User Info en modo claro */
+body.modo-claro .sidebar-footer {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-top: 1px solid #cbd5e1;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(8px);
+}
+
+body.modo-claro .user-info {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+body.modo-claro .user-info:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(37, 99, 235, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+body.modo-claro .user-avatar {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+body.modo-claro .user-name {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+body.modo-claro .user-role {
+    color: #64748b;
+    font-weight: 500;
+}
+
+body.modo-claro .logout-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: 1px solid #dc2626;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    transition: all 0.3s ease;
+}
+
+body.modo-claro .logout-btn:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    border-color: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 /* Main content wrapper */
@@ -2610,6 +2717,151 @@ body.modo-claro .btn-salir:hover {
     background: linear-gradient(135deg, #475569 0%, #334155 100%);
     box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
     transform: translateY(-3px);
+}
+
+/* ============================================
+   VISUALIZAR VENTAS - MODO CLARO
+   ============================================ */
+
+/* Contenedor principal */
+body.modo-claro .venta-visualizar-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+    min-height: 100vh;
+}
+
+/* Patrón de fondo para modo claro */
+body.modo-claro .venta-visualizar-container::before {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(139, 92, 246, 0.03) 0%, transparent 45%);
+}
+
+/* Header */
+body.modo-claro .venta-visualizar-header {
+    background: rgba(248, 250, 252, 0.95);
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+body.modo-claro .venta-visualizar-titulo {
+    color: #1e293b;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+/* Sección de búsqueda */
+body.modo-claro .busqueda-venta-section {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body.modo-claro .busqueda-venta-form {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+}
+
+body.modo-claro .campo-busqueda input {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    color: #1e293b;
+}
+
+body.modo-claro .campo-busqueda input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+body.modo-claro .btn-buscar-venta {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+body.modo-claro .btn-detalle-venta {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    border: none;
+    color: white;
+}
+
+/* Tabla de ventas */
+body.modo-claro .ventas-table-container {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+body.modo-claro .ventas-table {
+    background: #ffffff;
+}
+
+body.modo-claro .ventas-table thead th {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-bottom: 2px solid #2563eb;
+    font-weight: 700;
+}
+
+body.modo-claro .ventas-table tbody tr {
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+body.modo-claro .ventas-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+body.modo-claro .ventas-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.05);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.modo-claro .ventas-table tbody td {
+    color: #374151;
+    font-weight: 500;
+}
+
+/* Botones de acción */
+body.modo-claro .modal-actions .btn-exportar {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+}
+
+body.modo-claro .modal-actions .btn-salir {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    color: white;
+    border: none;
+}
+
+/* Modales */
+body.modo-claro .modal-content {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+body.modo-claro .modal-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom: 1px solid #cbd5e1;
+}
+
+body.modo-claro .modal-title {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+body.modo-claro .modal-body {
+    background: #ffffff;
+    color: #374151;
 }
 
 /* ============================================
