@@ -26,6 +26,19 @@ function actualizarFechaHora() {
     }
 }
 
+// Función para manejar navegación de pestañas
+function inicializarNavegacionTabs() {
+    const tabLinks = document.querySelectorAll('.tab-link');
+    
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Permitir navegación normal
+            // No prevenir default para permitir navegación
+            console.log('Navegando a:', this.href);
+        });
+    });
+}
+
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     // Actualizar fecha y hora inmediatamente
@@ -33,6 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Actualizar cada segundo
     setInterval(actualizarFechaHora, 1000);
+    
+    // Inicializar navegación de pestañas
+    inicializarNavegacionTabs();
     
     // Inicializar funcionalidades de meseros
     if (typeof inicializarFuncionalidadesMeseros === 'function') {

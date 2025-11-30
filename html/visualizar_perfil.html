@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,21 +8,36 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
     <link rel="stylesheet" href="../css/visualizar_perfil.css">
+    <link rel="stylesheet" href="../css/modo-claro.css" id="modo-claro-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <main class="main-content" id="mainContent">
-        <div class="visualizar-perfil-container">
-            <header class="visualizar-perfil-header">
-                <h1>
-                    <i class="fas fa-users-cog"></i>
-                    Perfiles del Sistema
-                </h1>
-                <div class="fecha-hora-box">
-                    <span id="fechaActual"></span>
-                    <span id="horaActual"></span>
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title"><i class="fas fa-users-cog"></i> Perfiles del Sistema</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="theme-toggle">
+                    <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
                 </div>
-            </header>
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <div class="visualizar-perfil-container">
 
             <div class="visualizar-perfil-contenido">
                 <div class="contenido-card">
@@ -81,5 +96,6 @@
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/visualizar_perfil.js"></script>
+    <script src="../js/theme-manager.js"></script>
 </body>
 </html>

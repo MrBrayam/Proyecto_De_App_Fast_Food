@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,26 +10,41 @@
     <link rel="stylesheet" href="../css/menu_principal.css">
     <link rel="stylesheet" href="../css/ver_administradores.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
+
 <body>
     <!-- Sidebar -->
     <div id="sidebarContainer"></div>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="module-container">
-            <!-- Header del módulo -->
-            <div class="module-header">
-                <h1 class="module-title">
-                    <i class="fas fa-user-shield"></i> Ver Administradores
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">
+                    <i class="fas fa-user-shield"></i>
+                    Ver Administradores
                 </h1>
-                <div class="fecha-hora-box">
-                    <span id="fechaActual">Cargando fecha...</span>
-                    <span id="horaActual">Cargando hora...</span>
+            </div>
+            <div class="top-bar-right">
+                <div class="theme-toggle">
+                    <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
                 </div>
             </div>
+        </header>
 
-            <!-- Contenido del módulo -->
+        <div class="module-container">
             <div class="module-contenido">
                 <!-- Navegación de tipos de usuario -->
                 <div class="user-type-tabs">
@@ -39,7 +54,7 @@
                     <a href="ver_meseros.html" class="tab-link">
                         <i class="fas fa-utensils"></i> Meseros
                     </a>
-                    <a href="ver_cajero.html" class="tab-link">
+                    <a href="ver_cajeros.html" class="tab-link">
                         <i class="fas fa-cash-register"></i> Cajeros
                     </a>
                     <a href="ver_repartidores.html" class="tab-link">
@@ -129,6 +144,8 @@
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/ver_administradores.js"></script>
+    <script src="../js/ver_administradores.js"></script>    <script src="../js/theme-manager.js"></script>
+
 </body>
 </html>
+    <link rel="stylesheet" href="../css/modo-claro.css" id="modo-claro-css" disabled>

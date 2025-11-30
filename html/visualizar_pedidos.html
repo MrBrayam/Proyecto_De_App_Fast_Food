@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,25 +10,40 @@
     <link rel="stylesheet" href="../css/menu_principal.css">
     <link rel="stylesheet" href="../css/visualizar_pedidos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
+
 <body>
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Contenedor Principal -->
-        <div class="visualizar-pedidos-container">
-            <!-- Header con Título -->
-            <div class="pedidos-header">
-                <h1 class="pedidos-titulo">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">
                     <i class="fas fa-receipt"></i>
                     Visualizar Pedidos
                 </h1>
-                <div class="fecha-hora-display">
-                    <span id="fecha-actual">Cargando...</span>
-                    <span id="hora-actual">--:--:--</span>
+            </div>
+            <div class="top-bar-right">
+                <div class="theme-toggle">
+                    <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
                 </div>
             </div>
+        </header>
 
+        <!-- Contenedor Principal -->
+        <div class="visualizar-pedidos-container">
             <!-- Sección de Filtros -->
             <section class="filtros-section">
                 <div class="filtros-container">
@@ -258,6 +273,9 @@
     <!-- Scripts -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/visualizar_pedidos.js"></script>
+    <script src="../js/visualizar_pedidos.js"></script>    <script src="../js/theme-manager.js"></script>
+
 </body>
 </html>
+
+    <link rel="stylesheet" href="../css/modo-claro.css" id="modo-claro-css" disabled>

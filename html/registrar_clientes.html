@@ -9,26 +9,39 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/menu_principal.css">
     <link rel="stylesheet" href="../css/registrar_clientes.css">
+    <link rel="stylesheet" href="../css/modo-claro.css" id="modo-claro-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Contenedor Principal -->
-        <div class="clientes-container">
-            <!-- Header con Título y Fecha/Hora -->
-            <div class="clientes-header">
-                <div class="clientes-header-left">
-                    <h1 class="clientes-titulo">Registro de cliente</h1>
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Registro de cliente</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="theme-toggle">
+                    <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
                 </div>
-                <div class="clientes-header-right">
-                    <div class="fecha-hora-display">
-                        <span id="fechaActual"></span>
-                        <span id="horaActual"></span>
-                    </div>
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
                 </div>
             </div>
+        </header>
+        
+        <!-- Contenedor Principal -->
+        <div class="clientes-container">
 
             <!-- Contenido -->
             <div class="clientes-contenido">
@@ -160,5 +173,6 @@
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/registrar_clientes.js"></script>
+    <script src="../js/theme-manager.js"></script>
 </body>
 </html>

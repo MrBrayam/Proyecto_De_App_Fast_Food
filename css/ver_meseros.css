@@ -19,6 +19,8 @@
     height: 100%;
     background: radial-gradient(circle, rgba(255, 87, 51, 0.1) 0%, transparent 70%);
     animation: pulse 15s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
 }
 
 @keyframes pulse {

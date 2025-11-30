@@ -6,7 +6,7 @@
 .venta-container {
     background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
     min-height: 100vh;
-    padding: 0;
+    padding: 24px;
     position: relative;
     overflow-x: hidden;
 }
@@ -39,13 +39,35 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 30px;
-    background: rgba(44, 47, 62, 0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 87, 51, 0.3);
+    padding: 24px 32px;
+    background: rgba(44, 47, 62, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 87, 51, 0.3);
+    border-radius: 16px;
     position: relative;
     z-index: 10;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 4px 16px rgba(255, 87, 51, 0.1);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.venta-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff5733, #ffc857, #ff5733);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: -200% 0; }
+    50% { background-position: 200% 0; }
 }
 
 .venta-header-left {

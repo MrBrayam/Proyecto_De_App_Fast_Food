@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,28 +10,37 @@
     <link rel="stylesheet" href="../css/menu_principal.css">
     <link rel="stylesheet" href="../css/visualizar_proveedores.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
+
 <body>
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Contenedor Principal -->
-        <div class="proveedores-visualizar-container">
-            <!-- Header con Título y Fecha/Hora -->
-            <div class="proveedores-header">
-                <div class="proveedores-header-left">
-                    <h1 class="proveedores-titulo">
-                        <i class="fas fa-truck-loading"></i>
-                        Visualizar Proveedores
-                    </h1>
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title"><i class="fas fa-truck-loading"></i> Visualizar Proveedores</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="theme-toggle">
+                    <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
                 </div>
-                <div class="proveedores-header-right">
-                    <div class="fecha-hora-display">
-                        <span id="fechaActual">Cargando...</span>
-                        <span id="horaActual">--:--:--</span>
-                    </div>
+                <div class="current-date" id="currentDate"></div>
+                <div class="notifications">
+                    <button class="notification-btn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
                 </div>
             </div>
+        </header>
+        
+        <!-- Contenedor Principal -->
+        <div class="proveedores-visualizar-container">
 
             <!-- Sección de Búsqueda y Filtros -->
             <section class="busqueda-section">
@@ -351,6 +360,9 @@
     <!-- Scripts -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/visualizar_proveedores.js"></script>
+    <script src="../js/visualizar_proveedores.js"></script>    <script src="../js/theme-manager.js"></script>
+
 </body>
 </html>
+
+    <link rel="stylesheet" href="../css/modo-claro.css" id="modo-claro-css" disabled>

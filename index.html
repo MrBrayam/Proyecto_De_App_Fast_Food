@@ -9,14 +9,20 @@
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/modo-claro.css" id="modo-claro-css" disabled>
 </head>
 <body>
     <div class="login-wrapper">
         <div class="login-container">
             <!-- Header -->
             <div class="login-header">
+                <div class="theme-toggle">
+                    <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
                 <div class="login-logo">
-                    �
+                    🍕
                 </div>
                 <h1 class="login-title">King's Pizza</h1>
                 <p class="login-subtitle">Sistema de Gestión de Pizzería</p>
@@ -111,5 +117,6 @@
 
     <!-- JavaScript -->
     <script src="js/login.js"></script>
+    <script src="js/theme-manager.js"></script>
 </body>
 </html>

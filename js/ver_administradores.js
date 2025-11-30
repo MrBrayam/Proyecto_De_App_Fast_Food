@@ -3,13 +3,6 @@
    Solo maneja fecha y hora
    ============================================ */
 
-// Inicializar al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-    actualizarFechaHora();
-    setInterval(actualizarFechaHora, 1000);
-    inicializarFuncionalidadesAdministradores();
-});
-
 // Actualizar fecha y hora en tiempo real
 function actualizarFechaHora() {
     const ahora = new Date();
@@ -33,3 +26,27 @@ function actualizarFechaHora() {
     document.getElementById('fechaActual').textContent = fechaFormateada;
     document.getElementById('horaActual').textContent = horaFormateada;
 }
+
+// Función para manejar navegación de pestañas
+function inicializarNavegacionTabs() {
+    const tabLinks = document.querySelectorAll('.tab-link');
+    
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Permitir navegación normal
+            // No prevenir default para permitir navegación
+            console.log('Navegando a:', this.href);
+        });
+    });
+}
+
+// Inicializar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 1000);
+    
+    // Inicializar navegación de pestañas
+    inicializarNavegacionTabs();
+    
+    inicializarFuncionalidadesAdministradores();
+});

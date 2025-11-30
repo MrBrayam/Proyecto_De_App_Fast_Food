@@ -18,10 +18,26 @@ function actualizarFechaHora() {
     }
 }
 
+// Función para manejar navegación de pestañas
+function inicializarNavegacionTabs() {
+    const tabLinks = document.querySelectorAll('.tab-link');
+    
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Permitir navegación normal
+            // No prevenir default para permitir navegación
+            console.log('Navegando a:', this.href);
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     
     setInterval(actualizarFechaHora, 1000);
+    
+    // Inicializar navegación de pestañas
+    inicializarNavegacionTabs();
     
     if (typeof inicializarFuncionalidadesRepartidores === 'function') {
         inicializarFuncionalidadesRepartidores();
