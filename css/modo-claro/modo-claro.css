@@ -2307,35 +2307,547 @@ body.modo-claro .mesa-btn:hover {
    ============================================ */
 
 /* Contenedor principal */
+/* ============================================
+   REGISTRAR VENTA - MODO CLARO
+   ============================================ */
+
 body.modo-claro .venta-container {
-    background: linear-gradient(135deg, var(--fondo-principal) 0%, var(--fondo-secundario) 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #f0f9ff 100%);
     min-height: 100vh;
     padding: 24px;
 }
 
+body.modo-claro .venta-container::before {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(96, 165, 250, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(37, 99, 235, 0.07) 0%, transparent 45%);
+}
+
+body.modo-claro .venta-container::after {
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+}
+
 /* Header de venta */
 body.modo-claro .venta-header {
-    background: linear-gradient(135deg, var(--fondo-principal) 0%, rgba(248, 250, 252, 0.9) 100%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
     border: 1px solid var(--borde-principal);
     border-radius: 16px;
-    padding: 24px;
+    box-shadow: var(--sombra-media);
     margin-bottom: 24px;
+}
+
+body.modo-claro .venta-header::before {
+    background: linear-gradient(90deg, var(--color-principal), var(--color-acento), var(--color-principal));
+}
+
+body.modo-claro .venta-header::after {
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+}
+
+body.modo-claro .venta-titulo {
+    color: var(--texto-principal);
+    text-shadow: none;
+}
+
+body.modo-claro .menu-hamburger {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .menu-hamburger:hover {
+    color: var(--color-principal);
+}
+
+body.modo-claro .fecha-hora-display {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .fecha-hora-display span {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .fecha-hora-display span {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--texto-principal);
+}
+
+/* Barra de información */
+body.modo-claro .venta-info-bar {
+    padding: 30px;
+}
+
+body.modo-claro .cliente-section label,
+body.modo-claro .tipo-pago-section label {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .input-cliente {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .input-cliente:focus {
+    border-color: var(--color-principal);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+body.modo-claro .input-cliente::placeholder {
+    color: var(--texto-placeholder);
+}
+
+body.modo-claro .btn-buscar {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .btn-buscar:hover {
+    background: var(--fondo-secundario);
+    border-color: var(--color-principal);
+}
+
+body.modo-claro .btn-nuevo-cliente {
+    background: var(--color-exito);
+    border: 2px solid #15803d;
+    color: white;
+}
+
+body.modo-claro .btn-nuevo-cliente:hover {
+    background: #16a34a;
+}
+
+body.modo-claro .select-tipo-pago {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .select-tipo-pago:focus {
+    border-color: var(--color-principal);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Formulario de productos */
+body.modo-claro .venta-productos-form {
+    padding: 20px 30px;
+}
+
+body.modo-claro .header-col {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-principal);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    text-shadow: none;
     box-shadow: var(--sombra-suave);
 }
 
-body.modo-claro .venta-header h1 {
+body.modo-claro .input-codigo,
+body.modo-claro .input-linea,
+body.modo-claro .input-descripcion,
+body.modo-claro .input-cantidad,
+body.modo-claro .input-precio {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
     color: var(--texto-principal);
-    font-weight: 800;
-    margin: 0;
 }
 
-body.modo-claro .venta-header .fecha-hora {
-    color: var(--texto-secundario);
+body.modo-claro .input-codigo:focus,
+body.modo-claro .input-linea:focus,
+body.modo-claro .input-cantidad:focus {
+    border-color: var(--color-principal);
+    background: var(--fondo-principal);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+body.modo-claro .input-descripcion:disabled,
+body.modo-claro .input-precio:disabled {
+    background: var(--fondo-secundario);
+    border-color: var(--borde-principal);
+}
+
+body.modo-claro .input-codigo::placeholder,
+body.modo-claro .input-linea::placeholder,
+body.modo-claro .input-cantidad::placeholder,
+body.modo-claro .input-precio::placeholder {
+    color: var(--texto-placeholder);
+}
+
+/* Tabla de ventas */
+body.modo-claro .venta-tabla-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-media);
+}
+
+body.modo-claro .venta-tabla-wrapper::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.5);
+}
+
+body.modo-claro .venta-tabla-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-principal);
+}
+
+body.modo-claro .venta-tabla-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secundario);
+}
+
+body.modo-claro .venta-tabla {
+    background: transparent;
+}
+
+body.modo-claro .venta-tabla thead th {
     background: rgba(37, 99, 235, 0.1);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--color-principal);
+    border-bottom: 2px solid var(--color-principal);
+    text-shadow: none;
+}
+
+body.modo-claro .venta-tabla tbody tr {
+    background: var(--fondo-principal);
+}
+
+body.modo-claro .venta-tabla tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+body.modo-claro .venta-tabla tbody td {
+    color: var(--texto-principal);
+    border-bottom: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .btn-scroll-up,
+body.modo-claro .btn-scroll-down,
+body.modo-claro .btn-eliminar-item {
+    color: var(--color-principal);
+}
+
+body.modo-claro .btn-scroll-up:hover,
+body.modo-claro .btn-scroll-down:hover {
+    color: var(--color-acento);
+}
+
+body.modo-claro .btn-eliminar-item {
+    color: var(--color-error);
+}
+
+body.modo-claro .btn-eliminar-item:hover {
+    color: #dc2626;
+}
+
+/* Botones de acción */
+body.modo-claro .venta-actions {
+    padding: 30px;
+}
+
+body.modo-claro .btn-eliminar {
+    background: linear-gradient(135deg, var(--color-error), #dc2626);
+}
+
+body.modo-claro .btn-eliminar:hover {
+    background: linear-gradient(135deg, #dc2626, var(--color-error));
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+}
+
+body.modo-claro .btn-registrar {
+    background: linear-gradient(135deg, var(--color-principal), var(--color-secundario));
+}
+
+body.modo-claro .btn-registrar:hover {
+    background: linear-gradient(135deg, var(--color-secundario), var(--color-principal));
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+}
+
+body.modo-claro .btn-salir {
+    background: linear-gradient(135deg, var(--color-advertencia), #d97706);
+}
+
+body.modo-claro .btn-salir:hover {
+    background: linear-gradient(135deg, #d97706, var(--color-advertencia));
+    box-shadow: 0 6px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* ============================================
+   VISUALIZAR VENTAS - MODO CLARO
+   ============================================ */
+
+body.modo-claro .venta-visualizar-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #f0f9ff 100%);
+    min-height: 100vh;
+}
+
+body.modo-claro .venta-visualizar-container::before {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(96, 165, 250, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(37, 99, 235, 0.07) 0%, transparent 45%);
+}
+
+body.modo-claro .venta-visualizar-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-suave);
+}
+
+body.modo-claro .venta-visualizar-titulo {
+    color: var(--texto-principal);
+    text-shadow: none;
+}
+
+body.modo-claro .fecha-hora-display {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .fecha-hora-display span {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--texto-principal);
+}
+
+/* Sección de búsqueda */
+body.modo-claro .busqueda-section {
+    padding: 30px;
+}
+
+body.modo-claro .busqueda-form {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-media);
+}
+
+body.modo-claro .input-busqueda-principal {
+    background: var(--fondo-principal);
+    border: 2px dashed var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .input-busqueda-principal::placeholder {
+    color: var(--texto-placeholder);
+}
+
+body.modo-claro .input-busqueda-principal:focus {
+    border-color: var(--color-principal);
+    border-style: solid;
+    background: var(--fondo-principal);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+body.modo-claro .btn-buscar-principal,
+body.modo-claro .btn-detalle-principal {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .btn-buscar-principal:hover {
+    background: var(--fondo-secundario);
+    border-color: var(--color-principal);
+}
+
+body.modo-claro .btn-detalle-principal:not(:disabled):hover {
+    background: var(--fondo-secundario);
+    border-color: var(--color-principal);
+}
+
+body.modo-claro .btn-detalle-principal:disabled {
+    background: var(--fondo-secundario);
+    opacity: 0.6;
+}
+
+/* Tabla de ventas */
+body.modo-claro .tabla-ventas-section {
+    padding: 0 30px 30px;
+}
+
+body.modo-claro .tabla-ventas-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-media);
+}
+
+body.modo-claro .tabla-ventas-wrapper::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.5);
+}
+
+body.modo-claro .tabla-ventas-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-principal);
+}
+
+body.modo-claro .tabla-ventas-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secundario);
+}
+
+body.modo-claro .tabla-ventas-principal {
+    background: transparent;
+}
+
+body.modo-claro .tabla-ventas-principal thead th {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-principal);
+    border-bottom: 2px solid var(--color-principal);
+}
+
+body.modo-claro .tabla-ventas-principal tbody tr {
+    background: var(--fondo-principal);
+}
+
+body.modo-claro .tabla-ventas-principal tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+body.modo-claro .tabla-ventas-principal tbody tr.selected {
+    background: rgba(37, 99, 235, 0.15);
+    border-left: 4px solid var(--color-principal);
+}
+
+body.modo-claro .tabla-ventas-principal tbody td {
+    color: var(--texto-principal);
+    border-bottom: 1px solid var(--borde-principal);
+}
+
+/* Botones de acción principales */
+body.modo-claro .acciones-principales {
+    padding: 0 30px 30px;
+}
+
+body.modo-claro .btn-exportar,
+body.modo-claro .btn-exportar-principal {
+    background: linear-gradient(135deg, var(--color-principal), var(--color-secundario);
+}
+
+body.modo-claro .btn-exportar:hover,
+body.modo-claro .btn-exportar-principal:hover {
+    background: linear-gradient(135deg, var(--color-secundario), var(--color-principal));
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+}
+
+body.modo-claro .btn-salir,
+body.modo-claro .btn-salir-principal {
+    background: linear-gradient(135deg, var(--color-error), #dc2626);
+}
+
+body.modo-claro .btn-salir:hover,
+body.modo-claro .btn-salir-principal:hover {
+    background: linear-gradient(135deg, #dc2626, var(--color-error));
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Modal de comprobante */
+body.modo-claro .modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+body.modo-claro .modal-content {
+    background: var(--fondo-principal);
+    border: 1px solid var(--borde-principal);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+body.modo-claro .btn-cerrar-modal {
+    color: var(--texto-secundario);
+}
+
+body.modo-claro .btn-cerrar-modal:hover {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .comprobante-container {
+    background: var(--fondo-principal);
+    border: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .comprobante-header {
+    background: var(--fondo-secundario);
+    border-bottom: 2px solid var(--borde-principal);
+}
+
+body.modo-claro .comprobante-header h2 {
+    color: var(--color-principal);
+}
+
+body.modo-claro .comprobante-logo {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .comprobante-numero {
+    color: var(--color-error);
+}
+
+body.modo-claro .comprobante-info p {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .comprobante-info strong {
+    color: var(--color-principal);
+}
+
+body.modo-claro .comprobante-tabla {
+    border-top: 1px solid var(--borde-principal);
+    border-bottom: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .comprobante-tabla thead th {
+    background: var(--fondo-secundario);
+    color: var(--color-principal);
+    border-bottom: 2px solid var(--borde-principal);
+}
+
+body.modo-claro .comprobante-tabla tbody td {
+    color: var(--texto-principal);
+    border-bottom: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .comprobante-totales {
+    background: var(--fondo-secundario);
+}
+
+body.modo-claro .comprobante-totales p {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .comprobante-totales .total-final {
+    color: var(--color-principal);
+}
+
+body.modo-claro .comprobante-footer {
+    border-top: 2px dashed var(--borde-principal);
+}
+
+body.modo-claro .comprobante-footer p {
+    color: var(--texto-secundario);
+}
+
+body.modo-claro .comprobante-footer p:first-child {
+    color: var(--color-principal);
+}
+
+body.modo-claro .btn-imprimir {
+    background: linear-gradient(135deg, var(--color-info), #0284c7);
+}
+
+body.modo-claro .btn-imprimir:hover {
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+body.modo-claro .btn-pdf {
+    background: linear-gradient(135deg, var(--color-error), #dc2626);
+}
+
+body.modo-claro .btn-pdf:hover {
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+}
+
+body.modo-claro .pizza-decoration {
+    opacity: 0.5;
 }
 
 /* Sección de cliente */
@@ -2867,6 +3379,248 @@ body.modo-claro .modal-body {
 /* ============================================
    PRINT STYLES
    ============================================ */
+
+/* ============================================
+   REGISTRAR PROMOCIONES - MODO CLARO
+   ============================================ */
+
+body.modo-claro .promocion-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #f0f9ff 100%);
+    min-height: 100vh;
+    padding: 0;
+}
+
+body.modo-claro .promocion-container::before {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(96, 165, 250, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(37, 99, 235, 0.07) 0%, transparent 45%);
+}
+
+body.modo-claro .promocion-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-suave);
+}
+
+body.modo-claro .promocion-titulo {
+    color: var(--texto-principal);
+    text-shadow: none;
+}
+
+body.modo-claro .fecha-hora-display {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .fecha-hora-display span {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .promocion-form-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-media);
+}
+
+body.modo-claro .promocion-form-card::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.5);
+}
+
+body.modo-claro .promocion-form-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-principal) 0%, var(--color-acento) 100%);
+    border: 2px solid rgba(226, 232, 240, 0.3);
+}
+
+body.modo-claro .promocion-form-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--color-secundario) 0%, var(--color-principal) 100%);
+}
+
+body.modo-claro .form-header {
+    border-bottom: 2px solid var(--borde-principal);
+}
+
+body.modo-claro .form-header h2 {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .form-header h2 i {
+    color: var(--color-principal);
+}
+
+body.modo-claro .section-title {
+    color: var(--color-principal);
+    border-bottom: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .form-group label,
+body.modo-claro .form-group-full label {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .form-group label i,
+body.modo-claro .form-group-full label i {
+    color: var(--color-acento);
+}
+
+body.modo-claro .form-input,
+body.modo-claro .form-select,
+body.modo-claro .form-textarea {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .form-input:focus,
+body.modo-claro .form-select:focus,
+body.modo-claro .form-textarea:focus {
+    border-color: var(--color-principal);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: var(--fondo-principal);
+}
+
+body.modo-claro .form-input::placeholder,
+body.modo-claro .form-textarea::placeholder {
+    color: var(--texto-placeholder);
+}
+
+body.modo-claro .form-actions {
+    border-top: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .btn-guardar {
+    background: linear-gradient(135deg, var(--color-exito), #16a34a);
+    color: white;
+}
+
+body.modo-claro .btn-guardar:hover {
+    background: linear-gradient(135deg, #16a34a, var(--color-exito));
+    box-shadow: 0 6px 12px rgba(34, 197, 94, 0.3);
+}
+
+body.modo-claro .btn-limpiar {
+    background: linear-gradient(135deg, var(--color-advertencia), #d97706);
+    color: white;
+}
+
+body.modo-claro .btn-limpiar:hover {
+    background: linear-gradient(135deg, #d97706, var(--color-advertencia));
+    box-shadow: 0 6px 12px rgba(245, 158, 11, 0.3);
+}
+
+body.modo-claro .btn-cancelar {
+    background: linear-gradient(135deg, var(--color-error), #dc2626);
+    color: white;
+}
+
+body.modo-claro .btn-cancelar:hover {
+    background: linear-gradient(135deg, #dc2626, var(--color-error));
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+}
+
+body.modo-claro .promociones-lista-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--borde-principal);
+    box-shadow: var(--sombra-media);
+}
+
+body.modo-claro .lista-header {
+    border-bottom: 2px solid var(--borde-principal);
+}
+
+body.modo-claro .lista-titulo {
+    color: var(--texto-principal);
+}
+
+body.modo-claro .lista-titulo i {
+    color: var(--color-principal);
+}
+
+body.modo-claro .search-input {
+    background: var(--fondo-principal);
+    border: 2px solid var(--borde-principal);
+    color: var(--texto-principal);
+}
+
+body.modo-claro .search-input:focus {
+    border-color: var(--color-principal);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+body.modo-claro .lista-search i {
+    color: var(--color-acento);
+}
+
+body.modo-claro .tabla-promociones thead th {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-principal);
+    border-bottom: 2px solid var(--color-principal);
+}
+
+body.modo-claro .tabla-promociones tbody tr {
+    background: var(--fondo-principal);
+}
+
+body.modo-claro .tabla-promociones tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+body.modo-claro .tabla-promociones tbody td {
+    color: var(--texto-principal);
+    border-bottom: 1px solid var(--borde-principal);
+}
+
+body.modo-claro .badge-activa {
+    background: rgba(34, 197, 94, 0.15);
+    color: #15803d;
+    border: 1px solid var(--color-exito);
+}
+
+body.modo-claro .badge-inactiva {
+    background: rgba(239, 68, 68, 0.15);
+    color: #b91c1c;
+    border: 1px solid var(--color-error);
+}
+
+body.modo-claro .badge-programada {
+    background: rgba(245, 158, 11, 0.15);
+    color: #b45309;
+    border: 1px solid var(--color-advertencia);
+}
+
+body.modo-claro .btn-edit {
+    color: var(--color-principal);
+}
+
+body.modo-claro .btn-edit:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+body.modo-claro .btn-delete {
+    color: var(--color-error);
+}
+
+body.modo-claro .btn-delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+body.modo-claro .tabla-container::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.5);
+}
+
+body.modo-claro .tabla-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-principal) 0%, var(--color-acento) 100%);
+    border: 2px solid rgba(226, 232, 240, 0.3);
+}
+
+body.modo-claro .tabla-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--color-secundario) 0%, var(--color-principal) 100%);
+}
 
 @media print {
     body {

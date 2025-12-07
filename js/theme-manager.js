@@ -7,6 +7,8 @@ class ThemeManager {
     constructor() {
         this.body = document.body;
         this.modoClaro = null;
+        this.modoClaroPage = null;
+        this.modoOscuroPage = null;
         this.themeIcon = null;
         this.themeBtn = null;
         
@@ -25,7 +27,7 @@ class ThemeManager {
     }
 
     setupThemeElements() {
-        // Buscar el enlace del modo claro
+        // Buscar el enlace del modo claro general
         this.modoClaro = document.getElementById('modo-claro-css');
         
         // Si no existe, crearlo
@@ -33,10 +35,14 @@ class ThemeManager {
             this.modoClaro = document.createElement('link');
             this.modoClaro.id = 'modo-claro-css';
             this.modoClaro.rel = 'stylesheet';
-            this.modoClaro.href = this.getCorrectPath() + 'css/modo-claro.css';
+            this.modoClaro.href = this.getCorrectPath() + 'css/modo-claro/modo-claro.css';
             this.modoClaro.disabled = true;
             document.head.appendChild(this.modoClaro);
         }
+
+        // Buscar los enlaces específicos de página
+        this.modoClaroPage = document.getElementById('modo-claro-page-css');
+        this.modoOscuroPage = document.getElementById('modo-oscuro-page-css');
 
         // Buscar elementos del tema
         this.themeIcon = document.querySelector('.theme-icon');
@@ -98,7 +104,15 @@ class ThemeManager {
 
     setLightTheme() {
         this.body.classList.add('modo-claro');
+        this.body.classList.remove('modo-oscuro');
+        
+        // Activar estilos de modo claro
         if (this.modoClaro) this.modoClaro.disabled = false;
+        if (this.modoClaroPage) this.modoClaroPage.disabled = false;
+        
+        // Desactivar estilos de modo oscuro
+        if (this.modoOscuroPage) this.modoOscuroPage.disabled = true;
+        
         if (this.themeIcon) this.themeIcon.textContent = '☀️';
         if (this.themeBtn) this.themeBtn.title = 'Cambiar a modo oscuro';
         localStorage.setItem('theme', 'light');
@@ -109,7 +123,15 @@ class ThemeManager {
 
     setDarkTheme() {
         this.body.classList.remove('modo-claro');
+        this.body.classList.add('modo-oscuro');
+        
+        // Desactivar estilos de modo claro
         if (this.modoClaro) this.modoClaro.disabled = true;
+        if (this.modoClaroPage) this.modoClaroPage.disabled = true;
+        
+        // Activar estilos de modo oscuro
+        if (this.modoOscuroPage) this.modoOscuroPage.disabled = false;
+        
         if (this.themeIcon) this.themeIcon.textContent = '🌙';
         if (this.themeBtn) this.themeBtn.title = 'Cambiar a modo claro';
         localStorage.setItem('theme', 'dark');

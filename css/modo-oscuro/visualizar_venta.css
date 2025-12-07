@@ -1,0 +1,16 @@
+/* ============================================
+   VISUALIZAR VENTAS - MODO OSCURO
+   ============================================ */
+
+/* 
+ * Este archivo permite personalizaciones adicionales para el modo oscuro
+ * Por defecto, la página usa los estilos oscuros definidos en visualizar_venta.css
+ * Aquí puedes agregar ajustes específicos si necesitas modificar el comportamiento
+ * del modo oscuro sin afectar los estilos base
+ */
+
+/* Ejemplo de uso:
+body.modo-oscuro .venta-visualizar-container {
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #2a2a3e 100%);
+}
+*/
