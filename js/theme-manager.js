@@ -40,6 +40,9 @@ class ThemeManager {
             document.head.appendChild(this.modoClaro);
         }
 
+        // Buscar el enlace del menu principal en modo claro
+        this.modoClaroMenu = document.getElementById('modo-claro-menu-css');
+        
         // Buscar los enlaces específicos de página
         this.modoClaroPage = document.getElementById('modo-claro-page-css');
         this.modoOscuroPage = document.getElementById('modo-oscuro-page-css');
@@ -108,6 +111,7 @@ class ThemeManager {
         
         // Activar estilos de modo claro
         if (this.modoClaro) this.modoClaro.disabled = false;
+        if (this.modoClaroMenu) this.modoClaroMenu.disabled = false;
         if (this.modoClaroPage) this.modoClaroPage.disabled = false;
         
         // Desactivar estilos de modo oscuro
@@ -127,6 +131,7 @@ class ThemeManager {
         
         // Desactivar estilos de modo claro
         if (this.modoClaro) this.modoClaro.disabled = true;
+        if (this.modoClaroMenu) this.modoClaroMenu.disabled = true;
         if (this.modoClaroPage) this.modoClaroPage.disabled = true;
         
         // Activar estilos de modo oscuro

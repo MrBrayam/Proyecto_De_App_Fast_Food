@@ -1,9 +1,9 @@
 /* ============================================
-   ESTILOS PARA REGISTRAR MESAS
+   ESTILOS PARA REGISTRAR PROMOCIONES - MODO OSCURO
    ============================================ */
 
 /* Contenedor Principal */
-.mesa-container {
+.promocion-container {
     background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
     min-height: 100vh;
     padding: 0;
@@ -12,7 +12,7 @@
 }
 
 /* Patrón de fondo con burbujas y formas suaves */
-.mesa-container::before {
+.promocion-container::before {
     content: '';
     position: absolute;
     top: 0;
@@ -35,7 +35,7 @@
 }
 
 /* Header */
-.mesa-header {
+.promocion-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,13 +48,13 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.mesa-header-left {
+.promocion-header-left {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.mesa-titulo {
+.promocion-titulo {
     color: white;
     font-size: 32px;
     font-weight: bold;
@@ -63,7 +63,7 @@
 }
 
 /* Fecha y Hora */
-.mesa-header-right {
+.promocion-header-right {
     display: flex;
     gap: 20px;
 }
@@ -83,8 +83,8 @@
     border: 1px solid rgba(255, 87, 51, 0.4);
 }
 
-/* Contenido de dos columnas */
-.mesa-contenido {
+/* Contenido principal */
+.promocion-contenido {
     display: grid;
     grid-template-columns: 1fr;
     gap: 30px;
@@ -94,7 +94,7 @@
 }
 
 /* Card del Formulario */
-.mesa-form-card {
+.promocion-form-card {
     background: rgba(44, 47, 62, 0.7);
     backdrop-filter: blur(15px);
     border-radius: 20px;
@@ -103,25 +103,27 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     max-height: calc(100vh - 150px);
     overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Scrollbar del formulario */
-.mesa-form-card::-webkit-scrollbar {
+.promocion-form-card::-webkit-scrollbar {
     width: 10px;
 }
 
-.mesa-form-card::-webkit-scrollbar-track {
+.promocion-form-card::-webkit-scrollbar-track {
     background: rgba(26, 29, 46, 0.3);
     border-radius: 10px;
 }
 
-.mesa-form-card::-webkit-scrollbar-thumb {
+.promocion-form-card::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, #ff5733 0%, #ffc857 100%);
     border-radius: 10px;
     border: 2px solid rgba(44, 47, 62, 0.3);
 }
 
-.mesa-form-card::-webkit-scrollbar-thumb:hover {
+.promocion-form-card::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, #ff6b6b 0%, #ffd700 100%);
 }
 
@@ -164,7 +166,7 @@
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
 }
 
@@ -231,40 +233,6 @@
     min-height: 80px;
 }
 
-/* Checkboxes */
-.form-section-advanced {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.form-checkbox {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: #ff5733;
-}
-
-.checkbox-label {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-}
-
-.checkbox-label i {
-    color: #ffc857;
-}
-
 /* Botones de Acción */
 .form-actions {
     display: flex;
@@ -323,8 +291,8 @@
     box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
 }
 
-/* Lista de Mesas */
-.mesas-lista-card {
+/* Lista de Promociones */
+.promociones-lista-card {
     background: rgba(44, 47, 62, 0.7);
     backdrop-filter: blur(15px);
     border-radius: 20px;
@@ -396,19 +364,19 @@
     border-radius: 12px;
 }
 
-.tabla-mesas {
+.tabla-promociones {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
 }
 
-.tabla-mesas thead {
+.tabla-promociones thead {
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
-.tabla-mesas thead th {
+.tabla-promociones thead th {
     background: rgba(26, 29, 46, 0.9);
     color: #ffc857;
     padding: 15px;
@@ -419,17 +387,17 @@
     letter-spacing: 0.5px;
 }
 
-.tabla-mesas tbody tr {
+.tabla-promociones tbody tr {
     background: rgba(26, 29, 46, 0.4);
     transition: all 0.3s ease;
 }
 
-.tabla-mesas tbody tr:hover {
+.tabla-promociones tbody tr:hover {
     background: rgba(255, 87, 51, 0.15);
     transform: scale(1.01);
 }
 
-.tabla-mesas tbody td {
+.tabla-promociones tbody td {
     padding: 15px;
     color: white;
     border-bottom: 1px solid rgba(255, 87, 51, 0.2);
@@ -445,28 +413,22 @@
     display: inline-block;
 }
 
-.badge-disponible {
+.badge-activa {
     background: rgba(40, 167, 69, 0.3);
     color: #90EE90;
     border: 1px solid #28a745;
 }
 
-.badge-ocupada {
+.badge-inactiva {
     background: rgba(220, 53, 69, 0.3);
     color: #FF6B6B;
     border: 1px solid #dc3545;
 }
 
-.badge-reservada {
+.badge-programada {
     background: rgba(255, 193, 7, 0.3);
     color: #FFD54F;
     border: 1px solid #ffc107;
-}
-
-.badge-mantenimiento {
-    background: rgba(108, 117, 125, 0.3);
-    color: #ADB5BD;
-    border: 1px solid #6c757d;
 }
 
 /* Botones de acciones en la tabla */
@@ -521,27 +483,23 @@
 
 /* Responsive */
 @media (max-width: 1400px) {
-    .mesa-contenido {
+    .promocion-contenido {
         grid-template-columns: 1fr;
     }
 
     .form-grid {
         grid-template-columns: 1fr;
     }
-    
-    .form-section-advanced {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media (max-width: 768px) {
-    .mesa-header {
+    .promocion-header {
         flex-direction: column;
         gap: 20px;
         padding: 20px;
     }
 
-    .mesa-titulo {
+    .promocion-titulo {
         font-size: 24px;
     }
 
@@ -556,13 +514,13 @@
         text-align: center;
     }
 
-    .mesa-contenido {
+    .promocion-contenido {
         padding: 20px;
         gap: 20px;
     }
 
-    .mesa-form-card,
-    .mesas-lista-card {
+    .promocion-form-card,
+    .promociones-lista-card {
         padding: 20px;
     }
 
@@ -576,12 +534,12 @@
         width: 100%;
     }
 
-    .tabla-mesas {
+    .tabla-promociones {
         font-size: 12px;
     }
 
-    .tabla-mesas th,
-    .tabla-mesas td {
+    .tabla-promociones th,
+    .tabla-promociones td {
         padding: 10px 8px;
     }
 

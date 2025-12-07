@@ -8,8 +8,10 @@
     
     <link rel="stylesheet" href="../css/modo-oscuro/styles.css">
     <link rel="stylesheet" href="../css/modo-oscuro/menu_principal.css">
-    <link rel="stylesheet" href="../css/modo-oscuro/registrar_platos.css">
+    <link rel="stylesheet" href="../css/modo-claro/menu_principal.css" id="modo-claro-menu-css" disabled>
+    <link rel="stylesheet" href="../css/modo-oscuro/registrar_platos.css" id="modo-oscuro-page-css">
     <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
+    <link rel="stylesheet" href="../css/modo-claro/registrar_platos.css" id="modo-claro-page-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -43,170 +45,66 @@
         <!-- Contenedor Principal -->
         <div class="plato-container">
 
-            <!-- Sección de Búsqueda -->
-            <section class="busqueda-section">
-                <div class="busqueda-grid">
-                    <div class="busqueda-item">
-                        <label for="searchCodigo">Código</label>
-                        <input type="text" id="searchCodigo" class="search-input" placeholder="Ej: 204568">
+            <!-- Formulario de Registro -->
+            <section class="formulario-section">
+                <h2 class="section-title"><i class="fas fa-utensils"></i> Datos del Plato</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="searchCodigo"><i class="fas fa-barcode"></i> Código</label>
+                        <input type="text" id="searchCodigo" class="form-input" placeholder="Ej: 204568">
                     </div>
-                    <div class="busqueda-item">
-                        <label for="searchNombre">Nombre</label>
-                        <input type="text" id="searchNombre" class="search-input" placeholder="Ej: Pizza Hawaiana">
+                    <div class="form-group">
+                        <label for="searchNombre"><i class="fas fa-pizza-slice"></i> Nombre del Plato</label>
+                        <input type="text" id="searchNombre" class="form-input" placeholder="Ej: Pizza Hawaiana">
                     </div>
-                    <div class="busqueda-item">
-                        <label for="searchDescripcion">Descripción</label>
-                        <textarea id="searchDescripcion" class="search-textarea" placeholder="Descripción del plato..." rows="3"></textarea>
-                    </div>
-                    <div class="busqueda-item">
-                        <label for="searchIngredientes">Ingredientes</label>
-                        <textarea id="searchIngredientes" class="search-textarea" placeholder="Lista de ingredientes..." rows="3"></textarea>
-                    </div>
-                    <div class="busqueda-item">
-                        <label for="searchTamano">Tamaño</label>
-                        <select id="searchTamano" class="search-select">
-                            <option value="">Seleccionar</option>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="searchTamano"><i class="fas fa-expand-arrows-alt"></i> Tamaño</label>
+                        <select id="searchTamano" class="form-select">
+                            <option value="">Seleccionar tamaño</option>
                             <option value="personal">Personal</option>
                             <option value="mediana">Mediana</option>
                             <option value="familiar">Familiar</option>
                             <option value="grande">Grande</option>
                         </select>
                     </div>
-                    <div class="busqueda-item">
-                        <label for="searchPrecio">Precio (S/)</label>
-                        <input type="number" id="searchPrecio" class="search-input" placeholder="0.00" min="0" step="0.01">
+                    <div class="form-group">
+                        <label for="searchPrecio"><i class="fas fa-tag"></i> Precio (S/)</label>
+                        <input type="number" id="searchPrecio" class="form-input" placeholder="0.00" min="0" step="0.01">
                     </div>
-                    <div class="busqueda-item">
-                        <label for="searchCantidad">Cantidad</label>
-                        <input type="number" id="searchCantidad" class="search-input" placeholder="0" min="0">
-                    </div>
-                    <div class="busqueda-item busqueda-btn">
-                        <button type="button" id="btnAnadir" class="btn-anadir" onclick="registrarPlato()">
-                            <i class="fas fa-plus-circle"></i>
-                            Añadir
-                        </button>
+                    <div class="form-group">
+                        <label for="searchCantidad"><i class="fas fa-boxes"></i> Cantidad</label>
+                        <input type="number" id="searchCantidad" class="form-input" placeholder="0" min="0">
                     </div>
                 </div>
-            </section>
 
-            <!-- Tabla de Platos -->
-            <section class="tabla-platos-section">
-                <div class="tabla-container">
-                    <table class="tabla-platos">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Imagen Referencial</th>
-                                <th>Descripción</th>
-                                <th>Ingredientes</th>
-                                <th>Tamaño</th>
-                                <th>Precio (S/)</th>
-                                <th>Cantidad</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaPlatosBody">
-                            <!-- Datos de prueba -->
-                            <tr>
-                                <td>204568</td>
-                                <td>Pizza Americana</td>
-                                <td>
-                                    <div class="imagen-plato">
-                                        <img src="https://via.placeholder.com/60/ff5733/ffffff?text=🍕" alt="Pizza">
-                                    </div>
-                                </td>
-                                <td>Pizza con base de masa, salsa de tomate y queso mozzarella, acompañada de pepperoni y jamón.</td>
-                                <td>Salsa de tomate, queso mozzarella, pepperoni, jamón, orégano.</td>
-                                <td>Familiar</td>
-                                <td class="precio">S/. 35.90</td>
-                                <td>15</td>
-                                <td>
-                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>204569</td>
-                                <td>Pizza Hawaiana</td>
-                                <td>
-                                    <div class="imagen-plato">
-                                        <img src="https://via.placeholder.com/60/ffc857/ffffff?text=🍕" alt="Pizza">
-                                    </div>
-                                </td>
-                                <td>Pizza con base de masa, salsa de tomate, queso mozzarella, jamón y piña.</td>
-                                <td>Salsa de tomate, queso mozzarella, jamón, piña, orégano.</td>
-                                <td>Mediana</td>
-                                <td class="precio">S/. 28.50</td>
-                                <td>20</td>
-                                <td>
-                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>204570</td>
-                                <td>Pizza Vegetariana</td>
-                                <td>
-                                    <div class="imagen-plato">
-                                        <img src="https://via.placeholder.com/60/27ae60/ffffff?text=🍕" alt="Pizza">
-                                    </div>
-                                </td>
-                                <td>Pizza con verduras frescas, champiñones, pimientos y aceitunas.</td>
-                                <td>Salsa de tomate, queso, champiñones, pimientos, aceitunas, cebolla.</td>
-                                <td>Grande</td>
-                                <td class="precio">S/. 32.00</td>
-                                <td>12</td>
-                                <td>
-                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>204571</td>
-                                <td>Pizza BBQ</td>
-                                <td>
-                                    <div class="imagen-plato">
-                                        <img src="https://via.placeholder.com/60/e74c3c/ffffff?text=🍕" alt="Pizza">
-                                    </div>
-                                </td>
-                                <td>Pizza con salsa BBQ, pollo, cebolla morada y queso mozzarella.</td>
-                                <td>Salsa BBQ, pollo, cebolla morada, queso mozzarella, cilantro.</td>
-                                <td>Familiar</td>
-                                <td class="precio">S/. 38.90</td>
-                                <td>18</td>
-                                <td>
-                                    <button class="btn-editar" onclick="editarPlato(this)" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-eliminar-item" onclick="eliminarPlato(this)" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="form-row">
+                    <div class="form-group form-group-full">
+                        <label for="searchDescripcion"><i class="fas fa-align-left"></i> Descripción</label>
+                        <textarea id="searchDescripcion" class="form-textarea" placeholder="Descripción detallada del plato..." rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group form-group-full">
+                        <label for="searchIngredientes"><i class="fas fa-list"></i> Ingredientes</label>
+                        <textarea id="searchIngredientes" class="form-textarea" placeholder="Lista de ingredientes separados por comas..." rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="btnAnadir" class="btn-anadir" onclick="registrarPlato()">
+                        <i class="fas fa-plus-circle"></i>
+                        Añadir Plato
+                    </button>
                 </div>
             </section>
 
             <!-- Botones de Acción -->
             <section class="acciones-platos">
-                <button type="button" id="btnEliminar" class="btn-main btn-eliminar">
-                    <i class="fas fa-trash-alt"></i>
-                    Eliminar
-                </button>
                 <button type="button" id="btnGuardar" class="btn-main btn-guardar">
                     <i class="fas fa-save"></i>
                     Guardar
@@ -226,5 +124,6 @@
     <script src="../js/theme-manager.js"></script>
 </body>
 </html>
+
 
 

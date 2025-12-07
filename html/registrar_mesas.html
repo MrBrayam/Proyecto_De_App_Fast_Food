@@ -8,8 +8,9 @@
     
     <link rel="stylesheet" href="../css/modo-oscuro/styles.css">
     <link rel="stylesheet" href="../css/modo-oscuro/menu_principal.css">
-    <link rel="stylesheet" href="../css/modo-oscuro/registrar_mesas.css">
-    <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
+    <link rel="stylesheet" href="../css/modo-claro/menu_principal.css" id="modo-claro-menu-css" disabled>
+    <link rel="stylesheet" href="../css/modo-oscuro/registrar_mesas.css" id="modo-oscuro-page-css">
+    <link rel="stylesheet" href="../css/modo-claro/registrar_mesas.css" id="modo-claro-page-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -235,47 +236,7 @@
                 </div>
 
                 <!-- Columna derecha: Lista de Mesas -->
-                <div class="mesas-lista-card">
-                    <div class="lista-header">
-                        <h2 class="lista-titulo">
-                            <i class="fas fa-list"></i>
-                            Mesas Registradas
-                        </h2>
-                        <div class="lista-search">
-                            <input 
-                                type="text" 
-                                id="buscarMesa" 
-                                class="search-input" 
-                                placeholder="Buscar mesa..."
-                            >
-                            <i class="fas fa-search"></i>
-                        </div>
-                    </div>
-
-                    <div class="tabla-container">
-                        <table class="tabla-mesas" id="tablaMesas">
-                            <thead>
-                                <tr>
-                                    <th>Nº</th>
-                                    <th>Capacidad</th>
-                                    <th>Ubicación</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Las mesas se cargarán dinámicamente -->
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 30px; color: rgba(255, 255, 255, 0.5);">
-                                        <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>
-                                        No hay mesas registradas
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <!-- Removida: tabla Mesas Registradas -->
             </div>
         </div>
     </main>
@@ -287,5 +248,6 @@
     <script src="../js/theme-manager.js"></script>
 </body>
 </html>
+
 
 

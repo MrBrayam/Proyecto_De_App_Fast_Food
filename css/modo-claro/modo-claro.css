@@ -442,6 +442,15 @@ body.modo-claro .sidebar {
         var(--sombra-media),
         inset -1px 0 0 rgba(37, 99, 235, 0.1);
     backdrop-filter: blur(10px);
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
 }
 
 /* Logo y header del sidebar */
@@ -450,6 +459,8 @@ body.modo-claro .sidebar-header {
     padding: 20px;
     border-bottom: 1px solid var(--borde-principal);
     position: relative;
+    flex-shrink: 0;
+    min-height: 70px;
 }
 
 body.modo-claro .sidebar-header::after {
@@ -472,6 +483,28 @@ body.modo-claro .sidebar-brand {
 /* Navegación del sidebar */
 body.modo-claro .sidebar-nav {
     padding: 16px 0;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 200px);
+}
+
+body.modo-claro .sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+body.modo-claro .sidebar-nav::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.3);
+    border-radius: 3px;
+}
+
+body.modo-claro .sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(37, 99, 235, 0.4);
+    border-radius: 3px;
+}
+
+body.modo-claro .sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(37, 99, 235, 0.6);
 }
 
 body.modo-claro .nav-item {
@@ -479,7 +512,11 @@ body.modo-claro .nav-item {
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+}
+
+body.modo-claro .nav-item.has-submenu {
+    overflow: visible;
 }
 
 body.modo-claro .nav-item::before {
@@ -504,6 +541,10 @@ body.modo-claro .nav-item a {
     transition: all 0.3s ease;
     border-radius: 12px;
     position: relative;
+}
+
+body.modo-claro .nav-item.has-submenu > a {
+    cursor: pointer;
 }
 
 body.modo-claro .nav-item a i {
@@ -540,6 +581,11 @@ body.modo-claro .nav-item.active {
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
     border: 1px solid rgba(37, 99, 235, 0.25);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+body.modo-claro .nav-item.has-submenu.open {
+    background: rgba(37, 99, 235, 0.05);
+    border: 1px solid rgba(37, 99, 235, 0.15);
 }
 
 body.modo-claro .nav-item.active::before {
@@ -587,27 +633,70 @@ body.modo-claro .nav-separator {
 
 /* Submenús en modo claro */
 body.modo-claro .submenu {
-    background: rgba(37, 99, 235, 0.03);
-    border-left: 2px solid rgba(37, 99, 235, 0.1);
-    margin-left: 16px;
-    border-radius: 0 8px 8px 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+body.modo-claro .has-submenu.open .submenu {
+    max-height: 800px;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.modo-claro .submenu-item {
+    list-style: none;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+body.modo-claro .has-submenu.open .submenu-item {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 body.modo-claro .submenu-link {
-    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 10px 16px;
-    padding-left: 32px;
+    padding-left: 56px;
+    color: #64748b;
+    text-decoration: none;
     transition: all 0.3s ease;
     font-weight: 500;
-    border-radius: 6px;
-    margin: 2px 8px;
+    font-size: 14px;
+    border-radius: 8px;
+    margin: 2px 12px;
+    position: relative;
+}
+
+body.modo-claro .submenu-link::before {
+    content: '';
+    position: absolute;
+    left: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: #cbd5e1;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
 body.modo-claro .submenu-link:hover {
     background: rgba(37, 99, 235, 0.08);
     color: #2563eb;
-    padding-left: 36px;
+    padding-left: 60px;
     font-weight: 600;
+}
+
+body.modo-claro .submenu-link:hover::before {
+    background: #2563eb;
+    transform: translateY(-50%) scale(1.5);
 }
 
 body.modo-claro .submenu-link.active {
@@ -615,11 +704,44 @@ body.modo-claro .submenu-link.active {
     color: white;
     font-weight: 700;
     box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    padding-left: 60px;
+}
+
+body.modo-claro .submenu-link.active::before {
+    background: white;
+    transform: translateY(-50%) scale(1.5);
+}
+
+/* Submenús de nivel 2 */
+body.modo-claro .submenu.level-2 {
+    background: transparent;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.modo-claro .submenu-item.has-submenu.open .submenu.level-2 {
+    max-height: 300px;
+}
+
+body.modo-claro .submenu.level-2 .submenu-link {
+    padding-left: 72px;
+    font-size: 13px;
+}
+
+body.modo-claro .submenu.level-2 .submenu-link::before {
+    left: 52px;
 }
 
 body.modo-claro .nav-arrow {
     color: #94a3b8;
     transition: all 0.3s ease;
+    margin-left: auto;
+    font-size: 12px;
+}
+
+body.modo-claro .has-submenu.open .nav-arrow {
+    transform: rotate(180deg);
 }
 
 body.modo-claro .nav-item:hover .nav-arrow {
@@ -636,6 +758,8 @@ body.modo-claro .sidebar-footer {
     border-top: 1px solid #cbd5e1;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(8px);
+    padding: 16px;
+    flex-shrink: 0;
 }
 
 body.modo-claro .user-info {
