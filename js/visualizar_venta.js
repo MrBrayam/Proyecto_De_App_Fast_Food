@@ -50,66 +50,16 @@ function configurarEventos() {
     }
 }
 
-// Cargar ventas desde localStorage o crear ejemplos
+// Cargar ventas desde la base de datos
 function cargarVentas() {
-    // Intentar cargar desde localStorage
-    const ventasGuardadas = localStorage.getItem('ventas');
+    // Las ventas se cargan desde la base de datos
+    // todasLasVentas = await fetch('/api/ventas').then(r => r.json());
     
+    const ventasGuardadas = localStorage.getItem('ventas');
     if (ventasGuardadas) {
         todasLasVentas = JSON.parse(ventasGuardadas);
     } else {
-        // Crear ventas de ejemplo
-        todasLasVentas = [
-            {
-                id: 1,
-                nroComprobante: '-------',
-                fecha: '2025-10-27',
-                fechaFormato: '26/10/2025 14:30',
-                hora: '14:30:00',
-                cliente: 'Juan Pérez',
-                mesa: 'Mesa 1',
-                tipoPago: 'efectivo',
-                productos: [
-                    { nombre: 'Pizza Hawaiana', cantidad: 2, precio: 35.00, total: 70.00 }
-                ],
-                productosTexto: 'Pizza Hawaiana x1',
-                total: 70.00,
-                estado: 'entregado'
-            },
-            {
-                id: 2,
-                nroComprobante: '1234676 136.00',
-                fecha: '2025-10-27',
-                fechaFormato: '26/10/2025 15:15',
-                hora: '15:15:00',
-                cliente: 'María González',
-                mesa: 'Para llevar',
-                tipoPago: 'Tarjeta',
-                productos: [
-                    { nombre: 'Pizza Pepperoni', cantidad: 1, precio: 40.00, total: 40.00 }
-                ],
-                productosTexto: 'Pizza Pepperoni x1',
-                total: 40.00,
-                estado: 'preparando'
-            },
-            {
-                id: 3,
-                nroComprobante: '-------',
-                fecha: '2025-10-27',
-                fechaFormato: '26/10/2025 15:45',
-                hora: '16:00:00',
-                cliente: 'Carlos Ramírez',
-                mesa: 'Mesa 3',
-                tipoPago: 'Transferencia',
-                productos: [
-                    { nombre: 'Pizza Vegetariana', cantidad: 1, precio: 38.00, total: 38.00 },
-                    { nombre: 'Coca Cola 1.5L', cantidad: 2, precio: 8.00, total: 16.00 }
-                ],
-                productosTexto: 'Pizza Vegetariana x1',
-                total: 54.00,
-                estado: 'pendiente'
-            }
-        ];
+        todasLasVentas = [];
     }
     
     mostrarVentas(todasLasVentas);

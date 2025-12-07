@@ -476,13 +476,15 @@ body {
 .main-content {
     flex: 1;
     margin-left: 280px;
-    transition: margin-left var(--transition-normal);
+    width: calc(100% - 280px);
+    transition: margin-left var(--transition-normal), width var(--transition-normal);
     background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
     min-height: 100vh;
 }
 
 .sidebar.collapsed ~ .main-content {
     margin-left: 80px;
+    width: calc(100% - 80px);
 }
 
 /* Top Bar */

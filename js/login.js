@@ -19,27 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const usernameError = document.getElementById('usernameError');
     const passwordError = document.getElementById('passwordError');
 
-
-    const users = [
-        {
-            username: 'admin',
-            password: 'admin123',
-            role: 'administrador',
-            name: 'Administrador'
-        },
-        {
-            username: 'cajero',
-            password: 'cajero123',
-            role: 'cajero',
-            name: 'Cajero'
-        },
-        {
-            username: 'delivery',
-            password: 'delivery123',
-            role: 'delivery',
-            name: 'Repartidor'
-        }
-    ];
+    // Los usuarios ahora se obtienen de la base de datos
+    let users = [];
 
     // Verificar si hay sesión guardada
     checkRememberedSession();
@@ -276,9 +257,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Log para desarrollo (remover en producción)
-    console.log('%c� King\'s Pizza - Sistema de Login Activo', 'color: #e74c3c; font-size: 16px; font-weight: bold;');
-    console.log('%cUsuarios de prueba:', 'color: #3498db; font-weight: bold;');
-    console.log('Admin: admin / admin123');
-    console.log('Cajero: cajero / cajero123');
-    console.log('Delivery: delivery / delivery123');
+    console.log('%c🍕 King\'s Pizza - Sistema de Login Activo', 'color: #e74c3c; font-size: 16px; font-weight: bold;');
+    console.log('%cAutenticación conectada a la base de datos', 'color: #3498db; font-weight: bold;');
 });

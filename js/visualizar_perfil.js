@@ -13,63 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function cargarPerfiles() {
-    perfiles = JSON.parse(localStorage.getItem('perfiles_sistema') || '[]');
+    // Los perfiles se cargan desde la base de datos
+    // perfiles = await fetch('/api/perfiles').then(r => r.json());
     
-    if (perfiles.length === 0) {
-        // Perfiles de ejemplo
-        perfiles = [
-            {
-                nombre: 'Administrador',
-                descripcion: 'Acceso completo al sistema con todos los permisos administrativos',
-                estado: 'activo',
-                nivelAcceso: '4',
-                permisos: { 
-                    accesoCompleto: true,
-                    ventas: { registrar: true, visualizar: true, modificar: true, eliminar: true },
-                    compras: { registrar: true, visualizar: true, inventario: true },
-                    usuarios: { registrar: true, visualizar: true, modificar: true, eliminar: true },
-                    reportes: { ventas: true, compras: true, financieros: true },
-                    clientes: true,
-                    proveedores: true,
-                    perfiles: true
-                },
-                fechaCreacion: '2025-10-01T10:00:00'
-            },
-            {
-                nombre: 'Cajero',
-                descripcion: 'Gestión de ventas y caja',
-                estado: 'activo',
-                nivelAcceso: '2',
-                permisos: {
-                    ventas: { registrar: true, visualizar: true },
-                    clientes: true
-                },
-                fechaCreacion: '2025-10-05T14:30:00'
-            },
-            {
-                nombre: 'Mesero',
-                descripcion: 'Toma de pedidos y gestión de mesas',
-                estado: 'activo',
-                nivelAcceso: '1',
-                permisos: {
-                    ventas: { registrar: true, visualizar: true }
-                },
-                fechaCreacion: '2025-10-10T09:00:00'
-            },
-            {
-                nombre: 'Repartidor',
-                descripcion: 'Gestión de entregas a domicilio',
-                estado: 'activo',
-                nivelAcceso: '1',
-                permisos: {
-                    ventas: { visualizar: true },
-                    clientes: true
-                },
-                fechaCreacion: '2025-10-12T11:00:00'
-            }
-        ];
-        localStorage.setItem('perfiles_sistema', JSON.stringify(perfiles));
-    }
+    perfiles = JSON.parse(localStorage.getItem('perfiles_sistema') || '[]');
     
     mostrarPerfiles(perfiles);
 }

@@ -20,44 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function cargarUsuarios() {
-    usuarios = JSON.parse(localStorage.getItem('usuarios_sistema') || '[]');
+    // Los usuarios se cargan desde la base de datos
+    // usuarios = await fetch('/api/usuarios').then(r => r.json());
     
-    if (usuarios.length === 0) {
-        // Usuarios de ejemplo
-        usuarios = [
-            {
-                nombre: 'Juan Pérez García',
-                dni: '12345678',
-                email: 'juan.perez@kingspizza.com',
-                telefono: '987654321',
-                usuario: 'jperez',
-                perfil: 'administrador',
-                estado: 'activo',
-                fechaRegistro: '2025-10-15T10:30:00'
-            },
-            {
-                nombre: 'María González López',
-                dni: '87654321',
-                email: 'maria.gonzalez@kingspizza.com',
-                telefono: '912345678',
-                usuario: 'mgonzalez',
-                perfil: 'cajero',
-                estado: 'activo',
-                fechaRegistro: '2025-10-20T14:20:00'
-            },
-            {
-                nombre: 'Carlos Ramírez Torres',
-                dni: '45678912',
-                email: 'carlos.ramirez@kingspizza.com',
-                telefono: '998877665',
-                usuario: 'cramirez',
-                perfil: 'mesero',
-                estado: 'activo',
-                fechaRegistro: '2025-10-22T09:15:00'
-            }
-        ];
-        localStorage.setItem('usuarios_sistema', JSON.stringify(usuarios));
-    }
+    usuarios = JSON.parse(localStorage.getItem('usuarios_sistema') || '[]');
     
     mostrarUsuarios(usuarios);
 }

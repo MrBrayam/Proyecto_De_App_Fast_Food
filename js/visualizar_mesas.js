@@ -60,128 +60,16 @@ function actualizarFechaHora() {
     document.getElementById('hora-actual').textContent = hora;
 }
 
-// Cargar mesas desde LocalStorage
+// Cargar mesas desde LocalStorage o base de datos
 function cargarMesasDesdeStorage() {
-    const mesasGuardadas = localStorage.getItem('mesas');
+    // Las mesas se cargan desde la base de datos
+    // mesasDB = await fetch('/api/mesas').then(r => r.json());
     
+    const mesasGuardadas = localStorage.getItem('mesas');
     if (mesasGuardadas) {
         mesasDB = JSON.parse(mesasGuardadas);
     } else {
-        // Datos de ejemplo si no hay mesas guardadas
-        mesasDB = [
-            {
-                id: 1,
-                numeroMesa: '001',
-                capacidad: 4,
-                ubicacion: 'Terraza Principal',
-                tipo: 'cuadrada',
-                estado: 'disponible',
-                prioridad: 'normal',
-                fumadores: true,
-                reservable: true,
-                exterior: true,
-                accesible: false,
-                observaciones: 'Mesa con vista al jardín, ideal para 4 personas.'
-            },
-            {
-                id: 2,
-                numeroMesa: '002',
-                capacidad: 2,
-                ubicacion: 'Interior Salón Principal',
-                tipo: 'redonda',
-                estado: 'ocupada',
-                prioridad: 'normal',
-                fumadores: false,
-                reservable: true,
-                exterior: false,
-                accesible: true,
-                observaciones: 'Mesa romántica junto a la ventana principal.'
-            },
-            {
-                id: 3,
-                numeroMesa: '003',
-                capacidad: 8,
-                ubicacion: 'Salón Privado VIP',
-                tipo: 'rectangular',
-                estado: 'reservada',
-                prioridad: 'vip',
-                fumadores: false,
-                reservable: true,
-                exterior: false,
-                accesible: true,
-                observaciones: 'Mesa ideal para eventos familiares o empresariales. Reservada para las 20:00.'
-            },
-            {
-                id: 4,
-                numeroMesa: '004',
-                capacidad: 6,
-                ubicacion: 'Terraza Norte',
-                tipo: 'rectangular',
-                estado: 'disponible',
-                prioridad: 'normal',
-                fumadores: true,
-                reservable: true,
-                exterior: true,
-                accesible: true,
-                observaciones: 'Mesa amplia con acceso directo a la terraza.'
-            },
-            {
-                id: 5,
-                numeroMesa: '005',
-                capacidad: 4,
-                ubicacion: 'Interior Salón Bar',
-                tipo: 'cuadrada',
-                estado: 'mantenimiento',
-                prioridad: 'normal',
-                fumadores: false,
-                reservable: false,
-                exterior: false,
-                accesible: false,
-                observaciones: 'En reparación por daño en la superficie. Estimado: 2 días.'
-            },
-            {
-                id: 6,
-                numeroMesa: '006',
-                capacidad: 2,
-                ubicacion: 'Ventana Principal',
-                tipo: 'redonda',
-                estado: 'disponible',
-                prioridad: 'vip',
-                fumadores: false,
-                reservable: true,
-                exterior: false,
-                accesible: true,
-                observaciones: 'Mesa premium con mejor vista del restaurante.'
-            },
-            {
-                id: 7,
-                numeroMesa: '007',
-                capacidad: 10,
-                ubicacion: 'Salón de Eventos',
-                tipo: 'rectangular',
-                estado: 'reservada',
-                prioridad: 'vip',
-                fumadores: false,
-                reservable: true,
-                exterior: false,
-                accesible: true,
-                observaciones: 'Mesa grande para eventos. Reservada para fiesta de cumpleaños.'
-            },
-            {
-                id: 8,
-                numeroMesa: '008',
-                capacidad: 4,
-                ubicacion: 'Interior Central',
-                tipo: 'cuadrada',
-                estado: 'ocupada',
-                prioridad: 'normal',
-                fumadores: false,
-                reservable: true,
-                exterior: false,
-                accesible: false,
-                observaciones: 'Mesa estándar en zona central del salón.'
-            }
-        ];
+        mesasDB = [];
     }
 }
 
