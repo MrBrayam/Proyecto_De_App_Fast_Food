@@ -1,10 +1,10 @@
 /* ============================================
-   ESTILOS PARA REGISTRAR PROMOCIONES
+   ESTILOS PARA REGISTRAR PROMOCIONES - MODO CLARO
    ============================================ */
 
 /* Contenedor Principal */
 .promocion-container {
-    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #f0f9ff 100%);
     min-height: 100vh;
     padding: 0;
     position: relative;
@@ -20,10 +20,10 @@
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(circle at 20% 50%, rgba(255, 87, 51, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 200, 87, 0.06) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 60% 90%, rgba(255, 140, 0, 0.07) 0%, transparent 45%);
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(96, 165, 250, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(37, 99, 235, 0.05) 0%, transparent 45%);
     background-size: 100% 100%;
     animation: floatBubbles 20s ease-in-out infinite;
     pointer-events: none;
@@ -40,12 +40,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 30px;
-    background: rgba(44, 47, 62, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 87, 51, 0.3);
+    border-bottom: 1px solid #e2e8f0;
     position: relative;
     z-index: 10;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .promocion-header-left {
@@ -55,11 +55,11 @@
 }
 
 .promocion-titulo {
-    color: white;
+    color: #1e293b;
     font-size: 32px;
     font-weight: bold;
     margin: 0;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Fecha y Hora */
@@ -71,16 +71,16 @@
 .fecha-hora-display {
     display: flex;
     gap: 20px;
-    color: white;
+    color: #1e293b;
     font-size: 16px;
     font-weight: 500;
 }
 
 .fecha-hora-display span {
-    background: rgba(255, 87, 51, 0.2);
+    background: rgba(37, 99, 235, 0.08);
     padding: 8px 16px;
     border-radius: 8px;
-    border: 1px solid rgba(255, 87, 51, 0.4);
+    border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 /* Contenido principal */
@@ -95,12 +95,12 @@
 
 /* Card del Formulario */
 .promocion-form-card {
-    background: rgba(44, 47, 62, 0.7);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     border-radius: 20px;
     padding: 30px;
-    border: 1px solid rgba(255, 87, 51, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     max-height: calc(100vh - 150px);
     overflow-y: auto;
     width: 100%;
@@ -113,28 +113,28 @@
 }
 
 .promocion-form-card::-webkit-scrollbar-track {
-    background: rgba(26, 29, 46, 0.3);
+    background: rgba(226, 232, 240, 0.5);
     border-radius: 10px;
 }
 
 .promocion-form-card::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #ff5733 0%, #ffc857 100%);
+    background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
     border-radius: 10px;
-    border: 2px solid rgba(44, 47, 62, 0.3);
+    border: 2px solid rgba(226, 232, 240, 0.5);
 }
 
 .promocion-form-card::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ff6b6b 0%, #ffd700 100%);
+    background: linear-gradient(180deg, #1e40af 0%, #2563eb 100%);
 }
 
 .form-header {
     margin-bottom: 25px;
     padding-bottom: 20px;
-    border-bottom: 2px solid rgba(255, 87, 51, 0.3);
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .form-header h2 {
-    color: white;
+    color: #1e293b;
     font-size: 24px;
     font-weight: bold;
     display: flex;
@@ -144,7 +144,7 @@
 }
 
 .form-header h2 i {
-    color: #ffc857;
+    color: #2563eb;
 }
 
 /* Secciones del formulario */
@@ -153,7 +153,7 @@
 }
 
 .section-title {
-    color: #ffc857;
+    color: #2563eb;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 15px;
@@ -161,7 +161,7 @@
     align-items: center;
     gap: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .form-grid {
@@ -183,7 +183,7 @@
 
 .form-group label,
 .form-group-full label {
-    color: rgba(255, 255, 255, 0.9);
+    color: #334155;
     font-size: 14px;
     font-weight: 600;
     display: flex;
@@ -193,18 +193,18 @@
 
 .form-group label i,
 .form-group-full label i {
-    color: #ffc857;
+    color: #2563eb;
     font-size: 14px;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
-    background: rgba(26, 29, 46, 0.6);
-    border: 2px solid rgba(255, 87, 51, 0.3);
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
     border-radius: 10px;
     padding: 12px 15px;
-    color: white;
+    color: #1e293b;
     font-size: 14px;
     outline: none;
     transition: all 0.3s ease;
@@ -214,14 +214,14 @@
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-    border-color: #ff5733;
-    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
-    background: rgba(26, 29, 46, 0.8);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: #ffffff;
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: #94a3b8;
 }
 
 .form-select {
@@ -239,7 +239,7 @@
     gap: 15px;
     margin-top: 30px;
     padding-top: 25px;
-    border-top: 1px solid rgba(255, 87, 51, 0.3);
+    border-top: 1px solid #e2e8f0;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -255,7 +255,7 @@
     align-items: center;
     gap: 10px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
 }
 
 .btn-guardar {
@@ -293,12 +293,12 @@
 
 /* Lista de Promociones */
 .promociones-lista-card {
-    background: rgba(44, 47, 62, 0.7);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     border-radius: 20px;
     padding: 30px;
-    border: 1px solid rgba(255, 87, 51, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     max-height: calc(100vh - 150px);
     overflow: hidden;
     display: flex;
@@ -311,11 +311,11 @@
     align-items: center;
     margin-bottom: 25px;
     padding-bottom: 20px;
-    border-bottom: 2px solid rgba(255, 87, 51, 0.3);
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .lista-titulo {
-    color: white;
+    color: #1e293b;
     font-size: 24px;
     font-weight: bold;
     display: flex;
@@ -325,7 +325,7 @@
 }
 
 .lista-titulo i {
-    color: #ffc857;
+    color: #2563eb;
 }
 
 .lista-search {
@@ -333,19 +333,19 @@
 }
 
 .search-input {
-    background: rgba(26, 29, 46, 0.6);
-    border: 2px solid rgba(255, 87, 51, 0.3);
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
     border-radius: 25px;
     padding: 10px 40px 10px 20px;
-    color: white;
+    color: #1e293b;
     font-size: 14px;
     outline: none;
     transition: all 0.3s ease;
 }
 
 .search-input:focus {
-    border-color: #ff5733;
-    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.2);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .lista-search i {
@@ -353,7 +353,7 @@
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #ffc857;
+    color: #2563eb;
     pointer-events: none;
 }
 
@@ -377,30 +377,30 @@
 }
 
 .tabla-promociones thead th {
-    background: rgba(26, 29, 46, 0.9);
-    color: #ffc857;
+    background: #f1f5f9;
+    color: #1e293b;
     padding: 15px;
     text-align: left;
     font-size: 14px;
     font-weight: 600;
-    border-bottom: 2px solid rgba(255, 87, 51, 0.5);
+    border-bottom: 2px solid #e2e8f0;
     letter-spacing: 0.5px;
 }
 
 .tabla-promociones tbody tr {
-    background: rgba(26, 29, 46, 0.4);
+    background: #ffffff;
     transition: all 0.3s ease;
 }
 
 .tabla-promociones tbody tr:hover {
-    background: rgba(255, 87, 51, 0.15);
+    background: rgba(37, 99, 235, 0.05);
     transform: scale(1.01);
 }
 
 .tabla-promociones tbody td {
     padding: 15px;
-    color: white;
-    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+    color: #334155;
+    border-bottom: 1px solid #e2e8f0;
     font-size: 14px;
 }
 
@@ -414,28 +414,28 @@
 }
 
 .badge-activa {
-    background: rgba(40, 167, 69, 0.3);
-    color: #90EE90;
-    border: 1px solid #28a745;
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    border: 1px solid #22c55e;
 }
 
 .badge-inactiva {
-    background: rgba(220, 53, 69, 0.3);
-    color: #FF6B6B;
-    border: 1px solid #dc3545;
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid #ef4444;
 }
 
 .badge-programada {
-    background: rgba(255, 193, 7, 0.3);
-    color: #FFD54F;
-    border: 1px solid #ffc107;
+    background: rgba(234, 179, 8, 0.1);
+    color: #ca8a04;
+    border: 1px solid #eab308;
 }
 
 /* Botones de acciones en la tabla */
 .btn-table-action {
     background: transparent;
     border: none;
-    color: white;
+    color: #334155;
     font-size: 16px;
     cursor: pointer;
     padding: 5px 8px;
@@ -444,20 +444,20 @@
 }
 
 .btn-edit {
-    color: #ffc857;
+    color: #2563eb;
 }
 
 .btn-edit:hover {
-    background: rgba(255, 200, 87, 0.2);
+    background: rgba(37, 99, 235, 0.1);
     transform: scale(1.1);
 }
 
 .btn-delete {
-    color: #FF6B6B;
+    color: #dc2626;
 }
 
 .btn-delete:hover {
-    background: rgba(220, 53, 69, 0.2);
+    background: rgba(239, 68, 68, 0.1);
     transform: scale(1.1);
 }
 
@@ -467,18 +467,18 @@
 }
 
 .tabla-container::-webkit-scrollbar-track {
-    background: rgba(26, 29, 46, 0.3);
+    background: rgba(226, 232, 240, 0.5);
     border-radius: 10px;
 }
 
 .tabla-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #ff5733 0%, #ffc857 100%);
+    background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
     border-radius: 10px;
-    border: 2px solid rgba(44, 47, 62, 0.3);
+    border: 2px solid rgba(226, 232, 240, 0.5);
 }
 
 .tabla-container::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ff6b6b 0%, #ffd700 100%);
+    background: linear-gradient(180deg, #1e40af 0%, #2563eb 100%);
 }
 
 /* Responsive */

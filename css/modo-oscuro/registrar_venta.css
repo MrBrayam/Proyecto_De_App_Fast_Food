@@ -1,16 +1,597 @@
 /* ============================================
-   REGISTRAR VENTA - MODO OSCURO
+   ESTILOS PARA REGISTRAR VENTA
    ============================================ */
 
-/* 
- * Este archivo permite personalizaciones adicionales para el modo oscuro
- * Por defecto, la página usa los estilos oscuros definidos en registrar_venta.css
- * Aquí puedes agregar ajustes específicos si necesitas modificar el comportamiento
- * del modo oscuro sin afectar los estilos base
- */
-
-/* Ejemplo de uso:
-body.modo-oscuro .venta-container {
-    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #2a2a3e 100%);
+/* Contenedor Principal */
+.venta-container {
+    background: linear-gradient(135deg, #1a1d2e 0%, #2c2f3e 50%, #3a3d4e 100%);
+    min-height: 100vh;
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
 }
-*/
+
+/* Patrón de fondo con burbujas y formas suaves */
+.venta-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 87, 51, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 200, 87, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 60% 90%, rgba(255, 140, 0, 0.07) 0%, transparent 45%);
+    background-size: 100% 100%;
+    animation: floatBubbles 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes floatBubbles {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-20px); }
+}
+
+/* Header de Venta */
+.venta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    background: rgba(44, 47, 62, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 87, 51, 0.3);
+    border-radius: 16px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 4px 16px rgba(255, 87, 51, 0.1);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.venta-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff5733, #ffc857, #ff5733);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: -200% 0; }
+    50% { background-position: 200% 0; }
+}
+
+.venta-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.menu-hamburger {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.menu-hamburger:hover {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+.venta-titulo {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Fecha y Hora */
+.venta-header-right {
+    display: flex;
+    gap: 20px;
+}
+
+.fecha-hora-display {
+    display: flex;
+    gap: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.fecha-hora-display span {
+    background: rgba(255, 87, 51, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.4);
+}
+
+/* Barra de Información (Cliente y Tipo de Pago) */
+.venta-info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 30px;
+    gap: 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.cliente-section,
+.tipo-pago-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cliente-section {
+    flex: 1;
+}
+
+.tipo-pago-section {
+    min-width: 300px;
+}
+
+.cliente-section label,
+.tipo-pago-section label {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.cliente-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-cliente {
+    flex: 1;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 12px 15px;
+    font-size: 16px;
+    color: #333;
+}
+
+.input-cliente::placeholder {
+    color: #999;
+}
+
+.btn-buscar {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    font-size: 18px;
+}
+
+.btn-buscar:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.btn-nuevo-cliente {
+    background: #90EE90;
+    border: 2px solid #2d5016;
+    border-radius: 5px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d5016;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-nuevo-cliente:hover {
+    background: #7CFC00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.select-tipo-pago {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 12px 15px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    width: 100%;
+}
+
+.select-tipo-pago:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Formulario de Productos */
+.venta-productos-form {
+    padding: 20px 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.productos-header-row {
+    display: grid;
+    grid-template-columns: 130px 180px 1fr 100px 120px 100px;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.header-col {
+    background: rgba(44, 47, 62, 0.7);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 87, 51, 0.3);
+}
+
+.productos-input-row {
+    display: grid;
+    grid-template-columns: 130px 180px 1fr 100px 120px 100px;
+    gap: 10px;
+}
+
+.input-codigo,
+.input-linea,
+.input-descripcion,
+.input-cantidad,
+.input-precio {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.input-codigo:focus,
+.input-linea:focus,
+.input-cantidad:focus {
+    outline: none;
+    border-color: #ff5733;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 87, 51, 0.15);
+}
+
+.input-codigo::placeholder,
+.input-linea::placeholder,
+.input-cantidad::placeholder,
+.input-precio::placeholder {
+    color: #999;
+}
+
+.input-descripcion:disabled,
+.input-precio:disabled {
+    background: rgba(240, 240, 255, 0.8);
+    cursor: not-allowed;
+    border-color: rgba(255, 87, 51, 0.2);
+}
+
+/* Estilos específicos para el input de cantidad */
+.input-cantidad {
+    text-align: center;
+    font-weight: 600;
+}
+
+.input-cantidad::-webkit-outer-spin-button,
+.input-cantidad::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-cantidad[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.btn-añadir {
+    background: #90EE90;
+    border: 2px solid #2d5016;
+    border-radius: 5px;
+    padding: 12px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d5016;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-añadir:hover {
+    background: #7CFC00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Tabla de Productos */
+.venta-tabla-container {
+    padding: 20px 30px;
+    position: relative;
+    z-index: 10;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+/* Estilos del scrollbar */
+.venta-tabla-container::-webkit-scrollbar {
+    width: 12px;
+}
+
+.venta-tabla-container::-webkit-scrollbar-track {
+    background: rgba(26, 29, 46, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+}
+
+.venta-tabla-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff5733 0%, #ffc857 100%);
+    border-radius: 10px;
+    border: 2px solid rgba(44, 47, 62, 0.3);
+}
+
+.venta-tabla-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff6b6b 0%, #ffd700 100%);
+}
+
+.venta-tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(26, 29, 46, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.venta-tabla thead {
+    background: linear-gradient(135deg, #2c2f3e 0%, #3a3d4e 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.venta-tabla th {
+    color: #ffc857;
+    padding: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid rgba(255, 87, 51, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.venta-tabla tbody tr {
+    background: rgba(26, 29, 46, 0.4);
+    transition: all 0.3s ease;
+}
+
+.venta-tabla tbody tr:hover {
+    background: rgba(255, 87, 51, 0.15);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(255, 87, 51, 0.2);
+}
+
+.venta-tabla td {
+    padding: 15px;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.th-producto { min-width: 200px; }
+.th-cantidad { width: 150px; }
+.th-precio { width: 150px; }
+.th-total { width: 150px; }
+.th-acciones { width: 80px; }
+
+.btn-scroll-up,
+.btn-scroll-down,
+.btn-eliminar-item {
+    background: transparent;
+    border: none;
+    color: #ffc857;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 8px;
+    transition: all 0.3s ease;
+    margin: 0 2px;
+}
+
+.btn-scroll-up:hover,
+.btn-scroll-down:hover {
+    color: #ff5733;
+    transform: scale(1.2);
+}
+
+.btn-eliminar-item {
+    color: #e74c3c;
+}
+
+.btn-eliminar-item:hover {
+    color: #c0392b;
+    transform: scale(1.2);
+}
+
+/* Botones de Acción */
+.venta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.btn-eliminar,
+.btn-registrar,
+.btn-salir {
+    padding: 15px 50px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-eliminar {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background: linear-gradient(135deg, #c82333, #dc3545);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+}
+
+.btn-registrar {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+}
+
+.btn-registrar:hover {
+    background: linear-gradient(135deg, #0056b3, #007bff);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+}
+
+.btn-salir {
+    background: linear-gradient(135deg, #ffc857, #ff8c42);
+    color: white;
+}
+
+.btn-salir:hover {
+    background: linear-gradient(135deg, #ff8c42, #ffc857);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 200, 87, 0.4);
+}
+
+/* Imagen decorativa de pizza (esquina inferior derecha) */
+.venta-container::after {
+    content: '';
+    position: fixed;
+    bottom: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 87, 51, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+/* Patrón decorativo mejorado en la esquina superior derecha */
+.venta-header::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .productos-header-row,
+    .productos-input-row {
+        grid-template-columns: 110px 160px 1fr 80px 100px 90px;
+    }
+}
+
+@media (max-width: 992px) {
+    .venta-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .venta-info-bar {
+        flex-direction: column;
+    }
+    
+    .tipo-pago-section {
+        width: 100%;
+    }
+    
+    .productos-header-row,
+    .productos-input-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    
+    .venta-tabla {
+        font-size: 14px;
+    }
+    
+    .venta-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn-eliminar,
+    .btn-registrar,
+    .btn-salir {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .venta-titulo {
+        font-size: 24px;
+    }
+    
+    .fecha-hora-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .input-fecha,
+    .input-hora {
+        min-width: 200px;
+    }
+}
