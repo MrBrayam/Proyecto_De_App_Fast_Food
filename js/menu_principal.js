@@ -1,7 +1,10 @@
 // ============================================
 // MENÚ PRINCIPAL - KING'S PIZZA
-// Funcionalidad del dashboard con sidebar
+// Funcionalidad del dashboard con sidebar y métricas
 // ============================================
+
+const API_BASE = '/Proyecto_De_App_Fast_Food/api';
+const DEBUG_DASHBOARD = true; // poner en false para silenciar logs
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos del DOM
@@ -158,7 +161,133 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // ============================================
+    // MÉTRICAS DEL DASHBOARD
+    // ============================================
+    cargarMetricasDashboard();
     
+
+// ------------------------------------------------
+// DASHBOARD DATA LOADING
+// ------------------------------------------------
+
+function logDebug(...args) {
+    if (DEBUG_DASHBOARD) {
+        console.debug('[dashboard]', ...args);
+    }
+}
+
+async function cargarMetricasDashboard() {
+    logDebug('Cargando métricas del dashboard...');
+    setTextoSeguro('statVentasHoy', 'Cargando...');
+    setTextoSeguro('statPedidosActivos', 'Cargando...');
+    setTextoSeguro('statClientes', 'Cargando...');
+    setTextoSeguro('statPlatos', 'Cargando...');
+
+    try {
+        const [ventasResp, pedidosResp, clientesResp, platosResp] = await Promise.all([
+            fetch(`${API_BASE}/ventas/listar`).then(r => r.json()),
+            fetch(`${API_BASE}/pedidos/listar`).then(r => r.json()),
+            fetch(`${API_BASE}/clientes/listar`).then(r => r.json()),
+            fetch(`${API_BASE}/platos/listar`).then(r => r.json())
+        ]);
+
+        actualizarVentasHoy(ventasResp);
+        actualizarPedidos(pedidosResp);
+        actualizarClientes(clientesResp);
+        actualizarPlatos(platosResp);
+        renderPedidosRecientes(pedidosResp);
+    } catch (error) {
+        console.error('Error cargando métricas del dashboard:', error);
+        setTextoSeguro('statVentasHoy', '--');
+        setTextoSeguro('statPedidosActivos', '--');
+        setTextoSeguro('statClientes', '--');
+        setTextoSeguro('statPlatos', '--');
+        setTextoSeguro('statVentasChange', 'Error al cargar');
+        setTextoSeguro('statPedidosChange', 'Error al cargar');
+        setTextoSeguro('statClientesChange', 'Error al cargar');
+        setTextoSeguro('statPlatosChange', 'Error al cargar');
+        const tbody = document.getElementById('recentPedidosBody');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Error al cargar</td></tr>';
+    }
+}
+
+function setTextoSeguro(id, valor) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+}
+
+function obtenerLista(data, clavePrincipal, claveAlterna) {
+    return (data && (data[clavePrincipal] || data[claveAlterna] || data.items)) || [];
+}
+
+function actualizarVentasHoy(dataVentas) {
+    const ventas = obtenerLista(dataVentas, 'items', 'ventas');
+    logDebug('Ventas recibidas:', ventas.length);
+    const hoyISO = new Date().toISOString().slice(0, 10);
+    const ventasHoy = ventas.filter(v => (v.FechaVenta || '').slice(0, 10) === hoyISO);
+    const totalHoy = ventasHoy.reduce((acc, v) => acc + (parseFloat(v.Total) || 0), 0);
+    setTextoSeguro('statVentasHoy', `S/ ${totalHoy.toFixed(2)}`);
+    setTextoSeguro('statVentasChange', `${ventasHoy.length} venta(s) hoy`);
+}
+
+function actualizarPedidos(dataPedidos) {
+    const pedidos = obtenerLista(dataPedidos, 'items', 'pedidos');
+    logDebug('Pedidos recibidos:', pedidos.length);
+    const activos = pedidos.filter(p => !['entregado', 'cancelado'].includes((p.Estado || '').toLowerCase()));
+    setTextoSeguro('statPedidosActivos', activos.length.toString());
+    setTextoSeguro('statPedidosChange', `${activos.length} en curso`);
+}
+
+function actualizarClientes(dataClientes) {
+    const clientes = obtenerLista(dataClientes, 'clientes', 'items');
+    logDebug('Clientes recibidos:', clientes.length);
+    setTextoSeguro('statClientes', clientes.length.toString());
+    setTextoSeguro('statClientesChange', 'Total registrados');
+}
+
+function actualizarPlatos(dataPlatos) {
+    const platos = obtenerLista(dataPlatos, 'platos', 'items');
+    logDebug('Platos recibidos:', platos.length);
+    setTextoSeguro('statPlatos', platos.length.toString());
+    setTextoSeguro('statPlatosChange', 'Disponibles en menú');
+}
+
+function renderPedidosRecientes(dataPedidos) {
+    const tbody = document.getElementById('recentPedidosBody');
+    if (!tbody) return;
+
+    const pedidos = obtenerLista(dataPedidos, 'items', 'pedidos');
+    logDebug('Render recientes, pedidos:', pedidos.length);
+
+    if (!pedidos.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay pedidos recientes</td></tr>';
+        return;
+    }
+
+    const recientes = [...pedidos]
+        .sort((a, b) => new Date(b.FechaPedido) - new Date(a.FechaPedido))
+        .slice(0, 5);
+
+    tbody.innerHTML = recientes.map(p => {
+        const estado = (p.Estado || '').toLowerCase();
+        const badgeClass = estado === 'entregado' ? 'badge-success'
+            : estado === 'cancelado' ? 'badge-danger'
+            : estado === 'listo' ? 'badge-info'
+            : 'badge-warning';
+        const total = parseFloat(p.Total) || 0;
+        return `
+            <tr>
+                <td>#${p.IdPedido}</td>
+                <td>${p.NombreCliente || 'Sin cliente'}</td>
+                <td>${p.TipoServicio || '-'}</td>
+                <td>S/ ${total.toFixed(2)}</td>
+                <td><span class="badge ${badgeClass}">${p.Estado || '-'}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
     // ============================================
     // RESTAURAR ESTADO DEL SIDEBAR
     // ============================================

@@ -109,14 +109,23 @@
                     <div class="formulario-linea" id="formularioLinea" style="display: none;">
                         <div class="form-row-proveedor">
                             <div class="form-group">
-                                <label for="codigo">CÓDIGO PRODUCTO</label>
+                                <label for="tipoItem">TIPO DE ÍTEM</label>
+                                <select id="tipoItem" class="form-control" onchange="cargarItemsPorTipo()">
+                                    <option value="">Seleccionar tipo</option>
+                                    <option value="producto">Producto</option>
+                                    <option value="insumo">Insumo</option>
+                                    <option value="suministro">Suministro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="codigo">CÓDIGO</label>
                                 <select id="codigo" class="form-control" onchange="seleccionarProducto()">
-                                    <option value="">Seleccione un producto</option>
+                                    <option value="">Primero seleccione el tipo</option>
                                 </select>
                             </div>
                             <div class="form-group full-width">
                                 <label for="descripcion">DESCRIPCIÓN</label>
-                                <input type="text" id="descripcion" placeholder="Descripción del producto" readonly>
+                                <input type="text" id="descripcion" placeholder="Descripción del ítem" readonly>
                             </div>
                         </div>
                         
@@ -152,6 +161,7 @@
                             <thead>
                                 <tr>
                                     <th>NRO</th>
+                                    <th>TIPO</th>
                                     <th>CÓDIGO</th>
                                     <th>DESCRIPCIÓN</th>
                                     <th>EMPAQUE</th>

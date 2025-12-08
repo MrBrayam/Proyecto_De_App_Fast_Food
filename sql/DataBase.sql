@@ -335,6 +335,7 @@ CREATE TABLE Compras (
 CREATE TABLE DetalleCompra (
     IdDetalleCompra INT PRIMARY KEY AUTO_INCREMENT,
     IdCompra INT NOT NULL,
+    TipoItem ENUM('producto', 'insumo', 'suministro') NOT NULL DEFAULT 'producto' COMMENT 'Indica si es Producto, Insumo o Suministro',
     Codigo VARCHAR(50) NOT NULL,
     Descripcion TEXT NOT NULL,
     Empaque VARCHAR(50),

@@ -50,8 +50,8 @@
                     <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
                     <div class="stat-info">
                         <h3 class="stat-title">Ventas Hoy</h3>
-                        <p class="stat-value">S/ 2,450.00</p>
-                        <p class="stat-change positive">+12% vs ayer</p>
+                        <p class="stat-value" id="statVentasHoy">--</p>
+                        <p class="stat-change" id="statVentasChange">Cargando...</p>
                     </div>
                 </div>
 
@@ -59,8 +59,8 @@
                     <div class="stat-icon"><i class="fas fa-box"></i></div>
                     <div class="stat-info">
                         <h3 class="stat-title">Pedidos Activos</h3>
-                        <p class="stat-value">48</p>
-                        <p class="stat-change positive">+8 nuevos</p>
+                        <p class="stat-value" id="statPedidosActivos">--</p>
+                        <p class="stat-change" id="statPedidosChange">Cargando...</p>
                     </div>
                 </div>
 
@@ -68,8 +68,8 @@
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
                     <div class="stat-info">
                         <h3 class="stat-title">Clientes Registrados</h3>
-                        <p class="stat-value">234</p>
-                        <p class="stat-change positive">+15 esta semana</p>
+                        <p class="stat-value" id="statClientes">--</p>
+                        <p class="stat-change" id="statClientesChange">Cargando...</p>
                     </div>
                 </div>
 
@@ -77,8 +77,8 @@
                     <div class="stat-icon"><i class="fas fa-pizza-slice"></i></div>
                     <div class="stat-info">
                         <h3 class="stat-title">Platos en Menú</h3>
-                        <p class="stat-value">28</p>
-                        <p class="stat-change neutral">Disponibles</p>
+                        <p class="stat-value" id="statPlatos">--</p>
+                        <p class="stat-change" id="statPlatosChange">Cargando...</p>
                     </div>
                 </div>
             </div>
@@ -97,40 +97,13 @@
                                         <tr>
                                             <th>N° Pedido</th>
                                             <th>Cliente</th>
-                                            <th>Producto</th>
+                                            <th>Servicio</th>
                                             <th>Total</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>#001</td>
-                                            <td>Juan Pérez</td>
-                                            <td>Pizza Hawaiana</td>
-                                            <td>S/ 35.00</td>
-                                            <td><span class="badge badge-success">Entregado</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#002</td>
-                                            <td>María González</td>
-                                            <td>Pizza Pepperoni</td>
-                                            <td>S/ 40.00</td>
-                                            <td><span class="badge badge-warning">En camino</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#003</td>
-                                            <td>Carlos Ramírez</td>
-                                            <td>Pizza Vegetariana</td>
-                                            <td>S/ 38.00</td>
-                                            <td><span class="badge badge-info">Preparando</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#004</td>
-                                            <td>Ana Torres</td>
-                                            <td>Pizza Margherita</td>
-                                            <td>S/ 32.00</td>
-                                            <td><span class="badge badge-info">Preparando</span></td>
-                                        </tr>
+                                    <tbody id="recentPedidosBody">
+                                        <tr><td colspan="5" style="text-align:center;">Cargando...</td></tr>
                                     </tbody>
                                 </table>
                             </div>

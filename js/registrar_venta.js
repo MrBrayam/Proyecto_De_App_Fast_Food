@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
     obtenerUsuarioActual();
+    cargarCajasAbiertas();
     inicializarEventos();
 });
 
@@ -86,6 +87,43 @@ function inicializarEventos() {
                 buscarPedido();
             }
         });
+    }
+}
+
+// Cargar cajas abiertas disponibles
+async function cargarCajasAbiertas() {
+    const selectCaja = document.getElementById('selectCaja');
+    if (!selectCaja) return;
+
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/caja/listar');
+        const data = await response.json();
+        
+        console.log('[registrar_venta] Cajas recibidas:', data);
+
+        if (data.exito && data.items) {
+            const cajasAbiertas = data.items.filter(c => c.Estado === 'abierta');
+            
+            if (cajasAbiertas.length === 0) {
+                selectCaja.innerHTML = '<option value="">No hay cajas abiertas</option>';
+                console.warn('[registrar_venta] No hay cajas abiertas disponibles');
+            } else {
+                selectCaja.innerHTML = '<option value="">Seleccionar caja</option>';
+                cajasAbiertas.forEach(caja => {
+                    const option = document.createElement('option');
+                    option.value = caja.CodCaja;
+                    option.textContent = `${caja.CodCaja} - ${caja.Turno || 'Sin turno'}`;
+                    selectCaja.appendChild(option);
+                });
+                console.log(`[registrar_venta] ${cajasAbiertas.length} caja(s) abiertas cargadas`);
+            }
+        } else {
+            selectCaja.innerHTML = '<option value="">Error al cargar cajas</option>';
+            console.error('[registrar_venta] Error en respuesta de cajas:', data);
+        }
+    } catch (error) {
+        console.error('[registrar_venta] Error cargando cajas:', error);
+        selectCaja.innerHTML = '<option value="">Error de conexión</option>';
     }
 }
 
@@ -216,9 +254,15 @@ function eliminarProducto(index) {
 // Registrar venta
 async function registrarVenta() {
     const tipoPago = document.getElementById('tipoPago').value.trim();
+    const codCaja = document.getElementById('selectCaja').value.trim();
     
     if (tipoPago === '') {
         alert('Seleccione tipo de pago');
+        return;
+    }
+
+    if (codCaja === '') {
+        alert('Seleccione una caja');
         return;
     }
 
@@ -252,8 +296,11 @@ async function registrarVenta() {
         descuento: descuento,
         total: total,
         idUsuario: idUsuario,
+        codCaja: codCaja,
         detalles: detalles
     };
+
+    console.log('[registrar_venta] Enviando venta:', datosVenta);
 
     try {
         const response = await fetch('/Proyecto_De_App_Fast_Food/api/ventas/registrar', {
@@ -265,6 +312,7 @@ async function registrarVenta() {
         });
 
         const datos = await response.json();
+        console.log('[registrar_venta] Respuesta del servidor:', datos);
 
         if (datos.exito) {
             alert('Venta registrada exitosamente');
@@ -280,7 +328,7 @@ async function registrarVenta() {
             alert('Error: ' + datos.mensaje);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('[registrar_venta] Error:', error);
         alert('Error al registrar venta');
     }
 }
@@ -320,9 +368,13 @@ function limpiarFormulario() {
     if (tipoPagoSelect) {
         tipoPagoSelect.value = '';
     }
+    const selectCaja = document.getElementById('selectCaja');
+    if (selectCaja && selectCaja.options.length > 1) {
+        selectCaja.selectedIndex = 0;
+    }
     const inputDescuento = document.getElementById('inputDescuento');
     if (inputDescuento) {
-        inputDescuento.value = '';
+        inputDescuento.value = '0';
     }
     
     productosAgregados = [];

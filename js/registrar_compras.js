@@ -99,57 +99,95 @@ function agregarLineaCompra() {
     formulario.style.display = formulario.style.display === 'none' ? 'block' : 'none';
     
     if (formulario.style.display === 'block') {
-        cargarProductosEnSelect();
-        // Agregar listener para el cambio de producto
-        document.getElementById('codigo').addEventListener('change', seleccionarProducto);
-        document.getElementById('codigo').focus();
+        // Reset tipo y código
+        document.getElementById('tipoItem').value = '';
+        document.getElementById('codigo').innerHTML = '<option value="">Primero seleccione el tipo</option>';
+        document.getElementById('tipoItem').focus();
     }
 }
 
-// Cargar productos disponibles en el select
-async function cargarProductosEnSelect() {
+// Cargar ítems según el tipo seleccionado
+async function cargarItemsPorTipo() {
+    const tipo = document.getElementById('tipoItem').value;
+    const selectCodigo = document.getElementById('codigo');
+    
+    if (!tipo) {
+        selectCodigo.innerHTML = '<option value="">Primero seleccione el tipo</option>';
+        return;
+    }
+    
+    selectCodigo.innerHTML = '<option value="">Cargando...</option>';
+    console.log('[registrar_compras] Cargando items tipo:', tipo);
+    
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/productos/listar');
-        const data = await response.json();
+        let endpoint = '';
+        let dataKey = '';
         
-        if (data.exito && data.productos) {
-            const selectCodigo = document.getElementById('codigo');
-            selectCodigo.innerHTML = '<option value="">Seleccione un producto</option>';
+        if (tipo === 'producto') {
+            endpoint = '/Proyecto_De_App_Fast_Food/api/productos/listar';
+            dataKey = 'productos';
+        } else if (tipo === 'insumo') {
+            endpoint = '/Proyecto_De_App_Fast_Food/api/insumos/listar';
+            dataKey = 'insumos';
+        } else if (tipo === 'suministro') {
+            endpoint = '/Proyecto_De_App_Fast_Food/api/suministros/listar';
+            dataKey = 'suministros';
+        }
+        
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        console.log('[registrar_compras] Respuesta:', data);
+        
+        if (data.exito && data[dataKey]) {
+            selectCodigo.innerHTML = `<option value="">Seleccione un ${tipo}</option>`;
             
-            data.productos.forEach(producto => {
+            data[dataKey].forEach(item => {
                 const option = document.createElement('option');
-                const codProducto = producto.CodProducto ?? producto.codProducto;
-                const nombreProducto = producto.Nombre ?? producto.NombreProducto ?? producto.nombreProducto ?? 'Producto';
-                const costoProducto = parseFloat(producto.Costo ?? 0).toFixed(2);
-                option.value = codProducto;
-                option.textContent = `${codProducto} - ${nombreProducto}`;
-                option.setAttribute('data-nombre', nombreProducto);
-                option.setAttribute('data-costo', costoProducto);
-                console.log('Producto cargado:', codProducto, nombreProducto, 'Costo:', costoProducto);
+                let codigo, nombre, precio;
+                
+                if (tipo === 'producto') {
+                    codigo = item.CodProducto ?? item.codProducto;
+                    nombre = item.Nombre ?? item.NombreProducto ?? item.nombreProducto ?? 'Producto';
+                    precio = parseFloat(item.Costo ?? 0).toFixed(2);
+                } else if (tipo === 'insumo') {
+                    codigo = item.CodInsumo ?? item.codInsumo;
+                    nombre = item.NombreInsumo ?? item.nombreInsumo ?? 'Insumo';
+                    precio = parseFloat(item.PrecioUnitario ?? 0).toFixed(2);
+                } else if (tipo === 'suministro') {
+                    codigo = item.IdSuministro ?? item.idSuministro;
+                    nombre = item.NombreSuministro ?? item.nombreSuministro ?? 'Suministro';
+                    precio = parseFloat(item.PrecioUnitario ?? 0).toFixed(2);
+                }
+                
+                option.value = codigo;
+                option.textContent = `${codigo} - ${nombre}`;
+                option.setAttribute('data-nombre', nombre);
+                option.setAttribute('data-precio', precio);
+                option.setAttribute('data-tipo', tipo);
                 selectCodigo.appendChild(option);
             });
+            console.log(`[registrar_compras] ${data[dataKey].length} items cargados`);
+        } else {
+            selectCodigo.innerHTML = `<option value="">No hay ${tipo}s disponibles</option>`;
         }
     } catch (error) {
-        console.error('Error cargando productos:', error);
+        console.error('[registrar_compras] Error cargando items:', error);
+        selectCodigo.innerHTML = '<option value="">Error al cargar</option>';
     }
 }
 
-// Seleccionar producto del select
+// Seleccionar item del select
 function seleccionarProducto() {
     const selectCodigo = document.getElementById('codigo');
     const option = selectCodigo.options[selectCodigo.selectedIndex];
     
-    console.log('seleccionarProducto ejecutada');
-    console.log('Código seleccionado:', option.value);
-    console.log('Atributo data-nombre:', option.getAttribute('data-nombre'));
-    console.log('Atributo data-costo:', option.getAttribute('data-costo'));
+    console.log('[registrar_compras] Item seleccionado:', option.value);
     
     if (option.value) {
-        const nombreProducto = option.getAttribute('data-nombre') || '';
-        const costoProducto = option.getAttribute('data-costo') || '0.00';
-        console.log('Asignando nombre:', nombreProducto, 'y costo:', costoProducto);
-        document.getElementById('descripcion').value = nombreProducto;
-        document.getElementById('precioUnitario').value = costoProducto;
+        const nombre = option.getAttribute('data-nombre') || '';
+        const precio = option.getAttribute('data-precio') || '0.00';
+        document.getElementById('descripcion').value = nombre;
+        document.getElementById('precioUnitario').value = precio;
     } else {
         document.getElementById('descripcion').value = '';
         document.getElementById('precioUnitario').value = '';
@@ -189,12 +227,20 @@ function guardarLineaCompra() {
         return;
     }
     
+    const tipoItem = document.getElementById('tipoItem').value;
+    
+    if (!tipoItem) {
+        mostrarMensaje('Debe seleccionar el tipo de ítem', 'error');
+        return;
+    }
+    
     // Crear línea
     numeroLinea++;
     const total = cantidad * precioUnitario;
     
     const linea = {
         numero: numeroLinea,
+        tipo: tipoItem,
         codigo,
         descripcion,
         empaque,
@@ -224,7 +270,8 @@ function cancelarLineaCompra() {
 
 // Limpiar formulario de línea
 function limpiarFormularioLinea() {
-    document.getElementById('codigo').value = '';
+    document.getElementById('tipoItem').value = '';
+    document.getElementById('codigo').innerHTML = '<option value="">Primero seleccione el tipo</option>';
     document.getElementById('descripcion').value = '';
     document.getElementById('empaque').value = '';
     document.getElementById('cantidad').value = '';
@@ -238,8 +285,10 @@ function actualizarTablaCompra() {
     
     lineasCompra.forEach((linea) => {
         const row = document.createElement('tr');
+        const tipoCapitalizado = linea.tipo.charAt(0).toUpperCase() + linea.tipo.slice(1);
         row.innerHTML = `
             <td>${linea.numero}</td>
+            <td><span class="badge badge-info">${tipoCapitalizado}</span></td>
             <td>${linea.codigo}</td>
             <td>${linea.descripcion}</td>
             <td>${linea.empaque}</td>
@@ -367,10 +416,18 @@ async function registrarCompra() {
         estado: 'pendiente',
         idUsuario: 1, // Cambiar según usuario logueado
         observaciones: '',
-        lineasCompra: lineasCompra
+        lineasCompra: lineasCompra.map(linea => ({
+            tipo: linea.tipo,
+            codigo: linea.codigo,
+            descripcion: linea.descripcion,
+            empaque: linea.empaque,
+            cantidad: linea.cantidad,
+            precioUnitario: linea.precioUnitario,
+            total: linea.total
+        }))
     };
     
-    console.log('Enviando datos de compra:', datosCompra);
+    console.log('[registrar_compras] Enviando datos de compra:', datosCompra);
     
     try {
         const response = await fetch('/Proyecto_De_App_Fast_Food/api/compras/registrar', {
