@@ -14,6 +14,7 @@ require_once __DIR__ . '/controllers/MesaController.php';
 require_once __DIR__ . '/controllers/PedidoController.php';
 require_once __DIR__ . '/controllers/PlatoController.php';
 require_once __DIR__ . '/controllers/CajaController.php';
+require_once __DIR__ . '/controllers/PromocionController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
@@ -65,4 +66,9 @@ return [
     'caja/listar' => [CajaController::class, 'listar'],
     'caja/abierta' => [CajaController::class, 'abierta'],
     'caja/cerrar' => [CajaController::class, 'cerrar'],
+    'promociones/registrar' => [PromocionController::class, 'registrar'],
+    'promociones/listar' => [PromocionController::class, 'listar'],
+    'promociones/actualizar' => [PromocionController::class, 'actualizar'],
+    'promociones/buscar' => [PromocionController::class, 'buscar'],
+    'promociones/eliminar' => [PromocionController::class, 'eliminar'],
 ];

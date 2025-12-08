@@ -2261,3 +2261,121 @@ BEGIN
     LIMIT 1;
 END //
 DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR PROMOCION
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_promocion_registrar;
+DELIMITER //
+CREATE PROCEDURE pa_promocion_registrar(
+    IN p_nombre VARCHAR(150),
+    IN p_tipo ENUM('2x1','porcentaje','monto','horario','combo','especial'),
+    IN p_descuento VARCHAR(50),
+    IN p_estado ENUM('activa','inactiva','programada'),
+    IN p_fechaInicio DATE,
+    IN p_fechaFin DATE,
+    IN p_diasAplicables VARCHAR(200),
+    IN p_horario VARCHAR(100),
+    IN p_montoMinimo DECIMAL(10,2),
+    IN p_usosMaximos INT,
+    IN p_acumulable BOOLEAN,
+    IN p_descripcion TEXT
+)
+BEGIN
+    INSERT INTO Promociones (
+        NombrePromocion, TipoPromocion, Descuento, Estado, FechaInicio, FechaFin,
+        DiasAplicables, Horario, MontoMinimo, UsosMaximos, Acumulable, Descripcion
+    ) VALUES (
+        p_nombre, p_tipo, p_descuento, p_estado, p_fechaInicio, p_fechaFin,
+        p_diasAplicables, p_horario, IFNULL(p_montoMinimo, 0), p_usosMaximos,
+        IFNULL(p_acumulable, FALSE), p_descripcion
+    );
+    
+    SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Promoción registrada correctamente', 'idPromocion', LAST_INSERT_ID()) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR PROMOCIONES
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_promocion_listar;
+DELIMITER //
+CREATE PROCEDURE pa_promocion_listar()
+BEGIN
+    SELECT 
+        IdPromocion, NombrePromocion, TipoPromocion, Descuento, Estado,
+        FechaInicio, FechaFin, DiasAplicables, Horario, MontoMinimo,
+        UsosMaximos, UsosCliente, Acumulable, Descripcion, FechaCreacion
+    FROM Promociones
+    ORDER BY FechaCreacion DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: ACTUALIZAR PROMOCION
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_promocion_actualizar;
+DELIMITER //
+CREATE PROCEDURE pa_promocion_actualizar(
+    IN p_idPromocion INT,
+    IN p_nombre VARCHAR(150),
+    IN p_tipo ENUM('2x1','porcentaje','monto','horario','combo','especial'),
+    IN p_descuento VARCHAR(50),
+    IN p_estado ENUM('activa','inactiva','programada'),
+    IN p_fechaInicio DATE,
+    IN p_fechaFin DATE,
+    IN p_diasAplicables VARCHAR(200),
+    IN p_horario VARCHAR(100),
+    IN p_montoMinimo DECIMAL(10,2),
+    IN p_usosMaximos INT,
+    IN p_acumulable BOOLEAN,
+    IN p_descripcion TEXT
+)
+BEGIN
+    UPDATE Promociones SET
+        NombrePromocion = p_nombre,
+        TipoPromocion = p_tipo,
+        Descuento = p_descuento,
+        Estado = p_estado,
+        FechaInicio = p_fechaInicio,
+        FechaFin = p_fechaFin,
+        DiasAplicables = p_diasAplicables,
+        Horario = p_horario,
+        MontoMinimo = IFNULL(p_montoMinimo, 0),
+        UsosMaximos = p_usosMaximos,
+        Acumulable = IFNULL(p_acumulable, FALSE),
+        Descripcion = p_descripcion
+    WHERE IdPromocion = p_idPromocion;
+    
+    SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Promoción actualizada correctamente') AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: BUSCAR PROMOCION
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_promocion_buscar;
+DELIMITER //
+CREATE PROCEDURE pa_promocion_buscar(IN p_idPromocion INT)
+BEGIN
+    SELECT 
+        IdPromocion, NombrePromocion, TipoPromocion, Descuento, Estado,
+        FechaInicio, FechaFin, DiasAplicables, Horario, MontoMinimo,
+        UsosMaximos, UsosCliente, Acumulable, Descripcion, FechaCreacion
+    FROM Promociones
+    WHERE IdPromocion = p_idPromocion
+    LIMIT 1;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: ELIMINAR PROMOCION
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_promocion_eliminar;
+DELIMITER //
+CREATE PROCEDURE pa_promocion_eliminar(IN p_idPromocion INT)
+BEGIN
+    DELETE FROM Promociones WHERE IdPromocion = p_idPromocion;
+    SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Promoción eliminada correctamente') AS resultado;
+END //
+DELIMITER ;

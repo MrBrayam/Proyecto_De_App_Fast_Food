@@ -46,35 +46,26 @@
             <!-- Sección de Búsqueda -->
             <div class="busqueda-section">
                 <form class="busqueda-form" onsubmit="return false;">
-                    <div class="campo-tipo-busqueda">
-                        <label for="tipoBusqueda"><i class="fas fa-filter"></i> Filtrar por:</label>
-                        <select id="tipoBusqueda" class="select-tipo-busqueda">
-                            <option value="nombre">Nombre</option>
-                            <option value="tipo">Tipo</option>
-                            <option value="descuento">Descuento</option>
-                            <option value="estado">Estado</option>
-                        </select>
-                    </div>
-                    
                     <div class="campo-busqueda">
                         <label for="busqueda"><i class="fas fa-search"></i> Buscar:</label>
                         <input 
                             type="text" 
                             id="busqueda" 
                             class="input-busqueda" 
-                            placeholder="Ingrese término de búsqueda..."
+                            placeholder="Ingrese nombre, tipo o descuento..."
                         >
                     </div>
-                    
-                    <button type="button" class="btn-buscar-principal" onclick="buscarPromocion()">
-                        <i class="fas fa-search"></i>
-                        BUSCAR
-                    </button>
-                    
-                    <button type="button" class="btn-detalle-principal" onclick="verDetalle()" id="btnDetalle" disabled>
-                        <i class="fas fa-info-circle"></i>
-                        DETALLE
-                    </button>
+                    <div class="botones-busqueda">
+                        <button type="button" class="btn-buscar-form" id="btnBuscar">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </button>
+                        
+                        <button type="button" class="btn-limpiar-form" onclick="limpiarBusqueda()">
+                            <i class="fas fa-times"></i>
+                            Limpiar
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -84,55 +75,29 @@
                     <table class="tabla-promociones" id="tablaPromociones">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>NOMBRE</th>
                                 <th>TIPO</th>
                                 <th>DESCUENTO</th>
-                                <th>VIGENCIA</th>
                                 <th>ESTADO</th>
+                                <th>INICIO</th>
+                                <th>FIN</th>
+                                <th>MONTO MIN</th>
+                                <th>USOS</th>
+                                <th>ACCIONES</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr onclick="seleccionarFila(this)">
-                                <td>2x1 en Pizzas Familiares</td>
-                                <td>2x1</td>
-                                <td>50%</td>
-                                <td>01/10/2025 - 31/10/2025</td>
-                                <td><span class="badge badge-activa">Activa</span></td>
-                            </tr>
-                            <tr onclick="seleccionarFila(this)">
-                                <td>Descuento Estudiantes</td>
-                                <td>Porcentaje</td>
-                                <td>15%</td>
-                                <td>01/09/2025 - 31/12/2025</td>
-                                <td><span class="badge badge-activa">Activa</span></td>
-                            </tr>
-                            <tr onclick="seleccionarFila(this)">
-                                <td>Happy Hour</td>
-                                <td>Horario</td>
-                                <td>20%</td>
-                                <td>Permanente</td>
-                                <td><span class="badge badge-activa">Activa</span></td>
-                            </tr>
-                            <tr onclick="seleccionarFila(this)">
-                                <td>Black Friday</td>
-                                <td>Especial</td>
-                                <td>40%</td>
-                                <td>24/11/2025 - 24/11/2025</td>
-                                <td><span class="badge badge-inactiva">Inactiva</span></td>
-                            </tr>
+                        <tbody id="tablaPromocionesBody">
+                            <tr><td colspan="10" class="text-center">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Botones de Acción -->
                 <div class="acciones-promociones">
-                    <button class="btn-exportar-promociones" onclick="exportarPromociones()">
-                        <i class="fas fa-file-excel"></i>
-                        Exportar
-                    </button>
-                    <button class="btn-salir-promociones" onclick="salirModulo()">
+                    <button class="btn-salir-promociones" id="btnVolver">
                         <i class="fas fa-times-circle"></i>
-                        Salir
+                        Volver
                     </button>
                 </div>
             </div>

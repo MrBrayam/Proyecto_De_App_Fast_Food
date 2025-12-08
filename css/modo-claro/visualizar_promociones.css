@@ -98,9 +98,14 @@
 
 .busqueda-form {
     display: grid;
-    grid-template-columns: 250px 1fr auto auto;
-    gap: 20px;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
     align-items: end;
+}
+
+.botones-busqueda {
+    display: flex;
+    gap: 10px;
 }
 
 .campo-tipo-busqueda,
@@ -662,4 +667,89 @@
         width: 100%;
         justify-content: center;
     }
+}
+
+/* Botones de acción en tabla */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-editar {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+    margin-right: 5px;
+}
+
+.btn-editar:hover {
+    background: #3b82f6;
+    color: white;
+    transform: scale(1.1);
+}
+
+.btn-eliminar {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.btn-eliminar:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+.text-center {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+}
+
+/* Estilos para botones de búsqueda */
+.btn-buscar-form,
+.btn-limpiar-form {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 40px;
+    white-space: nowrap;
+}
+
+.btn-buscar-form {
+    background: #2563eb;
+    color: white;
+    min-width: 100px;
+}
+
+.btn-buscar-form:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.btn-limpiar-form {
+    background: #d1d5db;
+    color: #111827;
+    min-width: 90px;
+}
+
+.btn-limpiar-form:hover {
+    background: #b3b9c9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(209, 213, 219, 0.4);
 }
