@@ -712,4 +712,181 @@ CREATE INDEX idx_ventas_fecha ON Ventas(FechaVenta);
 CREATE INDEX idx_ventas_tipo_pago ON Ventas(TipoPago);
 CREATE INDEX idx_compras_fecha ON Compras(FechaCompra);
 CREATE INDEX idx_proveedores_documento ON Proveedores(NumDoc);
-CREATE INDEX idx_promociones_fechas ON Promociones(FechaInicio, FechaFin)
+CREATE INDEX idx_promociones_fechas ON Promociones(FechaInicio, FechaFin);
+
+-- ============================================
+-- PA: REGISTRAR VENTA CON DETALLES
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_venta;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_venta(
+    IN p_id_cliente INT,
+    IN p_tipo_pago VARCHAR(20),
+    IN p_subtotal DECIMAL(12,2),
+    IN p_descuento DECIMAL(12,2),
+    IN p_total DECIMAL(12,2),
+    IN p_id_usuario INT,
+    IN p_cod_caja VARCHAR(50),
+    IN p_observaciones TEXT,
+    IN p_detalles JSON
+)
+BEGIN
+    DECLARE v_cod_venta INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO Ventas (IdCliente, TipoPago, SubTotal, Descuento, Total, IdUsuario, CodCaja, Observaciones, Estado)
+    VALUES (p_id_cliente, p_tipo_pago, p_subtotal, p_descuento, p_total, p_id_usuario, p_cod_caja, p_observaciones, 'pagado');
+
+    SET v_cod_venta = LAST_INSERT_ID();
+
+    INSERT INTO DetalleVenta (CodVenta, CodProducto, Linea, Descripcion, Cantidad, Precio, Subtotal, IdProducto)
+    SELECT
+        v_cod_venta,
+        jt.codProducto,
+        jt.linea,
+        jt.descripcion,
+        jt.cantidad,
+        jt.precio,
+        jt.subtotal,
+        jt.idProducto
+    FROM JSON_TABLE(
+        p_detalles,
+        '$[*]' COLUMNS (
+            codProducto VARCHAR(50) PATH '$.codProducto',
+            linea VARCHAR(100) PATH '$.linea',
+            descripcion VARCHAR(500) PATH '$.descripcion',
+            cantidad INT PATH '$.cantidad',
+            precio DECIMAL(10,2) PATH '$.precio',
+            subtotal DECIMAL(12,2) PATH '$.subtotal',
+            idProducto INT PATH '$.idProducto'
+        )
+    ) AS jt;
+
+    UPDATE Productos p
+    JOIN (
+        SELECT jt2.idProducto, jt2.cantidad
+        FROM JSON_TABLE(
+            p_detalles,
+            '$[*]' COLUMNS (
+                idProducto INT PATH '$.idProducto',
+                cantidad INT PATH '$.cantidad'
+            )
+        ) AS jt2
+        WHERE jt2.idProducto IS NOT NULL
+    ) d ON p.IdProducto = d.idProducto
+    SET p.Stock = GREATEST(0, p.Stock - d.cantidad);
+
+    COMMIT;
+
+    SELECT v_cod_venta AS CodVenta;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR PERFIL
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_perfil;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_perfil(
+    IN p_nombre_perfil VARCHAR(50),
+    IN p_descripcion TEXT,
+    IN p_nivel_acceso ENUM('1', '2', '3', '4'),
+    IN p_estado ENUM('activo', 'inactivo'),
+    IN p_ventas_registrar BOOLEAN,
+    IN p_ventas_visualizar BOOLEAN,
+    IN p_ventas_modificar BOOLEAN,
+    IN p_ventas_eliminar BOOLEAN,
+    IN p_compras_registrar BOOLEAN,
+    IN p_compras_visualizar BOOLEAN,
+    IN p_compras_inventario BOOLEAN,
+    IN p_usuarios_registrar BOOLEAN,
+    IN p_usuarios_visualizar BOOLEAN,
+    IN p_usuarios_modificar BOOLEAN,
+    IN p_usuarios_eliminar BOOLEAN,
+    IN p_reportes_ventas BOOLEAN,
+    IN p_reportes_compras BOOLEAN,
+    IN p_reportes_financieros BOOLEAN,
+    IN p_clientes BOOLEAN,
+    IN p_proveedores BOOLEAN,
+    IN p_perfiles BOOLEAN,
+    IN p_acceso_completo BOOLEAN
+)
+BEGIN
+    DECLARE v_id_perfil INT;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+    
+    START TRANSACTION;
+    
+    INSERT INTO Perfiles (
+        NombrePerfil, Descripcion, NivelAcceso, Estado,
+        PermisoVentasRegistrar, PermisoVentasVisualizar, PermisoVentasModificar, PermisoVentasEliminar,
+        PermisoComprasRegistrar, PermisoComprasVisualizar, PermisoComprasInventario,
+        PermisoUsuariosRegistrar, PermisoUsuariosVisualizar, PermisoUsuariosModificar, PermisoUsuariosEliminar,
+        PermisoReportesVentas, PermisoReportesCompras, PermisoReportesFinancieros,
+        PermisoClientes, PermisoProveedores, PermisoPerfiles, AccesoCompleto
+    ) VALUES (
+        p_nombre_perfil, p_descripcion, p_nivel_acceso, p_estado,
+        p_ventas_registrar, p_ventas_visualizar, p_ventas_modificar, p_ventas_eliminar,
+        p_compras_registrar, p_compras_visualizar, p_compras_inventario,
+        p_usuarios_registrar, p_usuarios_visualizar, p_usuarios_modificar, p_usuarios_eliminar,
+        p_reportes_ventas, p_reportes_compras, p_reportes_financieros,
+        p_clientes, p_proveedores, p_perfiles, p_acceso_completo
+    );
+    
+    SET v_id_perfil = LAST_INSERT_ID();
+    
+    COMMIT;
+    
+    SELECT v_id_perfil AS IdPerfil;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR PERFILES
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_perfiles;
+DELIMITER //
+CREATE PROCEDURE pa_listar_perfiles()
+BEGIN
+    SELECT 
+        IdPerfil,
+        NombrePerfil,
+        Descripcion,
+        NivelAcceso,
+        Estado,
+        PermisoVentasRegistrar,
+        PermisoVentasVisualizar,
+        PermisoVentasModificar,
+        PermisoVentasEliminar,
+        PermisoComprasRegistrar,
+        PermisoComprasVisualizar,
+        PermisoComprasInventario,
+        PermisoUsuariosRegistrar,
+        PermisoUsuariosVisualizar,
+        PermisoUsuariosModificar,
+        PermisoUsuariosEliminar,
+        PermisoReportesVentas,
+        PermisoReportesCompras,
+        PermisoReportesFinancieros,
+        PermisoClientes,
+        PermisoProveedores,
+        PermisoPerfiles,
+        AccesoCompleto,
+        FechaCreacion,
+        FechaActualizacion
+    FROM Perfiles
+    ORDER BY IdPerfil ASC;
+END //
+DELIMITER ;

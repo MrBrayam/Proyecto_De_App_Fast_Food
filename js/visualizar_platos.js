@@ -26,8 +26,15 @@ function actualizarFechaHora() {
     };
     const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
     
-    document.getElementById('fechaActual').textContent = fechaFormateada;
-    document.getElementById('horaActual').textContent = horaFormateada;
+    const fechaElement = document.getElementById('fechaActual');
+    const horaElement = document.getElementById('horaActual');
+    
+    if (fechaElement) {
+        fechaElement.textContent = fechaFormateada;
+    }
+    if (horaElement) {
+        horaElement.textContent = horaFormateada;
+    }
 }
 
 // Función placeholder para cerrar modal

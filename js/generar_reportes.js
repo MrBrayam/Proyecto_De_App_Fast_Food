@@ -7,33 +7,26 @@
 function actualizarFechaHora() {
     const ahora = new Date();
     
-    // Configurar formato de fecha
-    const opcionesFecha = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
     };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    // Configurar formato de hora
-    const opcionesHora = {
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
-    };
+    });
     
-    // Actualizar elementos del DOM
-    const fechaElement = document.getElementById('fechaActual');
-    const horaElement = document.getElementById('horaActual');
-    
+    const fechaElement = document.getElementById('currentDate');
     if (fechaElement) {
-        fechaElement.textContent = ahora.toLocaleDateString('es-ES', opcionesFecha);
-    }
-    
-    if (horaElement) {
-        horaElement.textContent = ahora.toLocaleTimeString('es-ES', opcionesHora);
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
     }
 }
+
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {

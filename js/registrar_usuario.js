@@ -4,24 +4,26 @@
 function actualizarFechaHora() {
     const ahora = new Date();
     
-    const fechaElement = document.getElementById('fechaActual');
-    if (fechaElement) {
-        const opciones = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
-        fechaElement.textContent = fechaFormateada;
-    }
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    const horaElement = document.getElementById('horaActual');
-    if (horaElement) {
-        const horaFormateada = ahora.toLocaleTimeString('es-ES', { 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit',
-            hour12: false 
-        });
-        horaElement.textContent = horaFormateada;
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    const fechaElement = document.getElementById('currentDate');
+    if (fechaElement) {
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
     }
 }
+
 
 // Inicializar al cargar
 document.addEventListener('DOMContentLoaded', function() {

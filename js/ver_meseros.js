@@ -6,23 +6,23 @@
 function actualizarFechaHora() {
     const ahora = new Date();
     
-    // Fecha
-    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const fechaActual = ahora.toLocaleDateString('es-ES', opciones);
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    // Hora
-    const horaActual = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
     
-    // Actualizar elementos del DOM
-    const fechaElement = document.getElementById('fechaActual');
-    const horaElement = document.getElementById('horaActual');
-    
+    const fechaElement = document.getElementById('currentDate');
     if (fechaElement) {
-        fechaElement.textContent = fechaActual;
-    }
-    
-    if (horaElement) {
-        horaElement.textContent = horaActual;
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
     }
 }
 

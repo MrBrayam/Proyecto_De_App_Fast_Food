@@ -21,14 +21,14 @@ function actualizarFechaHora() {
     };
     const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    const opcionesHora = { 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit',
-        hour12: false 
-    };
-    const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
     
-    document.getElementById('fechaActual').textContent = fechaFormateada;
-    document.getElementById('horaActual').textContent = horaFormateada;
+    const fechaElement = document.getElementById('currentDate');
+    if (fechaElement) {
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
+    }
 }

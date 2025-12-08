@@ -6,17 +6,26 @@ let chartCategorias, chartMetodosPago, chartTipoServicio;
 function actualizarFechaHora() {
     const ahora = new Date();
     
-    const fechaElement = document.getElementById('fechaActual');
-    if (fechaElement) {
-        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        fechaElement.textContent = ahora.toLocaleDateString('es-ES', opciones);
-    }
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
-    const horaElement = document.getElementById('horaActual');
-    if (horaElement) {
-        horaElement.textContent = ahora.toLocaleTimeString('es-ES');
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    const fechaElement = document.getElementById('currentDate');
+    if (fechaElement) {
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
     }
 }
+
 
 // Inicializar al cargar
 document.addEventListener('DOMContentLoaded', function() {

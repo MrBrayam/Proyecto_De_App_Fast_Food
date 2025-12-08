@@ -2,7 +2,7 @@
 function actualizarFechaHora() {
     const ahora = new Date();
     
-    const opciones = {
+    const opciones = { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 
@@ -16,6 +16,8 @@ function actualizarFechaHora() {
         second: '2-digit'
     });
     
-    document.getElementById('fechaActual').textContent = fechaFormateada;
-    document.getElementById('horaActual').textContent = horaFormateada;
+    const fechaElement = document.getElementById('currentDate');
+    if (fechaElement) {
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
+    }
 }

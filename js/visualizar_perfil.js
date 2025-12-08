@@ -12,13 +12,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('filtrarNivel').addEventListener('change', filtrarPerfiles);
 });
 
-function cargarPerfiles() {
-    // Los perfiles se cargan desde la base de datos
-    // perfiles = await fetch('/api/perfiles').then(r => r.json());
-    
-    perfiles = JSON.parse(localStorage.getItem('perfiles_sistema') || '[]');
-    
-    mostrarPerfiles(perfiles);
+async function cargarPerfiles() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/perfiles/listar');
+        const data = await response.json();
+        
+        if (data.exito) {
+            perfiles = data.perfiles;
+            mostrarPerfiles(perfiles);
+        } else {
+            console.error('Error al cargar perfiles:', data.mensaje);
+            perfiles = [];
+            mostrarPerfiles(perfiles);
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        perfiles = [];
+        mostrarPerfiles(perfiles);
+    }
 }
 
 function mostrarPerfiles(data) {
@@ -38,7 +49,7 @@ function mostrarPerfiles(data) {
             <div class="profile-header">
                 <div class="profile-title">
                     <div class="profile-info">
-                        <h3>${perfil.nombre}</h3>
+                        <h3>${perfil.nombrePerfil}</h3>
                         <div class="profile-nivel">Nivel ${perfil.nivelAcceso} - ${getNivelNombre(perfil.nivelAcceso)}</div>
                     </div>
                 </div>
@@ -112,7 +123,7 @@ function filtrarPerfiles() {
     const nivelFiltro = document.getElementById('filtrarNivel').value;
     
     let perfilesFiltrados = perfiles.filter(perfil => {
-        const coincideBusqueda = perfil.nombre.toLowerCase().includes(busqueda);
+        const coincideBusqueda = perfil.nombrePerfil.toLowerCase().includes(busqueda);
         const coincideEstado = !estadoFiltro || perfil.estado === estadoFiltro;
         const coincideNivel = !nivelFiltro || perfil.nivelAcceso === nivelFiltro;
         
@@ -124,7 +135,7 @@ function filtrarPerfiles() {
 
 function verPermisos(index) {
     const perfil = perfiles[index];
-    document.getElementById('modalPerfilNombre').textContent = perfil.nombre;
+    document.getElementById('modalPerfilNombre').textContent = perfil.nombrePerfil;
     
     let permisosHTML = '<div class="permissions-grid">';
     
@@ -132,53 +143,41 @@ function verPermisos(index) {
         permisosHTML += '<div class="permission-item active"><strong>✓ Acceso Completo al Sistema</strong></div>';
     } else {
         // Ventas
-        if (perfil.permisos.ventas) {
-            permisosHTML += '<div class="permission-category"><h4>Ventas</h4>';
-            if (perfil.permisos.ventas.registrar) permisosHTML += '<div class="permission-item active">✓ Registrar Ventas</div>';
-            if (perfil.permisos.ventas.visualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Ventas</div>';
-            if (perfil.permisos.ventas.modificar) permisosHTML += '<div class="permission-item active">✓ Modificar Ventas</div>';
-            if (perfil.permisos.ventas.eliminar) permisosHTML += '<div class="permission-item active">✓ Eliminar Ventas</div>';
-            permisosHTML += '</div>';
-        }
+        permisosHTML += '<div class="permission-category"><h4>Ventas</h4>';
+        if (perfil.permisos.ventasRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Ventas</div>';
+        if (perfil.permisos.ventasVisualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Ventas</div>';
+        if (perfil.permisos.ventasModificar) permisosHTML += '<div class="permission-item active">✓ Modificar Ventas</div>';
+        if (perfil.permisos.ventasEliminar) permisosHTML += '<div class="permission-item active">✓ Eliminar Ventas</div>';
+        permisosHTML += '</div>';
         
         // Compras
-        if (perfil.permisos.compras) {
-            permisosHTML += '<div class="permission-category"><h4>Compras</h4>';
-            if (perfil.permisos.compras.registrar) permisosHTML += '<div class="permission-item active">✓ Registrar Compras</div>';
-            if (perfil.permisos.compras.visualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Compras</div>';
-            if (perfil.permisos.compras.inventario) permisosHTML += '<div class="permission-item active">✓ Gestionar Inventario</div>';
-            permisosHTML += '</div>';
-        }
+        permisosHTML += '<div class="permission-category"><h4>Compras</h4>';
+        if (perfil.permisos.comprasRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Compras</div>';
+        if (perfil.permisos.comprasVisualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Compras</div>';
+        if (perfil.permisos.comprasInventario) permisosHTML += '<div class="permission-item active">✓ Gestionar Inventario</div>';
+        permisosHTML += '</div>';
         
         // Usuarios
-        if (perfil.permisos.usuarios) {
-            permisosHTML += '<div class="permission-category"><h4>Usuarios</h4>';
-            if (perfil.permisos.usuarios.registrar) permisosHTML += '<div class="permission-item active">✓ Registrar Usuarios</div>';
-            if (perfil.permisos.usuarios.visualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Usuarios</div>';
-            if (perfil.permisos.usuarios.modificar) permisosHTML += '<div class="permission-item active">✓ Modificar Usuarios</div>';
-            if (perfil.permisos.usuarios.eliminar) permisosHTML += '<div class="permission-item active">✓ Eliminar Usuarios</div>';
-            permisosHTML += '</div>';
-        }
+        permisosHTML += '<div class="permission-category"><h4>Usuarios</h4>';
+        if (perfil.permisos.usuariosRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Usuarios</div>';
+        if (perfil.permisos.usuariosVisualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Usuarios</div>';
+        if (perfil.permisos.usuariosModificar) permisosHTML += '<div class="permission-item active">✓ Modificar Usuarios</div>';
+        if (perfil.permisos.usuariosEliminar) permisosHTML += '<div class="permission-item active">✓ Eliminar Usuarios</div>';
+        permisosHTML += '</div>';
         
         // Reportes
-        if (perfil.permisos.reportes) {
-            permisosHTML += '<div class="permission-category"><h4>Reportes</h4>';
-            if (perfil.permisos.reportes.ventas) permisosHTML += '<div class="permission-item active">✓ Reportes de Ventas</div>';
-            if (perfil.permisos.reportes.compras) permisosHTML += '<div class="permission-item active">✓ Reportes de Compras</div>';
-            if (perfil.permisos.reportes.financieros) permisosHTML += '<div class="permission-item active">✓ Reportes Financieros</div>';
-            permisosHTML += '</div>';
-        }
+        permisosHTML += '<div class="permission-category"><h4>Reportes</h4>';
+        if (perfil.permisos.reportesVentas) permisosHTML += '<div class="permission-item active">✓ Reportes de Ventas</div>';
+        if (perfil.permisos.reportesCompras) permisosHTML += '<div class="permission-item active">✓ Reportes de Compras</div>';
+        if (perfil.permisos.reportesFinancieros) permisosHTML += '<div class="permission-item active">✓ Reportes Financieros</div>';
+        permisosHTML += '</div>';
         
         // Otros
-        if (perfil.permisos.clientes) {
-            permisosHTML += '<div class="permission-item active">✓ Gestionar Clientes</div>';
-        }
-        if (perfil.permisos.proveedores) {
-            permisosHTML += '<div class="permission-item active">✓ Gestionar Proveedores</div>';
-        }
-        if (perfil.permisos.perfiles) {
-            permisosHTML += '<div class="permission-item active">✓ Gestionar Perfiles</div>';
-        }
+        permisosHTML += '<div class="permission-category"><h4>Otros</h4>';
+        if (perfil.permisos.clientes) permisosHTML += '<div class="permission-item active">✓ Gestionar Clientes</div>';
+        if (perfil.permisos.proveedores) permisosHTML += '<div class="permission-item active">✓ Gestionar Proveedores</div>';
+        if (perfil.permisos.perfiles) permisosHTML += '<div class="permission-item active">✓ Gestionar Perfiles</div>';
+        permisosHTML += '</div>';
     }
     
     permisosHTML += '</div>';
@@ -212,6 +211,8 @@ function actualizarFechaHora() {
         second: '2-digit'
     });
     
-    document.getElementById('fechaActual').textContent = fechaFormateada;
-    document.getElementById('horaActual').textContent = horaFormateada;
+    const fechaElement = document.getElementById('currentDate');
+    if (fechaElement) {
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
+    }
 }

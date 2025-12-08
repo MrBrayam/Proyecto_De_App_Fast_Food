@@ -10,19 +10,23 @@ document.addEventListener('DOMContentLoaded', function() {
 function actualizarFechaHora() {
     const ahora = new Date();
     
-    const fechaElement = document.getElementById('fechaActual');
-    const horaElement = document.getElementById('horaActual');
+    const opciones = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
     
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    const fechaElement = document.getElementById('currentDate');
     if (fechaElement) {
-        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
-        fechaElement.textContent = fechaFormateada;
-    }
-    
-    if (horaElement) {
-        const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-        const horaFormateada = ahora.toLocaleTimeString('es-ES', opcionesHora);
-        horaElement.textContent = horaFormateada;
+        fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
     }
 }
 
