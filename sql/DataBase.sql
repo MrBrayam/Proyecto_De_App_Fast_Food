@@ -51,9 +51,7 @@ CREATE TABLE Perfiles (
 CREATE TABLE Usuarios (
     IdUsuario INT PRIMARY KEY AUTO_INCREMENT,
     Dni VARCHAR(20) NOT NULL UNIQUE,
-    Nombres VARCHAR(100) NOT NULL,
-    Apellidos VARCHAR(100) NOT NULL,
-    NombreCompleto VARCHAR(200) GENERATED ALWAYS AS (CONCAT(Nombres, ' ', Apellidos)) STORED,
+    NombreCompleto VARCHAR(200) NOT NULL,
     Telefono VARCHAR(20) NOT NULL,
     Email VARCHAR(100) UNIQUE,
     NombreUsuario VARCHAR(50) NOT NULL UNIQUE,
@@ -408,15 +406,11 @@ INSERT INTO Perfiles (NombrePerfil, Descripcion, NivelAcceso, AccesoCompleto,
     FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
 
 -- Insertar Usuarios de ejemplo (contraseña: admin123)
-INSERT INTO Usuarios (Dni, Nombres, Apellidos, Telefono, Email, NombreUsuario, Contrasena, IdPerfil, Estado) VALUES
-('12345678', 'Administrador', 'Sistema', '987654321', 'admin@kingspizza.com', 'admin', 
-'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, 'activo'),
-('87654321', 'Juan', 'Pérez García', '987654322', 'jperez@kingspizza.com', 'cajero', 
-'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 'activo'),
-('76543210', 'María', 'González López', '987654323', 'mgonzalez@kingspizza.com', 'mesero', 
-'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 3, 'activo'),
-('65432109', 'Carlos', 'Ramírez Torres', '987654324', 'cramirez@kingspizza.com', 'delivery', 
-'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, 'activo');
+INSERT INTO Usuarios (Dni, NombreCompleto, Telefono, Email, NombreUsuario, Contrasena, IdPerfil, Estado) VALUES
+('12345678', 'Administrador Sistema', '987654321', 'admin@kingspizza.com', 'admin', 'admin123', 1, 'activo'),
+('87654321', 'Juan Pérez García', '987654322', 'jperez@kingspizza.com', 'cajero', 'cajero123', 2, 'activo'),
+('76543210', 'María González López', '987654323', 'mgonzalez@kingspizza.com', 'mesero', 'mesero123', 3, 'activo'),
+('65432109', 'Carlos Ramírez Torres', '987654324', 'cramirez@kingspizza.com', 'delivery', 'delivery123', 4, 'activo');
 
 -- Insertar Mesas de ejemplo
 INSERT INTO Mesas (NumMesa, Cantidad, Ubicacion, TipoMesa, Prioridad) VALUES
@@ -888,5 +882,177 @@ BEGIN
         FechaActualizacion
     FROM Perfiles
     ORDER BY IdPerfil ASC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PROCEDIMIENTO: REGISTRAR USUARIO DEL SISTEMA
+-- Descripción: Registra un nuevo usuario en el sistema
+-- Parámetros:
+--   - p_dni: DNI del usuario
+--   - p_nombreCompleto: Nombre completo del usuario
+--   - p_telefono: Teléfono del usuario
+--   - p_email: Correo electrónico (opcional)
+--   - p_nombreUsuario: Nombre de usuario único
+--   - p_contrasena: Contraseña (será hasheada)
+--   - p_idPerfil: ID del perfil asignado
+--   - p_estado: Estado del usuario (activo/inactivo)
+-- Retorna: JSON con IdUsuario o mensaje de error
+-- ============================================
+DELIMITER //
+CREATE PROCEDURE pa_registrar_usuario(
+    IN p_dni VARCHAR(20),
+    IN p_nombreCompleto VARCHAR(200),
+    IN p_telefono VARCHAR(20),
+    IN p_email VARCHAR(100),
+    IN p_nombreUsuario VARCHAR(50),
+    IN p_contrasena VARCHAR(255),
+    IN p_idPerfil INT,
+    IN p_estado ENUM('activo', 'inactivo', 'suspendido')
+)
+BEGIN
+    DECLARE v_idUsuario INT;
+    DECLARE v_contrasenaHash VARCHAR(255);
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT JSON_OBJECT('error', 'Error al registrar usuario') AS resultado;
+    END;
+
+    START TRANSACTION;
+
+    -- Validar que el perfil existe
+    IF NOT EXISTS (SELECT 1 FROM Perfiles WHERE IdPerfil = p_idPerfil) THEN
+        SELECT JSON_OBJECT('error', 'El perfil especificado no existe') AS resultado;
+        ROLLBACK;
+    ELSE
+        -- Guardar contraseña sin hashear (solo para desarrollo)
+        SET v_contrasenaHash = p_contrasena;
+
+        -- Insertar el nuevo usuario
+        INSERT INTO Usuarios (
+            Dni,
+            NombreCompleto,
+            Telefono,
+            Email,
+            NombreUsuario,
+            Contrasena,
+            IdPerfil,
+            Estado
+        ) VALUES (
+            p_dni,
+            p_nombreCompleto,
+            p_telefono,
+            NULLIF(p_email, ''),
+            p_nombreUsuario,
+            v_contrasenaHash,
+            p_idPerfil,
+            p_estado
+        );
+
+        SET v_idUsuario = LAST_INSERT_ID();
+
+        COMMIT;
+
+        -- Retornar el ID del usuario registrado
+        SELECT JSON_OBJECT(
+            'IdUsuario', v_idUsuario,
+            'NombreUsuario', p_nombreUsuario,
+            'mensaje', 'Usuario registrado exitosamente'
+        ) AS resultado;
+    END IF;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LOGIN - VERIFICAR USUARIO Y CONTRASEÑA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_login;
+DELIMITER //
+CREATE PROCEDURE pa_login(
+    IN p_nombreUsuario VARCHAR(50),
+    IN p_contrasena VARCHAR(255)
+)
+BEGIN
+    DECLARE v_idUsuario INT;
+    DECLARE v_nombreCompleto VARCHAR(200);
+    DECLARE v_idPerfil INT;
+    DECLARE v_nombrePerfil VARCHAR(50);
+    DECLARE v_nivelAcceso VARCHAR(1);
+    DECLARE v_contrasenaGuardada VARCHAR(255);
+    DECLARE v_estado VARCHAR(20);
+    
+    -- Buscar usuario activo
+    SELECT 
+        u.IdUsuario,
+        u.NombreCompleto,
+        u.IdPerfil,
+        u.Contrasena,
+        u.Estado,
+        p.NombrePerfil,
+        p.NivelAcceso
+    INTO 
+        v_idUsuario,
+        v_nombreCompleto,
+        v_idPerfil,
+        v_contrasenaGuardada,
+        v_estado,
+        v_nombrePerfil,
+        v_nivelAcceso
+    FROM Usuarios u
+    INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+    WHERE u.NombreUsuario = p_nombreUsuario 
+    AND u.Estado = 'activo'
+    LIMIT 1;
+    
+    -- Verificar si el usuario existe
+    IF v_idUsuario IS NULL THEN
+        SELECT JSON_OBJECT(
+            'exito', FALSE,
+            'mensaje', 'Usuario o contraseña incorrectos'
+        ) AS resultado;
+    ELSEIF v_contrasenaGuardada != p_contrasena THEN
+        SELECT JSON_OBJECT(
+            'exito', FALSE,
+            'mensaje', 'Usuario o contraseña incorrectos'
+        ) AS resultado;
+    ELSE
+        -- Autenticación exitosa
+        SELECT JSON_OBJECT(
+            'exito', TRUE,
+            'idUsuario', v_idUsuario,
+            'nombreCompleto', v_nombreCompleto,
+            'idPerfil', v_idPerfil,
+            'nombrePerfil', v_nombrePerfil,
+            'nivelAcceso', v_nivelAcceso,
+            'mensaje', 'Autenticación exitosa'
+        ) AS resultado;
+    END IF;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR USUARIOS DEL SISTEMA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_usuarios;
+DELIMITER //
+CREATE PROCEDURE pa_listar_usuarios()
+BEGIN
+    SELECT 
+        u.IdUsuario,
+        u.Dni,
+        u.NombreCompleto,
+        u.Telefono,
+        u.Email,
+        u.NombreUsuario,
+        u.IdPerfil,
+        p.NombrePerfil,
+        p.NivelAcceso,
+        u.Estado,
+        u.FechaCreacion,
+        u.FechaActualizacion
+    FROM Usuarios u
+    INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+    ORDER BY u.IdUsuario DESC;
 END //
 DELIMITER ;

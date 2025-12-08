@@ -72,6 +72,18 @@
 
                         <div class="form-grid grid-2">
                             <div class="form-group">
+                                <label for="dni">DNI *</label>
+                                <input type="text" id="dni" name="dni" class="form-control" required placeholder="12345678" maxlength="8">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="telefono">Teléfono *</label>
+                                <input type="tel" id="telefono" name="telefono" class="form-control" required placeholder="946587524" maxlength="9">
+                            </div>
+                        </div>
+
+                        <div class="form-grid grid-2">
+                            <div class="form-group">
                                 <label for="nombres">Nombres *</label>
                                 <input type="text" id="nombres" name="nombres" class="form-control" required placeholder="Jose Alonso">
                             </div>
@@ -84,26 +96,21 @@
 
                         <div class="form-grid grid-2">
                             <div class="form-group">
-                                <label for="telefono">Teléfono *</label>
-                                <input type="tel" id="telefono" name="telefono" class="form-control" required placeholder="946587524">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="ja.ibericome@unsm.edu.pe">
                             </div>
                             
                             <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" class="form-control" required placeholder="ja.ibericome@unsm.edu.pe">
+                                <label for="nombreUsuario">Nombre de Usuario *</label>
+                                <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control" required placeholder="jiberico">
                             </div>
                         </div>
 
-                        <div class="form-grid grid-2">
-                            <div class="form-group">
-                                <label for="nombreUsuario">Nombre de Usuario *</label>
-                                <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control" required placeholder="Tiolberio">
-                            </div>
-                            
+                        <div class="form-grid">
                             <div class="form-group">
                                 <label for="contrasena">Contraseña *</label>
                                 <div class="password-input">
-                                    <input type="password" id="contrasena" name="contrasena" class="form-control" required placeholder="************">
+                                    <input type="password" id="contrasena" name="contrasena" class="form-control" required placeholder="************" minlength="6">
                                     <button type="button" class="btn-toggle-password" onclick="togglePassword('contrasena')">
                                         <i class="fas fa-eye"></i>
                                     </button>
