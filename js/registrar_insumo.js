@@ -30,11 +30,13 @@ async function cargarProveedores() {
             proveedoresData = data.proveedores;
             const select = document.getElementById('codProveedor');
             select.innerHTML = '<option value="">Seleccionar proveedor...</option>';
-            
+
             data.proveedores.forEach(proveedor => {
                 const option = document.createElement('option');
-                option.value = proveedor.CodProveedor;
-                option.textContent = proveedor.RazonSocial;
+                const id = proveedor.CodProveedor ?? proveedor.codProveedor;
+                const nombre = proveedor.RazonSocial ?? proveedor.razonSocial ?? proveedor.NombreComercial ?? proveedor.nombreComercial ?? 'Proveedor';
+                option.value = id;
+                option.textContent = nombre;
                 select.appendChild(option);
             });
         }

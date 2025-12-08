@@ -1,8 +1,10 @@
 // Evento de envío del formulario
 document.getElementById('formRegistrarSuministro').addEventListener('submit', registrarSuministro);
+document.getElementById('rucProveedor').addEventListener('blur', buscarProveedorPorRuc);
 
-// Set date to today
+// Set date to today and autogenerate invoice number
 document.getElementById('fechaCompra').valueAsDate = new Date();
+autogenerarNumeroFactura();
 
 // Actualizar fecha/hora
 actualizarFechaHora();
@@ -109,15 +111,61 @@ async function registrarSuministro(e) {
             document.getElementById('formRegistrarSuministro').reset();
             document.getElementById('fechaCompra').valueAsDate = new Date();
             
-            // Redirigir después de 1.5 segundos
+            // Redirigir después de 1.5 segundos al inventario pestaña suministros
             setTimeout(() => {
-                window.location.href = '../html/visualizar_inventario.html';
+                window.location.href = '../html/visualizar_inventario.html?tab=suministros';
             }, 1500);
         } else {
             mostrarAlerta(result.mensaje || 'Error al registrar el suministro', 'error');
         }
     } catch (error) {
         mostrarAlerta('Error en la solicitud: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Genera número de factura automático con prefijo FAC-YYYYMMDD-HHMMSS
+ */
+function autogenerarNumeroFactura() {
+    const ahora = new Date();
+    const yyyy = ahora.getFullYear();
+    const mm = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dd = String(ahora.getDate()).padStart(2, '0');
+    const hh = String(ahora.getHours()).padStart(2, '0');
+    const mi = String(ahora.getMinutes()).padStart(2, '0');
+    const ss = String(ahora.getSeconds()).padStart(2, '0');
+    const factura = `FAC-${yyyy}${mm}${dd}-${hh}${mi}${ss}`;
+    document.getElementById('numeroFactura').value = factura;
+}
+
+/**
+ * Busca proveedor por RUC y autocompleta nombre
+ */
+async function buscarProveedorPorRuc() {
+    const ruc = document.getElementById('rucProveedor').value.trim();
+
+    if (!ruc || ruc.length < 8) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/proveedores/buscar?numDoc=${encodeURIComponent(ruc)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.exito && data.proveedor) {
+            document.getElementById('proveedor').value = data.proveedor.razonSocial || '';
+            mostrarAlerta('Proveedor encontrado y cargado', 'exito');
+        } else {
+            mostrarAlerta('Proveedor no encontrado', 'error');
+        }
+    } catch (error) {
+        mostrarAlerta('Error al buscar proveedor: ' + error.message, 'error');
     }
 }
 

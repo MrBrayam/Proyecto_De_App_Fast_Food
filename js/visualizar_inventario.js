@@ -15,10 +15,37 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('tabFilter').addEventListener('change', cambiarPestana);
     document.getElementById('stateFilter').addEventListener('change', filtrarDatos);
     document.getElementById('searchInput').addEventListener('keyup', filtrarDatos);
-    
-    // Cargar datos iniciales
-    cargarProductos();
+
+    // Elegir pestaña inicial según query ?tab=
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam === 'suministros' || tabParam === 'insumos' || tabParam === 'productos') {
+        document.getElementById('tabFilter').value = tabParam;
+        tablaActual = tabParam;
+    }
+
+    // Cargar datos iniciales según pestaña activa
+    if (tablaActual === 'suministros') {
+        mostrarSeccion('suministros');
+        cargarSuministros();
+    } else if (tablaActual === 'insumos') {
+        mostrarSeccion('insumos');
+        cargarInsumos();
+    } else {
+        tablaActual = 'productos';
+        mostrarSeccion('productos');
+        cargarProductos();
+    }
 });
+
+function mostrarSeccion(tab) {
+    document.getElementById('productosSection').style.display = 'none';
+    document.getElementById('insumosSection').style.display = 'none';
+    document.getElementById('suministrosSection').style.display = 'none';
+    if (tab === 'productos') document.getElementById('productosSection').style.display = 'block';
+    if (tab === 'insumos') document.getElementById('insumosSection').style.display = 'block';
+    if (tab === 'suministros') document.getElementById('suministrosSection').style.display = 'block';
+}
 
 // Cargar productos desde API
 async function cargarProductos() {
@@ -197,22 +224,13 @@ function cambiarPestana() {
     const tab = document.getElementById('tabFilter').value;
     tablaActual = tab;
     
-    // Ocultar todas las secciones
-    document.getElementById('productosSection').style.display = 'none';
-    document.getElementById('insumosSection').style.display = 'none';
-    document.getElementById('suministrosSection').style.display = 'none';
+    // Ocultar todas las secciones y mostrar la seleccionada
+    mostrarSeccion(tab);
     
-    // Mostrar la seleccionada y cargar datos si es necesario
-    if (tab === 'productos') {
-        document.getElementById('productosSection').style.display = 'block';
-        if (productosData.length === 0) cargarProductos();
-    } else if (tab === 'insumos') {
-        document.getElementById('insumosSection').style.display = 'block';
-        if (insumosData.length === 0) cargarInsumos();
-    } else if (tab === 'suministros') {
-        document.getElementById('suministrosSection').style.display = 'block';
-        if (suministrosData.length === 0) cargarSuministros();
-    }
+    // Cargar datos si es necesario
+    if (tab === 'productos' && productosData.length === 0) cargarProductos();
+    else if (tab === 'insumos' && insumosData.length === 0) cargarInsumos();
+    else if (tab === 'suministros' && suministrosData.length === 0) cargarSuministros();
     
     filtrarDatos();
 }

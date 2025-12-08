@@ -10,9 +10,10 @@ class SuministroController
     public function registrar()
     {
         try {
-            // Get JSON body
+            // Get JSON body (handles UTF-16 payloads from PowerShell)
             $raw = file_get_contents('php://input');
-            $data = json_decode($raw, true, 512, JSON_UNESCAPED_UNICODE);
+            $raw = mb_convert_encoding($raw, 'UTF-8', 'UTF-8, UTF-16LE, UTF-16BE, ISO-8859-1');
+            $data = json_decode($raw, true);
 
             // Validar campos requeridos
             if (empty($data['tipoSuministro'])) {

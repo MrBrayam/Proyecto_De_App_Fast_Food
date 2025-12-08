@@ -1419,9 +1419,8 @@ BEGIN
     ) AS resultado;
 END //
 
--- ============================================
--- PA: REGISTRAR SUMINISTRO
--- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_suministro;
+DELIMITER //
 CREATE PROCEDURE pa_registrar_suministro(
     IN p_tipoSuministro VARCHAR(50),
     IN p_nombreSuministro VARCHAR(150),
@@ -1467,7 +1466,7 @@ BEGIN
         p_precioUnitario,
         p_fechaCompra,
         NULLIF(p_numeroFactura, ''),
-        NULLIF(p_estado, 'disponible'),
+        COALESCE(NULLIF(p_estado, ''), 'disponible'),
         NULLIF(p_ubicacion, ''),
         NULLIF(p_observaciones, '')
     );
