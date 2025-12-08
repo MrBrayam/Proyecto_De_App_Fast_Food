@@ -85,6 +85,37 @@ class Venta
         }
     }
 
+    public function buscarDetalles(int $codVenta): array
+    {
+        $db = Database::connection();
+        
+        try {
+            $stmt = $db->prepare('
+                SELECT 
+                    IdDetalleVenta,
+                    CodVenta,
+                    CodProducto,
+                    Linea,
+                    Descripcion,
+                    Cantidad,
+                    Precio,
+                    Subtotal,
+                    IdProducto
+                FROM DetalleVenta
+                WHERE CodVenta = ?
+                ORDER BY IdDetalleVenta ASC
+            ');
+            $stmt->execute([$codVenta]);
+            
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $rows;
+        } catch (Exception $e) {
+            error_log('Error en buscar detalles venta: ' . $e->getMessage());
+            return [];
+        }
+    }
+
     private function parsearResultado(array $resultado): array
     {
         // Si viene como JSON string, decodificar

@@ -2101,18 +2101,20 @@ BEGIN
     SELECT 
         v.CodVenta,
         v.IdCliente,
-        COALESCE(c.NombreCliente, 'Sin cliente') AS NombreCliente,
+        COALESCE(c.NombreCompleto, 'Sin cliente registrado') AS NombreCliente,
         v.TipoPago,
         v.SubTotal,
         v.Descuento,
         v.Total,
         v.IdUsuario,
+        COALESCE(u.NombreCompleto, CONCAT('Usuario ID: ', v.IdUsuario)) AS NombreUsuario,
         v.CodCaja,
         v.Estado,
         DATE_FORMAT(v.FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
         v.Observaciones
     FROM Ventas v
     LEFT JOIN Clientes c ON v.IdCliente = c.IdCliente
+    LEFT JOIN Usuarios u ON v.IdUsuario = u.IdUsuario
     ORDER BY v.FechaVenta DESC, v.CodVenta DESC;
 END //
 DELIMITER ;
@@ -2127,19 +2129,23 @@ CREATE PROCEDURE pa_buscar_venta(
 )
 BEGIN
     SELECT 
-        CodVenta,
-        IdCliente,
-        TipoPago,
-        SubTotal,
-        Descuento,
-        Total,
-        IdUsuario,
-        CodCaja,
-        Estado,
-        DATE_FORMAT(FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
-        Observaciones
-    FROM Ventas
-    WHERE CodVenta = p_codVenta
+        v.CodVenta,
+        v.IdCliente,
+        COALESCE(c.NombreCompleto, 'Sin cliente registrado') AS NombreCliente,
+        v.TipoPago,
+        v.SubTotal,
+        v.Descuento,
+        v.Total,
+        v.IdUsuario,
+        COALESCE(u.NombreCompleto, CONCAT('Usuario ID: ', v.IdUsuario)) AS NombreUsuario,
+        v.CodCaja,
+        v.Estado,
+        DATE_FORMAT(v.FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
+        v.Observaciones
+    FROM Ventas v
+    LEFT JOIN Clientes c ON v.IdCliente = c.IdCliente
+    LEFT JOIN Usuarios u ON v.IdUsuario = u.IdUsuario
+    WHERE v.CodVenta = p_codVenta
     LIMIT 1;
 END //
 

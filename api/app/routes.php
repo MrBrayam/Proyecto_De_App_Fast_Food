@@ -21,6 +21,7 @@ return [
     'ventas/registrar' => [VentaController::class, 'registrar'],
     'ventas/listar' => [VentaController::class, 'listar'],
     'ventas/buscar' => [VentaController::class, 'buscar'],
+    'ventas/detalles' => [VentaController::class, 'detalles'],
     'perfiles/registrar' => [PerfilController::class, 'registrar'],
     'perfiles/listar' => [PerfilController::class, 'listar'],
     'usuarios/registrar' => [UsuarioController::class, 'registrar'],

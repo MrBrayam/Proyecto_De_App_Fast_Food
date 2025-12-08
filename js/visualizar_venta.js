@@ -126,31 +126,56 @@ async function mostrarModalDetalle(venta) {
     document.getElementById('detalleIdVenta').textContent = venta.CodVenta;
     document.getElementById('detalleFecha').textContent = new Date(venta.FechaVenta).toLocaleDateString('es-ES');
     document.getElementById('detalleCliente').textContent = venta.NombreCliente || 'Sin cliente registrado';
-    document.getElementById('detalleUsuario').textContent = 'Usuario ID: ' + venta.IdUsuario;
+    const nombreUsuario = venta.NombreUsuario || (venta.IdUsuario ? `Usuario ID: ${venta.IdUsuario}` : 'Usuario desconocido');
+    document.getElementById('detalleUsuario').textContent = nombreUsuario;
     document.getElementById('detalleTipoPago').textContent = capitalizar(venta.TipoPago);
-    document.getElementById('detalleEstado').textContent = venta.Estado;
+    document.getElementById('detalleEstado').textContent = capitalizar(venta.Estado);
 
     // Cargar detalles de la venta (productos)
-    // Aquí necesitaríamos un endpoint que devuelva los detalles de venta
-    // Por ahora, mostraremos los totales
+    const tbody = document.getElementById('detalleProductos');
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Cargando productos...</td></tr>';
+
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/ventas/detalles?id=${venta.CodVenta}`);
+        const data = await response.json();
+
+        if (data.exito && data.detalles && data.detalles.length > 0) {
+            tbody.innerHTML = '';
+            data.detalles.forEach(detalle => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${detalle.CodProducto || '-'}</td>
+                    <td>${detalle.Descripcion || detalle.Linea || '-'}</td>
+                    <td>${detalle.Cantidad}</td>
+                    <td>S/ ${parseFloat(detalle.Precio).toFixed(2)}</td>
+                    <td><strong>S/ ${parseFloat(detalle.Subtotal).toFixed(2)}</strong></td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: #ffc857;">No se encontraron productos en esta venta</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error al cargar detalles:', error);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: #ff5733;"><i class="fas fa-exclamation-triangle"></i> Error al cargar los productos</td></tr>';
+    }
+
+    // Actualizar totales
     document.getElementById('detalleSubtotal').textContent = 'S/ ' + parseFloat(venta.SubTotal).toFixed(2);
     document.getElementById('detalleDescuento').textContent = 'S/ ' + parseFloat(venta.Descuento).toFixed(2);
     document.getElementById('detalleTotal').textContent = 'S/ ' + parseFloat(venta.Total).toFixed(2);
 
-    // Cargar productos desde API (próxima mejora: crear endpoint para detalles)
-    const tbody = document.getElementById('detalleProductos');
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando productos...</td></tr>';
-
-    // Por ahora mostrar mensaje simple
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Detalles de productos disponibles en próxima versión</td></tr>';
-
     // Mostrar modal
-    document.getElementById('modalDetalle').style.display = 'block';
+    const modal = document.getElementById('modalDetalle');
+    modal.classList.add('active');
+    modal.style.display = 'flex';
 }
 
 // Cerrar modal
 function cerrarModal() {
-    document.getElementById('modalDetalle').style.display = 'none';
+    const modal = document.getElementById('modalDetalle');
+    modal.classList.remove('active');
+    modal.style.display = 'none';
     ventaActualEnModal = null;
 }
 

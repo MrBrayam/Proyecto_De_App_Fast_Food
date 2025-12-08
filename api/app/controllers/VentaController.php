@@ -168,4 +168,32 @@ class VentaController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+    public function detalles(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        try {
+            $codVenta = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+            
+            if ($codVenta <= 0) {
+                $this->json(['exito' => false, 'mensaje' => 'ID de venta inválido'], 400);
+                return;
+            }
+
+            $model = new Venta();
+            $detalles = $model->buscarDetalles($codVenta);
+
+            $this->json(['exito' => true, 'detalles' => $detalles], 200);
+        } catch (Exception $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
 }
