@@ -45,6 +45,12 @@ class Pedido
     public function registrarDetalle(int $idPedido, array $detalle)
     {
         $db = Database::connection();
+        
+        error_log("Registrando detalle de pedido: " . json_encode([
+            'idPedido' => $idPedido,
+            'detalle' => $detalle
+        ]));
+        
         $stmt = $db->prepare('CALL pa_registrar_detalle_pedido(?, ?, ?, ?, ?, ?, ?)');
         
         $stmt->execute([
@@ -59,8 +65,12 @@ class Pedido
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        // Cerrar todos los result sets del stored procedure
-        while ($stmt->nextRowset()) {}        if ($result && isset($result['resultado'])) {
+        // Cerrar cursor
+        $stmt->closeCursor();
+        
+        error_log("Resultado de registrar detalle: " . json_encode($result));
+        
+        if ($result && isset($result['resultado'])) {
             return json_decode($result['resultado'], true);
         }
 

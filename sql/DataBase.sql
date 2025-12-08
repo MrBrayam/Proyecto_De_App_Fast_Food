@@ -230,7 +230,7 @@ CREATE TABLE Caja (
 -- ============================================
 CREATE TABLE Pedidos (
     IdPedido INT PRIMARY KEY AUTO_INCREMENT,
-    NumDocumentos VARCHAR(50) UNIQUE NOT NULL,
+    NumDocumentos VARCHAR(50) NOT NULL,
     TipoServicio ENUM('local', 'delivery', 'para-llevar') NOT NULL,
     NumMesa INT NULL,
     IdCliente INT NULL,

@@ -3,6 +3,11 @@
    Solo funcionalidades de interfaz
    ============================================ */
 
+// Variables globales para IDs
+let idProductoActual = null;
+let idPlatoActual = null;
+let tipoItemActual = null; // 'producto' o 'plato'
+
 document.addEventListener('DOMContentLoaded', function() {
     // Actualizar fecha y hora
     actualizarFechaHora();
@@ -170,6 +175,9 @@ async function buscarProductoPorCodigo() {
         const dataPlatos = await respPlatos.json();
 
         if (dataPlatos.exito && dataPlatos.plato) {
+            idPlatoActual = dataPlatos.plato.IdPlato || null;
+            idProductoActual = null;
+            tipoItemActual = 'plato';
             document.getElementById('searchDescripcion').value = dataPlatos.plato.Nombre || '';
             document.getElementById('precioUnitario').value = dataPlatos.plato.Precio || '0';
             return;
@@ -180,9 +188,15 @@ async function buscarProductoPorCodigo() {
         const dataProductos = await respProductos.json();
 
         if (dataProductos.exito && dataProductos.producto) {
+            idProductoActual = dataProductos.producto.IdProducto || null;
+            idPlatoActual = null;
+            tipoItemActual = 'producto';
             document.getElementById('searchDescripcion').value = dataProductos.producto.NombreProducto || '';
             document.getElementById('precioUnitario').value = dataProductos.producto.Precio || '0';
         } else {
+            idProductoActual = null;
+            idPlatoActual = null;
+            tipoItemActual = null;
             alert('Producto no encontrado');
             document.getElementById('searchDescripcion').value = '';
             document.getElementById('precioUnitario').value = '';
@@ -276,6 +290,8 @@ function agregarItem() {
     }
 
     itemsPedido.push({
+        idProducto: idProductoActual,
+        idPlato: idPlatoActual,
         codProducto: codigo,
         descripcionProducto: descripcion,
         cantidad,
@@ -290,6 +306,11 @@ function agregarItem() {
     document.getElementById('searchDescripcion').value = '';
     document.getElementById('precioUnitario').value = '';
     document.getElementById('cantidad').value = 1;
+    
+    // Limpiar IDs
+    idProductoActual = null;
+    idPlatoActual = null;
+    tipoItemActual = null;
 }
 
 function eliminarItem(index) {
@@ -373,8 +394,8 @@ async function registrarPedido() {
         estado: 'pendiente',
         observaciones: '',
         detalles: itemsPedido.map(it => ({
-            idProducto: null,
-            idPlato: null,
+            idProducto: it.idProducto || null,
+            idPlato: it.idPlato || null,
             codProducto: it.codProducto,
             descripcionProducto: it.descripcionProducto,
             cantidad: it.cantidad,
