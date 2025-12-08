@@ -45,37 +45,89 @@
         <!-- Contenedor Principal -->
         <div class="productos-visualizar-container">
 
+            <!-- Estadísticas -->
+            <div class="estadisticas-container">
+                <div class="estadistica-card">
+                    <div class="estadistica-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="estadistica-content">
+                        <h3>Total de Productos</h3>
+                        <p class="estadistica-numero" id="totalProductos">0</p>
+                    </div>
+                </div>
+
+                <div class="estadistica-card">
+                    <div class="estadistica-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="estadistica-content">
+                        <h3>Productos Activos</h3>
+                        <p class="estadistica-numero" id="productosActivos">0</p>
+                    </div>
+                </div>
+
+                <div class="estadistica-card">
+                    <div class="estadistica-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="estadistica-content">
+                        <h3>Productos Inactivos</h3>
+                        <p class="estadistica-numero" id="productosInactivos">0</p>
+                    </div>
+                </div>
+
+                <div class="estadistica-card">
+                    <div class="estadistica-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="estadistica-content">
+                        <h3>Stock Bajo</h3>
+                        <p class="estadistica-numero" id="productosStockBajo">0</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Contenido -->
             <div class="productos-contenido">
-                <!-- Sección de Búsqueda -->
+                <!-- Sección de Búsqueda y Filtros -->
                 <div class="busqueda-section">
-                    <form class="busqueda-form" onsubmit="return false;">
-                        <div class="campo-busqueda">
-                            <input 
-                                type="text" 
-                                id="busqueda" 
-                                class="input-busqueda" 
-                                placeholder="Buscar producto por nombre o código..."
-                            >
-                        </div>
-                        
-                        <div class="campo-categoria">
-                            <select id="categoriaFiltro" class="select-categoria">
-                                <option value="">Todas las categorías</option>
-                                <option value="pizzas">Pizzas</option>
-                                <option value="pastas">Pastas</option>
-                                <option value="ensaladas">Ensaladas</option>
-                                <option value="bebidas">Bebidas</option>
-                                <option value="postres">Postres</option>
-                                <option value="extras">Extras</option>
-                            </select>
-                        </div>
-                        
-                        <button type="button" class="btn-buscar" onclick="buscarProducto()">
+                    <div class="search-container">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="input-busqueda" 
+                            placeholder="Buscar por nombre o código..."
+                        >
+                    </div>
+
+                    <div class="filtros-container">
+                        <select id="filterCategoria" class="select-filtro">
+                            <option value="">Todas las categorías</option>
+                        </select>
+
+                        <select id="filterEstado" class="select-filtro">
+                            <option value="">Todos los estados</option>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+
+                        <button id="btnBuscar" class="btn-buscar">
                             <i class="fas fa-search"></i>
-                            BUSCAR
+                            Buscar
                         </button>
-                    </form>
+
+                        <button id="btnLimpiar" class="btn-limpiar">
+                            <i class="fas fa-times"></i>
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Cargando productos...</p>
                 </div>
 
                 <!-- Sección de Tabla -->
@@ -84,152 +136,26 @@
                         <table class="tabla-productos">
                             <thead>
                                 <tr>
-                                    <th>CÓDIGO</th>
-                                    <th>NOMBRE</th>
-                                    <th>CATEGORÍA</th>
-                                    <th>TAMAÑO</th>
-                                    <th>PRECIO</th>
-                                    <th>STOCK</th>
-                                    <th>ESTADO</th>
-                                    <th>ACCIONES</th>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Fila 1 -->
-                                <tr>
-                                    <td>PRD001</td>
-                                    <td>Pizza Hawaiana</td>
-                                    <td>Pizzas</td>
-                                    <td>Grande</td>
-                                    <td>S/ 25.90</td>
-                                    <td>45</td>
-                                    <td><span class="badge-disponible">Disponible</span></td>
-                                    <td>
-                                        <div class="acciones-btn">
-                                            <button class="btn-icono btn-editar" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-icono btn-eliminar" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Fila 2 -->
-                                <tr>
-                                    <td>PRD002</td>
-                                    <td>Pizza Pepperoni</td>
-                                    <td>Pizzas</td>
-                                    <td>Familiar</td>
-                                    <td>S/ 32.90</td>
-                                    <td>38</td>
-                                    <td><span class="badge-disponible">Disponible</span></td>
-                                    <td>
-                                        <div class="acciones-btn">
-                                            <button class="btn-icono btn-editar" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-icono btn-eliminar" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Fila 3 -->
-                                <tr>
-                                    <td>PRD003</td>
-                                    <td>Pasta Alfredo</td>
-                                    <td>Pastas</td>
-                                    <td>Personal</td>
-                                    <td>S/ 18.50</td>
-                                    <td>25</td>
-                                    <td><span class="badge-disponible">Disponible</span></td>
-                                    <td>
-                                        <div class="acciones-btn">
-                                            <button class="btn-icono btn-editar" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-icono btn-eliminar" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Fila 4 -->
-                                <tr>
-                                    <td>PRD004</td>
-                                    <td>Ensalada César</td>
-                                    <td>Ensaladas</td>
-                                    <td>-</td>
-                                    <td>S/ 12.90</td>
-                                    <td>30</td>
-                                    <td><span class="badge-disponible">Disponible</span></td>
-                                    <td>
-                                        <div class="acciones-btn">
-                                            <button class="btn-icono btn-editar" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-icono btn-eliminar" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Fila 5 -->
-                                <tr>
-                                    <td>PRD005</td>
-                                    <td>Coca Cola</td>
-                                    <td>Bebidas</td>
-                                    <td>1.5L</td>
-                                    <td>S/ 6.50</td>
-                                    <td>8</td>
-                                    <td><span class="badge-stock-bajo">Stock Bajo</span></td>
-                                    <td>
-                                        <div class="acciones-btn">
-                                            <button class="btn-icono btn-editar" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-icono btn-eliminar" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Fila 6 -->
-                                <tr>
-                                    <td>PRD006</td>
-                                    <td>Tiramisú</td>
-                                    <td>Postres</td>
-                                    <td>-</td>
-                                    <td>S/ 9.90</td>
-                                    <td>0</td>
-                                    <td><span class="badge-agotado">Agotado</span></td>
-                                    <td>
-                                        <div class="acciones-btn">
-                                            <button class="btn-icono btn-editar" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-icono btn-eliminar" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="productosTableBody">
+                                <!-- Datos dinámicos aquí -->
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <!-- Botones de Acción -->
-                <div class="acciones-section">
-                    <button type="button" class="btn-accion btn-exportar" onclick="exportarProductos()">
-                        <i class="fas fa-file-export"></i>
-                        EXPORTAR
-                    </button>
-                    <button type="button" class="btn-accion btn-salir" onclick="volverModulo()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        SALIR
-                    </button>
+                    <!-- Mensaje sin datos -->
+                    <div id="noDataMessage" class="no-data-message" style="display: none;">
+                        <i class="fas fa-inbox"></i>
+                        <p>No hay productos disponibles</p>
+                    </div>
                 </div>
             </div>
         </div>

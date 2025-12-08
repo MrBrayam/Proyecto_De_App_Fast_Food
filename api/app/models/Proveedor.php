@@ -8,7 +8,7 @@ class Proveedor
      */
     public function registrar(array $data): array
     {
-        $db = Database::getInstance()->getConnection();
+        $db = Database::connection();
         
         $stmt = $db->prepare('CALL pa_registrar_proveedor(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         
@@ -48,7 +48,7 @@ class Proveedor
      */
     public function listar(): array
     {
-        $db = Database::getInstance()->getConnection();
+        $db = Database::connection();
         
         $stmt = $db->prepare('CALL pa_listar_proveedores()');
         $stmt->execute();
@@ -61,7 +61,7 @@ class Proveedor
      */
     public function buscarPorId(int $id): ?array
     {
-        $db = Database::getInstance()->getConnection();
+        $db = Database::connection();
         
         $stmt = $db->prepare('SELECT * FROM Proveedores WHERE CodProveedor = ?');
         $stmt->execute([$id]);
@@ -75,7 +75,7 @@ class Proveedor
      */
     public function buscarPorDocumento(string $numDoc): ?array
     {
-        $db = Database::getInstance()->getConnection();
+        $db = Database::connection();
         
         $stmt = $db->prepare('SELECT * FROM Proveedores WHERE NumDoc = ?');
         $stmt->execute([$numDoc]);

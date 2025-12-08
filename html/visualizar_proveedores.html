@@ -100,12 +100,16 @@
                             <i class="fas fa-times"></i>
                             Limpiar
                         </button>
+                        <button type="button" id="btnRegistrar" class="btn-registrar">
+                            <i class="fas fa-plus"></i>
+                            Nuevo Proveedor
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Loading Spinner -->
-            <div id="loadingSpinner" class="loading-spinner" style="display:none;">
+            <div class="loading-spinner" style="display:none;">
                 <div class="spinner"></div>
                 <p>Cargando proveedores...</p>
             </div>
@@ -118,21 +122,17 @@
                             <tr>
                                 <th>Código</th>
                                 <th>Razón Social</th>
-                                <th>Nombre Comercial</th>
                                 <th>Categoría</th>
                                 <th>Teléfono</th>
                                 <th>Email</th>
-                                <th>Persona Contacto</th>
-                                <th>Ciudad</th>
                                 <th>Estado</th>
-                                <th>Descuento</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="proveedoresTableBody">
+                        <tbody>
                         </tbody>
                     </table>
-                    <div id="noDataMessage" class="no-data-message">
+                    <div class="no-data-message">
                         <i class="fas fa-inbox"></i>
                         <p>No hay proveedores para mostrar</p>
                     </div>
@@ -144,7 +144,7 @@
     <!-- Scripts -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/ver_proveedores.js"></script>
+    <script src="../js/visualizar_proveedores.js"></script>
     <script src="../js/theme-manager.js"></script>
 
 </body>

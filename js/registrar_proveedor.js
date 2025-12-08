@@ -47,54 +47,130 @@ function validarDocumento() {
 
 // Validar teléfono
 function validarTelefono(telefono) {
-    return /^\d{9}$/.test(telefono);
+    // Limpiar espacios y caracteres no numéricos
+    const telefonoLimpio = telefono.trim().replace(/\s+/g, '');
+    const esValido = /^\d{9}$/.test(telefonoLimpio);
+    
+    // Debug
+    console.log('Validando teléfono:', {
+        original: telefono,
+        limpio: telefonoLimpio,
+        longitud: telefonoLimpio.length,
+        esValido: esValido
+    });
+    
+    return esValido;
 }
 
 // Validar email
 function validarEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
-// Registrar proveedor
-async function guardarProveedor(event) {
-    event.preventDefault();
+// Enviar formulario
+async function submitForm(e) {
+    e.preventDefault();
     
-    const formData = new FormData(event.target);
+    const form = e.target;
+    const tipoDocumento = document.getElementById('tipoDocumento').value;
+    const numeroDocumento = document.getElementById('numeroDocumento').value.trim();
+    const razonSocial = document.getElementById('razonSocial').value.trim();
+    const nombreComercial = document.getElementById('nombreComercial').value.trim() || '';
+    const categoria = document.getElementById('categoria').value;
+    const telefono = document.getElementById('telefono').value.trim().replace(/\s+/g, '');
+    const telefonoSecundario = document.getElementById('telefonoSecundario').value.trim().replace(/\s+/g, '') || '';
+    const email = document.getElementById('email').value.trim();
+    const sitioWeb = document.getElementById('sitioWeb').value.trim() || '';
+    const personaContacto = document.getElementById('personaContacto').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const ciudad = document.getElementById('ciudad').value.trim() || '';
+    const distrito = document.getElementById('distrito').value.trim() || '';
+    const tiempoEntrega = document.getElementById('tiempoEntrega').value || '0';
+    const montoMinimo = document.getElementById('montoMinimo').value || '0.00';
+    const descuento = document.getElementById('descuento').value || '0.00';
+    const observaciones = document.getElementById('observaciones').value.trim() || '';
+    const estado = document.getElementById('estado').value;
     
     // Validaciones
-    if (!validarDocumento()) return;
-    
-    const telefono = formData.get('telefono');
-    if (!validarTelefono(telefono)) {
-        alert('El teléfono debe tener 9 dígitos');
+    if (!tipoDocumento) {
+        alert('Debe seleccionar un tipo de documento');
         return;
     }
     
-    const email = formData.get('email');
+    if (!numeroDocumento) {
+        alert('Debe ingresar un número de documento');
+        return;
+    }
+    
+    if (!validarDocumento()) return;
+    
+    if (!razonSocial) {
+        alert('Debe ingresar la razón social');
+        return;
+    }
+    
+    if (!categoria) {
+        alert('Debe seleccionar una categoría');
+        return;
+    }
+    
+    if (!telefono) {
+        alert('Debe ingresar un teléfono');
+        return;
+    }
+    
+    if (!validarTelefono(telefono)) {
+        alert(`El teléfono debe tener exactamente 9 dígitos numéricos.\nTeléfono ingresado: "${telefono}" (${telefono.length} caracteres)`);
+        document.getElementById('telefono').focus();
+        return;
+    }
+    
+    if (!email) {
+        alert('Debe ingresar un email');
+        return;
+    }
+    
     if (!validarEmail(email)) {
         alert('El email no es válido');
         return;
     }
     
+    if (!personaContacto) {
+        alert('Debe ingresar el nombre de la persona contacto');
+        return;
+    }
+    
+    if (!direccion) {
+        alert('Debe ingresar una dirección');
+        return;
+    }
+    
+    // Deshabilitar botón
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+    }
+    
     const data = {
-        tipoDoc: formData.get('tipoDocumento'),
-        numDoc: formData.get('numeroDocumento'),
-        razonSocial: formData.get('razonSocial'),
-        nombreComercial: formData.get('nombreComercial') || null,
-        categoria: formData.get('categoria'),
+        tipoDoc: tipoDocumento,
+        numDoc: numeroDocumento,
+        razonSocial: razonSocial,
+        nombreComercial: nombreComercial || null,
+        categoria: categoria,
         telefono: telefono,
-        telefonoSecundario: formData.get('telefonoSecundario') || null,
+        telefonoSecundario: telefonoSecundario || null,
         email: email,
-        sitioWeb: formData.get('sitioWeb') || null,
-        personaContacto: formData.get('personaContacto'),
-        direccion: formData.get('direccion'),
-        ciudad: formData.get('ciudad') || null,
-        distrito: formData.get('distrito') || null,
-        tiempoEntrega: parseInt(formData.get('tiempoEntrega')) || 0,
-        montoMinimo: parseFloat(formData.get('montoMinimo')) || 0.00,
-        descuento: parseFloat(formData.get('descuento')) || 0.00,
-        nota: formData.get('observaciones') || null,
-        estado: formData.get('estado')
+        sitioWeb: sitioWeb || null,
+        personaContacto: personaContacto,
+        direccion: direccion,
+        ciudad: ciudad || null,
+        distrito: distrito || null,
+        tiempoEntrega: parseInt(tiempoEntrega) || 0,
+        montoMinimo: parseFloat(montoMinimo) || 0.00,
+        descuento: parseFloat(descuento) || 0.00,
+        nota: observaciones || null,
+        estado: estado
     };
     
     try {
@@ -109,14 +185,20 @@ async function guardarProveedor(event) {
         const result = await response.json();
         
         if (result.exito) {
-            alert(`Proveedor registrado exitosamente\nCódigo: ${result.codProveedor}\nRazón Social: ${result.razonSocial}`);
-            event.target.reset();
+            alert(`¡Éxito!\nProveedor: ${result.razonSocial}\nCódigo: ${result.codProveedor}`);
+            form.reset();
+            window.location.href = 'visualizar_proveedores.html';
         } else {
-            alert('Error: ' + result.mensaje);
+            alert('Error: ' + (result.mensaje || 'Error desconocido'));
         }
     } catch (error) {
         console.error('Error:', error);
         alert('Error al registrar el proveedor. Por favor, intente nuevamente.');
+    } finally {
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-save"></i> Registrar Proveedor';
+        }
     }
 }
 
@@ -124,6 +206,13 @@ async function guardarProveedor(event) {
 function limpiarFormulario() {
     if (confirm('¿Está seguro que desea limpiar el formulario?')) {
         document.getElementById('formProveedor').reset();
+    }
+}
+
+// Salir del módulo
+function salirModulo() {
+    if (confirm('¿Está seguro que desea salir? Se perderán los datos no guardados')) {
+        window.location.href = 'visualizar_proveedores.html';
     }
 }
 
@@ -143,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener para el formulario
     const form = document.getElementById('formProveedor');
     if (form) {
-        form.addEventListener('submit', guardarProveedor);
+        form.addEventListener('submit', submitForm);
     }
     
     // Event listener para el botón limpiar
@@ -152,10 +241,19 @@ document.addEventListener('DOMContentLoaded', function() {
         btnLimpiar.addEventListener('click', limpiarFormulario);
     }
     
+    // Event listener para el botón salir
+    const btnSalir = document.querySelector('.btn-salir');
+    if (btnSalir) {
+        btnSalir.addEventListener('click', salirModulo);
+    }
+    
     // Validación solo números para documento y teléfonos
     const numeroDocumento = document.getElementById('numeroDocumento');
     const telefono = document.getElementById('telefono');
     const telefonoSecundario = document.getElementById('telefonoSecundario');
+    const tiempoEntrega = document.getElementById('tiempoEntrega');
+    const montoMinimo = document.getElementById('montoMinimo');
+    const descuento = document.getElementById('descuento');
     
     if (numeroDocumento) {
         numeroDocumento.addEventListener('keypress', soloNumeros);
@@ -178,6 +276,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    if (tiempoEntrega) {
+        tiempoEntrega.addEventListener('keypress', soloNumeros);
+        tiempoEntrega.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+    
+    if (montoMinimo) {
+        montoMinimo.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9.]/g, '');
+        });
+    }
+    
+    if (descuento) {
+        descuento.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9.]/g, '');
+            if (parseFloat(this.value) > 100) {
+                this.value = '100';
+            }
+        });
+    }
+    
     // Validar longitud según tipo de documento
     const tipoDocumento = document.getElementById('tipoDocumento');
     if (tipoDocumento && numeroDocumento) {
@@ -196,4 +316,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-

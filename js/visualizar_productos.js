@@ -1,9 +1,18 @@
-// ===== VISUALIZAR PRODUCTOS - JAVASCRIPT BÁSICO =====
+// ===== VISUALIZAR PRODUCTOS - JAVASCRIPT =====
+
+let productosGlobal = [];
 
 // Inicializar al cargar el DOM
 document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
+    
+    cargarProductos();
+    
+    // Event listeners para filtros
+    document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
+    document.getElementById('btnLimpiar').addEventListener('click', limpiarFiltros);
+    document.getElementById('filterEstado').addEventListener('change', aplicarFiltros);
 });
 
 // Actualizar fecha y hora
@@ -30,21 +39,161 @@ function actualizarFechaHora() {
     }
 }
 
-// Función para buscar producto
-function buscarProducto() {
-    const busqueda = document.getElementById('busqueda').value;
-    const categoria = document.getElementById('categoriaFiltro').value;
-    console.log('Buscando:', busqueda, 'Categoría:', categoria);
-    // Aquí iría la lógica de búsqueda
+// Cargar productos desde API
+async function cargarProductos() {
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const tableBody = document.getElementById('productosTableBody');
+    const noDataMessage = document.getElementById('noDataMessage');
+    
+    loadingSpinner.style.display = 'flex';
+    tableBody.innerHTML = '';
+    noDataMessage.style.display = 'none';
+    
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/productos/listar');
+        const data = await response.json();
+        
+        if (data.exito && data.productos) {
+            productosGlobal = data.productos;
+            mostrarProductos(productosGlobal);
+            actualizarEstadisticas(productosGlobal);
+            llenarFiltrosCategorias(productosGlobal);
+        } else {
+            mostrarMensajeVacio();
+        }
+    } catch (error) {
+        console.error('Error al cargar productos:', error);
+        mostrarMensajeVacio();
+    } finally {
+        loadingSpinner.style.display = 'none';
+    }
 }
 
-// Función para exportar productos
-function exportarProductos() {
-    alert('Exportando productos...');
-    // Aquí iría la lógica de exportación
+// Mostrar productos en tabla
+function mostrarProductos(productos) {
+    const tableBody = document.getElementById('productosTableBody');
+    const noDataMessage = document.getElementById('noDataMessage');
+    
+    if (!productos || productos.length === 0) {
+        mostrarMensajeVacio();
+        return;
+    }
+    
+    tableBody.innerHTML = '';
+    noDataMessage.style.display = 'none';
+    
+    productos.forEach(p => {
+        const fila = document.createElement('tr');
+        const codigo = p.CodProducto || p.codProducto || '';
+        const nombre = p.Nombre || p.nombre || '';
+        const categoria = p.Categoria || p.categoria || '';
+        const precio = p.Precio || p.precio || 0;
+        const stock = p.Stock || p.stock || 0;
+        const estado = p.Estado || p.estado || 'Inactivo';
+        
+        const estilo = estado === 'Activo' || estado === 'Disponible' 
+            ? 'badge-activo' 
+            : estado === 'Inactivo' 
+            ? 'badge-inactivo'
+            : 'badge-agotado';
+        
+        fila.innerHTML = `
+            <td>${codigo}</td>
+            <td>${nombre}</td>
+            <td>${categoria}</td>
+            <td>S/ ${parseFloat(precio).toFixed(2)}</td>
+            <td>${stock}</td>
+            <td><span class="badge ${estilo}">${estado}</span></td>
+            <td>
+                <button class="btn-icon btn-edit" title="Editar">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon btn-delete" title="Eliminar">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        tableBody.appendChild(fila);
+    });
 }
 
-// Función para volver
-function volverModulo() {
-    window.history.back();
+// Actualizar estadísticas
+function actualizarEstadisticas(productos) {
+    if (!productos) return;
+    
+    const total = productos.length;
+    const activos = productos.filter(p => 
+        (p.Estado || p.estado) === 'Activo' || (p.Estado || p.estado) === 'Disponible'
+    ).length;
+    const inactivos = total - activos;
+    const stockBajo = productos.filter(p => {
+        const stock = p.Stock || p.stock || 0;
+        return stock > 0 && stock <= 10;
+    }).length;
+    
+    document.getElementById('totalProductos').textContent = total;
+    document.getElementById('productosActivos').textContent = activos;
+    document.getElementById('productosInactivos').textContent = inactivos;
+    document.getElementById('productosStockBajo').textContent = stockBajo;
+}
+
+// Llenar filtros de categorías
+function llenarFiltrosCategorias(productos) {
+    if (!productos) return;
+    
+    const select = document.getElementById('filterCategoria');
+    const categorias = [...new Set(productos.map(p => p.Categoria || p.categoria))];
+    
+    // Limpiar opciones excepto la primera
+    while (select.options.length > 1) {
+        select.remove(1);
+    }
+    
+    categorias.forEach(cat => {
+        if (cat) {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            select.appendChild(option);
+        }
+    });
+}
+
+// Aplicar filtros
+function aplicarFiltros() {
+    if (!productosGlobal || productosGlobal.length === 0) return;
+    
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    const categoria = document.getElementById('filterCategoria').value;
+    const estado = document.getElementById('filterEstado').value;
+    
+    const productosFiltrados = productosGlobal.filter(p => {
+        const codigo = (p.CodProducto || p.codProducto || '').toString().toLowerCase();
+        const nombre = (p.Nombre || p.nombre || '').toLowerCase();
+        const cat = p.Categoria || p.categoria || '';
+        const est = p.Estado || p.estado || '';
+        
+        const cumpleTexto = codigo.includes(searchText) || nombre.includes(searchText);
+        const cumpleCategoria = !categoria || cat === categoria;
+        const cumpleEstado = !estado || est === estado;
+        
+        return cumpleTexto && cumpleCategoria && cumpleEstado;
+    });
+    
+    mostrarProductos(productosFiltrados);
+}
+
+// Limpiar filtros
+function limpiarFiltros() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('filterCategoria').value = '';
+    document.getElementById('filterEstado').value = '';
+    mostrarProductos(productosGlobal);
+}
+
+// Mostrar mensaje vacío
+function mostrarMensajeVacio() {
+    document.getElementById('productosTableBody').innerHTML = '';
+    document.getElementById('noDataMessage').style.display = 'flex';
 }
