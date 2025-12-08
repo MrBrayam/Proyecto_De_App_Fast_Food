@@ -1293,3 +1293,111 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR COMPRA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_compra;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_compra(
+    IN p_codProveedor INT,
+    IN p_ruc VARCHAR(20),
+    IN p_tipoComprobante ENUM('factura', 'boleta'),
+    IN p_numeroComprobante VARCHAR(50),
+    IN p_razonSocial VARCHAR(200),
+    IN p_telefono VARCHAR(20),
+    IN p_direccion TEXT,
+    IN p_subTotal DECIMAL(12,2),
+    IN p_igv DECIMAL(12,2),
+    IN p_total DECIMAL(12,2),
+    IN p_fechaCompra DATE,
+    IN p_estado ENUM('pendiente', 'recibido', 'cancelado'),
+    IN p_idUsuario INT,
+    IN p_observaciones TEXT
+)
+BEGIN
+    DECLARE v_idCompra INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT JSON_OBJECT('error', 'Error al registrar compra') AS resultado;
+    END;
+
+    START TRANSACTION;
+
+    -- Insertar la nueva compra
+    INSERT INTO Compras (
+        CodProveedor,
+        RUC,
+        TipoComprobante,
+        NumeroComprobante,
+        RazonSocial,
+        Telefono,
+        Direccion,
+        SubTotal,
+        IGV,
+        Total,
+        FechaCompra,
+        Estado,
+        IdUsuario,
+        Observaciones
+    ) VALUES (
+        p_codProveedor,
+        p_ruc,
+        p_tipoComprobante,
+        p_numeroComprobante,
+        p_razonSocial,
+        p_telefono,
+        p_direccion,
+        p_subTotal,
+        p_igv,
+        p_total,
+        p_fechaCompra,
+        p_estado,
+        p_idUsuario,
+        p_observaciones
+    );
+
+    SET v_idCompra = LAST_INSERT_ID();
+
+    COMMIT;
+
+    -- Retornar el ID de la compra registrada
+    SELECT JSON_OBJECT(
+        'IdCompra', v_idCompra,
+        'NumeroComprobante', p_numeroComprobante,
+        'RazonSocial', p_razonSocial,
+        'Total', p_total,
+        'mensaje', 'Compra registrada exitosamente'
+    ) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR COMPRAS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_compras;
+DELIMITER //
+CREATE PROCEDURE pa_listar_compras()
+BEGIN
+    SELECT
+        IdCompra,
+        CodProveedor,
+        RUC,
+        TipoComprobante,
+        NumeroComprobante,
+        RazonSocial,
+        Telefono,
+        Direccion,
+        SubTotal,
+        IGV,
+        Total,
+        DATE_FORMAT(FechaCompra, '%Y-%m-%d') as FechaCompra,
+        Estado,
+        IdUsuario,
+        Observaciones,
+        DATE_FORMAT(FechaCreacion, '%Y-%m-%d %H:%i:%s') as FechaCreacion
+    FROM Compras
+    ORDER BY FechaCompra DESC, IdCompra DESC;
+END //
+DELIMITER ;

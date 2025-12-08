@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
     <link rel="stylesheet" href="../css/modo-claro/visualizar_compras.css" id="modo-claro-page-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+</head>
 <body>
 
     <!-- Main Content -->
@@ -24,7 +24,10 @@
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h1 class="page-title">Visualizar Compra</h1>
+                <h1 class="page-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    Visualizar Compras
+                </h1>
             </div>
             <div class="top-bar-right">
                 <div class="theme-toggle">
@@ -44,84 +47,76 @@
 
         <!-- Contenedor Principal -->
         <div class="compras-visualizar-container">
-            <!-- Contenido -->
-            <div class="compras-contenido">
-                <!-- Sección de Búsqueda -->
-                <div class="busqueda-section">
-                    <form class="busqueda-form" onsubmit="return false;">
-                        <div class="campo-busqueda">
-                            <input 
-                                type="text" 
-                                id="busqueda" 
-                                class="input-busqueda" 
-                                placeholder="Ingrese término de búsqueda..."
-                            >
-                        </div>
-                        
-                        <button type="button" class="btn-buscar" onclick="buscarCompra()">
-                            <i class="fas fa-search"></i>
-                            BUSCAR
-                        </button>
-                        
-                        <button type="button" class="btn-detalle" onclick="verDetalle()" id="btnDetalle" disabled>
-                            <i class="fas fa-info-circle"></i>
-                            DETALLE
-                        </button>
-                    </form>
+            
+            <!-- Sección de Búsqueda y Filtros -->
+            <div class="busqueda-section">
+                <div class="busqueda-form">
+                    <div class="campo-busqueda">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            id="busqueda" 
+                            class="input-busqueda" 
+                            placeholder="Buscar por ID, fecha, proveedor o monto..."
+                        >
+                    </div>
+                    
+                    <button type="button" class="btn-buscar" onclick="buscarCompra()">
+                        <i class="fas fa-search"></i>
+                        BUSCAR
+                    </button>
+                    
+                    <button type="button" class="btn-detalle" onclick="verDetalle()" id="btnDetalle" disabled>
+                        <i class="fas fa-info-circle"></i>
+                        DETALLE
+                    </button>
+                    
+                    <button type="button" class="btn-registrar" onclick="window.location.href='registrar_compras.html'">
+                        <i class="fas fa-plus"></i>
+                        NUEVA COMPRA
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección de Tabla -->
+            <div class="tabla-compras-section">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando compras...</p>
                 </div>
 
-                <!-- Sección de Tabla -->
-                <div class="tabla-compras-section">
-                    <div class="tabla-compras-wrapper">
-                        <table class="tabla-compras" id="tablaCompras">
-                            <thead>
-                                <tr>
-                                    <th>CODIGO</th>
-                                    <th>FECHA</th>
-                                    <th>PROVEEDOR</th>
-                                    <th>TOTAL</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr onclick="seleccionarFila(this)">
-                                    <td>----</td>
-                                    <td>----</td>
-                                    <td>----</td>
-                                    <td>----</td>
-                                </tr>
-                                <tr onclick="seleccionarFila(this)">
-                                    <td>..</td>
-                                    <td>.....</td>
-                                    <td>......</td>
-                                    <td>.....</td>
-                                </tr>
-                                <tr onclick="seleccionarFila(this)">
-                                    <td>----</td>
-                                    <td>.....</td>
-                                    <td>..</td>
-                                    <td>.....</td>
-                                </tr>
-                                <tr onclick="seleccionarFila(this)">
-                                    <td>----</td>
-                                    <td>----</td>
-                                    <td>.....</td>
-                                    <td>.....</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="tabla-compras-wrapper">
+                    <table class="tabla-compras" id="tablaCompras">
+                        <thead>
+                            <tr>
+                                <th>CÓDIGO</th>
+                                <th>FECHA</th>
+                                <th>PROVEEDOR</th>
+                                <th>TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="mensaje-vacio">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Cargando...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <!-- Botones de Acción -->
-                    <div class="acciones-compras">
-                        <button class="btn-exportar-compras" onclick="exportarCompras()">
-                            <i class="fas fa-file-excel"></i>
-                            Exportar
-                        </button>
-                        <button class="btn-salir-compras" onclick="salirModulo()">
-                            <i class="fas fa-times-circle"></i>
-                            Salir
-                        </button>
-                    </div>
+                <!-- Botones de Acción -->
+                <div class="acciones-compras">
+                    <button class="btn-exportar-compras" onclick="exportarCompras()">
+                        <i class="fas fa-file-excel"></i>
+                        Exportar
+                    </button>
+                    <button class="btn-salir-compras" onclick="salirModulo()">
+                        <i class="fas fa-times-circle"></i>
+                        Salir
+                    </button>
                 </div>
             </div>
         </div>
@@ -130,11 +125,11 @@
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/visualizar_compras.js"></script>    <script src="../js/theme-manager.js"></script>
+    <script src="../js/visualizar_compras.js"></script>
+    <script src="../js/theme-manager.js"></script>
 
 </body>
 </html>
-    <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
 
 
 

@@ -395,3 +395,245 @@
         font-size: 14px;
     }
 }
+
+/* ============================================
+   NUEVOS ESTILOS PARA GESTIÓN DE LÍNEAS
+   ============================================ */
+
+/* Sección de encabezado con botón */
+.seccion-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.seccion-titulo {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffc857;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Botón agregar línea */
+.btn-agregar-linea {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.btn-agregar-linea:hover {
+    background: linear-gradient(135deg, #34d399 0%, #6ee7b7 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* Formulario para agregar línea */
+.formulario-linea {
+    background: rgba(44, 47, 62, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 87, 51, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.formulario-linea .form-row-proveedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.formulario-linea .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.formulario-linea .form-row-proveedor:last-child {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+/* Botones de acción en formulario */
+.btn-agregar,
+.btn-cancelar {
+    padding: 0.875rem 2rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.btn-agregar {
+    background: linear-gradient(135deg, #4a90e2 0%, #5ba3f5 100%) !important;
+    color: white !important;
+}
+
+.btn-agregar:hover {
+    background: linear-gradient(135deg, #5ba3f5 0%, #6cb4ff 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4) !important;
+}
+
+.btn-cancelar {
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important;
+    color: white !important;
+}
+
+.btn-cancelar:hover {
+    background: linear-gradient(135deg, #f87171 0%, #fca5a5 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Botón eliminar en tabla */
+.btn-eliminar {
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-eliminar:hover {
+    background: linear-gradient(135deg, #f87171 0%, #fca5a5 100%);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Resumen de totales */
+.resumen-totales {
+    background: rgba(44, 47, 62, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 200, 87, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(26, 29, 46, 0.6);
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+.total-item label {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.total-item span {
+    font-weight: 700;
+    color: #ffc857;
+    font-size: 1.2rem;
+}
+
+.total-final {
+    background: linear-gradient(135deg, rgba(255, 87, 51, 0.1) 0%, rgba(255, 200, 87, 0.1) 100%);
+    border: 2px solid #ffc857;
+    padding: 1.5rem;
+}
+
+.total-final span {
+    color: #ffc857;
+    font-size: 1.5rem;
+}
+
+/* Tabla mejorada */
+.tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(26, 29, 46, 0.6);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabla-productos thead {
+    background: linear-gradient(135deg, #ff5733 0%, #ff7851 100%);
+}
+
+.tabla-productos thead th {
+    padding: 1rem;
+    text-align: left;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tabla-productos tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.tabla-productos tbody tr:hover {
+    background: rgba(255, 87, 51, 0.1);
+}
+
+.tabla-productos tbody td {
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .seccion-encabezado {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-agregar-linea {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .formulario-linea .form-row-proveedor:last-child {
+        flex-direction: column;
+    }
+    
+    .btn-agregar,
+    .btn-cancelar {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .resumen-totales {
+        flex-direction: column;
+    }
+}

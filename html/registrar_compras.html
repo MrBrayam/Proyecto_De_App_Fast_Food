@@ -100,59 +100,97 @@
 
                 <!-- Tabla de Productos -->
                 <div class="seccion-productos">
+                    <div class="seccion-encabezado">
+                        <h2 class="seccion-titulo">DETALLE DE COMPRA:</h2>
+                        <button type="button" class="btn-agregar-linea" id="btnAgregarLinea" onclick="agregarLineaCompra()">
+                            <i class="fas fa-plus"></i>
+                            Agregar Producto
+                        </button>
+                    </div>
+                    
+                    <!-- Formulario para agregar línea -->
+                    <div class="formulario-linea" id="formularioLinea" style="display: none;">
+                        <div class="form-row-proveedor">
+                            <div class="form-group">
+                                <label for="codigo">CÓDIGO PRODUCTO</label>
+                                <input type="text" id="codigo" placeholder="Código del producto">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="descripcion">DESCRIPCIÓN</label>
+                                <input type="text" id="descripcion" placeholder="Descripción del producto">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row-proveedor">
+                            <div class="form-group">
+                                <label for="empaque">EMPAQUE</label>
+                                <input type="text" id="empaque" placeholder="Tipo de empaque">
+                            </div>
+                            <div class="form-group">
+                                <label for="cantidad">CANTIDAD</label>
+                                <input type="number" id="cantidad" placeholder="0" min="0.01" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="precioUnitario">PRECIO UNITARIO</label>
+                                <input type="number" id="precioUnitario" placeholder="0.00" min="0" step="0.01">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row-proveedor">
+                            <button type="button" class="btn-accion btn-agregar" onclick="guardarLineaCompra()">
+                                <i class="fas fa-check"></i>
+                                Agregar
+                            </button>
+                            <button type="button" class="btn-accion btn-cancelar" onclick="cancelarLineaCompra()">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="tabla-container">
                         <table class="tabla-productos">
                             <thead>
                                 <tr>
                                     <th>NRO</th>
-                                    <th>CODIGO</th>
-                                    <th>DESCRIPCION</th>
+                                    <th>CÓDIGO</th>
+                                    <th>DESCRIPCIÓN</th>
                                     <th>EMPAQUE</th>
                                     <th>CANTIDAD</th>
                                     <th>PRECIO UNITARIO</th>
                                     <th>TOTAL</th>
+                                    <th>ACCIÓN</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaProductosBody">
-                                <tr>
-                                    <td>1</td>
-                                    <td>12345678</td>
-                                    <td>Leche</td>
-                                    <td>Caja</td>
-                                    <td>2</td>
-                                    <td>S/55</td>
-                                    <td>S/110</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>10203040</td>
-                                    <td>Harina</td>
-                                    <td>Unidad</td>
-                                    <td>10</td>
-                                    <td>S/7</td>
-                                    <td>S/70</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>87654321</td>
-                                    <td>Tomate</td>
-                                    <td>Caja</td>
-                                    <td>3</td>
-                                    <td>S/24</td>
-                                    <td>S/72</td>
-                                </tr>
                             </tbody>
                         </table>
+                    </div>
+                    
+                    <!-- Resumen de totales -->
+                    <div class="resumen-totales">
+                        <div class="total-item">
+                            <label>Subtotal:</label>
+                            <span id="subtotal">S/ 0.00</span>
+                        </div>
+                        <div class="total-item">
+                            <label>IGV (18%):</label>
+                            <span id="igv">S/ 0.00</span>
+                        </div>
+                        <div class="total-item total-final">
+                            <label>TOTAL:</label>
+                            <span id="total">S/ 0.00</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Botones de Acción -->
                 <div class="acciones-section">
-                    <button type="button" class="btn-accion btn-registrar">
+                    <button type="button" class="btn-accion btn-registrar" onclick="registrarCompra()">
                         <i class="fas fa-save"></i>
                         Registrar
                     </button>
-                    <button type="button" class="btn-accion btn-salir" id="btnSalir">
+                    <button type="button" class="btn-accion btn-salir" id="btnSalir" onclick="salirModulo()">
                         <i class="fas fa-sign-out-alt"></i>
                         Salir
                     </button>
@@ -165,7 +203,6 @@
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/registrar_compras.js"></script>
-    <script src="../funcionalidades/registrar_compras_funcionalidades.js"></script>
     <script src="../js/theme-manager.js"></script>
 </body>
 </html>
