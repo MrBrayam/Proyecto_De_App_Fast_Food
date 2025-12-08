@@ -709,81 +709,6 @@ CREATE INDEX idx_proveedores_documento ON Proveedores(NumDoc);
 CREATE INDEX idx_promociones_fechas ON Promociones(FechaInicio, FechaFin);
 
 -- ============================================
--- PA: REGISTRAR VENTA CON DETALLES
--- ============================================
-DROP PROCEDURE IF EXISTS pa_registrar_venta;
-DELIMITER //
-CREATE PROCEDURE pa_registrar_venta(
-    IN p_id_cliente INT,
-    IN p_tipo_pago VARCHAR(20),
-    IN p_subtotal DECIMAL(12,2),
-    IN p_descuento DECIMAL(12,2),
-    IN p_total DECIMAL(12,2),
-    IN p_id_usuario INT,
-    IN p_cod_caja VARCHAR(50),
-    IN p_observaciones TEXT,
-    IN p_detalles JSON
-)
-BEGIN
-    DECLARE v_cod_venta INT;
-
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    START TRANSACTION;
-
-    INSERT INTO Ventas (IdCliente, TipoPago, SubTotal, Descuento, Total, IdUsuario, CodCaja, Observaciones, Estado)
-    VALUES (p_id_cliente, p_tipo_pago, p_subtotal, p_descuento, p_total, p_id_usuario, p_cod_caja, p_observaciones, 'pagado');
-
-    SET v_cod_venta = LAST_INSERT_ID();
-
-    INSERT INTO DetalleVenta (CodVenta, CodProducto, Linea, Descripcion, Cantidad, Precio, Subtotal, IdProducto)
-    SELECT
-        v_cod_venta,
-        jt.codProducto,
-        jt.linea,
-        jt.descripcion,
-        jt.cantidad,
-        jt.precio,
-        jt.subtotal,
-        jt.idProducto
-    FROM JSON_TABLE(
-        p_detalles,
-        '$[*]' COLUMNS (
-            codProducto VARCHAR(50) PATH '$.codProducto',
-            linea VARCHAR(100) PATH '$.linea',
-            descripcion VARCHAR(500) PATH '$.descripcion',
-            cantidad INT PATH '$.cantidad',
-            precio DECIMAL(10,2) PATH '$.precio',
-            subtotal DECIMAL(12,2) PATH '$.subtotal',
-            idProducto INT PATH '$.idProducto'
-        )
-    ) AS jt;
-
-    UPDATE Productos p
-    JOIN (
-        SELECT jt2.idProducto, jt2.cantidad
-        FROM JSON_TABLE(
-            p_detalles,
-            '$[*]' COLUMNS (
-                idProducto INT PATH '$.idProducto',
-                cantidad INT PATH '$.cantidad'
-            )
-        ) AS jt2
-        WHERE jt2.idProducto IS NOT NULL
-    ) d ON p.IdProducto = d.idProducto
-    SET p.Stock = GREATEST(0, p.Stock - d.cantidad);
-
-    COMMIT;
-
-    SELECT v_cod_venta AS CodVenta;
-END //
-DELIMITER ;
-
--- ============================================
 -- PA: REGISTRAR PERFIL
 -- ============================================
 DROP PROCEDURE IF EXISTS pa_registrar_perfil;
@@ -1054,5 +979,99 @@ BEGIN
     FROM Usuarios u
     INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
     ORDER BY u.IdUsuario DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR CLIENTES
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_clientes;
+DELIMITER //
+CREATE PROCEDURE pa_listar_clientes()
+BEGIN
+    SELECT 
+        IdCliente,
+        TipoDocumento,
+        NumDocumento,
+        Nombres,
+        Apellidos,
+        NombreCompleto,
+        Telefono,
+        Email,
+        Direccion,
+        MontoGastado,
+        Estado,
+        FechaRegistro,
+        FechaActualizacion
+    FROM Clientes
+    WHERE Estado = 'activo'
+    ORDER BY IdCliente DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR CLIENTE
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_cliente;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_cliente(
+    IN p_tipoDocumento ENUM('DNI', 'CE', 'RUC', 'PASAPORTE'),
+    IN p_numDocumento VARCHAR(20),
+    IN p_nombres VARCHAR(100),
+    IN p_apellidos VARCHAR(100),
+    IN p_telefono VARCHAR(20),
+    IN p_email VARCHAR(100),
+    IN p_direccion TEXT
+)
+BEGIN
+    DECLARE v_idCliente INT;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT JSON_OBJECT('error', 'Error al registrar cliente') AS resultado;
+    END;
+    
+    START TRANSACTION;
+    
+    -- Validar que el documento no exista
+    IF EXISTS (SELECT 1 FROM Clientes WHERE NumDocumento = p_numDocumento) THEN
+        SELECT JSON_OBJECT('error', 'El número de documento ya está registrado') AS resultado;
+        ROLLBACK;
+    ELSE
+        -- Insertar el nuevo cliente
+        INSERT INTO Clientes (
+            TipoDocumento,
+            NumDocumento,
+            Nombres,
+            Apellidos,
+            Telefono,
+            Email,
+            Direccion,
+            MontoGastado,
+            Estado
+        ) VALUES (
+            p_tipoDocumento,
+            p_numDocumento,
+            p_nombres,
+            p_apellidos,
+            p_telefono,
+            NULLIF(p_email, ''),
+            p_direccion,
+            0.00,
+            'activo'
+        );
+        
+        SET v_idCliente = LAST_INSERT_ID();
+        
+        COMMIT;
+        
+        -- Retornar el ID del cliente registrado
+        SELECT JSON_OBJECT(
+            'IdCliente', v_idCliente,
+            'NombreCompleto', CONCAT(p_nombres, ' ', p_apellidos),
+            'mensaje', 'Cliente registrado exitosamente'
+        ) AS resultado;
+    END IF;
 END //
 DELIMITER ;

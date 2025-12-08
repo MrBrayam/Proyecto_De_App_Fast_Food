@@ -2,19 +2,7 @@
 
 // Variables globales
 let ordenAscendente = true;
-let datosOriginales = [];
-
-// Datos de clientes (simulando base de datos)
-const clientesData = [
-    { id: 1, dni: '72345678', nombres: 'María', apellidos: 'González López', email: 'maria.gonzalez@email.com', telefono: '987654321', monto: 450.00 },
-    { id: 2, dni: '85647392', nombres: 'Carlos', apellidos: 'Ramírez Torres', email: 'carlos.ramirez@email.com', telefono: '912345678', monto: 1250.50 },
-    { id: 3, dni: '91234567', nombres: 'Ana', apellidos: 'Torres Mendoza', email: 'ana.torres@email.com', telefono: '923456789', monto: 85.00 },
-    { id: 4, dni: '78912345', nombres: 'Luis', apellidos: 'Mendoza Silva', email: 'luis.mendoza@email.com', telefono: '934567890', monto: 720.75 },
-    { id: 5, dni: '65498732', nombres: 'Patricia', apellidos: 'Flores Castro', email: 'patricia.flores@email.com', telefono: '945678901', monto: 320.25 },
-    { id: 6, dni: '58473619', nombres: 'Roberto', apellidos: 'Vásquez Pérez', email: 'roberto.vasquez@email.com', telefono: '956789012', monto: 95.00 },
-    { id: 7, dni: '47382951', nombres: 'Carmen', apellidos: 'Jiménez Ruiz', email: 'carmen.jimenez@email.com', telefono: '967890123', monto: 1480.00 },
-    { id: 8, dni: '36271849', nombres: 'José', apellidos: 'Herrera Díaz', email: 'jose.herrera@email.com', telefono: '978901234', monto: 630.90 }
-];
+let clientes = [];
 
 // Actualizar fecha y hora
 function actualizarFechaHora() {
@@ -40,46 +28,69 @@ function actualizarFechaHora() {
     }
 }
 
-
-// Función para renderizar la tabla
-function renderizarTabla(datos = clientesData) {
-    const tbody = document.getElementById('tbodyClientes');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    
-    datos.forEach((cliente, index) => {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${cliente.dni}</td>
-            <td>${cliente.nombres}</td>
-            <td>${cliente.apellidos}</td>
-            <td>${cliente.email}</td>
-            <td>${cliente.telefono}</td>
-            <td>S/. ${cliente.monto.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-        `;
-        tbody.appendChild(fila);
-    });
+// Cargar clientes desde la API
+async function cargarClientes() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/clientes/listar');
+        const data = await response.json();
+        
+        if (data.exito) {
+            clientes = data.clientes || [];
+            mostrarClientes(clientes);
+        } else {
+            console.error('Error al cargar clientes:', data.mensaje);
+            clientes = [];
+            mostrarClientes(clientes);
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        clientes = [];
+        mostrarClientes(clientes);
+    }
 }
 
-// Función para filtrar por texto
+// Mostrar clientes en la tabla
+function mostrarClientes(data) {
+    const tbody = document.getElementById('tbodyClientes');
+    
+    if (!tbody) return;
+    
+    if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No hay clientes registrados</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = data.map((cliente, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${cliente.numDocumento}</td>
+            <td>${cliente.nombres}</td>
+            <td>${cliente.apellidos}</td>
+            <td>${cliente.email || '-'}</td>
+            <td>${cliente.telefono}</td>
+            <td>${cliente.direccion || '-'}</td>
+            <td>S/. ${cliente.montoGastado.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        </tr>
+    `).join('');
+}
+
+// Función para filtrar clientes
 function filtrarClientes() {
     const textoBusqueda = document.getElementById('buscarCliente').value.toLowerCase().trim();
     const filtroMonto = document.getElementById('filtroMontoGastado').value;
     
-    let datosFiltrados = [...clientesData];
+    let datosFiltrados = [...clientes];
     
     // Filtrar por texto (busca en todos los campos)
     if (textoBusqueda) {
         datosFiltrados = datosFiltrados.filter(cliente => {
             return (
-                cliente.dni.toLowerCase().includes(textoBusqueda) ||
+                cliente.numDocumento.toLowerCase().includes(textoBusqueda) ||
                 cliente.nombres.toLowerCase().includes(textoBusqueda) ||
                 cliente.apellidos.toLowerCase().includes(textoBusqueda) ||
-                cliente.email.toLowerCase().includes(textoBusqueda) ||
+                (cliente.email && cliente.email.toLowerCase().includes(textoBusqueda)) ||
                 cliente.telefono.includes(textoBusqueda) ||
-                cliente.monto.toString().includes(textoBusqueda)
+                cliente.montoGastado.toString().includes(textoBusqueda)
             );
         });
     }
@@ -89,53 +100,31 @@ function filtrarClientes() {
         datosFiltrados = datosFiltrados.filter(cliente => {
             switch (filtroMonto) {
                 case 'bajo':
-                    return cliente.monto >= 0 && cliente.monto <= 100;
+                    return cliente.montoGastado >= 0 && cliente.montoGastado <= 100;
                 case 'medio':
-                    return cliente.monto > 100 && cliente.monto <= 500;
+                    return cliente.montoGastado > 100 && cliente.montoGastado <= 500;
                 case 'alto':
-                    return cliente.monto > 500;
+                    return cliente.montoGastado > 500;
                 default:
                     return true;
             }
         });
     }
     
-    renderizarTabla(datosFiltrados);
+    mostrarClientes(datosFiltrados);
 }
 
 // Función para ordenar por monto
 function ordenarPorMonto() {
-    const tbody = document.getElementById('tbodyClientes');
-    const filas = Array.from(tbody.querySelectorAll('tr'));
     const icono = document.getElementById('sortIcon');
     
-    // Extraer datos y ordenar
-    const datosConIndice = filas.map(fila => {
-        const celdas = fila.querySelectorAll('td');
-        const montoTexto = celdas[6].textContent.replace('S/.', '').replace(/,/g, '').trim();
-        const monto = parseFloat(montoTexto);
-        return {
-            fila: fila,
-            monto: monto
-        };
-    });
-    
-    // Ordenar
-    datosConIndice.sort((a, b) => {
+    // Crear copia y ordenar
+    const datosOrdenados = [...clientes].sort((a, b) => {
         if (ordenAscendente) {
-            return a.monto - b.monto;
+            return a.montoGastado - b.montoGastado;
         } else {
-            return b.monto - a.monto;
+            return b.montoGastado - a.montoGastado;
         }
-    });
-    
-    // Actualizar la tabla
-    tbody.innerHTML = '';
-    datosConIndice.forEach((item, index) => {
-        // Actualizar el número de fila
-        const celdas = item.fila.querySelectorAll('td');
-        celdas[0].textContent = index + 1;
-        tbody.appendChild(item.fila);
     });
     
     // Actualizar icono
@@ -147,12 +136,9 @@ function ordenarPorMonto() {
     
     // Cambiar el orden para la próxima vez
     ordenAscendente = !ordenAscendente;
-}
-
-// Función para cargar clientes
-function cargarClientes() {
-    datosOriginales = [...clientesData];
-    renderizarTabla();
+    
+    // Mostrar datos ordenados
+    mostrarClientes(datosOrdenados);
 }
 
 // Inicializar al cargar

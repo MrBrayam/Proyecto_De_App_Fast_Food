@@ -39,6 +39,9 @@ Thumbs.db
 .env.*.local
 config.local.php
 
+# Configuración de la API con credenciales sensibles
+api/app/config/config.php
+
 # Caché
 cache/
 __pycache__/

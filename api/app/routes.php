@@ -3,6 +3,7 @@ require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/VentaController.php';
 require_once __DIR__ . '/controllers/PerfilController.php';
 require_once __DIR__ . '/controllers/UsuarioController.php';
+require_once __DIR__ . '/controllers/ClienteController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
@@ -11,4 +12,7 @@ return [
     'perfiles/listar' => [PerfilController::class, 'listar'],
     'usuarios/registrar' => [UsuarioController::class, 'registrar'],
     'usuarios/listar' => [UsuarioController::class, 'listar'],
+    'clientes/registrar' => [ClienteController::class, 'registrar'],
+    'clientes/listar' => [ClienteController::class, 'listar'],
+    'clientes/buscar' => [ClienteController::class, 'buscar'],
 ];
