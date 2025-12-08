@@ -7,6 +7,9 @@ class Compra {
         try {
             $db = Database::connection();
             
+            // Log para debug
+            error_log("Datos recibidos en Compra::registrar: " . json_encode($data));
+            
             $sql = "CALL pa_registrar_compra(
                 :codProveedor, :ruc, :tipoComprobante, :numeroComprobante,
                 :razonSocial, :telefono, :direccion, :subTotal,
@@ -34,6 +37,33 @@ class Compra {
             
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             
+            // Cerrar el cursor para permitir nuevas consultas
+            $stmt->closeCursor();
+            
+            // El PA devuelve un JSON en el campo 'resultado'
+            if (isset($result['resultado'])) {
+                $resultadoJson = json_decode($result['resultado'], true);
+                $idCompra = $resultadoJson['IdCompra'] ?? null;
+                
+                error_log("IdCompra obtenido: " . $idCompra);
+                error_log("Lineas de compra: " . json_encode($data['lineasCompra'] ?? []));
+                
+                // Si hay detalles de compra, insertarlos
+                if ($idCompra && !empty($data['lineasCompra']) && is_array($data['lineasCompra'])) {
+                    error_log("Registrando " . count($data['lineasCompra']) . " líneas de detalle");
+                    $detalleResult = self::registrarDetalles($db, $idCompra, $data['lineasCompra']);
+                    error_log("Resultado de registrar detalles: " . ($detalleResult ? 'true' : 'false'));
+                } else {
+                    error_log("No se registrarán detalles. IdCompra: $idCompra, lineasCompra: " . (empty($data['lineasCompra']) ? 'vacío' : 'no es array'));
+                }
+                
+                return [
+                    'exito' => true,
+                    'idCompra' => $idCompra,
+                    'mensaje' => $resultadoJson['mensaje'] ?? 'Compra registrada exitosamente'
+                ];
+            }
+            
             return [
                 'exito' => true,
                 'idCompra' => $result['IdCompra'] ?? null,
@@ -53,24 +83,7 @@ class Compra {
         try {
             $db = Database::connection();
             
-            $sql = "SELECT 
-                        IdCompra,
-                        CodProveedor,
-                        RUC,
-                        TipoComprobante,
-                        NumeroComprobante,
-                        RazonSocial,
-                        Telefono,
-                        Direccion,
-                        SubTotal,
-                        IGV,
-                        Total,
-                        DATE_FORMAT(FechaCompra, '%Y-%m-%d') as FechaCompra,
-                        Estado,
-                        IdUsuario,
-                        Observaciones
-                    FROM Compras
-                    ORDER BY FechaCompra DESC, IdCompra DESC";
+            $sql = "CALL pa_listar_compras()";
             
             $stmt = $db->prepare($sql);
             $stmt->execute();
@@ -116,6 +129,56 @@ class Compra {
                 'exito' => false,
                 'mensaje' => 'Error al buscar compra: ' . $e->getMessage()
             ];
+        }
+    }
+    
+    private static function registrarDetalles($db, $idCompra, $lineas) {
+        try {
+            foreach ($lineas as $linea) {
+                $sql = "INSERT INTO DetalleCompra (
+                    IdCompra, 
+                    Codigo, 
+                    Descripcion, 
+                    Empaque, 
+                    Cantidad, 
+                    PrecioUnitario, 
+                    Total
+                ) VALUES (
+                    :idCompra, 
+                    :codigo, 
+                    :descripcion, 
+                    :empaque, 
+                    :cantidad, 
+                    :precioUnitario, 
+                    :total
+                )";
+                
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
+                $stmt->bindValue(':codigo', $linea['codigo'] ?? '', PDO::PARAM_STR);
+                $stmt->bindValue(':descripcion', $linea['descripcion'] ?? '', PDO::PARAM_STR);
+                $stmt->bindValue(':empaque', $linea['empaque'] ?? '', PDO::PARAM_STR);
+                $stmt->bindValue(':cantidad', $linea['cantidad'] ?? 0, PDO::PARAM_STR);
+                $stmt->bindValue(':precioUnitario', $linea['precioUnitario'] ?? 0, PDO::PARAM_STR);
+                $stmt->bindValue(':total', $linea['total'] ?? 0, PDO::PARAM_STR);
+                
+                error_log("Insertando detalle: " . json_encode([
+                    'idCompra' => $idCompra,
+                    'codigo' => $linea['codigo'] ?? '',
+                    'descripcion' => $linea['descripcion'] ?? '',
+                    'empaque' => $linea['empaque'] ?? '',
+                    'cantidad' => $linea['cantidad'] ?? 0,
+                    'precioUnitario' => $linea['precioUnitario'] ?? 0,
+                    'total' => $linea['total'] ?? 0
+                ]));
+                
+                $stmt->execute();
+            }
+            
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error en Compra::registrarDetalles() - " . $e->getMessage());
+            return false;
         }
     }
 }

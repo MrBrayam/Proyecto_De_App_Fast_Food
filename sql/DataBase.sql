@@ -648,153 +648,6 @@ END //
 DELIMITER ;
 
 -- ============================================
--- PA: APERTURA CAJA
--- ============================================
-DROP PROCEDURE IF EXISTS pa_caja_abrir;
-DELIMITER //
-CREATE PROCEDURE pa_caja_abrir(
-    IN p_codCaja VARCHAR(50),
-    IN p_montoInicial DECIMAL(12,2),
-    IN p_turno ENUM('Mañana','Tarde','Noche'),
-    IN p_idUsuario INT,
-    IN p_fecha DATE
-)
-BEGIN
-    DECLARE v_existe INT DEFAULT 0;
-    
-    -- Verificar si la caja existe
-    SELECT COUNT(*) INTO v_existe
-    FROM Caja 
-    WHERE CodCaja = p_codCaja;
-    
-    -- Si no existe, crear nueva caja
-    IF v_existe = 0 THEN
-        INSERT INTO Caja (
-            CodCaja, Estado, MontoInicial, MontoFinal, Fecha, Turno,
-            IdUsuario, HoraApertura, TotalVentas, TotalEfectivo, TotalTarjeta,
-            TotalYape, TotalPlin, Observaciones
-        ) VALUES (
-            p_codCaja,
-            'abierta',
-            IFNULL(p_montoInicial, 0),
-            0,
-            p_fecha,
-            p_turno,
-            p_idUsuario,
-            NOW(),
-            0, 0, 0, 0, 0,
-            NULL
-        );
-        SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja creada y abierta correctamente', 'CodCaja', p_codCaja) AS resultado;
-    ELSE
-        -- Si existe, actualizar (reabrir)
-        UPDATE Caja SET
-            Estado = 'abierta',
-            MontoInicial = IFNULL(p_montoInicial, 0),
-            MontoFinal = 0,
-            Fecha = p_fecha,
-            Turno = p_turno,
-            IdUsuario = p_idUsuario,
-            HoraApertura = NOW(),
-            HoraCierre = NULL,
-            TotalVentas = 0,
-            TotalEfectivo = 0,
-            TotalTarjeta = 0,
-            TotalYape = 0,
-            TotalPlin = 0,
-            Observaciones = NULL
-        WHERE CodCaja = p_codCaja;
-        
-        SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja abierta correctamente', 'CodCaja', p_codCaja) AS resultado;
-    END IF;
-END //
-DELIMITER ;
-
--- ============================================
--- PA: LISTAR CAJAS
--- ============================================
-DROP PROCEDURE IF EXISTS pa_caja_listar;
-DELIMITER //
-CREATE PROCEDURE pa_caja_listar()
-BEGIN
-    SELECT 
-        CodCaja,
-        Estado,
-        MontoInicial,
-        MontoFinal,
-        Fecha AS FechaApertura,
-        HoraApertura,
-        HoraCierre,
-        Fecha,
-        Turno,
-        IdUsuario,
-        TotalVentas,
-        TotalEfectivo,
-        TotalTarjeta,
-        TotalYape,
-        TotalPlin,
-        Observaciones
-    FROM Caja
-    ORDER BY Fecha DESC, HoraApertura DESC;
-END //
-DELIMITER ;
-
--- ============================================
--- PA: CAJA ABIERTA ACTUAL
--- ============================================
-DROP PROCEDURE IF EXISTS pa_caja_abierta;
-DELIMITER //
-CREATE PROCEDURE pa_caja_abierta()
-BEGIN
-    SELECT 
-        CodCaja,
-        Estado,
-        MontoInicial,
-        MontoFinal,
-        Fecha AS FechaApertura,
-        HoraApertura,
-        HoraCierre,
-        Fecha,
-        Turno,
-        IdUsuario,
-        TotalVentas,
-        TotalEfectivo,
-        TotalTarjeta,
-        TotalYape,
-        TotalPlin,
-        Observaciones
-    FROM Caja
-    WHERE Estado = 'abierta'
-    ORDER BY HoraApertura DESC
-    LIMIT 1;
-END //
-DELIMITER ;
-
--- ============================================
--- PA: CERRAR CAJA
--- ============================================
-DROP PROCEDURE IF EXISTS pa_caja_cerrar;
-DELIMITER //
-CREATE PROCEDURE pa_caja_cerrar(
-    IN p_codCaja VARCHAR(50),
-    IN p_montoFinal DECIMAL(12,2),
-    IN p_observaciones TEXT,
-    IN p_idUsuario INT
-)
-BEGIN
-    UPDATE Caja
-    SET Estado = 'cerrada',
-        MontoFinal = IFNULL(p_montoFinal, 0),
-        HoraCierre = NOW(),
-        Observaciones = p_observaciones,
-        IdUsuario = p_idUsuario
-    WHERE CodCaja = p_codCaja;
-
-    SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja cerrada correctamente', 'CodCaja', p_codCaja) AS resultado;
-END //
-DELIMITER ;
-
--- ============================================
 -- PA: LISTAR PERFILES
 -- ============================================
 DROP PROCEDURE IF EXISTS pa_listar_perfiles;
@@ -1980,6 +1833,32 @@ BEGIN
         DATE_FORMAT(FechaEntrega, '%Y-%m-%d %H:%i:%s') AS FechaEntrega,
         Observaciones
     FROM Pedidos
+    ORDER BY FechaPedido DESC, IdPedido DESC;
+END //-- ============================================
+-- PA: LISTAR PEDIDOS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_pedidos;
+DELIMITER //
+CREATE PROCEDURE pa_listar_pedidos()
+BEGIN
+    SELECT 
+        IdPedido,
+        NumDocumentos,
+        TipoServicio,
+        NumMesa,
+        IdCliente,
+        NombreCliente,
+        DireccionCliente,
+        TelefonoCliente,
+        IdUsuario,
+        SubTotal,
+        Descuento,
+        Total,
+        Estado,
+        DATE_FORMAT(FechaPedido, '%Y-%m-%d %H:%i:%s') AS FechaPedido,
+        DATE_FORMAT(FechaEntrega, '%Y-%m-%d %H:%i:%s') AS FechaEntrega,
+        Observaciones
+    FROM Pedidos
     WHERE Estado IN ('pendiente', 'preparando', 'listo')
     ORDER BY FechaPedido DESC, IdPedido DESC;
 END //
@@ -2090,7 +1969,7 @@ BEGIN
         'mensaje', 'Detalle de pedido registrado exitosamente'
     ) AS resultado;
 END //
-DELIMITER ;
+
 
 -- ============================================
 -- PA: REGISTRAR VENTA
@@ -2222,7 +2101,7 @@ BEGIN
     SELECT 
         v.CodVenta,
         v.IdCliente,
-        COALESCE(c.NombreCompleto, 'Sin cliente') AS NombreCliente,
+        COALESCE(c.NombreCliente, 'Sin cliente') AS NombreCliente,
         v.TipoPago,
         v.SubTotal,
         v.Descuento,
@@ -2263,8 +2142,174 @@ BEGIN
     WHERE CodVenta = p_codVenta
     LIMIT 1;
 END //
+
+INSERT INTO Caja (
+  CodCaja, Estado, MontoInicial, MontoFinal, Fecha, Turno, IdUsuario,
+  HoraApertura, HoraCierre,
+  TotalVentas, TotalEfectivo, TotalTarjeta, TotalYape, TotalPlin,
+  Observaciones
+) VALUES
+('CAJ-20251208-A1', 'abierta', 300.00, 0.00, '2025-12-08', 'Mañana', 1,
+ '2025-12-08 08:00:00', NULL,
+ 1250.00, 700.00, 350.00, 120.00, 80.00,
+ 'Turno mañana en curso'),
+
+('CAJ-20251207-T1', 'cerrada', 250.00, 1870.00, '2025-12-07', 'Tarde', 2,
+ '2025-12-07 15:00:00', '2025-12-07 23:15:00',
+ 1620.00, 900.00, 500.00, 140.00, 80.00,
+ 'Cierre sin incidencias'),
+
+('CAJ-20251206-N1', 'cerrada', 200.00, 1180.00, '2025-12-06', 'Noche', 3,
+ '2025-12-06 18:00:00', '2025-12-07 01:10:00',
+ 980.00, 520.00, 280.00, 90.00, 90.00,
+ 'Cuadre correcto, sin diferencias');
+ 
+ 
+-- ============================================
+-- PA: APERTURA CAJA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_abrir;
+DELIMITER //
+CREATE PROCEDURE pa_caja_abrir(
+    IN p_codCaja VARCHAR(50),
+    IN p_montoInicial DECIMAL(12,2),
+    IN p_turno ENUM('Mañana','Tarde','Noche'),
+    IN p_idUsuario INT,
+    IN p_fecha DATE
+)
+BEGIN
+    DECLARE v_existe INT DEFAULT 0;
+    
+    -- Verificar si la caja existe
+    SELECT COUNT(*) INTO v_existe
+    FROM Caja 
+    WHERE CodCaja = p_codCaja;
+    
+    -- Si no existe, crear nueva caja
+    IF v_existe = 0 THEN
+        INSERT INTO Caja (
+            CodCaja, Estado, MontoInicial, MontoFinal, Fecha, Turno,
+            IdUsuario, HoraApertura, TotalVentas, TotalEfectivo, TotalTarjeta,
+            TotalYape, TotalPlin, Observaciones
+        ) VALUES (
+            p_codCaja,
+            'abierta',
+            IFNULL(p_montoInicial, 0),
+            0,
+            p_fecha,
+            p_turno,
+            p_idUsuario,
+            NOW(),
+            0, 0, 0, 0, 0,
+            NULL
+        );
+        SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja creada y abierta correctamente', 'CodCaja', p_codCaja) AS resultado;
+    ELSE
+        -- Si existe, actualizar (reabrir)
+        UPDATE Caja SET
+            Estado = 'abierta',
+            MontoInicial = IFNULL(p_montoInicial, 0),
+            MontoFinal = 0,
+            Fecha = p_fecha,
+            Turno = p_turno,
+            IdUsuario = p_idUsuario,
+            HoraApertura = NOW(),
+            HoraCierre = NULL,
+            TotalVentas = 0,
+            TotalEfectivo = 0,
+            TotalTarjeta = 0,
+            TotalYape = 0,
+            TotalPlin = 0,
+            Observaciones = NULL
+        WHERE CodCaja = p_codCaja;
+        
+        SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja abierta correctamente', 'CodCaja', p_codCaja) AS resultado;
+    END IF;
+END //
 DELIMITER ;
 
+-- ============================================
+-- PA: LISTAR CAJAS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_listar;
+DELIMITER //
+CREATE PROCEDURE pa_caja_listar()
+BEGIN
+    SELECT 
+        CodCaja,
+        Estado,
+        MontoInicial,
+        MontoFinal,
+        Fecha AS FechaApertura,
+        HoraApertura,
+        HoraCierre,
+        Fecha,
+        Turno,
+        IdUsuario,
+        TotalVentas,
+        TotalEfectivo,
+        TotalTarjeta,
+        TotalYape,
+        TotalPlin,
+        Observaciones
+    FROM Caja
+    ORDER BY Fecha DESC, HoraApertura DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: CAJA ABIERTA ACTUAL
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_abierta;
+DELIMITER //
+CREATE PROCEDURE pa_caja_abierta()
+BEGIN
+    SELECT 
+        CodCaja,
+        Estado,
+        MontoInicial,
+        MontoFinal,
+        Fecha AS FechaApertura,
+        HoraApertura,
+        HoraCierre,
+        Fecha,
+        Turno,
+        IdUsuario,
+        TotalVentas,
+        TotalEfectivo,
+        TotalTarjeta,
+        TotalYape,
+        TotalPlin,
+        Observaciones
+    FROM Caja
+    WHERE Estado = 'abierta'
+    ORDER BY HoraApertura DESC
+    LIMIT 1;
+END //
+
+-- ============================================
+-- PA: CERRAR CAJA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_cerrar;
+DELIMITER //
+CREATE PROCEDURE pa_caja_cerrar(
+    IN p_codCaja VARCHAR(50),
+    IN p_montoFinal DECIMAL(12,2),
+    IN p_observaciones TEXT,
+    IN p_idUsuario INT
+)
+BEGIN
+    UPDATE Caja
+    SET Estado = 'cerrada',
+        MontoFinal = IFNULL(p_montoFinal, 0),
+        HoraCierre = NOW(),
+        Observaciones = p_observaciones,
+        IdUsuario = p_idUsuario
+    WHERE CodCaja = p_codCaja;
+
+    SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja cerrada correctamente', 'CodCaja', p_codCaja) AS resultado;
+END //
+ 
 -- ============================================
 -- PA: REGISTRAR PROMOCION
 -- ============================================

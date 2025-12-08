@@ -60,14 +60,23 @@ async function seleccionarProveedor() {
         
         if (data.exito && data.proveedor) {
             proveedorSeleccionado = data.proveedor;
-            const nombreEmpresa = data.proveedor.NombreEmpresa ?? data.proveedor.nombreEmpresa ?? data.proveedor.RazonSocial ?? data.proveedor.razonSocial ?? '';
-            const telefono = data.proveedor.Telefono ?? data.proveedor.telefono ?? '';
-            const direccion = data.proveedor.Direccion ?? data.proveedor.direccion ?? '';
+            console.log('Proveedor seleccionado:', proveedorSeleccionado);
+            
+            const nombreEmpresa = data.proveedor.razonSocial ?? data.proveedor.nombreComercial ?? '';
+            const telefono = data.proveedor.telefono ?? '';
+            const direccion = data.proveedor.direccion ?? '';
+            const ruc = data.proveedor.numDoc ?? '';
+            
             document.getElementById('razonSocial').value = nombreEmpresa;
             document.getElementById('telefono').value = telefono;
             document.getElementById('direccion').value = direccion;
+            
+            // Guardar RUC en variable global
+            proveedorSeleccionado.ruc = ruc;
+            console.log('RUC guardado:', ruc);
         } else {
             limpiarDatosProveedor();
+            mostrarMensaje('Proveedor no encontrado', 'error');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -90,7 +99,60 @@ function agregarLineaCompra() {
     formulario.style.display = formulario.style.display === 'none' ? 'block' : 'none';
     
     if (formulario.style.display === 'block') {
+        cargarProductosEnSelect();
+        // Agregar listener para el cambio de producto
+        document.getElementById('codigo').addEventListener('change', seleccionarProducto);
         document.getElementById('codigo').focus();
+    }
+}
+
+// Cargar productos disponibles en el select
+async function cargarProductosEnSelect() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/productos/listar');
+        const data = await response.json();
+        
+        if (data.exito && data.productos) {
+            const selectCodigo = document.getElementById('codigo');
+            selectCodigo.innerHTML = '<option value="">Seleccione un producto</option>';
+            
+            data.productos.forEach(producto => {
+                const option = document.createElement('option');
+                const codProducto = producto.CodProducto ?? producto.codProducto;
+                const nombreProducto = producto.Nombre ?? producto.NombreProducto ?? producto.nombreProducto ?? 'Producto';
+                const costoProducto = parseFloat(producto.Costo ?? 0).toFixed(2);
+                option.value = codProducto;
+                option.textContent = `${codProducto} - ${nombreProducto}`;
+                option.setAttribute('data-nombre', nombreProducto);
+                option.setAttribute('data-costo', costoProducto);
+                console.log('Producto cargado:', codProducto, nombreProducto, 'Costo:', costoProducto);
+                selectCodigo.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error cargando productos:', error);
+    }
+}
+
+// Seleccionar producto del select
+function seleccionarProducto() {
+    const selectCodigo = document.getElementById('codigo');
+    const option = selectCodigo.options[selectCodigo.selectedIndex];
+    
+    console.log('seleccionarProducto ejecutada');
+    console.log('Código seleccionado:', option.value);
+    console.log('Atributo data-nombre:', option.getAttribute('data-nombre'));
+    console.log('Atributo data-costo:', option.getAttribute('data-costo'));
+    
+    if (option.value) {
+        const nombreProducto = option.getAttribute('data-nombre') || '';
+        const costoProducto = option.getAttribute('data-costo') || '0.00';
+        console.log('Asignando nombre:', nombreProducto, 'y costo:', costoProducto);
+        document.getElementById('descripcion').value = nombreProducto;
+        document.getElementById('precioUnitario').value = costoProducto;
+    } else {
+        document.getElementById('descripcion').value = '';
+        document.getElementById('precioUnitario').value = '';
     }
 }
 
@@ -269,15 +331,32 @@ async function registrarCompra() {
         return;
     }
     
+    // Validar que hay un proveedor seleccionado
+    if (!proveedorSeleccionado) {
+        mostrarMensaje('Debe seleccionar un proveedor', 'error');
+        return;
+    }
+    
     const subtotal = lineasCompra.reduce((sum, linea) => sum + linea.total, 0);
     const igv = subtotal * 0.18;
     const total = subtotal + igv;
     
+    // Obtener CodProveedor del select directamente
+    const codProveedor = document.getElementById('ruc').value.trim();
+    const rucProveedor = proveedorSeleccionado?.ruc || proveedorSeleccionado?.numDoc || '';
+    
+    console.log('CodProveedor:', codProveedor);
+    console.log('RUC Proveedor:', rucProveedor);
+    
+    // Generar número de comprobante automáticamente si está vacío
+    const numeroComprobante = document.getElementById('numeroComprobante')?.value.trim() || 
+                             'COM-' + Date.now(); // Generar automáticamente
+    
     const datosCompra = {
-        codProveedor: proveedorSeleccionado?.CodProveedor || 0,
-        ruc: document.getElementById('ruc').value.trim(),
+        codProveedor: codProveedor,
+        ruc: rucProveedor,
+        numeroComprobante: numeroComprobante,
         tipoComprobante: document.getElementById('tipoComprobante').value,
-        numeroComprobante: '',
         razonSocial: document.getElementById('razonSocial').value.trim(),
         telefono: document.getElementById('telefono').value.trim(),
         direccion: document.getElementById('direccion').value.trim(),
@@ -287,8 +366,11 @@ async function registrarCompra() {
         fechaCompra: new Date().toISOString().split('T')[0],
         estado: 'pendiente',
         idUsuario: 1, // Cambiar según usuario logueado
-        observaciones: ''
+        observaciones: '',
+        lineasCompra: lineasCompra
     };
+    
+    console.log('Enviando datos de compra:', datosCompra);
     
     try {
         const response = await fetch('/Proyecto_De_App_Fast_Food/api/compras/registrar', {
@@ -310,6 +392,7 @@ async function registrarCompra() {
             }, 2000);
         } else {
             mostrarMensaje('Error al registrar: ' + (data.mensaje || 'Error desconocido'), 'error');
+            console.error('Error en respuesta:', data);
         }
         
     } catch (error) {
