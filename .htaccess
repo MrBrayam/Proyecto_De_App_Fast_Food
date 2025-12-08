@@ -5,6 +5,9 @@
     # Permitir acceso a archivos y carpetas reales
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+
+    # No reescribir rutas de la API (se manejarán en /api/.htaccess)
+    RewriteCond %{REQUEST_URI} !^/api/
     
     # Redirigir requests a index.html
     RewriteRule ^(.*)$ index.html [QSA,L]
