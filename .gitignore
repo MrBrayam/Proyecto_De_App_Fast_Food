@@ -1,2 +1,84 @@
+# ============================================
+# CARPETAS A IGNORAR
+# ============================================
+
+# Carpeta de base de datos local (contiene contraseña y jar)
+/BD/
+/bd/
+/sql/
+
+# Referencias y funcionalidades
 /referencias/
 /funcionalidades/
+
+# Dependencias y módulos
+node_modules/
+composer_vendors/
+vendor/
+
+# Logs y archivos temporales
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración local
+.env
+.env.local
+.env.*.local
+config.local.php
+
+# Caché
+cache/
+__pycache__/
+*.pyc
+
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================
+# ARCHIVOS ESPECÍFICOS A IGNORAR
+# ============================================
+
+# Archivo de configuración con contraseñas
+api/config.php
+
+# Archivos compilados Java
+BD/*.class
+BD/*.jar
+BD/*.exe
+
+# Credenciales y secrets
+.credentials
+credentials.json
+secrets.json
+private_key
+public_key
+
+# Documentos personales
+*.docx
+*.xlsx
+*.ppt
+todo.txt
+notas.txt
+
+# ============================================
+# EXCEPCIONES (archivos que sí deben subirse)
+# ============================================
+
+!.gitkeep
+!index.html
+!README.md

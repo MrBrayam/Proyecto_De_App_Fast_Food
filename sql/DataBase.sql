@@ -1,13 +1,13 @@
 -- ============================================
--- BASE DE DATOS: SISTEMA FAST FOOD COMPLETO
--- Basado en análisis completo de HTMLs y diagrama de referencia
--- Creado: Noviembre 2025
+-- BASE DE DATOS: KING'S PIZZA - SISTEMA FAST FOOD COMPLETO
+-- Basado en análisis completo del proyecto
+-- Actualizado: Diciembre 2025
 -- ============================================
 
 -- Eliminar base de datos existente y crear nueva
-DROP DATABASE IF EXISTS sistema_fast_food_completo;
-CREATE DATABASE sistema_fast_food_completo CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
-USE sistema_fast_food_completo;
+DROP DATABASE IF EXISTS kings_pizza_db;
+CREATE DATABASE kings_pizza_db CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
+USE kings_pizza_db;
 
 -- ============================================
 -- TABLA: PERFILES (ROLES DE USUARIO)
@@ -16,10 +16,33 @@ CREATE TABLE Perfiles (
     IdPerfil INT PRIMARY KEY AUTO_INCREMENT,
     NombrePerfil VARCHAR(50) NOT NULL UNIQUE,
     Descripcion TEXT,
-    PermisoVentas BOOLEAN DEFAULT FALSE,
-    PermisoReportes BOOLEAN DEFAULT FALSE,
-    PermisoInventario BOOLEAN DEFAULT FALSE,
-    FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    NivelAcceso ENUM('1', '2', '3', '4') DEFAULT '1' COMMENT '1=Básico, 2=Intermedio, 3=Avanzado, 4=Administrador',
+    Estado ENUM('activo', 'inactivo') DEFAULT 'activo',
+    -- Permisos de Ventas
+    PermisoVentasRegistrar BOOLEAN DEFAULT FALSE,
+    PermisoVentasVisualizar BOOLEAN DEFAULT FALSE,
+    PermisoVentasModificar BOOLEAN DEFAULT FALSE,
+    PermisoVentasEliminar BOOLEAN DEFAULT FALSE,
+    -- Permisos de Compras
+    PermisoComprasRegistrar BOOLEAN DEFAULT FALSE,
+    PermisoComprasVisualizar BOOLEAN DEFAULT FALSE,
+    PermisoComprasInventario BOOLEAN DEFAULT FALSE,
+    -- Permisos de Usuarios
+    PermisoUsuariosRegistrar BOOLEAN DEFAULT FALSE,
+    PermisoUsuariosVisualizar BOOLEAN DEFAULT FALSE,
+    PermisoUsuariosModificar BOOLEAN DEFAULT FALSE,
+    PermisoUsuariosEliminar BOOLEAN DEFAULT FALSE,
+    -- Permisos de Reportes
+    PermisoReportesVentas BOOLEAN DEFAULT FALSE,
+    PermisoReportesCompras BOOLEAN DEFAULT FALSE,
+    PermisoReportesFinancieros BOOLEAN DEFAULT FALSE,
+    -- Permisos Generales
+    PermisoClientes BOOLEAN DEFAULT FALSE,
+    PermisoProveedores BOOLEAN DEFAULT FALSE,
+    PermisoPerfiles BOOLEAN DEFAULT FALSE,
+    AccesoCompleto BOOLEAN DEFAULT FALSE,
+    FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FechaActualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- ============================================
@@ -51,6 +74,7 @@ CREATE TABLE Clientes (
     NumDocumento VARCHAR(20) NOT NULL UNIQUE,
     Nombres VARCHAR(100) NOT NULL,
     Apellidos VARCHAR(100) NOT NULL,
+    NombreCompleto VARCHAR(200) GENERATED ALWAYS AS (CONCAT(Nombres, ' ', Apellidos)) STORED,
     Telefono VARCHAR(20) NOT NULL,
     Email VARCHAR(100),
     Direccion TEXT,
@@ -364,18 +388,35 @@ CREATE TABLE Suministros (
 -- ============================================
 
 -- Insertar Perfiles
-INSERT INTO Perfiles (NombrePerfil, Descripcion, PermisoVentas, PermisoReportes, PermisoInventario) VALUES
-('administrador', 'Administrador del sistema', TRUE, TRUE, TRUE),
-('cajero', 'Personal de caja y ventas', TRUE, FALSE, FALSE),
-('mesero', 'Personal de atención de mesas', TRUE, FALSE, FALSE),
-('repartidor', 'Personal de delivery', FALSE, FALSE, FALSE),
-('supervisor', 'Supervisor de operaciones', TRUE, TRUE, FALSE),
-('cocinero', 'Personal de cocina', FALSE, FALSE, TRUE);
+INSERT INTO Perfiles (NombrePerfil, Descripcion, NivelAcceso, AccesoCompleto, 
+    PermisoVentasRegistrar, PermisoVentasVisualizar, PermisoVentasModificar, PermisoVentasEliminar,
+    PermisoComprasRegistrar, PermisoComprasVisualizar, PermisoComprasInventario,
+    PermisoUsuariosRegistrar, PermisoUsuariosVisualizar, PermisoUsuariosModificar, PermisoUsuariosEliminar,
+    PermisoReportesVentas, PermisoReportesCompras, PermisoReportesFinancieros,
+    PermisoClientes, PermisoProveedores, PermisoPerfiles) VALUES
+('administrador', 'Acceso completo al sistema con todos los permisos administrativos', '4', TRUE, 
+    TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE),
+('cajero', 'Gestión de ventas y caja', '2', FALSE, 
+    TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE),
+('mesero', 'Toma de pedidos y gestión de mesas', '1', FALSE, 
+    TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+('repartidor', 'Gestión de entregas a domicilio', '1', FALSE, 
+    FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE),
+('supervisor', 'Supervisor de operaciones', '3', FALSE, 
+    TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE),
+('cocinero', 'Personal de cocina', '1', FALSE, 
+    FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
 
--- Insertar Usuario Administrador por defecto
-INSERT INTO Usuarios (Dni, Nombres, Apellidos, Telefono, Email, NombreUsuario, Contrasena, IdPerfil) VALUES
-('12345678', 'Administrador', 'Sistema', '987654321', 'admin@fastfood.com', 'admin', 
-'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1);
+-- Insertar Usuarios de ejemplo (contraseña: admin123)
+INSERT INTO Usuarios (Dni, Nombres, Apellidos, Telefono, Email, NombreUsuario, Contrasena, IdPerfil, Estado) VALUES
+('12345678', 'Administrador', 'Sistema', '987654321', 'admin@kingspizza.com', 'admin', 
+'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, 'activo'),
+('87654321', 'Juan', 'Pérez García', '987654322', 'jperez@kingspizza.com', 'cajero', 
+'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 'activo'),
+('76543210', 'María', 'González López', '987654323', 'mgonzalez@kingspizza.com', 'mesero', 
+'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 3, 'activo'),
+('65432109', 'Carlos', 'Ramírez Torres', '987654324', 'cramirez@kingspizza.com', 'delivery', 
+'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, 'activo');
 
 -- Insertar Mesas de ejemplo
 INSERT INTO Mesas (NumMesa, Cantidad, Ubicacion, TipoMesa, Prioridad) VALUES
@@ -510,6 +551,8 @@ BEGIN
 END//
 
 -- Procedimiento para actualizar stock después de venta
+
+DELIMITER //
 CREATE PROCEDURE ActualizarStockVenta(
     IN p_CodVenta INT
 )
@@ -546,7 +589,7 @@ BEGIN
     CLOSE cur;
 END//
 
-DELIMITER ;
+
 
 -- ============================================
 -- TRIGGERS
@@ -566,6 +609,7 @@ BEGIN
     END IF;
 END//
 
+DELIMITER //
 -- Trigger para calcular subtotal en detalle de pedido
 CREATE TRIGGER CalcularSubtotalDetallePedido
 BEFORE INSERT ON DetallePedido
@@ -575,12 +619,79 @@ BEGIN
 END//
 
 -- Trigger para calcular subtotal en detalle de venta
+DELIMITER //
 CREATE TRIGGER CalcularSubtotalDetalleVenta
 BEFORE INSERT ON DetalleVenta
 FOR EACH ROW
 BEGIN
     SET NEW.Subtotal = NEW.Cantidad * NEW.Precio;
 END//
+
+-- Trigger para calcular subtotal al actualizar detalle de compra
+DELIMITER //
+CREATE TRIGGER CalcularSubtotalDetalleCompra
+BEFORE INSERT ON DetalleCompra
+FOR EACH ROW
+BEGIN
+    SET NEW.Total = NEW.Cantidad * NEW.PrecioUnitario;
+END//
+
+
+-- ============================================
+-- STORED PROCEDURE: VERIFICAR LOGIN
+-- ============================================
+DELIMITER //
+
+CREATE PROCEDURE VerificarLogin(
+    IN p_NombreUsuario VARCHAR(50),
+    IN p_Contrasena VARCHAR(255),
+    OUT p_IdUsuario INT,
+    OUT p_NombreCompleto VARCHAR(200),
+    OUT p_IdPerfil INT,
+    OUT p_NombrePerfil VARCHAR(50),
+    OUT p_Estado VARCHAR(20),
+    OUT p_Exito BOOLEAN
+)
+BEGIN
+    DECLARE v_ContrasenaHash VARCHAR(255);
+    DECLARE v_Exito BOOLEAN DEFAULT FALSE;
+    
+    -- Inicializar salidas
+    SET p_IdUsuario = NULL;
+    SET p_NombreCompleto = NULL;
+    SET p_IdPerfil = NULL;
+    SET p_NombrePerfil = NULL;
+    SET p_Estado = NULL;
+    SET p_Exito = FALSE;
+    
+    -- Buscar usuario y verificar contraseña
+    SELECT 
+        u.IdUsuario,
+        u.NombreCompleto,
+        u.IdPerfil,
+        u.Contrasena,
+        u.Estado,
+        p.NombrePerfil
+    INTO 
+        p_IdUsuario,
+        p_NombreCompleto,
+        p_IdPerfil,
+        v_ContrasenaHash,
+        p_Estado,
+        p_NombrePerfil
+    FROM Usuarios u
+    JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+    WHERE u.NombreUsuario = p_NombreUsuario AND u.Estado = 'activo'
+    LIMIT 1;
+    
+    -- Verificar si el usuario existe
+    IF p_IdUsuario IS NOT NULL THEN
+        -- Verificar contraseña (comparación directa o con hash según corresponda)
+        IF v_ContrasenaHash = p_Contrasena OR v_ContrasenaHash = SHA2(p_Contrasena, 256) THEN
+            SET p_Exito = TRUE;
+        END IF;
+    END IF;
+END //
 
 DELIMITER ;
 
@@ -601,4 +712,4 @@ CREATE INDEX idx_ventas_fecha ON Ventas(FechaVenta);
 CREATE INDEX idx_ventas_tipo_pago ON Ventas(TipoPago);
 CREATE INDEX idx_compras_fecha ON Compras(FechaCompra);
 CREATE INDEX idx_proveedores_documento ON Proveedores(NumDoc);
-CREATE INDEX idx_promociones_fechas ON Promociones(FechaInicio, FechaFin);
+CREATE INDEX idx_promociones_fechas ON Promociones(FechaInicio, FechaFin)

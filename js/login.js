@@ -94,69 +94,78 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mostrar estado de carga
         setLoadingState(true);
 
-        // Simular delay de conexión al servidor (500ms)
-        setTimeout(() => {
-            // Buscar usuario
-            const user = users.find(u => u.username === username && u.password === password);
+        // Construir la URL correcta según la ubicación actual
+        const apiUrl = window.location.pathname.includes('/Proyecto_De_App_Fast_Food/') 
+            ? '/Proyecto_De_App_Fast_Food/api/login.php'
+            : '/api/login.php';
 
-            if (user) {
+        // Enviar solicitud al servidor
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                usuario: username,
+                contrasena: password
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
                 // Login exitoso
-                handleSuccessfulLogin(user);
+                handleSuccessfulLogin(data.usuario, data.token);
             } else {
                 // Login fallido
-                handleFailedLogin();
+                showAlert(data.mensaje || 'Usuario o contraseña incorrectos', 'error');
+                passwordInput.value = '';
+                passwordInput.focus();
             }
-
             setLoadingState(false);
-        }, 500);
+        })
+        .catch(error => {
+            console.error('Error en login:', error);
+            showAlert('Error al conectar con el servidor. Intente nuevamente.', 'error');
+            setLoadingState(false);
+        });
     }
 
     // Manejar login exitoso
-    function handleSuccessfulLogin(user) {
+    function handleSuccessfulLogin(usuario, token) {
         // Guardar sesión en localStorage
         const sessionData = {
-            username: user.username,
-            name: user.name,
-            role: user.role,
-            loginTime: new Date().toISOString()
+            id: usuario.id,
+            nombre: usuario.nombre,
+            perfil: usuario.perfil,
+            idPerfil: usuario.idPerfil,
+            loginTime: new Date().toISOString(),
+            token: token
         };
 
         localStorage.setItem('userSession', JSON.stringify(sessionData));
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('currentUser', JSON.stringify(sessionData));
+        localStorage.setItem('authToken', token);
 
         // Si el usuario marcó "Recordarme", guardar preferencia
         if (rememberMe.checked) {
             localStorage.setItem('rememberMe', 'true');
-            localStorage.setItem('rememberedUser', user.username);
+            localStorage.setItem('rememberedUser', usernameInput.value);
         } else {
             localStorage.removeItem('rememberMe');
             localStorage.removeItem('rememberedUser');
         }
 
         // Mostrar mensaje de éxito
-        showAlert(`¡Bienvenido, ${user.name}!`, 'success');
+        showAlert(`¡Bienvenido, ${usuario.nombre}!`, 'success');
 
         // Redirigir al menú principal
         setTimeout(() => {
-            redirectToDashboard(user.role);
+            redirectToDashboard(usuario.perfil);
         }, 1000);
     }
 
-    // Manejar login fallido
-    function handleFailedLogin() {
-        showAlert('Usuario o contraseña incorrectos. Por favor intente nuevamente.', 'error');
-        passwordInput.value = '';
-        passwordInput.focus();
-        
-        // Añadir efecto de shake
-        loginForm.classList.add('shake');
-        setTimeout(() => {
-            loginForm.classList.remove('shake');
-        }, 500);
-    }
-
-    // Redirigir según el rol del usuario
+    // Función auxiliar para cambiar estado de carga del botón
     function redirectToDashboard(role) {
         // Todos los usuarios van al menú principal
         window.location.href = 'html/menu_principal.html';

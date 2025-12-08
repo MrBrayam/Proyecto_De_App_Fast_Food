@@ -1,0 +1,182 @@
+/* ============================================
+   MODO OSCURO - LOGIN
+   Estilos específicos para la página de login en modo oscuro
+   ============================================ */
+
+:root.dark-mode {
+    --color-primary: #3b82f6;
+    --color-primary-dark: #1e40af;
+    --color-primary-light: #60a5fa;
+    --color-bg: #1f2937;
+    --color-bg-secondary: #111827;
+    --color-text: #f3f4f6;
+    --color-text-light: #d1d5db;
+    --color-border: #374151;
+    --color-error: #f87171;
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-input-bg: #2d3748;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+}
+
+:root.dark-mode body {
+    background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%);
+    color: var(--color-text);
+}
+
+:root.dark-mode .login-container {
+    background: var(--color-bg);
+    box-shadow: 0 20px 60px var(--color-shadow);
+    border: 1px solid var(--color-border);
+}
+
+:root.dark-mode .login-header {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    border-bottom: 2px solid var(--color-primary);
+    color: var(--color-text);
+}
+
+:root.dark-mode .login-logo {
+    color: var(--color-text);
+}
+
+:root.dark-mode .login-title {
+    color: var(--color-text);
+}
+
+:root.dark-mode .login-subtitle {
+    color: var(--color-text-light);
+}
+
+:root.dark-mode .btn-theme {
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+:root.dark-mode .btn-theme:hover {
+    background: var(--color-border);
+    color: var(--color-primary);
+}
+
+:root.dark-mode .form-label {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+:root.dark-mode .form-control {
+    background: var(--color-input-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+:root.dark-mode .form-control:focus {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+:root.dark-mode .form-control::placeholder {
+    color: var(--color-text-light);
+}
+
+:root.dark-mode .input-icon {
+    color: var(--color-text-light);
+}
+
+:root.dark-mode .password-toggle {
+    color: var(--color-text-light);
+    background: transparent;
+}
+
+:root.dark-mode .password-toggle:hover {
+    color: var(--color-primary);
+}
+
+:root.dark-mode .remember-me label {
+    color: var(--color-text);
+}
+
+:root.dark-mode .remember-me input[type="checkbox"] {
+    accent-color: var(--color-primary);
+}
+
+:root.dark-mode .login-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+:root.dark-mode .login-btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+:root.dark-mode .login-btn:disabled {
+    background: var(--color-text-light);
+    box-shadow: none;
+}
+
+:root.dark-mode .login-alert {
+    border: 1px solid;
+    background-color: transparent;
+}
+
+:root.dark-mode .login-alert.error {
+    border-color: #7f1d1d;
+    background-color: rgba(127, 29, 29, 0.1);
+    color: #fca5a5;
+}
+
+:root.dark-mode .login-alert.success {
+    border-color: #065f46;
+    background-color: rgba(6, 95, 70, 0.1);
+    color: #6ee7b7;
+}
+
+:root.dark-mode .login-alert.warning {
+    border-color: #78350f;
+    background-color: rgba(120, 53, 15, 0.1);
+    color: #fcd34d;
+}
+
+:root.dark-mode .form-error {
+    color: #f87171;
+}
+
+:root.dark-mode .login-footer {
+    color: var(--color-text-light);
+    border-top: 1px solid var(--color-border);
+}
+
+:root.dark-mode .form-control.error {
+    border-color: var(--color-error);
+    background: rgba(248, 113, 113, 0.05);
+}
+
+/* Estilos de animación en modo oscuro */
+:root.dark-mode .login-btn:active {
+    transform: scale(0.98);
+}
+
+:root.dark-mode .input-group:has(.form-control:focus) {
+    border-color: var(--color-primary);
+}
+
+/* Mejoras para accesibilidad */
+:root.dark-mode .form-control:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+:root.dark-mode .login-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+:root.dark-mode .btn-theme:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

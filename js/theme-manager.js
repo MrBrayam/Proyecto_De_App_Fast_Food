@@ -9,6 +9,8 @@ class ThemeManager {
         this.modoClaro = null;
         this.modoClaroPage = null;
         this.modoOscuroPage = null;
+        this.modoClaroLogin = null;
+        this.modoOscuroLogin = null;
         this.themeIcon = null;
         this.themeBtn = null;
         
@@ -46,6 +48,10 @@ class ThemeManager {
         // Buscar los enlaces específicos de página
         this.modoClaroPage = document.getElementById('modo-claro-page-css');
         this.modoOscuroPage = document.getElementById('modo-oscuro-page-css');
+        
+        // Buscar los enlaces específicos de login
+        this.modoClaroLogin = document.getElementById('modo-claro-login-css');
+        this.modoOscuroLogin = document.getElementById('modo-oscuro-login-css');
 
         // Buscar elementos del tema
         this.themeIcon = document.querySelector('.theme-icon');
@@ -113,9 +119,11 @@ class ThemeManager {
         if (this.modoClaro) this.modoClaro.disabled = false;
         if (this.modoClaroMenu) this.modoClaroMenu.disabled = false;
         if (this.modoClaroPage) this.modoClaroPage.disabled = false;
+        if (this.modoClaroLogin) this.modoClaroLogin.disabled = false;
         
         // Desactivar estilos de modo oscuro
         if (this.modoOscuroPage) this.modoOscuroPage.disabled = true;
+        if (this.modoOscuroLogin) this.modoOscuroLogin.disabled = true;
         
         if (this.themeIcon) this.themeIcon.textContent = '☀️';
         if (this.themeBtn) this.themeBtn.title = 'Cambiar a modo oscuro';
@@ -133,9 +141,11 @@ class ThemeManager {
         if (this.modoClaro) this.modoClaro.disabled = true;
         if (this.modoClaroMenu) this.modoClaroMenu.disabled = true;
         if (this.modoClaroPage) this.modoClaroPage.disabled = true;
+        if (this.modoClaroLogin) this.modoClaroLogin.disabled = true;
         
         // Activar estilos de modo oscuro
         if (this.modoOscuroPage) this.modoOscuroPage.disabled = false;
+        if (this.modoOscuroLogin) this.modoOscuroLogin.disabled = false;
         
         if (this.themeIcon) this.themeIcon.textContent = '🌙';
         if (this.themeBtn) this.themeBtn.title = 'Cambiar a modo claro';
