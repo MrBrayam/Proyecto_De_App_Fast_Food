@@ -232,4 +232,65 @@ class ClienteController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error al buscar cliente'], 500);
         }
     }
+
+    /**
+     * Busca un cliente por número de documento (DNI)
+     */
+    public function buscarPorDni(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $dni = isset($_GET['dni']) ? trim($_GET['dni']) : null;
+
+        if (!$dni) {
+            $this->json(['exito' => false, 'mensaje' => 'DNI requerido'], 400);
+            return;
+        }
+
+        $model = new Cliente();
+        try {
+            $cliente = $model->buscarPorDocumento($dni);
+            
+            if (!$cliente) {
+                $this->json(['exito' => false, 'mensaje' => 'Cliente no encontrado'], 404);
+                return;
+            }
+
+            $clienteFormateado = [
+                'idCliente' => (int)$cliente['IdCliente'],
+                'tipoDocumento' => $cliente['TipoDocumento'],
+                'numDocumento' => $cliente['NumDocumento'],
+                'nombres' => $cliente['Nombres'],
+                'apellidos' => $cliente['Apellidos'],
+                'nombreCompleto' => $cliente['NombreCompleto'],
+                'telefono' => $cliente['Telefono'],
+                'email' => $cliente['Email'],
+                'direccion' => $cliente['Direccion'],
+                'montoGastado' => (float)$cliente['MontoGastado'],
+                'estado' => $cliente['Estado'],
+                'fechaRegistro' => $cliente['FechaRegistro'],
+                'fechaActualizacion' => $cliente['FechaActualizacion'],
+            ];
+
+            $this->json([
+                'exito' => true,
+                'cliente' => $clienteFormateado,
+            ]);
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error al buscar cliente'], 500);
+        }
+    }
 }
+

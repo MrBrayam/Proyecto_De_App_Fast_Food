@@ -1,4 +1,345 @@
 /* ============================================
+   Registrar Venta (Modo Oscuro)
+   Diseño limpio y consistente, manteniendo inputs
+============================================ */
+
+:root {
+    --bg: #0f172a;
+    --surface: #111827;
+    --surface-soft: #1f2937;
+    --border: #1f2937;
+    --border-strong: #374151;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --accent: #f97316;
+    --accent-2: #22c55e;
+    --danger: #ef4444;
+    --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.venta-container {
+    background: var(--bg);
+    min-height: calc(100vh - 96px);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+}
+
+.venta-info-bar {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 960px) {
+    .venta-info-bar {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cliente-section label,
+.tipo-pago-section label {
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.cliente-input-group {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 720px) {
+    .cliente-input-group {
+        grid-template-columns: 1fr;
+    }
+    .cliente-input-group button {
+        width: 100%;
+    }
+}
+
+input,
+select {
+    width: 100%;
+    background: var(--surface-soft);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input::placeholder,
+select::placeholder {
+    color: var(--muted);
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25);
+    background: #0b1220;
+}
+
+.btn-buscar,
+.btn-nuevo-cliente,
+.btn-añadir,
+.btn-eliminar,
+.btn-registrar {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    color: #0b0f1a;
+}
+
+.btn-buscar {
+    background: var(--accent);
+    color: #0b0f1a;
+    min-width: 52px;
+}
+
+.btn-nuevo-cliente {
+    background: var(--accent-2);
+    color: #0b0f1a;
+}
+
+.btn-añadir {
+    background: var(--accent-2);
+    color: #0b0f1a;
+}
+
+.btn-eliminar {
+    background: #334155;
+    color: var(--text);
+}
+
+.btn-registrar {
+    background: var(--accent);
+    color: #0b0f1a;
+}
+
+.btn-buscar:hover,
+.btn-nuevo-cliente:hover,
+.btn-añadir:hover,
+.btn-eliminar:hover,
+.btn-registrar:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+    filter: brightness(1.05);
+}
+
+.btn-buscar:active,
+.btn-nuevo-cliente:active,
+.btn-añadir:active,
+.btn-eliminar:active,
+.btn-registrar:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.pedido-info {
+    margin-top: -4px;
+    border-radius: 12px;
+    padding: 12px 16px;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: var(--text);
+}
+
+.pedido-info .info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.pedido-info strong {
+    color: var(--accent-2);
+}
+
+.venta-productos-form .productos-header-row,
+.venta-productos-form .productos-input-row {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr 1fr 1fr 0.9fr;
+    gap: 10px;
+    align-items: center;
+}
+
+@media (max-width: 960px) {
+    .venta-productos-form .productos-header-row,
+    .venta-productos-form .productos-input-row {
+        grid-template-columns: 1fr;
+    }
+    .btn-añadir {
+        width: 100%;
+    }
+}
+
+.header-col {
+    background: var(--surface-soft);
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.venta-tabla-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    max-height: 340px;
+}
+
+.venta-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.venta-tabla thead {
+    background: #0b1220;
+}
+
+.venta-tabla th {
+    padding: 12px 10px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+}
+
+.venta-tabla td {
+    padding: 12px 10px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+}
+
+.venta-tabla tbody tr:hover {
+    background: rgba(249, 115, 22, 0.08);
+}
+
+.btn-eliminar-producto {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fecdd3;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-eliminar-producto:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.venta-resumen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: center;
+}
+
+@media (max-width: 720px) {
+    .venta-resumen {
+        grid-template-columns: 1fr;
+    }
+}
+
+.resumen-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--text);
+}
+
+.resumen-row input {
+    max-width: 180px;
+}
+
+.resumen-totales {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: end;
+    gap: 14px;
+    color: var(--text);
+}
+
+@media (max-width: 720px) {
+    .resumen-totales {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+}
+
+.resumen-item {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 10px;
+    min-width: 160px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.resumen-item.total {
+    border-color: rgba(249, 115, 22, 0.6);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.15);
+}
+
+.venta-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+    .venta-actions {
+        flex-direction: column;
+    }
+    .venta-actions button {
+        width: 100%;
+    }
+}
+
+.btn-registrar {
+    min-width: 160px;
+}
+
+.btn-eliminar {
+    min-width: 120px;
+}
+
+/* Utilidades */
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.muted { color: var(--muted); }/* ============================================
    ESTILOS PARA REGISTRAR VENTA
    ============================================ */
 

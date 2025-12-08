@@ -83,6 +83,11 @@ class PedidoController
 
     public function buscar()
     {
+        // Agregar CORS headers
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+        
         try {
             $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
             if ($id <= 0) {
@@ -97,6 +102,55 @@ class PedidoController
             if ($pedido) {
                 http_response_code(200);
                 echo json_encode(['exito' => true, 'pedido' => $pedido]);
+            } else {
+                http_response_code(404);
+                echo json_encode(['exito' => false, 'mensaje' => 'Pedido no encontrado']);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    public function actualizarEstado()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['exito' => false, 'mensaje' => 'Método no permitido']);
+                return;
+            }
+
+            $raw = file_get_contents('php://input');
+            $raw = mb_convert_encoding($raw, 'UTF-8', 'UTF-8, UTF-16LE, UTF-16BE, ISO-8859-1');
+            $data = json_decode($raw, true);
+
+            $idPedido = isset($data['idPedido']) ? (int)$data['idPedido'] : 0;
+            $nuevoEstado = isset($data['estado']) ? trim($data['estado']) : '';
+
+            if ($idPedido <= 0) {
+                http_response_code(400);
+                echo json_encode(['exito' => false, 'mensaje' => 'ID de pedido inválido']);
+                return;
+            }
+
+            if (!in_array($nuevoEstado, ['pendiente', 'entregado', 'cancelado'])) {
+                http_response_code(400);
+                echo json_encode(['exito' => false, 'mensaje' => 'Estado inválido']);
+                return;
+            }
+
+            $pedidoModel = new Pedido();
+            $actualizado = $pedidoModel->actualizarEstado($idPedido, $nuevoEstado);
+
+            if ($actualizado) {
+                http_response_code(200);
+                echo json_encode([
+                    'exito' => true,
+                    'mensaje' => 'Estado del pedido actualizado',
+                    'idPedido' => $idPedido,
+                    'nuevoEstado' => $nuevoEstado
+                ]);
             } else {
                 http_response_code(404);
                 echo json_encode(['exito' => false, 'mensaje' => 'Pedido no encontrado']);

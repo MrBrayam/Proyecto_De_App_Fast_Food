@@ -107,77 +107,10 @@
                                 <th>Cliente</th>
                                 <th>Fecha</th>
                                 <th>Tipo Servicio</th>
-                                <th>Producto</th>
                                 <th>Información</th>
                             </tr>
                         </thead>
                         <tbody id="tablaPedidosBody">
-                            <!-- Datos de prueba -->
-                            <tr>
-                                <td>001</td>
-                                <td>72345678</td>
-                                <td>María González</td>
-                                <td>27/10/2025</td>
-                                <td><span class="badge badge-local">Local</span></td>
-                                <td>2 Pizzas, 1 Bebida</td>
-                                <td>
-                                    <button class="btn-info" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>002</td>
-                                <td>85647392</td>
-                                <td>Carlos Ramírez</td>
-                                <td>27/10/2025</td>
-                                <td><span class="badge badge-delivery">Delivery</span></td>
-                                <td>1 Pizza, 2 Entradas, 1 Postre</td>
-                                <td>
-                                    <button class="btn-info" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>003</td>
-                                <td>91234567</td>
-                                <td>Ana Torres</td>
-                                <td>26/10/2025</td>
-                                <td><span class="badge badge-para-llevar">Para Llevar</span></td>
-                                <td>3 Pizzas, 2 Bebidas</td>
-                                <td>
-                                    <button class="btn-info" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>004</td>
-                                <td>78912345</td>
-                                <td>Luis Mendoza</td>
-                                <td>26/10/2025</td>
-                                <td><span class="badge badge-local">Local</span></td>
-                                <td>1 Promoción Familiar</td>
-                                <td>
-                                    <button class="btn-info" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>005</td>
-                                <td>65498732</td>
-                                <td>Patricia Flores</td>
-                                <td>25/10/2025</td>
-                                <td><span class="badge badge-delivery">Delivery</span></td>
-                                <td>2 Pizzas, 3 Bebidas, 1 Entrada</td>
-                                <td>
-                                    <button class="btn-info" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -268,6 +201,16 @@
                         </tfoot>
                     </table>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action btn-marcar-entregado" id="btnMarcarEntregado" onclick="marcarComoEntregado()" title="Marcar este pedido como entregado">
+                    <i class="fas fa-check-circle"></i>
+                    Marcar como Entregado
+                </button>
+                <button class="btn-action btn-cerrar" onclick="cerrarModal()" title="Cerrar">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
             </div>
         </div>
     </div>

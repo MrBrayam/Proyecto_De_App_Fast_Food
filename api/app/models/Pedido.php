@@ -28,6 +28,8 @@ class Pedido
         ]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Cerrar todos los result sets del stored procedure
         while ($stmt->nextRowset()) {}
 
         if ($result && isset($result['resultado'])) {
@@ -44,7 +46,7 @@ class Pedido
     {
         $db = Database::connection();
         $stmt = $db->prepare('CALL pa_registrar_detalle_pedido(?, ?, ?, ?, ?, ?, ?)');
-
+        
         $stmt->execute([
             $idPedido,
             $detalle['idProducto'] ?? null,
@@ -56,9 +58,9 @@ class Pedido
         ]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        while ($stmt->nextRowset()) {}
-
-        if ($result && isset($result['resultado'])) {
+        
+        // Cerrar todos los result sets del stored procedure
+        while ($stmt->nextRowset()) {}        if ($result && isset($result['resultado'])) {
             return json_decode($result['resultado'], true);
         }
 
@@ -78,10 +80,71 @@ class Pedido
     public function buscarPorId(int $idPedido)
     {
         $db = Database::connection();
-        $stmt = $db->prepare('CALL pa_buscar_pedido(?)');
-        $stmt->execute([$idPedido]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        while ($stmt->nextRowset()) {}
-        return $row;
+        
+        try {
+            // Obtener el pedido directamente de la tabla
+            $sql = 'SELECT 
+                        IdPedido,
+                        NumDocumentos,
+                        TipoServicio,
+                        NumMesa,
+                        IdCliente,
+                        NombreCliente,
+                        DireccionCliente,
+                        TelefonoCliente,
+                        IdUsuario,
+                        SubTotal,
+                        Descuento,
+                        Total,
+                        Estado,
+                        FechaPedido,
+                        Observaciones
+                    FROM Pedidos
+                    WHERE IdPedido = ' . intval($idPedido);
+            
+            $stmt = $db->query($sql);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$row) {
+                return null;
+            }
+            
+            // Obtener detalles
+            $sqlDetalles = 'SELECT 
+                        IdDetalle,
+                        IdPedido,
+                        IdProducto,
+                        IdPlato,
+                        CodProducto,
+                        DescripcionProducto,
+                        Cantidad,
+                        PrecioUnitario,
+                        Subtotal
+                    FROM DetallePedido
+                    WHERE IdPedido = ' . intval($idPedido) . '
+                    ORDER BY IdDetalle ASC';
+            
+            $stmtDetalles = $db->query($sqlDetalles);
+            $detalles = $stmtDetalles->fetchAll(PDO::FETCH_ASSOC);
+            
+            $row['Detalles'] = is_array($detalles) ? $detalles : [];
+            return $row;
+        } catch (Exception $e) {
+            error_log('Error en buscarPorId: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function actualizarEstado(int $idPedido, string $nuevoEstado)
+    {
+        $db = Database::connection();
+        $stmt = $db->prepare('
+            UPDATE Pedidos 
+            SET Estado = ?, FechaActualizacion = NOW()
+            WHERE IdPedido = ?
+        ');
+        $stmt->execute([$nuevoEstado, $idPedido]);
+        
+        return $stmt->rowCount() > 0;
     }
 }

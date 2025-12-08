@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="../css/modo-claro/menu_principal.css" id="modo-claro-menu-css" disabled>
     <link rel="stylesheet" href="../css/modo-oscuro/visualizar_venta.css">
     <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
-    <link rel="stylesheet" href="../css/modo-oscuro/visualizar_venta.css" id="modo-oscuro-page-css" disabled>
+    <link rel="stylesheet" href="../css/modo-claro/visualizar_venta.css" id="modo-claro-page-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+</head>
 <body>
 
     <!-- Main Content -->
@@ -45,23 +45,28 @@
         <!-- Contenedor Principal -->
         <div class="venta-visualizar-container">
 
-            <!-- Búsqueda de Ventas -->
+            <!-- Búsqueda y Filtros -->
             <div class="busqueda-section">
                 <div class="busqueda-form">
                     <input 
                         type="text" 
                         id="campoBusqueda" 
                         class="input-busqueda-principal" 
-                        placeholder="Buscar venta..."
+                        placeholder="Buscar por ID venta, cliente, tipo de pago..."
+                        onkeypress="if(event.key==='Enter') buscarVenta()"
                     >
                     
                     <button class="btn-buscar-principal" onclick="buscarVenta()">
-                        BUSCAR
+                        <i class="fas fa-search"></i> BUSCAR
                     </button>
-                    
-                    <button class="btn-detalle-principal" onclick="mostrarDetalle()" disabled id="btnDetalle">
-                        DETALLE
-                    </button>
+
+                    <select id="filtroTipoPago" class="input-filtro" onchange="cargarVentas()">
+                        <option value="">Todos los tipos de pago</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="yape">Yape</option>
+                        <option value="plin">Plin</option>
+                    </select>
                 </div>
             </div>
 
@@ -71,11 +76,14 @@
                     <table class="tabla-ventas-principal">
                         <thead>
                             <tr>
-                                <th>Nro COMPROBANTE</th>
-                                <th>FECHA</th>
-                                <th>CLIENTE</th>
-                                <th>TOTAL</th>
+                                <th>ID Venta</th>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Subtotal</th>
+                                <th>Descuento</th>
+                                <th>Total</th>
                                 <th>Tipo Pago</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyVentas">
@@ -87,115 +95,81 @@
 
             <!-- Botones de Acción -->
             <div class="acciones-principales">
-                <button class="btn-action btn-exportar" onclick="exportarVentas()">
-                    <i class="fas fa-file-export"></i> Exportar
+                <button class="btn-action btn-limpiar" onclick="limpiarBusqueda()">
+                    <i class="fas fa-redo"></i> Limpiar
                 </button>
                 <button class="btn-action btn-salir" onclick="salir()">
                     <i class="fas fa-times"></i> Salir
                 </button>
             </div>
         </div>
-    </main>
 
-    <!-- Modal de detalle de venta -->
-    <div id="modalDetalle" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-file-invoice"></i> Comprobante de Pago</h2>
-                <button class="btn-close" onclick="cerrarModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="comprobante">
-                <div class="comprobante-header">
-                    <div class="empresa-info">
-                        <h3><i class="fas fa-pizza-slice"></i> KING'S PIZZA</h3>
-                        <p>RUC: 20123456789</p>
-                        <p>Av. Principal 123, Lima - Perú</p>
-                        <p>Tel: (01) 234-5678</p>
-                    </div>
-                    <div class="comprobante-numero">
-                        <h4>BOLETA DE VENTA</h4>
-                        <p>N° <span id="detalleNroComprobante">001-0001</span></p>
-                    </div>
+        <!-- Modal de Detalle de Venta -->
+        <div id="modalDetalle" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Detalle de Venta</h2>
+                    <button class="btn-cerrar" onclick="cerrarModal()">&times;</button>
                 </div>
-
-                <div class="comprobante-info">
-                    <div class="info-row">
-                        <span class="label">Fecha:</span>
-                        <span id="detalleFecha" class="value">--/--/----</span>
+                <div class="modal-body">
+                    <div class="detalle-info">
+                        <div class="info-row">
+                            <span><strong>ID Venta:</strong> <span id="detalleIdVenta"></span></span>
+                            <span><strong>Fecha:</strong> <span id="detalleFecha"></span></span>
+                            <span><strong>Cliente:</strong> <span id="detalleCliente"></span></span>
+                        </div>
+                        <div class="info-row">
+                            <span><strong>Usuario:</strong> <span id="detalleUsuario"></span></span>
+                            <span><strong>Tipo Pago:</strong> <span id="detalleTipoPago"></span></span>
+                            <span><strong>Estado:</strong> <span id="detalleEstado"></span></span>
+                        </div>
                     </div>
-                    <div class="info-row">
-                        <span class="label">Hora:</span>
-                        <span id="detalleHora" class="value">--:--:--</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Cliente:</span>
-                        <span id="detalleCliente" class="value">-----------</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Tipo de Pago:</span>
-                        <span id="detalleTipoPago" class="value">-----------</span>
-                    </div>
-                </div>
-
-                <div class="comprobante-productos">
-                    <table class="tabla-detalle">
+                    
+                    <h3>Productos</h3>
+                    <table class="detalle-productos-tabla">
                         <thead>
                             <tr>
-                                <th>Producto</th>
-                                <th>Cant.</th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
                                 <th>Precio</th>
-                                <th>Total</th>
+                                <th>Subtotal</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaDetalleProductos">
-                            <!-- Se llenará dinámicamente -->
+                        <tbody id="detalleProductos">
                         </tbody>
                     </table>
-                </div>
 
-                <div class="comprobante-totales">
-                    <div class="total-row">
-                        <span class="label">Subtotal:</span>
-                        <span id="detalleSubtotal" class="value">S/ 0.00</span>
-                    </div>
-                    <div class="total-row">
-                        <span class="label">IGV (18%):</span>
-                        <span id="detalleIGV" class="value">S/ 0.00</span>
-                    </div>
-                    <div class="total-row total-final">
-                        <span class="label">TOTAL:</span>
-                        <span id="detalleTotal" class="value">S/ 0.00</span>
+                    <div class="detalle-totales">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="detalleSubtotal">S/ 0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Descuento:</span>
+                            <span id="detalleDescuento">S/ 0.00</span>
+                        </div>
+                        <div class="total-row total">
+                            <span>Total:</span>
+                            <span id="detalleTotal">S/ 0.00</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="comprobante-footer">
-                    <p>¡Gracias por su compra!</p>
-                    <p>Vuelva pronto</p>
-                </div>
-
-                <div class="modal-acciones">
-                    <button class="btn-modal btn-imprimir" onclick="imprimirComprobante()">
-                        <i class="fas fa-print"></i> Imprimir
-                    </button>
-                    <button class="btn-modal btn-pdf" onclick="descargarPDF()">
-                        <i class="fas fa-file-pdf"></i> Descargar PDF
-                    </button>
+                <div class="modal-footer">
+                    <button class="btn-cerrar-modal" onclick="cerrarModal()">Cerrar</button>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/visualizar_venta.js"></script>    <script src="../js/theme-manager.js"></script>
+    <script src="../js/visualizar_venta.js"></script>
+    <script src="../js/theme-manager.js"></script>
 
 </body>
 </html>
-    <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
 
 
 

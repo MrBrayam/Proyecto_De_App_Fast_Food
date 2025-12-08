@@ -16,10 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnRegistrar = document.getElementById('btnRegistrar');
     const tablaBody = document.getElementById('tablaPedidoBody');
     const inputCodigo = document.getElementById('searchCodigo');
+    const inputDni = document.getElementById('dniCliente');
 
     if (btnAgregar) btnAgregar.addEventListener('click', agregarItem);
     if (btnRegistrar) btnRegistrar.addEventListener('click', registrarPedido);
     if (inputCodigo) inputCodigo.addEventListener('blur', buscarProductoPorCodigo);
+    if (inputDni) inputDni.addEventListener('blur', buscarClientePorDNI);
 
     // Delegar eliminación de items
     if (tablaBody) {
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Estado local de items
 let itemsPedido = [];
+let idClienteEncontrado = null; // Guardar ID del cliente si se encuentra
 
 // Función para configurar el tipo de servicio
 function configurarTipoServicio() {
@@ -150,6 +153,38 @@ async function buscarProductoPorCodigo() {
     }
 }
 
+// Buscar cliente por DNI y autocompletar nombre, teléfono y dirección
+async function buscarClientePorDNI() {
+    const dni = document.getElementById('dniCliente').value.trim();
+    if (!dni || dni.length < 8) return;
+
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/clientes/buscar-por-dni?dni=${encodeURIComponent(dni)}`);
+        const data = await response.json();
+
+        if (data.exito && data.cliente) {
+            const cliente = data.cliente;
+            idClienteEncontrado = cliente.idCliente || null;
+            document.getElementById('nombreCliente').value = cliente.nombreCompleto || '';
+            document.getElementById('telefonoCliente').value = cliente.telefono || '';
+            document.getElementById('direccionCliente').value = cliente.direccion || '';
+        } else {
+            // Si no encuentra, limpiar campos e ID
+            idClienteEncontrado = null;
+            document.getElementById('nombreCliente').value = '';
+            document.getElementById('telefonoCliente').value = '';
+            document.getElementById('direccionCliente').value = '';
+        }
+    } catch (error) {
+        console.error('Error buscando cliente:', error);
+        // No mostrar alerta, solo limpiar campos
+        idClienteEncontrado = null;
+        document.getElementById('nombreCliente').value = '';
+        document.getElementById('telefonoCliente').value = '';
+        document.getElementById('direccionCliente').value = '';
+    }
+}
+
 // Añadir item al pedido
 function agregarItem() {
     const codigo = document.getElementById('searchCodigo').value.trim();
@@ -229,6 +264,7 @@ async function registrarPedido() {
     const nombreCliente = document.getElementById('nombreCliente').value.trim();
     const direccionCliente = document.getElementById('direccionCliente').value.trim();
     const telefonoCliente = document.getElementById('telefonoCliente').value.trim();
+    const dniCliente = document.getElementById('dniCliente').value.trim();
 
     if (!nombreCliente) {
         alert('El nombre del cliente es obligatorio');
@@ -253,10 +289,10 @@ async function registrarPedido() {
 
     const subTotal = itemsPedido.reduce((acc, it) => acc + it.subtotal, 0);
     const payload = {
-        numDocumentos: '',
+        numDocumentos: dniCliente || '',
         tipoServicio,
         numMesa: numeroMesa ? parseInt(numeroMesa, 10) : null,
-        idCliente: null,
+        idCliente: idClienteEncontrado || null,
         nombreCliente,
         direccionCliente: direccionCliente || null,
         telefonoCliente: telefonoCliente || null,
@@ -287,8 +323,10 @@ async function registrarPedido() {
         if (data.exito) {
             alert('Pedido registrado exitosamente');
             itemsPedido = [];
+            idClienteEncontrado = null;
             renderizarTabla();
             // limpiar formulario básico
+            document.getElementById('dniCliente').value = '';
             document.getElementById('nombreCliente').value = '';
             document.getElementById('direccionCliente').value = '';
             document.getElementById('telefonoCliente').value = '';

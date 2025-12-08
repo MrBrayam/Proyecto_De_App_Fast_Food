@@ -13,10 +13,13 @@ require_once __DIR__ . '/controllers/SuministroController.php';
 require_once __DIR__ . '/controllers/MesaController.php';
 require_once __DIR__ . '/controllers/PedidoController.php';
 require_once __DIR__ . '/controllers/PlatoController.php';
+require_once __DIR__ . '/controllers/CajaController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
     'ventas/registrar' => [VentaController::class, 'registrar'],
+    'ventas/listar' => [VentaController::class, 'listar'],
+    'ventas/buscar' => [VentaController::class, 'buscar'],
     'perfiles/registrar' => [PerfilController::class, 'registrar'],
     'perfiles/listar' => [PerfilController::class, 'listar'],
     'usuarios/registrar' => [UsuarioController::class, 'registrar'],
@@ -24,6 +27,7 @@ return [
     'clientes/registrar' => [ClienteController::class, 'registrar'],
     'clientes/listar' => [ClienteController::class, 'listar'],
     'clientes/buscar' => [ClienteController::class, 'buscar'],
+    'clientes/buscar-por-dni' => [ClienteController::class, 'buscarPorDni'],
     'proveedores/registrar' => [ProveedorController::class, 'registrar'],
     'proveedores/listar' => [ProveedorController::class, 'listar'],
     'proveedores/buscar' => [ProveedorController::class, 'buscar'],
@@ -53,7 +57,12 @@ return [
     'pedidos/registrar' => [PedidoController::class, 'registrar'],
     'pedidos/listar' => [PedidoController::class, 'listar'],
     'pedidos/buscar' => [PedidoController::class, 'buscar'],
+    'pedidos/actualizar-estado' => [PedidoController::class, 'actualizarEstado'],
     'platos/registrar' => [PlatoController::class, 'registrar'],
     'platos/listar' => [PlatoController::class, 'listar'],
     'platos/buscar' => [PlatoController::class, 'buscar'],
+    'caja/abrir' => [CajaController::class, 'abrir'],
+    'caja/listar' => [CajaController::class, 'listar'],
+    'caja/abierta' => [CajaController::class, 'abierta'],
+    'caja/cerrar' => [CajaController::class, 'cerrar'],
 ];

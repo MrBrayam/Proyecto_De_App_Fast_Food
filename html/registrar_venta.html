@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/modo-oscuro/styles.css">
     <link rel="stylesheet" href="../css/modo-oscuro/menu_principal.css">
     <link rel="stylesheet" href="../css/modo-claro/menu_principal.css" id="modo-claro-menu-css" disabled>
-    <link rel="stylesheet" href="../css/modo-oscuro/registrar_venta.css">
+    <link rel="stylesheet" href="../css/modo-oscuro/registrar_venta.css" id="modo-oscuro-page-css">
     <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
     <link rel="stylesheet" href="../css/modo-claro/registrar_venta.css" id="modo-claro-page-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -44,16 +44,16 @@
 
         <!-- Contenedor Principal de Venta -->
         <div class="venta-container">
-            <!-- Sección Cliente y Tipo de Pago -->
+            <!-- Sección Búsqueda de Pedidos -->
             <div class="venta-info-bar">
                 <div class="cliente-section">
-                    <label for="clienteBuscar">CLIENTE</label>
+                    <label for="buscarPedido">PEDIDO O CLIENTE</label>
                     <div class="cliente-input-group">
-                        <input type="text" id="clienteBuscar" class="input-cliente" placeholder="Buscar">
-                        <button class="btn-buscar" onclick="buscarCliente()">
+                        <input type="text" id="buscarPedido" class="input-cliente" placeholder="Buscar por ID pedido o nombre cliente">
+                        <button class="btn-buscar" onclick="buscarPedido()">
                             <i class="fas fa-search"></i>
                         </button>
-                        <button class="btn-nuevo-cliente" onclick="nuevoCliente()">Nuevo Cliente</button>
+                        <button class="btn-nuevo-cliente" onclick="nuevoRegistro()">Nuevo Registro</button>
                     </div>
                 </div>
                 <div class="tipo-pago-section">
@@ -68,20 +68,28 @@
                 </div>
             </div>
 
+            <!-- Info del Pedido Seleccionado -->
+            <div class="pedido-info" id="pedidoInfo" style="display: none;">
+                <div class="info-row">
+                    <span><strong>Pedido #:</strong> <span id="infoPedidoId"></span></span>
+                    <span><strong>Cliente:</strong> <span id="infoPedidoCliente"></span></span>
+                    <span><strong>Tipo Servicio:</strong> <span id="infoPedidoTipo"></span></span>
+                    <span><strong>Fecha:</strong> <span id="infoPedidoFecha"></span></span>
+                </div>
+            </div>
+
             <!-- Formulario de Productos -->
             <div class="venta-productos-form">
                 <div class="productos-header-row">
                     <div class="header-col col-codigo">Codigo</div>
-                    <div class="header-col col-linea">Linea de Producto</div>
                     <div class="header-col col-descripcion">Descripción</div>
                     <div class="header-col col-cantidad">Cantidad</div>
                     <div class="header-col col-precio">Precio</div>
                     <div class="header-col col-btn"></div>
                 </div>
                 <div class="productos-input-row">
-                    <input type="text" id="inputCodigo" class="input-codigo" placeholder="Buscar__">
-                    <input type="text" id="inputLinea" class="input-linea" placeholder="Buscar__">
-                    <input type="text" id="inputDescripcion" class="input-descripcion" disabled>
+                    <input type="text" id="inputCodigo" class="input-codigo" placeholder="Código producto">
+                    <input type="text" id="inputDescripcion" class="input-descripcion" placeholder="Descripción" disabled>
                     <input type="number" id="inputCantidad" class="input-cantidad" placeholder="1" value="1" min="1">
                     <input type="text" id="inputPrecio" class="input-precio" placeholder="S/" disabled>
                     <button class="btn-añadir" onclick="añadirProducto()">Añadir</button>
@@ -100,43 +108,37 @@
                             <th class="th-acciones"></th>
                         </tr>
                     </thead>
-                    <tbody id="tablaProductos">
-                        <tr>
-                            <td>PRODUCTO 1</td>
-                            <td>1</td>
-                            <td>S/10</td>
-                            <td>S/10</td>
-                            <td>
-                                <button class="btn-scroll-up" onclick="moverArriba(this)"><i class="fas fa-chevron-up"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>PRODUCTO 2</td>
-                            <td>2</td>
-                            <td>S/10</td>
-                            <td>S/20</td>
-                            <td>
-                                <button class="btn-scroll-up" onclick="moverArriba(this)"><i class="fas fa-chevron-up"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>PRODUCTO 3</td>
-                            <td>3</td>
-                            <td>S/10</td>
-                            <td>S/30</td>
-                            <td>
-                                <button class="btn-scroll-down" onclick="moverAbajo(this)"><i class="fas fa-chevron-down"></i></button>
-                            </td>
-                        </tr>
+                    <tbody>
                     </tbody>
                 </table>
             </div>
 
+            <!-- Resumen de Venta -->
+            <div class="venta-resumen">
+                <div class="resumen-row">
+                    <label>Descuento:</label>
+                    <input type="number" id="inputDescuento" value="0" min="0" step="0.01" onchange="actualizarTablaProductos()">
+                </div>
+                <div class="resumen-totales">
+                    <div class="resumen-item">
+                        <span>SUBTOTAL:</span>
+                        <span id="subtotalVenta">S/ 0.00</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span>DESCUENTO:</span>
+                        <span id="descuentoVenta">S/ 0.00</span>
+                    </div>
+                    <div class="resumen-item total">
+                        <span>TOTAL:</span>
+                        <span id="totalVenta">S/ 0.00</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Botones de Acción -->
             <div class="venta-actions">
-                <button class="btn-eliminar" onclick="eliminarVenta()">Eliminar</button>
-                <button class="btn-registrar" onclick="registrarVenta()">Registrar</button>
-                <button class="btn-salir" onclick="salirVenta()">Salir</button>
+                <button class="btn-eliminar" onclick="limpiarFormulario()">Limpiar</button>
+                <button class="btn-registrar" onclick="registrarVenta()">Registrar Venta</button>
             </div>
         </div>
     </main>
@@ -144,7 +146,7 @@
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
-    <script src="../js/registrar_venta.js"></script>
+    <script src="../js/registrar_venta.js?v=2"></script>
     <script src="../js/theme-manager.js"></script>
 </body>
 </html>

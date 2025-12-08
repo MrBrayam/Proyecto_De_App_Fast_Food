@@ -648,6 +648,153 @@ END //
 DELIMITER ;
 
 -- ============================================
+-- PA: APERTURA CAJA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_abrir;
+DELIMITER //
+CREATE PROCEDURE pa_caja_abrir(
+    IN p_codCaja VARCHAR(50),
+    IN p_montoInicial DECIMAL(12,2),
+    IN p_turno ENUM('Mañana','Tarde','Noche'),
+    IN p_idUsuario INT,
+    IN p_fecha DATE
+)
+BEGIN
+    DECLARE v_existe INT DEFAULT 0;
+    
+    -- Verificar si la caja existe
+    SELECT COUNT(*) INTO v_existe
+    FROM Caja 
+    WHERE CodCaja = p_codCaja;
+    
+    -- Si no existe, crear nueva caja
+    IF v_existe = 0 THEN
+        INSERT INTO Caja (
+            CodCaja, Estado, MontoInicial, MontoFinal, Fecha, Turno,
+            IdUsuario, HoraApertura, TotalVentas, TotalEfectivo, TotalTarjeta,
+            TotalYape, TotalPlin, Observaciones
+        ) VALUES (
+            p_codCaja,
+            'abierta',
+            IFNULL(p_montoInicial, 0),
+            0,
+            p_fecha,
+            p_turno,
+            p_idUsuario,
+            NOW(),
+            0, 0, 0, 0, 0,
+            NULL
+        );
+        SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja creada y abierta correctamente', 'CodCaja', p_codCaja) AS resultado;
+    ELSE
+        -- Si existe, actualizar (reabrir)
+        UPDATE Caja SET
+            Estado = 'abierta',
+            MontoInicial = IFNULL(p_montoInicial, 0),
+            MontoFinal = 0,
+            Fecha = p_fecha,
+            Turno = p_turno,
+            IdUsuario = p_idUsuario,
+            HoraApertura = NOW(),
+            HoraCierre = NULL,
+            TotalVentas = 0,
+            TotalEfectivo = 0,
+            TotalTarjeta = 0,
+            TotalYape = 0,
+            TotalPlin = 0,
+            Observaciones = NULL
+        WHERE CodCaja = p_codCaja;
+        
+        SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja abierta correctamente', 'CodCaja', p_codCaja) AS resultado;
+    END IF;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR CAJAS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_listar;
+DELIMITER //
+CREATE PROCEDURE pa_caja_listar()
+BEGIN
+    SELECT 
+        CodCaja,
+        Estado,
+        MontoInicial,
+        MontoFinal,
+        Fecha AS FechaApertura,
+        HoraApertura,
+        HoraCierre,
+        Fecha,
+        Turno,
+        IdUsuario,
+        TotalVentas,
+        TotalEfectivo,
+        TotalTarjeta,
+        TotalYape,
+        TotalPlin,
+        Observaciones
+    FROM Caja
+    ORDER BY Fecha DESC, HoraApertura DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: CAJA ABIERTA ACTUAL
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_abierta;
+DELIMITER //
+CREATE PROCEDURE pa_caja_abierta()
+BEGIN
+    SELECT 
+        CodCaja,
+        Estado,
+        MontoInicial,
+        MontoFinal,
+        Fecha AS FechaApertura,
+        HoraApertura,
+        HoraCierre,
+        Fecha,
+        Turno,
+        IdUsuario,
+        TotalVentas,
+        TotalEfectivo,
+        TotalTarjeta,
+        TotalYape,
+        TotalPlin,
+        Observaciones
+    FROM Caja
+    WHERE Estado = 'abierta'
+    ORDER BY HoraApertura DESC
+    LIMIT 1;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: CERRAR CAJA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_caja_cerrar;
+DELIMITER //
+CREATE PROCEDURE pa_caja_cerrar(
+    IN p_codCaja VARCHAR(50),
+    IN p_montoFinal DECIMAL(12,2),
+    IN p_observaciones TEXT,
+    IN p_idUsuario INT
+)
+BEGIN
+    UPDATE Caja
+    SET Estado = 'cerrada',
+        MontoFinal = IFNULL(p_montoFinal, 0),
+        HoraCierre = NOW(),
+        Observaciones = p_observaciones,
+        IdUsuario = p_idUsuario
+    WHERE CodCaja = p_codCaja;
+
+    SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Caja cerrada correctamente', 'CodCaja', p_codCaja) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
 -- PA: LISTAR PERFILES
 -- ============================================
 DROP PROCEDURE IF EXISTS pa_listar_perfiles;
@@ -1941,5 +2088,176 @@ BEGIN
         'Subtotal', p_cantidad * p_precioUnitario,
         'mensaje', 'Detalle de pedido registrado exitosamente'
     ) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR VENTA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_venta;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_venta(
+    IN p_idCliente INT,
+    IN p_tipoPago ENUM('efectivo', 'tarjeta', 'yape', 'plin'),
+    IN p_subTotal DECIMAL(12,2),
+    IN p_descuento DECIMAL(12,2),
+    IN p_total DECIMAL(12,2),
+    IN p_idUsuario INT,
+    IN p_codCaja VARCHAR(50),
+    IN p_observaciones TEXT,
+    IN p_detalles JSON
+)
+BEGIN
+    DECLARE v_codVenta INT;
+    DECLARE v_detalle_count INT;
+    DECLARE v_i INT DEFAULT 0;
+    DECLARE v_codProducto VARCHAR(50);
+    DECLARE v_linea VARCHAR(100);
+    DECLARE v_descripcion TEXT;
+    DECLARE v_cantidad INT;
+    DECLARE v_precio DECIMAL(10,2);
+    DECLARE v_subtotal DECIMAL(12,2);
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT JSON_OBJECT(
+            'error', 'Error al registrar venta'
+        ) AS resultado;
+    END;
+
+    START TRANSACTION;
+
+    -- Validar parámetros requeridos
+    IF p_tipoPago IS NULL OR p_tipoPago = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El tipo de pago es obligatorio';
+    END IF;
+
+    IF p_idUsuario IS NULL OR p_idUsuario <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El usuario es obligatorio';
+    END IF;
+
+    -- Insertar la venta
+    INSERT INTO Ventas (
+        IdCliente,
+        TipoPago,
+        SubTotal,
+        Descuento,
+        Total,
+        IdUsuario,
+        CodCaja,
+        Estado,
+        Observaciones
+    ) VALUES (
+        NULLIF(p_idCliente, 0),
+        p_tipoPago,
+        p_subTotal,
+        p_descuento,
+        p_total,
+        p_idUsuario,
+        NULLIF(p_codCaja, ''),
+        'pagado',
+        NULLIF(p_observaciones, '')
+    );
+
+    SET v_codVenta = LAST_INSERT_ID();
+
+    -- Insertar detalles de venta desde JSON
+    IF p_detalles IS NOT NULL AND JSON_TYPE(p_detalles) = 'ARRAY' THEN
+        SET v_detalle_count = JSON_LENGTH(p_detalles);
+        WHILE v_i < v_detalle_count DO
+            SET v_codProducto = JSON_UNQUOTE(JSON_EXTRACT(p_detalles, CONCAT('$[', v_i, '].codProducto')));
+            SET v_linea = JSON_UNQUOTE(JSON_EXTRACT(p_detalles, CONCAT('$[', v_i, '].linea')));
+            SET v_descripcion = JSON_UNQUOTE(JSON_EXTRACT(p_detalles, CONCAT('$[', v_i, '].descripcion')));
+            SET v_cantidad = JSON_UNQUOTE(JSON_EXTRACT(p_detalles, CONCAT('$[', v_i, '].cantidad')));
+            SET v_precio = JSON_UNQUOTE(JSON_EXTRACT(p_detalles, CONCAT('$[', v_i, '].precio')));
+            SET v_subtotal = v_cantidad * v_precio;
+
+            INSERT INTO DetalleVenta (
+                CodVenta,
+                CodProducto,
+                Linea,
+                Descripcion,
+                Cantidad,
+                Precio,
+                Subtotal
+            ) VALUES (
+                v_codVenta,
+                v_codProducto,
+                COALESCE(v_linea, ''),
+                COALESCE(v_descripcion, ''),
+                COALESCE(v_cantidad, 0),
+                COALESCE(v_precio, 0),
+                v_subtotal
+            );
+
+            SET v_i = v_i + 1;
+        END WHILE;
+    END IF;
+
+    COMMIT;
+
+    -- Retornar la venta registrada
+    SELECT JSON_OBJECT(
+        'CodVenta', v_codVenta,
+        'IdCliente', p_idCliente,
+        'TipoPago', p_tipoPago,
+        'SubTotal', p_subTotal,
+        'Descuento', p_descuento,
+        'Total', p_total,
+        'Estado', 'pagado',
+        'mensaje', 'Venta registrada exitosamente'
+    ) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR VENTAS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_ventas;
+DELIMITER //
+CREATE PROCEDURE pa_listar_ventas()
+BEGIN
+    SELECT 
+        CodVenta,
+        IdCliente,
+        TipoPago,
+        SubTotal,
+        Descuento,
+        Total,
+        IdUsuario,
+        CodCaja,
+        Estado,
+        DATE_FORMAT(FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
+        Observaciones
+    FROM Ventas
+    ORDER BY FechaVenta DESC, CodVenta DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: BUSCAR VENTA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_buscar_venta;
+DELIMITER //
+CREATE PROCEDURE pa_buscar_venta(
+    IN p_codVenta INT
+)
+BEGIN
+    SELECT 
+        CodVenta,
+        IdCliente,
+        TipoPago,
+        SubTotal,
+        Descuento,
+        Total,
+        IdUsuario,
+        CodCaja,
+        Estado,
+        DATE_FORMAT(FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
+        Observaciones
+    FROM Ventas
+    WHERE CodVenta = p_codVenta
+    LIMIT 1;
 END //
 DELIMITER ;

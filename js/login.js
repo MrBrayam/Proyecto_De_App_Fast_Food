@@ -142,10 +142,20 @@ document.addEventListener('DOMContentLoaded', function() {
             token: token
         };
 
+        // Guardar también en sessionStorage con las claves esperadas por el resto de pantallas
+        const sessionUser = {
+            IdUsuario: usuario.id,
+            NombreCompleto: usuario.nombre,
+            Perfil: usuario.perfil,
+            IdPerfil: usuario.idPerfil,
+            Token: token
+        };
+
         localStorage.setItem('userSession', JSON.stringify(sessionData));
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('currentUser', JSON.stringify(sessionData));
         localStorage.setItem('authToken', token);
+        sessionStorage.setItem('usuario', JSON.stringify(sessionUser));
 
         // Si el usuario marcó "Recordarme", guardar preferencia
         if (rememberMe.checked) {
@@ -168,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función auxiliar para cambiar estado de carga del botón
     function redirectToDashboard(role) {
         // Todos los usuarios van al menú principal
-        window.location.href = 'html/menu_principal.html';
+        window.location.href = '/Proyecto_De_App_Fast_Food/html/menu_principal.html';
     }
 
     // Verificar sesión recordada

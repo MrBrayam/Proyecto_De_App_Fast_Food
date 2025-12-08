@@ -2,22 +2,20 @@
    JAVASCRIPT PARA VISUALIZAR VENTAS
    ============================================ */
 
-// Variables globales
-let ventaSeleccionada = null;
-let todasLasVentas = [];
+let ventas = [];
+let ventasFiltradas = [];
+let ventaActualEnModal = null;
 
-// Inicialización al cargar la página
+// Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
     cargarVentas();
-    configurarEventos();
 });
 
-// Actualizar fecha y hora en tiempo real
+// Actualizar fecha y hora
 function actualizarFechaHora() {
     const ahora = new Date();
-    
     const opciones = { 
         weekday: 'long', 
         year: 'numeric', 
@@ -25,29 +23,157 @@ function actualizarFechaHora() {
         day: 'numeric' 
     };
     const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
-    
     const horaFormateada = ahora.toLocaleTimeString('es-ES', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
     });
     
-    const fechaElement = document.getElementById('fechaActual');
-    const horaElement = document.getElementById('horaActual');
-    
-    if (fechaElement) {
-        fechaElement.textContent = fechaFormateada;
-    }
-    if (horaElement) {
-        horaElement.textContent = horaFormateada;
+    document.getElementById('currentDate').textContent = fechaFormateada + ' ' + horaFormateada;
+}
+
+// Cargar todas las ventas
+async function cargarVentas() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/ventas/listar');
+        const datos = await response.json();
+
+        if (datos.exito) {
+            ventas = datos.items || [];
+            ventasFiltradas = [...ventas];
+            renderizarTabla();
+        } else {
+            alert('Error al cargar ventas');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar ventas');
     }
 }
 
-// Configurar eventos
-function configurarEventos() {
-    // Evento para búsqueda al presionar Enter
-    const campoBusqueda = document.getElementById('campoBusqueda');
-    if (campoBusqueda) {
+// Renderizar tabla de ventas
+function renderizarTabla() {
+    const tbody = document.getElementById('tbodyVentas');
+    tbody.innerHTML = '';
+
+    if (ventasFiltradas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No hay ventas</td></tr>';
+        return;
+    }
+
+    ventasFiltradas.forEach(venta => {
+        const fecha = new Date(venta.FechaVenta).toLocaleDateString('es-ES');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${venta.CodVenta}</td>
+            <td>${fecha}</td>
+            <td>${venta.IdCliente ? 'Cliente ID: ' + venta.IdCliente : 'Sin cliente'}</td>
+            <td>S/ ${parseFloat(venta.SubTotal).toFixed(2)}</td>
+            <td>S/ ${parseFloat(venta.Descuento).toFixed(2)}</td>
+            <td><strong>S/ ${parseFloat(venta.Total).toFixed(2)}</strong></td>
+            <td>${capitalizar(venta.TipoPago)}</td>
+            <td>
+                <button class="btn-ver" onclick="verDetalleVenta(${venta.CodVenta})" title="Ver detalle">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Capitalizar texto
+function capitalizar(texto) {
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+// Ver detalle de venta
+async function verDetalleVenta(codVenta) {
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/ventas/buscar?id=${codVenta}`);
+        const datos = await response.json();
+
+        if (datos.exito && datos.venta) {
+            ventaActualEnModal = datos.venta;
+            mostrarModalDetalle(datos.venta);
+        } else {
+            alert('Error al cargar detalle de venta');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar venta');
+    }
+}
+
+// Mostrar modal con detalle
+async function mostrarModalDetalle(venta) {
+    // Información de la venta
+    document.getElementById('detalleIdVenta').textContent = venta.CodVenta;
+    document.getElementById('detalleFecha').textContent = new Date(venta.FechaVenta).toLocaleDateString('es-ES');
+    document.getElementById('detalleCliente').textContent = venta.IdCliente ? 'ID: ' + venta.IdCliente : 'Sin cliente registrado';
+    document.getElementById('detalleUsuario').textContent = 'Usuario ID: ' + venta.IdUsuario;
+    document.getElementById('detalleTipoPago').textContent = capitalizar(venta.TipoPago);
+    document.getElementById('detalleEstado').textContent = venta.Estado;
+
+    // Cargar detalles de la venta (productos)
+    // Aquí necesitaríamos un endpoint que devuelva los detalles de venta
+    // Por ahora, mostraremos los totales
+    document.getElementById('detalleSubtotal').textContent = 'S/ ' + parseFloat(venta.SubTotal).toFixed(2);
+    document.getElementById('detalleDescuento').textContent = 'S/ ' + parseFloat(venta.Descuento).toFixed(2);
+    document.getElementById('detalleTotal').textContent = 'S/ ' + parseFloat(venta.Total).toFixed(2);
+
+    // Cargar productos desde API (próxima mejora: crear endpoint para detalles)
+    const tbody = document.getElementById('detalleProductos');
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando productos...</td></tr>';
+
+    // Por ahora mostrar mensaje simple
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Detalles de productos disponibles en próxima versión</td></tr>';
+
+    // Mostrar modal
+    document.getElementById('modalDetalle').style.display = 'block';
+}
+
+// Cerrar modal
+function cerrarModal() {
+    document.getElementById('modalDetalle').style.display = 'none';
+    ventaActualEnModal = null;
+}
+
+// Buscar venta
+function buscarVenta() {
+    const busqueda = document.getElementById('campoBusqueda').value.trim().toLowerCase();
+    const filtroTipoPago = document.getElementById('filtroTipoPago').value;
+
+    if (busqueda === '' && filtroTipoPago === '') {
+        ventasFiltradas = [...ventas];
+    } else {
+        ventasFiltradas = ventas.filter(venta => {
+            const coincideBusqueda = 
+                venta.CodVenta.toString().includes(busqueda) ||
+                venta.TipoPago.toLowerCase().includes(busqueda);
+            
+            const coincideFiltro = filtroTipoPago === '' || venta.TipoPago === filtroTipoPago;
+            
+            return coincideBusqueda && coincideFiltro;
+        });
+    }
+
+    renderizarTabla();
+}
+
+// Limpiar búsqueda
+function limpiarBusqueda() {
+    document.getElementById('campoBusqueda').value = '';
+    document.getElementById('filtroTipoPago').value = '';
+    ventasFiltradas = [...ventas];
+    renderizarTabla();
+}
+
+// Salir
+function salir() {
+    window.location.href = 'menu_principal.html';
+}
+
         campoBusqueda.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
