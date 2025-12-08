@@ -1486,3 +1486,349 @@ BEGIN
     ) AS resultado;
 END //
 DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR MESA
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_mesa;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_mesa(
+    IN p_numeroMesa INT,
+    IN p_capacidad INT,
+    IN p_ubicacion VARCHAR(50),
+    IN p_tipo VARCHAR(50),
+    IN p_estado VARCHAR(50),
+    IN p_prioridad VARCHAR(50),
+    IN p_ventana BOOLEAN,
+    IN p_sillaBebe BOOLEAN,
+    IN p_accesible BOOLEAN,
+    IN p_silenciosa BOOLEAN,
+    IN p_observaciones TEXT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    -- Validar capacidad
+    IF p_capacidad <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La capacidad debe ser mayor a 0';
+    END IF;
+
+    -- Verificar si la mesa ya existe
+    IF EXISTS (SELECT 1 FROM Mesas WHERE NumMesa = p_numeroMesa) THEN
+        -- Actualizar mesa existente
+        UPDATE Mesas
+        SET 
+            Cantidad = p_capacidad,
+            Ubicacion = COALESCE(NULLIF(p_ubicacion, ''), Ubicacion),
+            TipoMesa = COALESCE(NULLIF(p_tipo, ''), TipoMesa),
+            Estado = COALESCE(NULLIF(p_estado, ''), Estado),
+            Prioridad = COALESCE(NULLIF(p_prioridad, ''), Prioridad),
+            Ventana = COALESCE(p_ventana, Ventana),
+            SillaBebe = COALESCE(p_sillaBebe, SillaBebe),
+            Accesible = COALESCE(p_accesible, Accesible),
+            Silenciosa = COALESCE(p_silenciosa, Silenciosa),
+            Observacion = NULLIF(p_observaciones, '')
+        WHERE NumMesa = p_numeroMesa;
+
+        COMMIT;
+
+        SELECT JSON_OBJECT(
+            'NumMesa', p_numeroMesa,
+            'mensaje', 'Mesa actualizada exitosamente'
+        ) AS resultado;
+    ELSE
+        -- Insertar nueva mesa
+        INSERT INTO Mesas (
+            NumMesa,
+            Cantidad,
+            Ubicacion,
+            TipoMesa,
+            Estado,
+            Prioridad,
+            Ventana,
+            SillaBebe,
+            Accesible,
+            Silenciosa,
+            Observacion
+        ) VALUES (
+            p_numeroMesa,
+            p_capacidad,
+            COALESCE(NULLIF(p_ubicacion, ''), 'salon-principal'),
+            COALESCE(NULLIF(p_tipo, ''), 'cuadrada'),
+            COALESCE(NULLIF(p_estado, ''), 'disponible'),
+            COALESCE(NULLIF(p_prioridad, ''), 'normal'),
+            COALESCE(p_ventana, FALSE),
+            COALESCE(p_sillaBebe, FALSE),
+            COALESCE(p_accesible, FALSE),
+            COALESCE(p_silenciosa, FALSE),
+            NULLIF(p_observaciones, '')
+        );
+
+        COMMIT;
+
+        SELECT JSON_OBJECT(
+            'NumMesa', p_numeroMesa,
+            'Capacidad', p_capacidad,
+            'mensaje', 'Mesa registrada exitosamente'
+        ) AS resultado;
+    END IF;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR MESAS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_mesas;
+DELIMITER //
+CREATE PROCEDURE pa_listar_mesas()
+BEGIN
+    SELECT 
+        NumMesa AS IdMesa,
+        NumMesa,
+        Cantidad AS Capacidad,
+        Ubicacion,
+        TipoMesa AS Tipo,
+        Estado,
+        Prioridad,
+        Ventana,
+        SillaBebe,
+        Accesible,
+        Silenciosa,
+        Observacion AS Observaciones,
+        DATE_FORMAT(FechaCreacion, '%Y-%m-%d') AS FechaCreacion
+    FROM Mesas
+    ORDER BY NumMesa ASC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR PEDIDO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_pedido;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_pedido(
+    IN p_numDocumentos VARCHAR(50),
+    IN p_tipoServicio ENUM('local', 'delivery', 'para-llevar'),
+    IN p_numMesa INT,
+    IN p_idCliente INT,
+    IN p_nombreCliente VARCHAR(200),
+    IN p_direccionCliente TEXT,
+    IN p_telefonoCliente VARCHAR(20),
+    IN p_idUsuario INT,
+    IN p_subTotal DECIMAL(12,2),
+    IN p_descuento DECIMAL(12,2),
+    IN p_total DECIMAL(12,2),
+    IN p_estado ENUM('pendiente', 'preparando', 'listo', 'entregado', 'cancelado'),
+    IN p_observaciones TEXT
+)
+BEGIN
+    DECLARE v_idPedido INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    -- Validar parámetros requeridos
+    IF p_tipoServicio IS NULL OR p_tipoServicio = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El tipo de servicio es obligatorio';
+    END IF;
+
+    IF p_nombreCliente IS NULL OR p_nombreCliente = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El nombre del cliente es obligatorio';
+    END IF;
+
+    IF p_idUsuario IS NULL OR p_idUsuario <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El usuario es obligatorio';
+    END IF;
+
+    -- Insertar el nuevo pedido
+    INSERT INTO Pedidos (
+        NumDocumentos,
+        TipoServicio,
+        NumMesa,
+        IdCliente,
+        NombreCliente,
+        DireccionCliente,
+        TelefonoCliente,
+        IdUsuario,
+        SubTotal,
+        Descuento,
+        Total,
+        Estado,
+        Observaciones
+    ) VALUES (
+        COALESCE(NULLIF(p_numDocumentos, ''), CONCAT('PED-', DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))),
+        p_tipoServicio,
+        NULLIF(p_numMesa, 0),
+        NULLIF(p_idCliente, 0),
+        p_nombreCliente,
+        NULLIF(p_direccionCliente, ''),
+        NULLIF(p_telefonoCliente, ''),
+        p_idUsuario,
+        COALESCE(p_subTotal, 0.00),
+        COALESCE(p_descuento, 0.00),
+        COALESCE(p_total, 0.00),
+        COALESCE(NULLIF(p_estado, ''), 'pendiente'),
+        NULLIF(p_observaciones, '')
+    );
+
+    SET v_idPedido = LAST_INSERT_ID();
+
+    COMMIT;
+
+    -- Retornar el pedido registrado
+    SELECT JSON_OBJECT(
+        'IdPedido', v_idPedido,
+        'NumDocumentos', COALESCE(NULLIF(p_numDocumentos, ''), CONCAT('PED-', DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))),
+        'NombreCliente', p_nombreCliente,
+        'Total', p_total,
+        'Estado', COALESCE(NULLIF(p_estado, ''), 'pendiente'),
+        'mensaje', 'Pedido registrado exitosamente'
+    ) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR PEDIDOS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_pedidos;
+DELIMITER //
+CREATE PROCEDURE pa_listar_pedidos()
+BEGIN
+    SELECT 
+        IdPedido,
+        NumDocumentos,
+        TipoServicio,
+        NumMesa,
+        IdCliente,
+        NombreCliente,
+        DireccionCliente,
+        TelefonoCliente,
+        IdUsuario,
+        SubTotal,
+        Descuento,
+        Total,
+        Estado,
+        DATE_FORMAT(FechaPedido, '%Y-%m-%d %H:%i:%s') AS FechaPedido,
+        DATE_FORMAT(FechaEntrega, '%Y-%m-%d %H:%i:%s') AS FechaEntrega,
+        Observaciones
+    FROM Pedidos
+    ORDER BY FechaPedido DESC, IdPedido DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: BUSCAR PEDIDO POR ID
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_buscar_pedido;
+DELIMITER //
+CREATE PROCEDURE pa_buscar_pedido(
+    IN p_idPedido INT
+)
+BEGIN
+    SELECT 
+        IdPedido,
+        NumDocumentos,
+        TipoServicio,
+        NumMesa,
+        IdCliente,
+        NombreCliente,
+        DireccionCliente,
+        TelefonoCliente,
+        IdUsuario,
+        SubTotal,
+        Descuento,
+        Total,
+        Estado,
+        DATE_FORMAT(FechaPedido, '%Y-%m-%d %H:%i:%s') AS FechaPedido,
+        DATE_FORMAT(FechaEntrega, '%Y-%m-%d %H:%i:%s') AS FechaEntrega,
+        Observaciones
+    FROM Pedidos
+    WHERE IdPedido = p_idPedido
+    LIMIT 1;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR DETALLE PEDIDO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_detalle_pedido;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_detalle_pedido(
+    IN p_idPedido INT,
+    IN p_idProducto INT,
+    IN p_idPlato INT,
+    IN p_codProducto VARCHAR(50),
+    IN p_descripcionProducto TEXT,
+    IN p_cantidad INT,
+    IN p_precioUnitario DECIMAL(10,2)
+)
+BEGIN
+    DECLARE v_idDetalle INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    -- Validar parámetros requeridos
+    IF p_idPedido IS NULL OR p_idPedido <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El ID del pedido es obligatorio';
+    END IF;
+
+    IF p_cantidad IS NULL OR p_cantidad <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La cantidad debe ser mayor a 0';
+    END IF;
+
+    IF p_precioUnitario IS NULL OR p_precioUnitario < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El precio unitario es obligatorio';
+    END IF;
+
+    -- Insertar detalle del pedido
+    INSERT INTO DetallePedido (
+        IdPedido,
+        IdProducto,
+        IdPlato,
+        CodProducto,
+        DescripcionProducto,
+        Cantidad,
+        PrecioUnitario,
+        Subtotal
+    ) VALUES (
+        p_idPedido,
+        NULLIF(p_idProducto, 0),
+        NULLIF(p_idPlato, 0),
+        p_codProducto,
+        p_descripcionProducto,
+        p_cantidad,
+        p_precioUnitario,
+        p_cantidad * p_precioUnitario
+    );
+
+    SET v_idDetalle = LAST_INSERT_ID();
+
+    COMMIT;
+
+    -- Retornar el detalle registrado
+    SELECT JSON_OBJECT(
+        'IdDetalle', v_idDetalle,
+        'IdPedido', p_idPedido,
+        'CodProducto', p_codProducto,
+        'Cantidad', p_cantidad,
+        'PrecioUnitario', p_precioUnitario,
+        'Subtotal', p_cantidad * p_precioUnitario,
+        'mensaje', 'Detalle de pedido registrado exitosamente'
+    ) AS resultado;
+END //
+DELIMITER ;

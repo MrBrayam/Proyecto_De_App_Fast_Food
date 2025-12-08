@@ -3,7 +3,7 @@
    Vista de tarjetas con filtros y modal de detalles
    ============================================ */
 
-// Base de datos de mesas (se obtiene del LocalStorage)
+// Base de datos de mesas (se obtiene del API)
 let mesasDB = [];
 let mesaSeleccionada = null;
 let filtroActual = 'todos';
@@ -19,8 +19,8 @@ function inicializar() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
     
-    // Cargar mesas del LocalStorage
-    cargarMesasDesdeStorage();
+    // Cargar mesas desde API
+    cargarMesasDesdeAPI();
     
     // Event Listeners
     document.getElementById('searchMesa').addEventListener('input', buscarMesas);
@@ -36,10 +36,6 @@ function inicializar() {
             aplicarFiltros();
         });
     });
-    
-    // Renderizar mesas
-    renderizarMesas();
-    actualizarContadores();
 }
 
 // Actualizar fecha y hora
@@ -67,17 +63,49 @@ function actualizarFechaHora() {
 }
 
 
-// Cargar mesas desde LocalStorage o base de datos
-function cargarMesasDesdeStorage() {
-    // Las mesas se cargan desde la base de datos
-    // mesasDB = await fetch('/api/mesas').then(r => r.json());
-    
-    const mesasGuardadas = localStorage.getItem('mesas');
-    if (mesasGuardadas) {
-        mesasDB = JSON.parse(mesasGuardadas);
-    } else {
+// Cargar mesas desde API (usa PA en backend)
+async function cargarMesasDesdeAPI() {
+    try {
+        console.log('Iniciando carga de mesas desde API...');
+        const resp = await fetch('/Proyecto_De_App_Fast_Food/api/mesas/listar', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        console.log('Respuesta recibida:', resp.status, resp.statusText);
+        const data = await resp.json();
+        console.log('Datos parseados:', data);
+        
+        if (data.exito && Array.isArray(data.items)) {
+            console.log('Mesas cargadas:', data.items.length);
+            mesasDB = data.items.map(mapMesaBackend);
+        } else {
+            console.warn('Respuesta inválida o sin items:', data);
+            mesasDB = [];
+        }
+    } catch (err) {
+        console.error('Error cargando mesas:', err);
         mesasDB = [];
     }
+    renderizarMesas();
+    actualizarContadores();
+}
+
+function mapMesaBackend(row) {
+    const toBool = (v) => v === true || v === 1 || v === '1' || v === 'true';
+    return {
+        id: row.IdMesa,
+        numeroMesa: row.NumMesa,
+        capacidad: row.Capacidad,
+        ubicacion: row.Ubicacion,
+        tipo: row.Tipo || 'cuadrada',
+        estado: row.Estado || 'disponible',
+        prioridad: row.Prioridad || 'normal',
+        ventana: toBool(row.Ventana),
+        sillaBebe: toBool(row.SillaBebe),
+        accesible: toBool(row.Accesible),
+        silenciosa: toBool(row.Silenciosa),
+        observaciones: row.Observaciones || '',
+    };
 }
 
 // Renderizar todas las mesas como tarjetas
@@ -114,17 +142,17 @@ function crearTarjetaMesa(mesa) {
     
     // Iconos de características
     const caracteristicas = `
-        <div class="caracteristica-icon ${mesa.fumadores ? 'active' : ''}" title="${mesa.fumadores ? 'Permite fumadores' : 'No fumadores'}">
-            <i class="fas fa-smoking"></i>
+        <div class="caracteristica-icon ${mesa.ventana ? 'active' : ''}" title="${mesa.ventana ? 'Junto a ventana' : 'Sin ventana'}">
+            <i class="fas fa-window-maximize"></i>
         </div>
-        <div class="caracteristica-icon ${mesa.reservable ? 'active' : ''}" title="${mesa.reservable ? 'Reservable' : 'No reservable'}">
-            <i class="fas fa-calendar-check"></i>
-        </div>
-        <div class="caracteristica-icon ${mesa.exterior ? 'active' : ''}" title="${mesa.exterior ? 'Exterior' : 'Interior'}">
-            <i class="fas fa-tree"></i>
+        <div class="caracteristica-icon ${mesa.sillaBebe ? 'active' : ''}" title="${mesa.sillaBebe ? 'Silla para bebé' : 'Sin silla para bebé'}">
+            <i class="fas fa-baby"></i>
         </div>
         <div class="caracteristica-icon ${mesa.accesible ? 'active' : ''}" title="${mesa.accesible ? 'Accesible' : 'No accesible'}">
             <i class="fas fa-wheelchair"></i>
+        </div>
+        <div class="caracteristica-icon ${mesa.silenciosa ? 'active' : ''}" title="${mesa.silenciosa ? 'Zona silenciosa' : 'Zona normal'}">
+            <i class="fas fa-volume-mute"></i>
         </div>
     `;
     
@@ -174,7 +202,7 @@ function crearTarjetaMesa(mesa) {
 
 // Mostrar modal de detalles
 function mostrarDetalles(id) {
-    const mesa = mesasDB.find(m => m.id === id);
+    const mesa = mesasDB.find(m => String(m.id) === String(id));
     if (!mesa) return;
     
     mesaSeleccionada = mesa;
@@ -198,21 +226,21 @@ function mostrarDetalles(id) {
     
     // Características
     const caracteristicasHTML = `
-        <div class="caracteristica-badge ${mesa.fumadores ? 'activa' : 'inactiva'}">
-            <i class="fas fa-smoking"></i>
-            ${mesa.fumadores ? 'Permite fumadores' : 'No fumadores'}
+        <div class="caracteristica-badge ${mesa.ventana ? 'activa' : 'inactiva'}">
+            <i class="fas fa-window-maximize"></i>
+            ${mesa.ventana ? 'Junto a ventana' : 'Sin ventana'}
         </div>
-        <div class="caracteristica-badge ${mesa.reservable ? 'activa' : 'inactiva'}">
-            <i class="fas fa-calendar-check"></i>
-            ${mesa.reservable ? 'Reservable' : 'No reservable'}
-        </div>
-        <div class="caracteristica-badge ${mesa.exterior ? 'activa' : 'inactiva'}">
-            <i class="fas fa-tree"></i>
-            ${mesa.exterior ? 'Exterior' : 'Interior'}
+        <div class="caracteristica-badge ${mesa.sillaBebe ? 'activa' : 'inactiva'}">
+            <i class="fas fa-baby"></i>
+            ${mesa.sillaBebe ? 'Silla para bebé' : 'Sin silla para bebé'}
         </div>
         <div class="caracteristica-badge ${mesa.accesible ? 'activa' : 'inactiva'}">
             <i class="fas fa-wheelchair"></i>
             ${mesa.accesible ? 'Accesible' : 'No accesible'}
+        </div>
+        <div class="caracteristica-badge ${mesa.silenciosa ? 'activa' : 'inactiva'}">
+            <i class="fas fa-volume-mute"></i>
+            ${mesa.silenciosa ? 'Zona silenciosa' : 'Zona normal'}
         </div>
     `;
     document.getElementById('detalle-caracteristicas').innerHTML = caracteristicasHTML;
@@ -233,8 +261,8 @@ function cerrarModal() {
 // Editar mesa (redirige a registrar mesas)
 function editarMesa() {
     if (mesaSeleccionada) {
-        // Guardar ID de la mesa a editar en sessionStorage
-        sessionStorage.setItem('editarMesaId', mesaSeleccionada.id);
+        // Guardar datos de la mesa a editar en sessionStorage
+        sessionStorage.setItem('editarMesaData', JSON.stringify(mesaSeleccionada));
         window.location.href = 'registrar_mesas.html';
     }
 }
