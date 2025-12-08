@@ -86,7 +86,7 @@ async function registrarUsuario(event) {
         nombreCompleto: formData.get('nombre'),
         telefono: formData.get('telefono'),
         email: formData.get('email'),
-        nombreUsuario: formData.get('nombreUsuario'),
+        nombreUsuario: formData.get('usuario'),
         contrasena: password,
         idPerfil: parseInt(formData.get('perfil')),
         estado: formData.get('estado')
