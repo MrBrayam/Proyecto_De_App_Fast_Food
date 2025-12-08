@@ -209,5 +209,45 @@ class ProductoController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error al eliminar producto', 'error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Busca un producto por código
+     */
+    public function buscar(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $codProducto = $_GET['codProducto'] ?? '';
+        if (trim($codProducto) === '') {
+            $this->json(['exito' => false, 'mensaje' => 'Código de producto requerido'], 400);
+            return;
+        }
+
+        $model = new Producto();
+        try {
+            $producto = $model->obtenerPorCodigo($codProducto);
+            if (!$producto) {
+                $this->json(['exito' => false, 'mensaje' => 'Producto no encontrado'], 404);
+                return;
+            }
+
+            $this->json(['exito' => true, 'producto' => $producto], 200);
+        } catch (Exception $e) {
+            error_log('Error en ProductoController::buscar: ' . $e->getMessage());
+            $this->json(['exito' => false, 'mensaje' => 'Error al buscar producto', 'error' => $e->getMessage()], 500);
+        }
+    }
 }
 ?>

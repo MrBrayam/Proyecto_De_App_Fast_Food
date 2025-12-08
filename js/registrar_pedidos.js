@@ -15,9 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnAgregar = document.getElementById('btnAgregar');
     const btnRegistrar = document.getElementById('btnRegistrar');
     const tablaBody = document.getElementById('tablaPedidoBody');
+    const inputCodigo = document.getElementById('searchCodigo');
 
     if (btnAgregar) btnAgregar.addEventListener('click', agregarItem);
     if (btnRegistrar) btnRegistrar.addEventListener('click', registrarPedido);
+    if (inputCodigo) inputCodigo.addEventListener('blur', buscarProductoPorCodigo);
 
     // Delegar eliminación de items
     if (tablaBody) {
@@ -111,6 +113,40 @@ function actualizarFechaHora() {
     const fechaElement = document.getElementById('currentDate');
     if (fechaElement) {
         fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
+    }
+}
+
+// Buscar producto por código y autocompletar descripción y precio
+async function buscarProductoPorCodigo() {
+    const codigo = document.getElementById('searchCodigo').value.trim();
+    if (!codigo) return;
+
+    try {
+        // Primero buscar en platos
+        const respPlatos = await fetch(`/Proyecto_De_App_Fast_Food/api/platos/buscar?codPlato=${encodeURIComponent(codigo)}`);
+        const dataPlatos = await respPlatos.json();
+
+        if (dataPlatos.exito && dataPlatos.plato) {
+            document.getElementById('searchDescripcion').value = dataPlatos.plato.Nombre || '';
+            document.getElementById('precioUnitario').value = dataPlatos.plato.Precio || '0';
+            return;
+        }
+
+        // Si no encontró en platos, buscar en productos
+        const respProductos = await fetch(`/Proyecto_De_App_Fast_Food/api/productos/buscar?codProducto=${encodeURIComponent(codigo)}`);
+        const dataProductos = await respProductos.json();
+
+        if (dataProductos.exito && dataProductos.producto) {
+            document.getElementById('searchDescripcion').value = dataProductos.producto.NombreProducto || '';
+            document.getElementById('precioUnitario').value = dataProductos.producto.Precio || '0';
+        } else {
+            alert('Producto no encontrado');
+            document.getElementById('searchDescripcion').value = '';
+            document.getElementById('precioUnitario').value = '';
+        }
+    } catch (error) {
+        console.error('Error buscando producto:', error);
+        alert('Error al buscar el producto');
     }
 }
 

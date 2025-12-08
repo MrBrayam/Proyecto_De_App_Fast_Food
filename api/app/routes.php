@@ -31,6 +31,7 @@ return [
     'productos/listar' => [ProductoController::class, 'listar'],
     'productos/actualizar' => [ProductoController::class, 'actualizar'],
     'productos/eliminar' => [ProductoController::class, 'eliminar'],
+    'productos/buscar' => [ProductoController::class, 'buscar'],
     'compras/registrar' => [CompraController::class, 'registrar'],
     'compras/listar' => [CompraController::class, 'listar'],
     'compras/buscar' => [CompraController::class, 'buscar'],
