@@ -1,6 +1,11 @@
 // Evento de envío del formulario
 document.getElementById('formRegistrarSuministro').addEventListener('submit', registrarSuministro);
-document.getElementById('rucProveedor').addEventListener('blur', buscarProveedorPorRuc);
+document.getElementById('rucProveedor').addEventListener('change', seleccionarProveedor);
+
+// Cargar proveedores en el select
+document.addEventListener('DOMContentLoaded', function() {
+    cargarProveedoresEnSelect();
+});
 
 // Set date to today and autogenerate invoice number
 document.getElementById('fechaCompra').valueAsDate = new Date();
@@ -139,33 +144,58 @@ function autogenerarNumeroFactura() {
 }
 
 /**
- * Busca proveedor por RUC y autocompleta nombre
+ * Cargar proveedores en el select
  */
-async function buscarProveedorPorRuc() {
-    const ruc = document.getElementById('rucProveedor').value.trim();
+async function cargarProveedoresEnSelect() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/proveedores/listar');
+        const data = await response.json();
+        
+        if (data.exito && data.proveedores) {
+            const selectRuc = document.getElementById('rucProveedor');
+            selectRuc.innerHTML = '<option value="">Seleccione un proveedor</option>';
+            
+            data.proveedores.forEach(proveedor => {
+                const option = document.createElement('option');
+                const codProveedor = proveedor.CodProveedor ?? proveedor.codProveedor;
+                const nombreEmpresa = proveedor.NombreEmpresa ?? proveedor.nombreEmpresa ?? proveedor.RazonSocial ?? proveedor.razonSocial ?? 'Proveedor';
+                const numDoc = proveedor.NumDocumento ?? proveedor.numDocumento ?? '';
+                option.value = codProveedor;
+                option.textContent = `${nombreEmpresa} (RUC: ${numDoc})`;
+                selectRuc.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error cargando proveedores:', error);
+    }
+}
 
-    if (!ruc || ruc.length < 8) {
+/**
+ * Seleccionar proveedor del select y autocompletar nombre
+ */
+async function seleccionarProveedor() {
+    const codProveedor = document.getElementById('rucProveedor').value.trim();
+
+    if (!codProveedor) {
+        document.getElementById('proveedor').value = '';
         return;
     }
 
     try {
-        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/proveedores/buscar?numDoc=${encodeURIComponent(ruc)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/proveedores/buscar?id=${encodeURIComponent(codProveedor)}`);
         const data = await response.json();
 
         if (data.exito && data.proveedor) {
-            document.getElementById('proveedor').value = data.proveedor.razonSocial || '';
-            mostrarAlerta('Proveedor encontrado y cargado', 'exito');
+            const nombreEmpresa = data.proveedor.NombreEmpresa ?? data.proveedor.nombreEmpresa ?? data.proveedor.RazonSocial ?? data.proveedor.razonSocial ?? '';
+            document.getElementById('proveedor').value = nombreEmpresa;
+            mostrarAlerta('Proveedor cargado correctamente', 'exito');
         } else {
+            document.getElementById('proveedor').value = '';
             mostrarAlerta('Proveedor no encontrado', 'error');
         }
     } catch (error) {
-        mostrarAlerta('Error al buscar proveedor: ' + error.message, 'error');
+        console.error('Error:', error);
+        document.getElementById('proveedor').value = '';
     }
 }
 

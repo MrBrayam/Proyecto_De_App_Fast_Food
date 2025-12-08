@@ -10,51 +10,71 @@ document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
     
+    // Cargar proveedores en el select
+    cargarProveedoresEnSelect();
+    
     // Event listeners
-    document.getElementById('ruc').addEventListener('blur', buscarProveedorPorRuc);
+    document.getElementById('ruc').addEventListener('change', seleccionarProveedor);
     document.getElementById('cantidad').addEventListener('change', calcularTotal);
     document.getElementById('precioUnitario').addEventListener('change', calcularTotal);
 });
 
-// Buscar proveedor por RUC
-async function buscarProveedorPorRuc() {
-    const ruc = document.getElementById('ruc').value.trim();
+// Cargar proveedores en el select
+async function cargarProveedoresEnSelect() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/proveedores/listar');
+        const data = await response.json();
+        
+        if (data.exito && data.proveedores) {
+            const selectRuc = document.getElementById('ruc');
+            selectRuc.innerHTML = '<option value="">Seleccione un proveedor</option>';
+            
+            data.proveedores.forEach(proveedor => {
+                const option = document.createElement('option');
+                const codProveedor = proveedor.CodProveedor ?? proveedor.codProveedor;
+                const nombreEmpresa = proveedor.NombreEmpresa ?? proveedor.nombreEmpresa ?? proveedor.RazonSocial ?? proveedor.razonSocial ?? 'Proveedor';
+                const numDoc = proveedor.NumDocumento ?? proveedor.numDocumento ?? '';
+                option.value = codProveedor;
+                option.textContent = `${nombreEmpresa} (RUC: ${numDoc})`;
+                option.setAttribute('data-ruc', numDoc);
+                selectRuc.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error cargando proveedores:', error);
+    }
+}
+
+// Seleccionar proveedor del select
+async function seleccionarProveedor() {
+    const codProveedor = document.getElementById('ruc').value.trim();
     
-    if (!ruc || ruc.length < 8) {
+    if (!codProveedor) {
         limpiarDatosProveedor();
         return;
     }
     
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/proveedores/buscar?numDoc=' + ruc, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/proveedores/buscar?id=' + codProveedor);
         const data = await response.json();
         
         if (data.exito && data.proveedor) {
-            // Autocompletar el formulario
-            const proveedor = data.proveedor;
-            document.getElementById('razonSocial').value = proveedor.razonSocial || '';
-            document.getElementById('telefono').value = proveedor.telefono || '';
-            document.getElementById('direccion').value = proveedor.direccion || '';
-            
-            proveedorSeleccionado = proveedor;
-            
-            console.log('Proveedor encontrado:', proveedor);
+            proveedorSeleccionado = data.proveedor;
+            const nombreEmpresa = data.proveedor.NombreEmpresa ?? data.proveedor.nombreEmpresa ?? data.proveedor.RazonSocial ?? data.proveedor.razonSocial ?? '';
+            const telefono = data.proveedor.Telefono ?? data.proveedor.telefono ?? '';
+            const direccion = data.proveedor.Direccion ?? data.proveedor.direccion ?? '';
+            document.getElementById('razonSocial').value = nombreEmpresa;
+            document.getElementById('telefono').value = telefono;
+            document.getElementById('direccion').value = direccion;
         } else {
             limpiarDatosProveedor();
-            mostrarMensaje('Proveedor no encontrado', 'warning');
         }
-        
     } catch (error) {
-        console.error('Error al buscar proveedor:', error);
+        console.error('Error:', error);
         limpiarDatosProveedor();
     }
 }
+
 
 // Limpiar datos del proveedor
 function limpiarDatosProveedor() {
