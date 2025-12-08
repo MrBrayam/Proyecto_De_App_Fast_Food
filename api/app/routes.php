@@ -12,6 +12,7 @@ require_once __DIR__ . '/controllers/InsumoController.php';
 require_once __DIR__ . '/controllers/SuministroController.php';
 require_once __DIR__ . '/controllers/MesaController.php';
 require_once __DIR__ . '/controllers/PedidoController.php';
+require_once __DIR__ . '/controllers/PlatoController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
@@ -51,4 +52,7 @@ return [
     'pedidos/registrar' => [PedidoController::class, 'registrar'],
     'pedidos/listar' => [PedidoController::class, 'listar'],
     'pedidos/buscar' => [PedidoController::class, 'buscar'],
+    'platos/registrar' => [PlatoController::class, 'registrar'],
+    'platos/listar' => [PlatoController::class, 'listar'],
+    'platos/buscar' => [PlatoController::class, 'buscar'],
 ];

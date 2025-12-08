@@ -1103,6 +1103,117 @@ END //
 DELIMITER ;
 
 -- ============================================
+-- PA: REGISTRAR PLATO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_plato;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_plato(
+    IN p_codPlato VARCHAR(50),
+    IN p_nombre VARCHAR(150),
+    IN p_descripcion TEXT,
+    IN p_ingredientes TEXT,
+    IN p_tamano ENUM('personal', 'mediana', 'familiar', 'grande'),
+    IN p_precio DECIMAL(10,2),
+    IN p_cantidad INT,
+    IN p_estado ENUM('disponible', 'no_disponible')
+)
+BEGIN
+    DECLARE v_idPlato INT;
+
+    START TRANSACTION;
+
+    IF p_codPlato IS NULL OR p_codPlato = '' OR p_nombre IS NULL OR p_nombre = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Código y nombre del plato son requeridos';
+    END IF;
+
+    IF EXISTS (SELECT 1 FROM Platos WHERE CodPlato = p_codPlato) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El código de plato ya existe';
+    END IF;
+
+    INSERT INTO Platos (
+        CodPlato,
+        Nombre,
+        Descripcion,
+        Ingredientes,
+        Tamano,
+        Precio,
+        Cantidad,
+        Estado
+    ) VALUES (
+        p_codPlato,
+        p_nombre,
+        NULLIF(p_descripcion, ''),
+        NULLIF(p_ingredientes, ''),
+        p_tamano,
+        p_precio,
+        COALESCE(p_cantidad, 0),
+        COALESCE(NULLIF(p_estado, ''), 'disponible')
+    );
+
+    SET v_idPlato = LAST_INSERT_ID();
+
+    COMMIT;
+
+    SELECT JSON_OBJECT(
+        'IdPlato', v_idPlato,
+        'CodPlato', p_codPlato,
+        'Nombre', p_nombre,
+        'mensaje', 'Plato registrado exitosamente'
+    ) AS resultado;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR PLATOS
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_platos;
+DELIMITER //
+CREATE PROCEDURE pa_listar_platos()
+BEGIN
+    SELECT 
+        CodPlato,
+        Nombre,
+        Descripcion,
+        Ingredientes,
+        Tamano,
+        Precio,
+        Cantidad,
+        Estado,
+        FechaCreacion,
+        FechaActualizacion
+    FROM Platos
+    ORDER BY CodPlato DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: BUSCAR PLATO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_buscar_plato;
+DELIMITER //
+CREATE PROCEDURE pa_buscar_plato(
+    IN p_codPlato VARCHAR(50)
+)
+BEGIN
+    SELECT 
+        IdPlato,
+        CodPlato,
+        Nombre,
+        Descripcion,
+        Ingredientes,
+        Tamano,
+        Precio,
+        Cantidad,
+        Estado,
+        FechaCreacion,
+        FechaActualizacion
+    FROM Platos
+    WHERE CodPlato = p_codPlato
+    LIMIT 1;
+END //
+DELIMITER ;
+
+-- ============================================
 -- PA: REGISTRAR CLIENTE
 -- ============================================
 DROP PROCEDURE IF EXISTS pa_registrar_cliente;

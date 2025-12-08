@@ -13,10 +13,9 @@
     <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
     <link rel="stylesheet" href="../css/modo-claro/visualizar_platos.css" id="modo-claro-page-css" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 <body>
-
-    <!-- Main Content -->
+</head>
+<body>
     <main class="main-content" id="mainContent">
         <!-- Top Bar -->
         <header class="top-bar">
@@ -73,114 +72,10 @@
 
             <!-- Grid de Platos -->
             <section class="platos-grid-section">
-                <div class="platos-grid" id="platosGrid">
-                    <!-- Plato 1 -->
-                    <div class="plato-card">
-                        <div class="plato-imagen">
-                            <img src="https://via.placeholder.com/200/ff5733/ffffff?text=🍕" alt="Pizza Americana">
-                        </div>
-                        <div class="plato-info">
-                            <div class="plato-header">
-                                <h3 class="plato-nombre">Pizza Americana</h3>
-                                <span class="plato-codigo">204568</span>
-                            </div>
-                            <p class="plato-descripcion">Pizza con base de masa, salsa de tomate y queso mozzarella, acompañada de pepperoni y jamón.</p>
-                            <div class="plato-ingredientes">
-                                <strong>Ingredientes:</strong> Salsa de tomate, queso mozzarella, pepperoni, jamón, orégano.
-                            </div>
-                            <div class="plato-detalles">
-                                <span class="plato-tamano"><i class="fas fa-pizza-slice"></i> Familiar</span>
-                                <span class="plato-precio"><i class="fas fa-tag"></i> S/. 40.00</span>
-                                <span class="plato-cantidad"><i class="fas fa-boxes"></i> Stock: 2</span>
-                            </div>
-                            <div class="plato-acciones">
-                                <button class="btn-ver-detalles" onclick="verDetalles(this)" title="Ver detalles">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Plato 2 -->
-                    <div class="plato-card">
-                        <div class="plato-imagen">
-                            <img src="https://via.placeholder.com/200/ffc857/ffffff?text=🍕" alt="Pizza Hawaiana">
-                        </div>
-                        <div class="plato-info">
-                            <div class="plato-header">
-                                <h3 class="plato-nombre">Pizza Hawaiana</h3>
-                                <span class="plato-codigo">204569</span>
-                            </div>
-                            <p class="plato-descripcion">Pizza con base de masa, salsa de tomate, queso mozzarella, jamón y piña.</p>
-                            <div class="plato-ingredientes">
-                                <strong>Ingredientes:</strong> Salsa de tomate, queso mozzarella, jamón, piña, orégano.
-                            </div>
-                            <div class="plato-detalles">
-                                <span class="plato-tamano"><i class="fas fa-pizza-slice"></i> Mediana</span>
-                                <span class="plato-precio"><i class="fas fa-tag"></i> S/. 35.00</span>
-                                <span class="plato-cantidad"><i class="fas fa-boxes"></i> Stock: 5</span>
-                            </div>
-                            <div class="plato-acciones">
-                                <button class="btn-ver-detalles" onclick="verDetalles(this)" title="Ver detalles">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Plato 3 -->
-                    <div class="plato-card">
-                        <div class="plato-imagen">
-                            <img src="https://via.placeholder.com/200/27ae60/ffffff?text=🍕" alt="Pizza Vegetariana">
-                        </div>
-                        <div class="plato-info">
-                            <div class="plato-header">
-                                <h3 class="plato-nombre">Pizza Vegetariana</h3>
-                                <span class="plato-codigo">204570</span>
-                            </div>
-                            <p class="plato-descripcion">Pizza con verduras frescas, champiñones, pimientos y aceitunas.</p>
-                            <div class="plato-ingredientes">
-                                <strong>Ingredientes:</strong> Salsa de tomate, queso, champiñones, pimientos, aceitunas, cebolla.
-                            </div>
-                            <div class="plato-detalles">
-                                <span class="plato-tamano"><i class="fas fa-pizza-slice"></i> Grande</span>
-                                <span class="plato-precio"><i class="fas fa-tag"></i> S/. 38.00</span>
-                                <span class="plato-cantidad"><i class="fas fa-boxes"></i> Stock: 3</span>
-                            </div>
-                            <div class="plato-acciones">
-                                <button class="btn-ver-detalles" onclick="verDetalles(this)" title="Ver detalles">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Plato 4 -->
-                    <div class="plato-card">
-                        <div class="plato-imagen">
-                            <img src="https://via.placeholder.com/200/e74c3c/ffffff?text=🍕" alt="Pizza BBQ">
-                        </div>
-                        <div class="plato-info">
-                            <div class="plato-header">
-                                <h3 class="plato-nombre">Pizza BBQ</h3>
-                                <span class="plato-codigo">204571</span>
-                            </div>
-                            <p class="plato-descripcion">Pizza con salsa BBQ, pollo, cebolla morada y queso mozzarella.</p>
-                            <div class="plato-ingredientes">
-                                <strong>Ingredientes:</strong> Salsa BBQ, pollo, cebolla morada, queso mozzarella, cilantro.
-                            </div>
-                            <div class="plato-detalles">
-                                <span class="plato-tamano"><i class="fas fa-pizza-slice"></i> Familiar</span>
-                                <span class="plato-precio"><i class="fas fa-tag"></i> S/. 42.00</span>
-                                <span class="plato-cantidad"><i class="fas fa-boxes"></i> Stock: 4</span>
-                            </div>
-                            <div class="plato-acciones">
-                                <button class="btn-ver-detalles" onclick="verDetalles(this)" title="Ver detalles">
-                                    <i class="fas fa-eye"></i> Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="platos-grid" id="platosGrid"></div>
+                <div class="empty-state" id="emptyState" hidden>
+                    <i class="fas fa-utensils"></i>
+                    <p>No hay platos registrados.</p>
                 </div>
             </section>
 
@@ -219,7 +114,24 @@
                     </div>
                     <div class="detalle-item">
                         <label>Tamaño:</label>
-    <!-- Scripts -->
+                        <span id="detalleTamano">-</span>
+                    </div>
+                    <div class="detalle-item">
+                        <label>Precio:</label>
+                        <span id="detallePrecio">-</span>
+                    </div>
+                    <div class="detalle-item">
+                        <label>Cantidad Disponible:</label>
+                        <span id="detalleCantidad">-</span>
+                    </div>
+                    <div class="detalle-item detalle-full">
+                        <label>Descripción:</label>
+                        <span id="detalleDescripcion">-</span>
+                    </div>
+                    <div class="detalle-item detalle-full">
+                        <label>Ingredientes:</label>
+                        <span id="detalleIngredientes">-</span>
+                    </div>
     <script src="../js/load_sidebar.js"></script>
     <script src="../js/menu_principal.js"></script>
     <script src="../js/visualizar_platos.js"></script>
@@ -245,10 +157,9 @@
     <script src="../js/menu_principal.js"></script>
     <script src="../js/visualizar_platos.js"></script>    <script src="../js/theme-manager.js"></script>
 
+    <script src="../js/load_sidebar.js"></script>
+    <script src="../js/menu_principal.js"></script>
+    <script src="../js/visualizar_platos.js"></script>
+    <script src="../js/theme-manager.js"></script>
 </body>
 </html>
-
-    <link rel="stylesheet" href="../css/modo-claro/modo-claro.css" id="modo-claro-css" disabled>
-
-
-

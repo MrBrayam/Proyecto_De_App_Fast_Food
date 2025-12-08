@@ -1,86 +1,88 @@
-// ===== REGISTRAR PLATOS - FRONTEND ONLY =====
-// Solo funcionalidades de interfaz básica
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Actualizar fecha y hora
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
+
+    const btnGuardar = document.getElementById('btnGuardar');
+    const btnAnadir = document.getElementById('btnAnadir');
+
+    if (btnGuardar) btnGuardar.addEventListener('click', registrarPlato);
+    if (btnAnadir) btnAnadir.addEventListener('click', registrarPlato);
 });
 
-// Función para actualizar fecha y hora
 function actualizarFechaHora() {
     const ahora = new Date();
-    
-    const opciones = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const fechaFormateada = ahora.toLocaleDateString('es-ES', opciones);
-    
-    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-    });
-    
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const fechaElement = document.getElementById('currentDate');
     if (fechaElement) {
         fechaElement.textContent = fechaFormateada + ' ' + horaFormateada;
     }
 }
 
+async function registrarPlato() {
+    const codPlato = document.getElementById('searchCodigo').value.trim();
+    const nombre = document.getElementById('searchNombre').value.trim();
+    const tamano = document.getElementById('searchTamano').value;
+    const precio = parseFloat(document.getElementById('searchPrecio').value || '0');
+    const cantidad = parseInt(document.getElementById('searchCantidad').value || '0', 10);
+    const descripcion = document.getElementById('searchDescripcion').value.trim();
+    const ingredientes = document.getElementById('searchIngredientes').value.trim();
 
-// Función para editar plato
-function editarPlato(codigo) {
-    alert(`Función de editar plato con código: ${codigo}\nEsta funcionalidad se implementará en la versión completa.`);
-}
-
-// Función para eliminar plato
-function eliminarPlato(codigo) {
-    if(confirm(`¿Está seguro de que desea eliminar el plato con código ${codigo}?`)) {
-        // Aquí iría la lógica para eliminar el plato
-        alert(`Plato con código ${codigo} eliminado correctamente.\nEsta funcionalidad se implementará en la versión completa.`);
-    }
-}
-
-// Función para registrar nuevo plato
-function registrarPlato() {
-    const nombre = document.getElementById('searchNombre').value;
-    const categoria = document.getElementById('searchCategoria').value;
-    const descripcion = document.getElementById('searchDescripcion').value;
-    const ingredientes = document.getElementById('searchIngredientes').value;
-    const disponibilidad = document.getElementById('searchDisponibilidad').value;
-    const precio = document.getElementById('searchPrecio').value;
-    
-    // Validación básica
-    if (!nombre || !categoria || !descripcion || !ingredientes || !disponibilidad || !precio) {
-        alert('Por favor, complete todos los campos obligatorios.');
+    if (!codPlato || !nombre) {
+        alert('Código y nombre del plato son obligatorios');
         return;
     }
-    
-    if (parseFloat(precio) <= 0) {
-        alert('El precio debe ser mayor a 0.');
+    if (!tamano) {
+        alert('Selecciona un tamaño');
         return;
     }
-    
-    // Simulación de registro exitoso
-    alert(`Plato registrado correctamente:\n
-Nombre: ${nombre}
-Categoría: ${categoria}
-Descripción: ${descripcion}
-Ingredientes: ${ingredientes}
-Disponibilidad: ${disponibilidad}
-Precio: S/. ${precio}
+    if (isNaN(precio) || precio < 0) {
+        alert('El precio debe ser mayor o igual a 0');
+        return;
+    }
+    if (isNaN(cantidad) || cantidad < 0) {
+        alert('La cantidad debe ser 0 o mayor');
+        return;
+    }
 
-Esta funcionalidad se implementará completamente en la versión final.`);
-    
-    // Limpiar formulario
+    const payload = {
+        codPlato,
+        nombre,
+        descripcion,
+        ingredientes,
+        tamano,
+        precio,
+        cantidad,
+        estado: 'disponible'
+    };
+
+    try {
+        const resp = await fetch('/Proyecto_De_App_Fast_Food/api/platos/registrar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await resp.json();
+        if (data.exito) {
+            alert('Plato registrado correctamente');
+            limpiarFormulario();
+        } else {
+            alert(data.mensaje || 'No se pudo registrar el plato');
+        }
+    } catch (error) {
+        console.error('Error registrando plato:', error);
+        alert('Ocurrió un error al registrar el plato');
+    }
+}
+
+function limpiarFormulario() {
+    document.getElementById('searchCodigo').value = '';
     document.getElementById('searchNombre').value = '';
-    document.getElementById('searchCategoria').value = '';
+    document.getElementById('searchTamano').value = '';
+    document.getElementById('searchPrecio').value = '';
+    document.getElementById('searchCantidad').value = '';
     document.getElementById('searchDescripcion').value = '';
     document.getElementById('searchIngredientes').value = '';
-    document.getElementById('searchDisponibilidad').value = '';
-    document.getElementById('searchPrecio').value = '';
 }
