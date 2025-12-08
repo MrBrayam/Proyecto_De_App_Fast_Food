@@ -224,19 +224,6 @@
                                         required
                                     >
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="cargoContacto">
-                                        <i class="fas fa-briefcase"></i>
-                                        Cargo
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        id="cargoContacto" 
-                                        class="form-input" 
-                                        placeholder="Ej: Gerente de Ventas"
-                                    >
-                                </div>
                             </div>
                         </div>
 
@@ -299,29 +286,16 @@
                             
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="condicionPago">
-                                        <i class="fas fa-credit-card"></i>
-                                        Condición de Pago
-                                    </label>
-                                    <select id="condicionPago" class="form-select">
-                                        <option value="Contado">Contado</option>
-                                        <option value="15 días">15 días</option>
-                                        <option value="30 días">30 días</option>
-                                        <option value="45 días">45 días</option>
-                                        <option value="60 días">60 días</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
                                     <label for="tiempoEntrega">
                                         <i class="fas fa-clock"></i>
-                                        Tiempo de Entrega
+                                        Tiempo de Entrega (días)
                                     </label>
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         id="tiempoEntrega" 
                                         class="form-input" 
-                                        placeholder="Ej: 24 horas"
+                                        placeholder="0"
+                                        min="0"
                                     >
                                 </div>
 
@@ -336,13 +310,14 @@
                                         class="form-input" 
                                         placeholder="0.00"
                                         step="0.01"
+                                        min="0"
                                     >
                                 </div>
 
                                 <div class="form-group">
                                     <label for="descuento">
                                         <i class="fas fa-percent"></i>
-                                        Descuento
+                                        Descuento (%)
                                     </label>
                                     <input 
                                         type="number" 
@@ -351,6 +326,7 @@
                                         placeholder="0"
                                         min="0"
                                         max="100"
+                                        step="0.01"
                                     >
                                 </div>
                             </div>

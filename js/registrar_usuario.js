@@ -49,20 +49,6 @@ async function cargarPerfiles() {
     }
 }
 
-// Generar nombre de usuario automáticamente
-function generarNombreUsuario() {
-    const nombres = document.getElementById('nombres').value.trim();
-    const apellidos = document.getElementById('apellidos').value.trim();
-    
-    if (nombres && apellidos) {
-        const primerNombre = nombres.split(' ')[0].toLowerCase();
-        const primerApellido = apellidos.split(' ')[0].toLowerCase();
-        const nombreUsuario = primerNombre.charAt(0) + primerApellido;
-        
-        document.getElementById('nombreUsuario').value = nombreUsuario;
-    }
-}
-
 // Mostrar/ocultar contraseña
 function togglePassword(inputId) {
     const input = document.getElementById(inputId);
@@ -85,16 +71,25 @@ async function registrarUsuario(event) {
     event.preventDefault();
     
     const formData = new FormData(event.target);
+    
+    // Validar que las contraseñas coincidan
+    const password = formData.get('password');
+    const confirmarPassword = formData.get('confirmarPassword');
+    
+    if (password !== confirmarPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+    }
+    
     const data = {
         dni: formData.get('dni'),
-        nombres: formData.get('nombres'),
-        apellidos: formData.get('apellidos'),
+        nombreCompleto: formData.get('nombre'),
         telefono: formData.get('telefono'),
-        email: formData.get('email') || null,
+        email: formData.get('email'),
         nombreUsuario: formData.get('nombreUsuario'),
-        contrasena: formData.get('contrasena'),
+        contrasena: password,
         idPerfil: parseInt(formData.get('perfil')),
-        estado: 'activo'
+        estado: formData.get('estado')
     };
     
     // Validaciones básicas en frontend
@@ -115,6 +110,11 @@ async function registrarUsuario(event) {
     
     if (!data.contrasena || data.contrasena.length < 6) {
         alert('La contraseña debe tener al menos 6 caracteres');
+        return;
+    }
+    
+    if (!data.nombreCompleto || data.nombreCompleto.trim().length < 3) {
+        alert('Debe ingresar el nombre completo');
         return;
     }
     
@@ -149,10 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cargar perfiles disponibles
     cargarPerfiles();
-    
-    // Generar nombre de usuario automáticamente
-    document.getElementById('nombres').addEventListener('blur', generarNombreUsuario);
-    document.getElementById('apellidos').addEventListener('blur', generarNombreUsuario);
     
     // Validación solo números para teléfono y DNI
     document.getElementById('telefono').addEventListener('input', function() {

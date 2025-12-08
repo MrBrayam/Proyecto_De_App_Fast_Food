@@ -1010,6 +1010,136 @@ END //
 DELIMITER ;
 
 -- ============================================
+-- PA: REGISTRAR PROVEEDOR
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_proveedor;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_proveedor(
+    IN p_tipoDoc ENUM('RUC', 'DNI', 'CE'),
+    IN p_numDoc VARCHAR(20),
+    IN p_razonSocial VARCHAR(200),
+    IN p_nombreComercial VARCHAR(200),
+    IN p_categoria ENUM('Alimentos', 'Bebidas', 'Empaques', 'Lácteos', 'Carnes', 'Vegetales', 'Limpieza', 'Equipos'),
+    IN p_telefono VARCHAR(20),
+    IN p_telefonoSecundario VARCHAR(20),
+    IN p_email VARCHAR(100),
+    IN p_sitioWeb VARCHAR(255),
+    IN p_personaContacto VARCHAR(100),
+    IN p_direccion TEXT,
+    IN p_ciudad VARCHAR(100),
+    IN p_distrito VARCHAR(100),
+    IN p_tiempoEntrega INT,
+    IN p_montoMinimo DECIMAL(10,2),
+    IN p_descuento DECIMAL(5,2),
+    IN p_nota TEXT,
+    IN p_estado ENUM('activo', 'inactivo')
+)
+BEGIN
+    DECLARE v_codProveedor INT;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT JSON_OBJECT('error', 'Error al registrar proveedor') AS resultado;
+    END;
+    
+    START TRANSACTION;
+    
+    -- Validar que el documento no exista
+    IF EXISTS (SELECT 1 FROM Proveedores WHERE NumDoc = p_numDoc) THEN
+        SELECT JSON_OBJECT('error', 'El número de documento ya está registrado') AS resultado;
+        ROLLBACK;
+    ELSE
+        -- Insertar el nuevo proveedor
+        INSERT INTO Proveedores (
+            TipoDoc,
+            NumDoc,
+            RazonSocial,
+            NombreComercial,
+            Categoria,
+            Telefono,
+            TelefonoSecundario,
+            Email,
+            Sitio_Web,
+            PersonaContacto,
+            Direccion,
+            Ciudad,
+            Distrito,
+            TiempoEntrega,
+            MontoMinimo,
+            Descuento,
+            Nota,
+            Estado
+        ) VALUES (
+            p_tipoDoc,
+            p_numDoc,
+            p_razonSocial,
+            NULLIF(p_nombreComercial, ''),
+            p_categoria,
+            p_telefono,
+            NULLIF(p_telefonoSecundario, ''),
+            p_email,
+            NULLIF(p_sitioWeb, ''),
+            p_personaContacto,
+            p_direccion,
+            NULLIF(p_ciudad, ''),
+            NULLIF(p_distrito, ''),
+            COALESCE(p_tiempoEntrega, 0),
+            COALESCE(p_montoMinimo, 0.00),
+            COALESCE(p_descuento, 0.00),
+            NULLIF(p_nota, ''),
+            p_estado
+        );
+        
+        SET v_codProveedor = LAST_INSERT_ID();
+        
+        COMMIT;
+        
+        -- Retornar el ID del proveedor registrado
+        SELECT JSON_OBJECT(
+            'CodProveedor', v_codProveedor,
+            'RazonSocial', p_razonSocial,
+            'mensaje', 'Proveedor registrado exitosamente'
+        ) AS resultado;
+    END IF;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR PROVEEDORES
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_proveedores;
+DELIMITER //
+CREATE PROCEDURE pa_listar_proveedores()
+BEGIN
+    SELECT 
+        CodProveedor,
+        TipoDoc,
+        NumDoc,
+        RazonSocial,
+        NombreComercial,
+        Categoria,
+        Estado,
+        Telefono,
+        TelefonoSecundario,
+        Email,
+        Sitio_Web,
+        PersonaContacto,
+        Direccion,
+        Ciudad,
+        Distrito,
+        TiempoEntrega,
+        MontoMinimo,
+        Descuento,
+        Nota,
+        FechaCreacion,
+        FechaActualizacion
+    FROM Proveedores
+    ORDER BY CodProveedor DESC;
+END //
+DELIMITER ;
+
+-- ============================================
 -- PA: REGISTRAR CLIENTE
 -- ============================================
 DROP PROCEDURE IF EXISTS pa_registrar_cliente;
