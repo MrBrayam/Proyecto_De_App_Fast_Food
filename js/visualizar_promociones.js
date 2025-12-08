@@ -2,7 +2,7 @@
    JAVASCRIPT PARA VISUALIZAR PROMOCIONES
    ============================================ */
 
-const API_BASE = '/Proyecto_De_App_Fast_Food/api';
+const API_BASE_PROMO = '/Proyecto_De_App_Fast_Food/api';
 let promociones = [];
 
 // Inicializar al cargar la página
@@ -71,7 +71,7 @@ function inicializarEventos() {
 // Cargar promociones
 async function cargarPromociones() {
     try {
-        const resp = await fetch(`${API_BASE}/promociones/listar`);
+        const resp = await fetch(`${API_BASE_PROMO}/promociones/listar`);
         const data = await resp.json();
 
         console.log('Respuesta API listar:', data);
@@ -169,7 +169,7 @@ function formatearFecha(fecha) {
 // Editar promoción
 async function editarPromocion(idPromocion) {
     try {
-        const resp = await fetch(`${API_BASE}/promociones/buscar?id=${idPromocion}`);
+        const resp = await fetch(`${API_BASE_PROMO}/promociones/buscar?id=${idPromocion}`);
         const data = await resp.json();
 
         if (!resp.ok || !data.exito) {
@@ -195,7 +195,7 @@ function confirmarEliminar(idPromocion) {
 // Eliminar promoción
 async function eliminarPromocion(idPromocion) {
     try {
-        const resp = await fetch(`${API_BASE}/promociones/eliminar`, {
+        const resp = await fetch(`${API_BASE_PROMO}/promociones/eliminar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idPromocion })

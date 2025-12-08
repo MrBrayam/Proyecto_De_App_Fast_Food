@@ -56,6 +56,7 @@ return [
     'mesas/registrar' => [MesaController::class, 'registrar'],
     'mesas/listar' => [MesaController::class, 'listar'],
     'mesas/buscar' => [MesaController::class, 'buscar'],
+    'mesas/actualizar-estado' => [MesaController::class, 'actualizarEstado'],
     'pedidos/registrar' => [PedidoController::class, 'registrar'],
     'pedidos/listar' => [PedidoController::class, 'listar'],
     'pedidos/buscar' => [PedidoController::class, 'buscar'],

@@ -114,5 +114,32 @@ class Mesa
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Actualiza el estado de una mesa
+     */
+    public function actualizarEstado($numeroMesa, $estado)
+    {
+        $db = Database::connection();
+        
+        // Primero verificar que la mesa existe
+        $mesaExiste = $this->buscarPorId($numeroMesa);
+        if (!$mesaExiste) {
+            return null;
+        }
+        
+        $stmt = $db->prepare('
+            UPDATE Mesas
+            SET Estado = ?
+            WHERE NumMesa = ?
+        ');
+        
+        $resultado = $stmt->execute([$estado, $numeroMesa]);
+        
+        if ($resultado) {
+            return $this->buscarPorId($numeroMesa);
+        }
+        
+        return null;
+    }
 }
-?>

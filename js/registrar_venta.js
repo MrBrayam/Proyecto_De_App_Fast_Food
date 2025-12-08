@@ -174,8 +174,11 @@ async function cargarDetallePedido(idPedido) {
         const response = await fetch(`/Proyecto_De_App_Fast_Food/api/pedidos/buscar?id=${idPedido}`);
         const datos = await response.json();
 
+        console.log('[registrar_venta] Respuesta búsqueda pedido:', datos);
+
         if (datos.exito && datos.pedido) {
             pedidoSeleccionado = datos.pedido;
+            console.log('[registrar_venta] Pedido cargado:', pedidoSeleccionado);
             
             // Mostrar info del pedido
             document.getElementById('pedidoInfo').style.display = 'block';
@@ -315,13 +318,41 @@ async function registrarVenta() {
         console.log('[registrar_venta] Respuesta del servidor:', datos);
 
         if (datos.exito) {
-            alert('Venta registrada exitosamente');
-            
-            // Si viene de un pedido, marcar como entregado
+            // Si viene de un pedido, marcar como entregado y liberar mesa PRIMERO
             if (pedidoSeleccionado) {
-                await marcarPedidoEntregado(pedidoSeleccionado.IdPedido);
+                console.log('[registrar_venta] Pedido seleccionado:', JSON.stringify(pedidoSeleccionado));
+                console.log('[registrar_venta] NumMesa del pedido:', pedidoSeleccionado.NumMesa);
+                console.log('[registrar_venta] Tipo de NumMesa:', typeof pedidoSeleccionado.NumMesa);
+                
+                try {
+                    await marcarPedidoEntregado(pedidoSeleccionado.IdPedido);
+                    console.log('[registrar_venta] Pedido marcado como entregado');
+                } catch (e) {
+                    console.error('[registrar_venta] Error marcando pedido:', e);
+                }
+                
+                // Si tiene mesa asociada, marcarla como disponible
+                const numMesa = parseInt(pedidoSeleccionado.NumMesa, 10);
+                console.log('[registrar_venta] NumMesa convertido a int:', numMesa);
+                
+                if (numMesa && numMesa > 0) {
+                    console.log('[registrar_venta] Intentando actualizar mesa', numMesa, 'a disponible');
+                    try {
+                        await actualizarEstadoMesaVenta(numMesa, 'disponible');
+                        console.log('[registrar_venta] Mesa actualizada exitosamente');
+                    } catch (e) {
+                        console.error('[registrar_venta] Error actualizando mesa:', e);
+                    }
+                } else {
+                    console.warn('[registrar_venta] No hay NumMesa válido en el pedido seleccionado. NumMesa:', pedidoSeleccionado.NumMesa);
+                }
+            } else {
+                console.warn('[registrar_venta] No hay pedidoSeleccionado');
             }
 
+            // Mostrar mensaje de éxito DESPUÉS de actualizar la mesa
+            alert('Venta registrada exitosamente');
+            
             // Limpiar formulario
             limpiarFormulario();
         } else {
@@ -358,6 +389,34 @@ async function marcarPedidoEntregado(idPedido) {
         }
     } catch (error) {
         console.error('Error al marcar pedido:', error);
+    }
+}
+
+// Actualizar estado de la mesa
+async function actualizarEstadoMesaVenta(numMesa, estado) {
+    try {
+        console.log(`[registrar_venta] Actualizando mesa ${numMesa} a estado: ${estado}`);
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/mesas/actualizar-estado', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                numMesa: numMesa,
+                estado: estado
+            })
+        });
+
+        const datos = await response.json();
+        console.log(`[registrar_venta] Respuesta actualizar mesa:`, datos);
+
+        if (datos.exito) {
+            console.log(`[registrar_venta] Mesa ${numMesa} actualizada a ${estado}`);
+        } else {
+            console.error(`[registrar_venta] Error al actualizar mesa:`, datos.mensaje);
+        }
+    } catch (error) {
+        console.error(`[registrar_venta] Error al actualizar mesa ${numMesa}:`, error);
     }
 }
 

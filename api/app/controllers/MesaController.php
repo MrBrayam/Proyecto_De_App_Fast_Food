@@ -106,5 +106,48 @@ class MesaController
             echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
         }
     }
+
+    /**
+     * POST /api/mesas/actualizar-estado
+     * Actualiza el estado de una mesa
+     */
+    public function actualizarEstado()
+    {
+        try {
+            $raw = file_get_contents('php://input');
+            $raw = mb_convert_encoding($raw, 'UTF-8', 'UTF-8, UTF-16LE, UTF-16BE, ISO-8859-1');
+            $data = json_decode($raw, true);
+
+            if (empty($data['numMesa'])) {
+                http_response_code(400);
+                echo json_encode(['exito' => false, 'mensaje' => 'El número de mesa es obligatorio']);
+                return;
+            }
+
+            if (empty($data['estado'])) {
+                http_response_code(400);
+                echo json_encode(['exito' => false, 'mensaje' => 'El estado es obligatorio']);
+                return;
+            }
+
+            $mesa = new Mesa();
+            $resultado = $mesa->actualizarEstado($data['numMesa'], $data['estado']);
+
+            if ($resultado) {
+                http_response_code(200);
+                echo json_encode([
+                    'exito' => true,
+                    'mesa' => $resultado,
+                    'mensaje' => 'Estado de la mesa actualizado'
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['exito' => false, 'mensaje' => 'No se pudo actualizar el estado de la mesa']);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+        }
+    }
 }
 ?>

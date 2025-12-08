@@ -413,6 +413,12 @@ async function registrarPedido() {
         const data = await resp.json();
         if (data.exito) {
             alert('Pedido registrado exitosamente');
+            
+            // Actualizar estado de la mesa si es servicio local
+            if (tipoServicio === 'local' && numeroMesa) {
+                await actualizarEstadoMesa(parseInt(numeroMesa, 10), 'ocupada');
+            }
+            
             itemsPedido = [];
             idClienteEncontrado = null;
             renderizarTabla();
@@ -422,11 +428,38 @@ async function registrarPedido() {
             document.getElementById('direccionCliente').value = '';
             document.getElementById('telefonoCliente').value = '';
             document.getElementById('numeroMesa').value = '';
+            
+            // Recargar mesas disponibles
+            cargarMesasActivas();
         } else {
             alert(data.mensaje || 'No se pudo registrar el pedido');
         }
     } catch (err) {
         console.error('Error registrando pedido:', err);
         alert('Error al registrar el pedido');
+    }
+}
+
+// Actualizar estado de la mesa
+async function actualizarEstadoMesa(numMesa, estado) {
+    try {
+        console.log(`[registrar_pedidos] Actualizando mesa ${numMesa} a estado: ${estado}`);
+        const resp = await fetch('/Proyecto_De_App_Fast_Food/api/mesas/actualizar-estado', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                numMesa: numMesa,
+                estado: estado
+            })
+        });
+
+        const data = await resp.json();
+        if (data.exito) {
+            console.log(`[registrar_pedidos] Mesa ${numMesa} actualizada a ${estado}`);
+        } else {
+            console.warn(`[registrar_pedidos] Error al actualizar mesa: ${data.mensaje}`);
+        }
+    } catch (err) {
+        console.error(`[registrar_pedidos] Error actualizando mesa ${numMesa}:`, err);
     }
 }
