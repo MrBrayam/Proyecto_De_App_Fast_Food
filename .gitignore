@@ -40,6 +40,7 @@ Thumbs.db
 config.local.php
 
 # Configuración de la API con credenciales sensibles
+api/config.php
 api/app/config/config.php
 
 # Caché
@@ -55,9 +56,6 @@ __pycache__/
 # ============================================
 # ARCHIVOS ESPECÍFICOS A IGNORAR
 # ============================================
-
-# Archivo de configuración con contraseñas
-api/config.php
 
 # Archivos compilados Java
 BD/*.class
@@ -85,4 +83,3 @@ notas.txt
 !.gitkeep
 !index.html
 !README.md
-/ProyectoLP-GestionColasSAT/
