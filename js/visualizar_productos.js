@@ -89,13 +89,21 @@ function mostrarProductos(productos) {
         const categoria = p.Categoria || p.categoria || '';
         const precio = p.Precio || p.precio || 0;
         const stock = p.Stock || p.stock || 0;
-        const estado = p.Estado || p.estado || 'Inactivo';
+        const estado = (p.Estado || p.estado || 'no_disponible').toLowerCase();
         
-        const estilo = estado === 'Activo' || estado === 'Disponible' 
-            ? 'badge-activo' 
-            : estado === 'Inactivo' 
-            ? 'badge-inactivo'
-            : 'badge-agotado';
+        let estilo = 'badge-inactivo';
+        let estadoMostrar = estado;
+        
+        if (estado === 'disponible') {
+            estilo = 'badge-activo';
+            estadoMostrar = 'DISPONIBLE';
+        } else if (estado === 'no_disponible') {
+            estilo = 'badge-inactivo';
+            estadoMostrar = 'NO DISPONIBLE';
+        } else if (estado === 'agotado') {
+            estilo = 'badge-agotado';
+            estadoMostrar = 'AGOTADO';
+        }
         
         fila.innerHTML = `
             <td>${codigo}</td>
@@ -103,7 +111,7 @@ function mostrarProductos(productos) {
             <td>${categoria}</td>
             <td>S/ ${parseFloat(precio).toFixed(2)}</td>
             <td>${stock}</td>
-            <td><span class="badge ${estilo}">${estado}</span></td>
+            <td><span class="badge ${estilo}">${estadoMostrar}</span></td>
             <td>
                 <button class="btn-icon btn-edit" title="Editar">
                     <i class="fas fa-edit"></i>
@@ -124,7 +132,7 @@ function actualizarEstadisticas(productos) {
     
     const total = productos.length;
     const activos = productos.filter(p => 
-        (p.Estado || p.estado) === 'Activo' || (p.Estado || p.estado) === 'Disponible'
+        (p.Estado || p.estado || '').toLowerCase() === 'disponible'
     ).length;
     const inactivos = total - activos;
     const stockBajo = productos.filter(p => {
