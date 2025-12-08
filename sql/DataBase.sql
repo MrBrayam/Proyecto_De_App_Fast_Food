@@ -520,72 +520,6 @@ LEFT JOIN Clientes c ON p.IdCliente = c.IdCliente
 LEFT JOIN Usuarios u ON p.IdUsuario = u.IdUsuario;
 
 -- ============================================
--- PROCEDIMIENTOS ALMACENADOS
--- ============================================
-
-DELIMITER //
-
--- Procedimiento para calcular totales de pedido
-CREATE PROCEDURE CalcularTotalPedido(
-    IN p_IdPedido INT
-)
-BEGIN
-    DECLARE v_SubTotal DECIMAL(12,2) DEFAULT 0.00;
-    
-    -- Calcular subtotal
-    SELECT SUM(Subtotal) INTO v_SubTotal
-    FROM DetallePedido
-    WHERE IdPedido = p_IdPedido;
-    
-    -- Actualizar pedido
-    UPDATE Pedidos 
-    SET SubTotal = IFNULL(v_SubTotal, 0.00),
-        Total = IFNULL(v_SubTotal, 0.00) - Descuento
-    WHERE IdPedido = p_IdPedido;
-END//
-
--- Procedimiento para actualizar stock después de venta
-
-DELIMITER //
-CREATE PROCEDURE ActualizarStockVenta(
-    IN p_CodVenta INT
-)
-BEGIN
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE v_IdProducto INT;
-    DECLARE v_Cantidad INT;
-    
-    DECLARE cur CURSOR FOR 
-        SELECT IdProducto, Cantidad 
-        FROM DetalleVenta 
-        WHERE CodVenta = p_CodVenta AND IdProducto IS NOT NULL;
-    
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    
-    OPEN cur;
-    read_loop: LOOP
-        FETCH cur INTO v_IdProducto, v_Cantidad;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
-        
-        -- Actualizar stock
-        UPDATE Productos 
-        SET Stock = Stock - v_Cantidad,
-            Estado = CASE 
-                WHEN Stock - v_Cantidad <= 0 THEN 'agotado'
-                WHEN Stock - v_Cantidad <= StockMinimo THEN 'disponible'
-                ELSE 'disponible'
-            END
-        WHERE IdProducto = v_IdProducto;
-    END LOOP;
-    
-    CLOSE cur;
-END//
-
-
-
--- ============================================
 -- TRIGGERS
 -- ============================================
 
@@ -629,65 +563,6 @@ FOR EACH ROW
 BEGIN
     SET NEW.Total = NEW.Cantidad * NEW.PrecioUnitario;
 END//
-
-
--- ============================================
--- STORED PROCEDURE: VERIFICAR LOGIN
--- ============================================
-DELIMITER //
-
-CREATE PROCEDURE VerificarLogin(
-    IN p_NombreUsuario VARCHAR(50),
-    IN p_Contrasena VARCHAR(255),
-    OUT p_IdUsuario INT,
-    OUT p_NombreCompleto VARCHAR(200),
-    OUT p_IdPerfil INT,
-    OUT p_NombrePerfil VARCHAR(50),
-    OUT p_Estado VARCHAR(20),
-    OUT p_Exito BOOLEAN
-)
-BEGIN
-    DECLARE v_ContrasenaHash VARCHAR(255);
-    DECLARE v_Exito BOOLEAN DEFAULT FALSE;
-    
-    -- Inicializar salidas
-    SET p_IdUsuario = NULL;
-    SET p_NombreCompleto = NULL;
-    SET p_IdPerfil = NULL;
-    SET p_NombrePerfil = NULL;
-    SET p_Estado = NULL;
-    SET p_Exito = FALSE;
-    
-    -- Buscar usuario y verificar contraseña
-    SELECT 
-        u.IdUsuario,
-        u.NombreCompleto,
-        u.IdPerfil,
-        u.Contrasena,
-        u.Estado,
-        p.NombrePerfil
-    INTO 
-        p_IdUsuario,
-        p_NombreCompleto,
-        p_IdPerfil,
-        v_ContrasenaHash,
-        p_Estado,
-        p_NombrePerfil
-    FROM Usuarios u
-    JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
-    WHERE u.NombreUsuario = p_NombreUsuario AND u.Estado = 'activo'
-    LIMIT 1;
-    
-    -- Verificar si el usuario existe
-    IF p_IdUsuario IS NOT NULL THEN
-        -- Verificar contraseña (comparación directa o con hash según corresponda)
-        IF v_ContrasenaHash = p_Contrasena OR v_ContrasenaHash = SHA2(p_Contrasena, 256) THEN
-            SET p_Exito = TRUE;
-        END IF;
-    END IF;
-END //
-
-DELIMITER ;
 
 -- ============================================
 -- ÍNDICES PARA OPTIMIZACIÓN
@@ -1399,5 +1274,216 @@ BEGIN
         DATE_FORMAT(FechaCreacion, '%Y-%m-%d %H:%i:%s') as FechaCreacion
     FROM Compras
     ORDER BY FechaCompra DESC, IdCompra DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR PRODUCTOS INVENTARIO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_productos_inventario;
+DELIMITER //
+CREATE PROCEDURE pa_listar_productos_inventario()
+BEGIN
+    SELECT 
+        IdProducto,
+        CodProducto,
+        NombreProducto,
+        Categoria,
+        Tamano,
+        Precio,
+        Costo,
+        Stock,
+        StockMinimo,
+        TiempoPreparacion,
+        CASE 
+            WHEN Stock <= 0 THEN 'Agotado'
+            WHEN Stock <= StockMinimo THEN 'Stock Bajo'
+            ELSE 'Disponible'
+        END AS EstadoStock,
+        Estado,
+        CodigoBarras,
+        Descripcion,
+        CodProveedor,
+        DATE_FORMAT(FechaCreacion, '%Y-%m-%d') as FechaCreacion,
+        DATE_FORMAT(FechaActualizacion, '%Y-%m-%d') as FechaActualizacion
+    FROM Productos
+    ORDER BY CodProducto ASC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR INSUMOS INVENTARIO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_insumos_inventario;
+DELIMITER //
+CREATE PROCEDURE pa_listar_insumos_inventario()
+BEGIN
+    SELECT 
+        CodInsumo,
+        NombreInsumo,
+        Ubicacion,
+        Observacion,
+        PrecioUnitario,
+        DATE_FORMAT(Vencimiento, '%Y-%m-%d') as Vencimiento,
+        Estado,
+        CodProveedor,
+        DATE_FORMAT(FechaCreacion, '%Y-%m-%d') as FechaCreacion,
+        DATE_FORMAT(FechaActualizacion, '%Y-%m-%d') as FechaActualizacion
+    FROM Insumos
+    ORDER BY CodInsumo ASC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: LISTAR SUMINISTROS INVENTARIO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_listar_suministros_inventario;
+DELIMITER //
+CREATE PROCEDURE pa_listar_suministros_inventario()
+BEGIN
+    SELECT 
+        IdSuministro,
+        TipoSuministro,
+        NombreSuministro,
+        Proveedor,
+        Cantidad,
+        UnidadMedida,
+        PrecioUnitario,
+        Cantidad * PrecioUnitario as Total,
+        DATE_FORMAT(FechaCompra, '%Y-%m-%d') as FechaCompra,
+        NumeroFactura,
+        Estado,
+        Ubicacion,
+        Observaciones,
+        DATE_FORMAT(FechaCreacion, '%Y-%m-%d') as FechaCreacion,
+        DATE_FORMAT(FechaActualizacion, '%Y-%m-%d') as FechaActualizacion
+    FROM Suministros
+    ORDER BY IdSuministro DESC;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: REGISTRAR INSUMO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_registrar_insumo;
+DELIMITER //
+CREATE PROCEDURE pa_registrar_insumo(
+    IN p_nombreInsumo VARCHAR(150),
+    IN p_ubicacion VARCHAR(100),
+    IN p_precioUnitario DECIMAL(10,2),
+    IN p_vencimiento DATE,
+    IN p_estado ENUM('disponible', 'agotado', 'vencido'),
+    IN p_codProveedor INT,
+    IN p_observacion TEXT
+)
+BEGIN
+    DECLARE v_codInsumo INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT JSON_OBJECT('error', 'Error al registrar insumo') AS resultado;
+    END;
+
+    START TRANSACTION;
+
+    -- Insertar el nuevo insumo
+    INSERT INTO Insumos (
+        NombreInsumo,
+        Ubicacion,
+        Observacion,
+        PrecioUnitario,
+        Vencimiento,
+        Estado,
+        CodProveedor
+    ) VALUES (
+        p_nombreInsumo,
+        p_ubicacion,
+        NULLIF(p_observacion, ''),
+        p_precioUnitario,
+        p_vencimiento,
+        p_estado,
+        NULLIF(p_codProveedor, 0)
+    );
+
+    SET v_codInsumo = LAST_INSERT_ID();
+
+    COMMIT;
+
+    -- Retornar el insumo registrado
+    SELECT JSON_OBJECT(
+        'CodInsumo', v_codInsumo,
+        'NombreInsumo', p_nombreInsumo,
+        'Ubicacion', p_ubicacion,
+        'PrecioUnitario', p_precioUnitario,
+        'mensaje', 'Insumo registrado exitosamente'
+    ) AS resultado;
+END //
+
+-- ============================================
+-- PA: REGISTRAR SUMINISTRO
+-- ============================================
+CREATE PROCEDURE pa_registrar_suministro(
+    IN p_tipoSuministro VARCHAR(50),
+    IN p_nombreSuministro VARCHAR(150),
+    IN p_proveedor VARCHAR(200),
+    IN p_cantidad INT,
+    IN p_unidadMedida VARCHAR(50),
+    IN p_precioUnitario DECIMAL(10,2),
+    IN p_fechaCompra DATE,
+    IN p_numeroFactura VARCHAR(50),
+    IN p_estado VARCHAR(50),
+    IN p_ubicacion VARCHAR(150),
+    IN p_observaciones TEXT
+)
+BEGIN
+    DECLARE v_idSuministro INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    -- Insertar el suministro
+    INSERT INTO Suministros (
+        TipoSuministro,
+        NombreSuministro,
+        Proveedor,
+        Cantidad,
+        UnidadMedida,
+        PrecioUnitario,
+        FechaCompra,
+        NumeroFactura,
+        Estado,
+        Ubicacion,
+        Observaciones
+    ) VALUES (
+        p_tipoSuministro,
+        p_nombreSuministro,
+        p_proveedor,
+        p_cantidad,
+        NULLIF(p_unidadMedida, ''),
+        p_precioUnitario,
+        p_fechaCompra,
+        NULLIF(p_numeroFactura, ''),
+        NULLIF(p_estado, 'disponible'),
+        NULLIF(p_ubicacion, ''),
+        NULLIF(p_observaciones, '')
+    );
+
+    SET v_idSuministro = LAST_INSERT_ID();
+
+    COMMIT;
+
+    -- Retornar el suministro registrado
+    SELECT JSON_OBJECT(
+        'IdSuministro', v_idSuministro,
+        'NombreSuministro', p_nombreSuministro,
+        'TipoSuministro', p_tipoSuministro,
+        'Proveedor', p_proveedor,
+        'PrecioUnitario', p_precioUnitario,
+        'mensaje', 'Suministro registrado exitosamente'
+    ) AS resultado;
 END //
 DELIMITER ;

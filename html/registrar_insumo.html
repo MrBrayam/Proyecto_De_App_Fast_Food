@@ -53,7 +53,7 @@
                             <!-- Nombre del insumo -->
                             <div class="form-group">
                                 <label for="nombreInsumo">
-                                    Nombre del insumo
+                                    <i class="fas fa-box"></i> Nombre del insumo
                                 </label>
                                 <input 
                                     type="text" 
@@ -64,80 +64,24 @@
                                 >
                             </div>
 
-                            <!-- Cantidad inicial -->
+                            <!-- Ubicación en almacén -->
                             <div class="form-group">
-                                <label for="cantidadInicial">
-                                    Cantidad inicial
-                                </label>
-                                <input 
-                                    type="number" 
-                                    id="cantidadInicial" 
-                                    class="form-input"
-                                    placeholder="Ejemplo: 100"
-                                    min="0"
-                                    step="0.01"
-                                    required
-                                >
-                            </div>
-
-                            <!-- Unidad de medida -->
-                            <div class="form-group">
-                                <label for="unidadMedida">
-                                    Unidad de medida
-                                </label>
-                                <select 
-                                    id="unidadMedida" 
-                                    class="form-select"
-                                    required
-                                >
-                                    <option value="">Seleccionar unidad...</option>
-                                    <option value="kg">Kilogramos (kg)</option>
-                                    <option value="g">Gramos (g)</option>
-                                    <option value="lt">Litros (lt)</option>
-                                    <option value="ml">Mililitros (ml)</option>
-                                    <option value="unidad">Unidad</option>
-                                    <option value="caja">Caja</option>
-                                    <option value="paquete">Paquete</option>
-                                    <option value="bolsa">Bolsa</option>
-                                </select>
-                            </div>
-
-                            <!-- Categoría -->
-                            <div class="form-group">
-                                <label for="categoria">
-                                    Categoría
+                                <label for="ubicacion">
+                                    <i class="fas fa-map-marker-alt"></i> Ubicación
                                 </label>
                                 <input 
                                     type="text" 
-                                    id="categoria" 
+                                    id="ubicacion" 
                                     class="form-input"
-                                    placeholder="Ejemplo: Salsas"
+                                    placeholder="Ejemplo: Estante A - Nivel 2"
                                     required
                                 >
-                            </div>
-
-                            <!-- Proveedor -->
-                            <div class="form-group">
-                                <label for="proveedor">
-                                    Proveedor
-                                </label>
-                                <select 
-                                    id="proveedor" 
-                                    class="form-select"
-                                >
-                                    <option value="">Seleccionar proveedor...</option>
-                                    <option value="distribuidora_esperanza">Distribuidora La Esperanza</option>
-                                    <option value="mercado_central">Mercado Central SAC</option>
-                                    <option value="alimentos_frescos">Alimentos Frescos EIRL</option>
-                                    <option value="grupo_alimentario">Grupo Alimentario del Norte</option>
-                                    <option value="otro">Otro proveedor</option>
-                                </select>
                             </div>
 
                             <!-- Precio unitario -->
                             <div class="form-group">
                                 <label for="precioUnitario">
-                                    Precio unitario (S/)
+                                    <i class="fas fa-dollar-sign"></i> Precio unitario (S/)
                                 </label>
                                 <input 
                                     type="number" 
@@ -146,56 +90,59 @@
                                     placeholder="Ejemplo: 25.50"
                                     min="0"
                                     step="0.01"
-                                >
-                            </div>
-
-                            <!-- Stock mínimo -->
-                            <div class="form-group">
-                                <label for="stockMinimo">
-                                    Stock mínimo
-                                </label>
-                                <input 
-                                    type="number" 
-                                    id="stockMinimo" 
-                                    class="form-input"
-                                    placeholder="Ejemplo: 10"
-                                    min="0"
-                                    step="0.01"
+                                    required
                                 >
                             </div>
 
                             <!-- Fecha de vencimiento -->
                             <div class="form-group">
-                                <label for="fechaVencimiento">
-                                    Fecha de vencimiento
+                                <label for="vencimiento">
+                                    <i class="fas fa-calendar-times"></i> Fecha de vencimiento
                                 </label>
                                 <input 
                                     type="date" 
-                                    id="fechaVencimiento" 
+                                    id="vencimiento" 
                                     class="form-input"
                                 >
                             </div>
 
-                            <!-- Ubicación en almacén -->
-                            <div class="form-group full-width">
-                                <label for="ubicacion">
-                                    Ubicación en almacén
+                            <!-- Estado -->
+                            <div class="form-group">
+                                <label for="estado">
+                                    <i class="fas fa-check-circle"></i> Estado
                                 </label>
-                                <input 
-                                    type="text" 
-                                    id="ubicacion" 
-                                    class="form-input"
-                                    placeholder="Ejemplo: Estante A - Nivel 2"
+                                <select 
+                                    id="estado" 
+                                    class="form-select"
+                                    required
                                 >
+                                    <option value="">Seleccionar estado...</option>
+                                    <option value="disponible" selected>Disponible</option>
+                                    <option value="agotado">Agotado</option>
+                                    <option value="vencido">Vencido</option>
+                                </select>
+                            </div>
+
+                            <!-- Proveedor -->
+                            <div class="form-group">
+                                <label for="codProveedor">
+                                    <i class="fas fa-building"></i> Proveedor
+                                </label>
+                                <select 
+                                    id="codProveedor" 
+                                    class="form-select"
+                                >
+                                    <option value="">Seleccionar proveedor...</option>
+                                </select>
                             </div>
 
                             <!-- Observaciones -->
                             <div class="form-group full-width">
-                                <label for="observaciones">
-                                    Observaciones
+                                <label for="observacion">
+                                    <i class="fas fa-sticky-note"></i> Observaciones
                                 </label>
                                 <textarea 
-                                    id="observaciones" 
+                                    id="observacion" 
                                     class="form-textarea"
                                     rows="3"
                                     placeholder="Notas adicionales sobre el insumo..."
@@ -209,9 +156,13 @@
                                 <i class="fas fa-save"></i>
                                 GUARDAR
                             </button>
-                            <button type="button" class="btn-accion btn-cancelar" onclick="cancelarRegistro()">
-                                <i class="fas fa-times"></i>
-                                CANCELAR
+                            <button type="reset" class="btn-accion btn-limpiar">
+                                <i class="fas fa-redo"></i>
+                                LIMPIAR
+                            </button>
+                            <button type="button" class="btn-accion btn-cancelar" onclick="volverAtras()">
+                                <i class="fas fa-arrow-left"></i>
+                                VOLVER
                             </button>
                         </div>
                     </form>

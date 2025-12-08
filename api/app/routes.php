@@ -7,6 +7,9 @@ require_once __DIR__ . '/controllers/ClienteController.php';
 require_once __DIR__ . '/controllers/ProveedorController.php';
 require_once __DIR__ . '/controllers/ProductoController.php';
 require_once __DIR__ . '/controllers/CompraController.php';
+require_once __DIR__ . '/controllers/InventarioController.php';
+require_once __DIR__ . '/controllers/InsumoController.php';
+require_once __DIR__ . '/controllers/SuministroController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
@@ -28,5 +31,16 @@ return [
     'compras/registrar' => [CompraController::class, 'registrar'],
     'compras/listar' => [CompraController::class, 'listar'],
     'compras/buscar' => [CompraController::class, 'buscar'],
+    'inventario/productos' => [InventarioController::class, 'listarProductos'],
+    'inventario/insumos' => [InventarioController::class, 'listarInsumos'],
+    'inventario/suministros' => [InventarioController::class, 'listarSuministros'],
+    'inventario/producto' => [InventarioController::class, 'buscarProducto'],
+    'inventario/insumo' => [InventarioController::class, 'buscarInsumo'],
+    'inventario/suministro' => [InventarioController::class, 'buscarSuministro'],
+    'insumos/registrar' => [InsumoController::class, 'registrar'],
+    'insumos/listar' => [InsumoController::class, 'listar'],
+    'insumos/buscar' => [InsumoController::class, 'buscar'],
+    'suministros/registrar' => [SuministroController::class, 'registrar'],
+    'suministros/listar' => [SuministroController::class, 'listar'],
+    'suministros/buscar' => [SuministroController::class, 'buscar'],
 ];
-

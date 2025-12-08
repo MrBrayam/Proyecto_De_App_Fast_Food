@@ -24,7 +24,10 @@
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menú">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h1 class="page-title">Visualizar Inventario</h1>
+                <h1 class="page-title">
+                    <i class="fas fa-warehouse"></i>
+                    Visualizar Inventario
+                </h1>
             </div>
             <div class="top-bar-right">
                 <div class="theme-toggle">
@@ -43,99 +46,155 @@
         </header>
 
         <!-- Contenedor Principal -->
-        <div class="inventario-visualizar-container">
-            <!-- Contenido -->
-            <div class="inventario-contenido">
-                <!-- Sección de Búsqueda -->
-                <div class="busqueda-section">
-                    <form class="busqueda-form" onsubmit="return false;">
-                        <div class="campo-fecha">
-                            <label for="fechaInicio">Fecha Inicio</label>
-                            <input 
-                                type="text" 
-                                id="fechaInicio" 
-                                class="input-fecha" 
-                                placeholder="dd/mm/aaaa"
-                            >
-                        </div>
-
-                        <div class="campo-fecha">
-                            <label for="fechaFin">Fecha Fin</label>
-                            <input 
-                                type="text" 
-                                id="fechaFin" 
-                                class="input-fecha" 
-                                placeholder="dd/mm/aaaa"
-                            >
-                        </div>
-                        
-                        <button type="button" class="btn-buscar">
-                            Buscar
-                        </button>
-                    </form>
+        <div class="inventario-container">
+            <!-- Controles -->
+            <div class="controls-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Buscar en inventario..."
+                    >
                 </div>
 
-                <!-- Sección de Tabla -->
-                <div class="tabla-inventario-section">
-                    <div class="tabla-inventario-wrapper">
-                        <table class="tabla-inventario" id="tablaInventario">
-                            <thead>
-                                <tr>
-                                    <th>NOMBRE</th>
-                                    <th>CANTIDAD DISPONIBLE</th>
-                                    <th>UNIDAD</th>
-                                    <th>CATEGORÍA</th>
-                                    <th>FECHA DE ACTUALIZACIÓN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Queso mozzarella</td>
-                                    <td>50</td>
-                                    <td>kg</td>
-                                    <td>Alimentos</td>
-                                    <td>15/03/2025</td>
-                                </tr>
-                                <tr>
-                                    <td>Salsa de tomate</td>
-                                    <td>30</td>
-                                    <td>lt</td>
-                                    <td>Alimentos</td>
-                                    <td>10/04/2025</td>
-                                </tr>
-                                <tr>
-                                    <td>Harina</td>
-                                    <td>20</td>
-                                    <td>kg</td>
-                                    <td>Alimentos</td>
-                                    <td>01/04/2025</td>
-                                </tr>
-                                <tr>
-                                    <td>Vaso</td>
-                                    <td>100</td>
-                                    <td>con</td>
-                                    <td>Suministros</td>
-                                    <td>05/04/2025</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="filters">
+                    <select id="tabFilter" class="filter-select">
+                        <option value="productos">Productos</option>
+                        <option value="insumos">Insumos</option>
+                        <option value="suministros">Suministros</option>
+                    </select>
 
-                    <!-- Botones de Acción -->
-                    <div class="acciones-inventario">
-                        <button class="btn-volver" onclick="volverModulo()">
-                            <i class="fas fa-arrow-left"></i>
-                            Volver
-                        </button>
-                        <button class="btn-actualizar" onclick="actualizarInventario()">
-                            <i class="fas fa-sync-alt"></i>
-                            Actualizar
-                        </button>
+                    <select id="stateFilter" class="filter-select">
+                        <option value="">Todos los estados</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Agotado">Agotado</option>
+                        <option value="Stock Bajo">Stock Bajo</option>
+                    </select>
+                </div>
+
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Items:</span>
+                        <span class="stat-value" id="totalItems">0</span>
                     </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Stock Bajo:</span>
+                        <span class="stat-value alert" id="lowStockItems">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Agotados:</span>
+                        <span class="stat-value danger" id="outOfStockItems">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Productos -->
+            <div class="table-section" id="productosSection">
+                <h2 class="section-title">
+                    <i class="fas fa-pizza-slice"></i>
+                    Productos
+                </h2>
+                <div class="table-wrapper">
+                    <table class="table-datos" id="productosTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Tamaño</th>
+                                <th>Precio</th>
+                                <th>Costo</th>
+                                <th>Stock</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productosBody">
+                            <tr>
+                                <td colspan="10" class="text-center">Cargando productos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla de Insumos -->
+            <div class="table-section" id="insumosSection" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-boxes"></i>
+                    Insumos
+                </h2>
+                <div class="table-wrapper">
+                    <table class="table-datos" id="insumosTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Ubicación</th>
+                                <th>Precio Unitario</th>
+                                <th>Vencimiento</th>
+                                <th>Estado</th>
+                                <th>Observaciones</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="insumosBody">
+                            <tr>
+                                <td colspan="8" class="text-center">Cargando insumos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla de Suministros -->
+            <div class="table-section" id="suministrosSection" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-cubes"></i>
+                    Suministros
+                </h2>
+                <div class="table-wrapper">
+                    <table class="table-datos" id="suministrosTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Unidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                                <th>Fecha Compra</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suministrosBody">
+                            <tr>
+                                <td colspan="10" class="text-center">Cargando suministros...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Modal de Detalles -->
+    <div class="modal" id="detallesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detalles</h2>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript -->
     <script src="../js/load_sidebar.js"></script>
