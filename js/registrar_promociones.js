@@ -17,8 +17,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Validar usuario autenticado
 function obtenerUsuarioActual() {
-    const usuario = JSON.parse(sessionStorage.getItem('usuario'));
-    if (usuario) {
+    const sessionUserRaw = sessionStorage.getItem('usuario');
+    let usuario = null;
+
+    if (sessionUserRaw) {
+        try {
+            usuario = JSON.parse(sessionUserRaw);
+        } catch (e) {
+            usuario = null;
+        }
+    }
+
+    if (!usuario) {
+        const localUserRaw = localStorage.getItem('userSession') || localStorage.getItem('currentUser');
+        if (localUserRaw) {
+            try {
+                const localUser = JSON.parse(localUserRaw);
+                usuario = {
+                    IdUsuario: localUser.IdUsuario || localUser.id || localUser.idUsuario,
+                    NombreCompleto: localUser.NombreCompleto || localUser.nombre || localUser.nombreCompleto
+                };
+                sessionStorage.setItem('usuario', JSON.stringify(usuario));
+            } catch (e) {
+                usuario = null;
+            }
+        }
+    }
+
+    if (usuario && usuario.IdUsuario) {
         idUsuario = usuario.IdUsuario;
     } else {
         alert('No hay usuario autenticado');
