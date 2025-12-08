@@ -90,7 +90,6 @@ select:focus {
 
 .btn-buscar,
 .btn-nuevo-cliente,
-.btn-añadir,
 .btn-eliminar,
 .btn-registrar {
     border: none;
@@ -108,8 +107,7 @@ select:focus {
     min-width: 52px;
 }
 
-.btn-nuevo-cliente,
-.btn-añadir { background: var(--accent-2); color: #ffffff; }
+.btn-nuevo-cliente { background: var(--accent-2); color: #ffffff; }
 
 .btn-eliminar {
     background: #e2e8f0;
@@ -123,7 +121,6 @@ select:focus {
 
 .btn-buscar:hover,
 .btn-nuevo-cliente:hover,
-.btn-añadir:hover,
 .btn-eliminar:hover,
 .btn-registrar:hover {
     transform: translateY(-1px);
@@ -133,7 +130,6 @@ select:focus {
 
 .btn-buscar:active,
 .btn-nuevo-cliente:active,
-.btn-añadir:active,
 .btn-eliminar:active,
 .btn-registrar:active {
     transform: translateY(0);
@@ -157,22 +153,6 @@ select:focus {
 }
 
 .pedido-info strong { color: var(--accent-2); }
-
-.venta-productos-form .productos-header-row,
-.venta-productos-form .productos-input-row {
-    display: grid;
-    grid-template-columns: 1.2fr 2fr 1fr 1fr 0.9fr;
-    gap: 10px;
-    align-items: center;
-}
-
-@media (max-width: 960px) {
-    .venta-productos-form .productos-header-row,
-    .venta-productos-form .productos-input-row {
-        grid-template-columns: 1fr;
-    }
-    .btn-añadir { width: 100%; }
-}
 
 .header-col {
     background: var(--surface-soft);
@@ -525,112 +505,6 @@ select:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
-}
-
-/* Formulario de Productos */
-.venta-productos-form {
-    padding: 20px 30px;
-    position: relative;
-    z-index: 10;
-}
-
-.productos-header-row {
-    display: grid;
-    grid-template-columns: 130px 180px 1fr 100px 120px 100px;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.header-col {
-    background: #f1f5f9;
-    backdrop-filter: blur(10px);
-    color: #1e293b;
-    padding: 12px 15px;
-    font-weight: bold;
-    font-size: 14px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    text-shadow: none;
-    border: 1px solid #e2e8f0;
-}
-
-.productos-input-row {
-    display: grid;
-    grid-template-columns: 130px 180px 1fr 100px 120px 100px;
-    gap: 10px;
-}
-
-.input-codigo,
-.input-linea,
-.input-descripcion,
-.input-cantidad,
-.input-precio {
-    background: #ffffff;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px 15px;
-    font-size: 14px;
-    color: #1e293b;
-    transition: all 0.3s ease;
-}
-
-.input-codigo:focus,
-.input-linea:focus,
-.input-cantidad:focus {
-    outline: none;
-    border-color: #2563eb;
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.input-codigo::placeholder,
-.input-linea::placeholder,
-.input-cantidad::placeholder,
-.input-precio::placeholder {
-    color: #94a3b8;
-}
-
-.input-descripcion:disabled,
-.input-precio:disabled {
-    background: #f1f5f9;
-    cursor: not-allowed;
-    border-color: #cbd5e1;
-}
-
-/* Estilos específicos para el input de cantidad */
-.input-cantidad {
-    text-align: center;
-    font-weight: 600;
-}
-
-.input-cantidad::-webkit-outer-spin-button,
-.input-cantidad::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.input-cantidad[type=number] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.btn-añadir {
-    background: #22c55e;
-    border: 2px solid #16a34a;
-    border-radius: 5px;
-    padding: 12px 15px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffffff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-añadir:hover {
-    background: #16a34a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Tabla de Productos */

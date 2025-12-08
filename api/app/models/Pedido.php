@@ -138,11 +138,22 @@ class Pedido
     public function actualizarEstado(int $idPedido, string $nuevoEstado)
     {
         $db = Database::connection();
-        $stmt = $db->prepare('
-            UPDATE Pedidos 
-            SET Estado = ?, FechaActualizacion = NOW()
-            WHERE IdPedido = ?
-        ');
+        
+        // Si el estado es "entregado", también establecer FechaEntrega
+        if ($nuevoEstado === 'entregado') {
+            $stmt = $db->prepare('
+                UPDATE Pedidos 
+                SET Estado = ?, FechaEntrega = NOW()
+                WHERE IdPedido = ?
+            ');
+        } else {
+            $stmt = $db->prepare('
+                UPDATE Pedidos 
+                SET Estado = ?
+                WHERE IdPedido = ?
+            ');
+        }
+        
         $stmt->execute([$nuevoEstado, $idPedido]);
         
         return $stmt->rowCount() > 0;

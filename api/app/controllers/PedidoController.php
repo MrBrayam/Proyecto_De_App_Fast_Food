@@ -114,7 +114,17 @@ class PedidoController
 
     public function actualizarEstado()
     {
+        // Headers CORS
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+        
         try {
+            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                http_response_code(200);
+                return;
+            }
+            
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 http_response_code(405);
                 echo json_encode(['exito' => false, 'mensaje' => 'Método no permitido']);
@@ -134,7 +144,7 @@ class PedidoController
                 return;
             }
 
-            if (!in_array($nuevoEstado, ['pendiente', 'entregado', 'cancelado'])) {
+            if (!in_array($nuevoEstado, ['pendiente', 'preparando', 'listo', 'entregado', 'cancelado'])) {
                 http_response_code(400);
                 echo json_encode(['exito' => false, 'mensaje' => 'Estado inválido']);
                 return;

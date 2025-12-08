@@ -51,43 +51,15 @@ function obtenerUsuarioActual() {
 
 // Inicializar eventos
 function inicializarEventos() {
-    // Enter en input de cantidad
-    document.getElementById('inputCantidad').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            añadirProducto();
-        }
-    });
-
-    // Validar cantidad mínima
-    document.getElementById('inputCantidad').addEventListener('change', function() {
-        if (this.value < 1) {
-            this.value = 1;
-        }
-    });
-
-    // Buscar código de producto
-    document.getElementById('inputCodigo').addEventListener('blur', function() {
-        if (this.value.trim() !== '') {
-            buscarProductoPorCodigo(this.value.trim());
-        }
-    });
-
     // Buscar pedido con Enter
-    document.getElementById('buscarPedido').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            buscarPedido();
-        }
-    });
-
-    // Buscar producto al presionar Enter en el código
-    document.getElementById('inputCodigo').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const codigo = this.value.trim();
-            if (codigo !== '') {
-                buscarProductoPorCodigo(codigo);
+    const inputBuscarPedido = document.getElementById('buscarPedido');
+    if (inputBuscarPedido) {
+        inputBuscarPedido.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                buscarPedido();
             }
-        }
-    });
+        });
+    }
 }
 
 // Buscar pedido por ID o nombre de cliente
@@ -162,23 +134,7 @@ async function cargarDetallePedido(idPedido) {
                     });
                 });
                 actualizarTablaProductos();
-
-                // Pre-cargar los inputs con el primer detalle para facilitar edición
-                const primerDetalle = pedidoSeleccionado.Detalles[0];
-                if (primerDetalle) {
-                    document.getElementById('inputCodigo').value = primerDetalle.CodProducto || '';
-                    document.getElementById('inputDescripcion').value = primerDetalle.DescripcionProducto || '';
-                    document.getElementById('inputCantidad').value = Number(primerDetalle.Cantidad) || 1;
-                    const precioPrimero = Number(primerDetalle.PrecioUnitario) || 0;
-                    document.getElementById('inputPrecio').value = precioPrimero ? precioPrimero.toFixed(2) : '';
-                }
             }
-
-            // Limpiar inputs
-            document.getElementById('inputCodigo').value = '';
-            document.getElementById('inputDescripcion').value = '';
-            document.getElementById('inputCantidad').value = '1';
-            document.getElementById('inputPrecio').value = '';
 
         } else {
             alert('Error al cargar detalles del pedido');
@@ -187,70 +143,6 @@ async function cargarDetallePedido(idPedido) {
         console.error('Error:', error);
         alert('Error al cargar pedido');
     }
-}
-
-// Buscar producto por código
-async function buscarProductoPorCodigo(codigo) {
-    try {
-        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/platos/buscar?cod=${codigo}`);
-        const datos = await response.json();
-
-        if (datos.exito && datos.plato) {
-            document.getElementById('inputDescripcion').value = datos.plato.Nombre;
-            document.getElementById('inputPrecio').value = datos.plato.Precio.toFixed(2);
-            if (!document.getElementById('inputCantidad').value || document.getElementById('inputCantidad').value === '0') {
-                document.getElementById('inputCantidad').value = '1';
-            }
-        } else {
-            // Intentar buscar en productos
-            const responseProducto = await fetch(`/Proyecto_De_App_Fast_Food/api/productos/buscar?cod=${codigo}`);
-            const datosProducto = await responseProducto.json();
-            
-            if (datosProducto.exito && datosProducto.producto) {
-                document.getElementById('inputDescripcion').value = datosProducto.producto.NombreProducto;
-                document.getElementById('inputPrecio').value = datosProducto.producto.Precio.toFixed(2);
-                if (!document.getElementById('inputCantidad').value || document.getElementById('inputCantidad').value === '0') {
-                    document.getElementById('inputCantidad').value = '1';
-                }
-            } else {
-                alert('Producto no encontrado');
-                document.getElementById('inputDescripcion').value = '';
-                document.getElementById('inputPrecio').value = '';
-            }
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al buscar producto');
-    }
-}
-
-// Añadir producto a la tabla
-function añadirProducto() {
-    const codigo = document.getElementById('inputCodigo').value.trim();
-    const descripcion = document.getElementById('inputDescripcion').value.trim();
-    const cantidad = parseInt(document.getElementById('inputCantidad').value) || 1;
-    const precio = parseFloat(document.getElementById('inputPrecio').value) || 0;
-
-    if (codigo === '' || descripcion === '' || precio === 0) {
-        alert('Ingrese datos válidos del producto');
-        return;
-    }
-
-    productosAgregados.push({
-        codProducto: codigo,
-        descripcion: descripcion,
-        cantidad: cantidad,
-        precio: Number(precio) || 0
-    });
-
-    actualizarTablaProductos();
-
-    // Limpiar inputs
-    document.getElementById('inputCodigo').value = '';
-    document.getElementById('inputDescripcion').value = '';
-    document.getElementById('inputCantidad').value = '1';
-    document.getElementById('inputPrecio').value = '';
-    document.getElementById('inputCodigo').focus();
 }
 
 // Actualizar tabla de productos
@@ -369,7 +261,8 @@ async function registrarVenta() {
 // Marcar pedido como entregado
 async function marcarPedidoEntregado(idPedido) {
     try {
-        await fetch('/Proyecto_De_App_Fast_Food/api/pedidos/actualizar-estado', {
+        console.log('Marcando pedido ' + idPedido + ' como entregado');
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/pedidos/actualizar-estado', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -379,6 +272,15 @@ async function marcarPedidoEntregado(idPedido) {
                 estado: 'entregado'
             })
         });
+        
+        const datos = await response.json();
+        console.log('Respuesta del servidor:', datos);
+        
+        if (datos.exito) {
+            console.log('Pedido marcado como entregado correctamente');
+        } else {
+            console.error('Error al marcar pedido:', datos.mensaje);
+        }
     } catch (error) {
         console.error('Error al marcar pedido:', error);
     }
@@ -387,18 +289,23 @@ async function marcarPedidoEntregado(idPedido) {
 // Limpiar formulario
 function limpiarFormulario() {
     document.getElementById('buscarPedido').value = '';
-    document.getElementById('tipoPago').value = '';
-    document.getElementById('inputCodigo').value = '';
-    document.getElementById('inputDescripcion').value = '';
-    document.getElementById('inputCantidad').value = '1';
-    document.getElementById('inputPrecio').value = '';
-    document.getElementById('inputDescuento').value = '';
+    const tipoPagoSelect = document.getElementById('tipoPago');
+    if (tipoPagoSelect) {
+        tipoPagoSelect.value = '';
+    }
+    const inputDescuento = document.getElementById('inputDescuento');
+    if (inputDescuento) {
+        inputDescuento.value = '';
+    }
     
     productosAgregados = [];
     pedidoSeleccionado = null;
     
     document.getElementById('pedidoInfo').style.display = 'none';
-    document.querySelector('.venta-tabla tbody').innerHTML = '';
+    const tbody = document.querySelector('.venta-tabla tbody');
+    if (tbody) {
+        tbody.innerHTML = '';
+    }
     
     document.getElementById('subtotalVenta').textContent = 'S/ 0.00';
     document.getElementById('descuentoVenta').textContent = 'S/ 0.00';

@@ -1980,6 +1980,7 @@ BEGIN
         DATE_FORMAT(FechaEntrega, '%Y-%m-%d %H:%i:%s') AS FechaEntrega,
         Observaciones
     FROM Pedidos
+    WHERE Estado IN ('pendiente', 'preparando', 'listo')
     ORDER BY FechaPedido DESC, IdPedido DESC;
 END //
 DELIMITER ;
@@ -2219,19 +2220,21 @@ DELIMITER //
 CREATE PROCEDURE pa_listar_ventas()
 BEGIN
     SELECT 
-        CodVenta,
-        IdCliente,
-        TipoPago,
-        SubTotal,
-        Descuento,
-        Total,
-        IdUsuario,
-        CodCaja,
-        Estado,
-        DATE_FORMAT(FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
-        Observaciones
-    FROM Ventas
-    ORDER BY FechaVenta DESC, CodVenta DESC;
+        v.CodVenta,
+        v.IdCliente,
+        COALESCE(c.NombreCompleto, 'Sin cliente') AS NombreCliente,
+        v.TipoPago,
+        v.SubTotal,
+        v.Descuento,
+        v.Total,
+        v.IdUsuario,
+        v.CodCaja,
+        v.Estado,
+        DATE_FORMAT(v.FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
+        v.Observaciones
+    FROM Ventas v
+    LEFT JOIN Clientes c ON v.IdCliente = c.IdCliente
+    ORDER BY v.FechaVenta DESC, v.CodVenta DESC;
 END //
 DELIMITER ;
 

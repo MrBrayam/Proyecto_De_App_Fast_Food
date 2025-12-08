@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
     
+    // Cargar mesas disponibles
+    cargarMesasActivas();
+    
     // Configurar evento para tipo de servicio
     configurarTipoServicio();
 
@@ -21,7 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnAgregar) btnAgregar.addEventListener('click', agregarItem);
     if (btnRegistrar) btnRegistrar.addEventListener('click', registrarPedido);
     if (inputCodigo) inputCodigo.addEventListener('blur', buscarProductoPorCodigo);
-    if (inputDni) inputDni.addEventListener('blur', buscarClientePorDNI);
+    if (inputDni) {
+        inputDni.addEventListener('blur', buscarClientePorDNI);
+        inputDni.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') buscarClientePorDNI();
+        });
+    }
 
     // Delegar eliminación de items
     if (tablaBody) {
@@ -37,6 +45,38 @@ document.addEventListener('DOMContentLoaded', function() {
 // Estado local de items
 let itemsPedido = [];
 let idClienteEncontrado = null; // Guardar ID del cliente si se encuentra
+
+// Cargar mesas activas desde la API
+async function cargarMesasActivas() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/mesas/listar');
+        const data = await response.json();
+        
+        console.log('Respuesta API mesas:', data);
+        
+        if (data.exito && data.items) {
+            const selectMesas = document.getElementById('numeroMesa');
+            const mesasActivas = data.items.filter(mesa => mesa.Estado === 'disponible');
+            
+            // Limpiar opciones actuales (excepto la primera)
+            while (selectMesas.options.length > 1) {
+                selectMesas.remove(1);
+            }
+            
+            // Agregar mesas activas
+            mesasActivas.forEach(mesa => {
+                const option = document.createElement('option');
+                option.value = mesa.NumMesa;
+                option.textContent = `Mesa ${mesa.NumMesa} (${mesa.Capacidad} personas)`;
+                selectMesas.appendChild(option);
+            });
+            
+            console.log(`Se cargaron ${mesasActivas.length} mesas disponibles`);
+        }
+    } catch (error) {
+        console.error('Error cargando mesas:', error);
+    }
+}
 
 // Función para configurar el tipo de servicio
 function configurarTipoServicio() {
@@ -155,33 +195,63 @@ async function buscarProductoPorCodigo() {
 
 // Buscar cliente por DNI y autocompletar nombre, teléfono y dirección
 async function buscarClientePorDNI() {
-    const dni = document.getElementById('dniCliente').value.trim();
-    if (!dni || dni.length < 8) return;
+    const dniInput = document.getElementById('dniCliente');
+    const nombreInput = document.getElementById('nombreCliente');
+    const telefonoInput = document.getElementById('telefonoCliente');
+    const direccionInput = document.getElementById('direccionCliente');
+    
+    const dni = dniInput.value.trim();
+    
+    console.log('Buscando cliente con DNI:', dni);
+    
+    // Validar DNI
+    if (!dni || dni.length < 8) {
+        console.log('DNI inválido o vacío');
+        return;
+    }
 
     try {
-        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/clientes/buscar-por-dni?dni=${encodeURIComponent(dni)}`);
+        const url = `/Proyecto_De_App_Fast_Food/api/clientes/buscar-por-dni?dni=${encodeURIComponent(dni)}`;
+        console.log('URL de búsqueda:', url);
+        
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
+        
         const data = await response.json();
+        console.log('Respuesta JSON completa:', data);
 
         if (data.exito && data.cliente) {
             const cliente = data.cliente;
+            console.log('✓ Cliente encontrado:', cliente);
+            
+            // Guardar ID del cliente
             idClienteEncontrado = cliente.idCliente || null;
-            document.getElementById('nombreCliente').value = cliente.nombreCompleto || '';
-            document.getElementById('telefonoCliente').value = cliente.telefono || '';
-            document.getElementById('direccionCliente').value = cliente.direccion || '';
+            console.log('ID cliente guardado:', idClienteEncontrado);
+            
+            // Llenar campos con datos del cliente
+            nombreInput.value = cliente.nombreCompleto || '';
+            telefonoInput.value = cliente.telefono || '';
+            direccionInput.value = cliente.direccion || '';
+            
+            console.log('Campos actualizados:');
+            console.log('  Nombre:', nombreInput.value);
+            console.log('  Teléfono:', telefonoInput.value);
+            console.log('  Dirección:', direccionInput.value);
         } else {
             // Si no encuentra, limpiar campos e ID
+            console.log('✗ Cliente no encontrado:', data.mensaje);
             idClienteEncontrado = null;
-            document.getElementById('nombreCliente').value = '';
-            document.getElementById('telefonoCliente').value = '';
-            document.getElementById('direccionCliente').value = '';
+            nombreInput.value = '';
+            telefonoInput.value = '';
+            direccionInput.value = '';
         }
     } catch (error) {
-        console.error('Error buscando cliente:', error);
-        // No mostrar alerta, solo limpiar campos
+        console.error('✗ Error en fetch:', error);
+        // Limpiar campos en caso de error
         idClienteEncontrado = null;
-        document.getElementById('nombreCliente').value = '';
-        document.getElementById('telefonoCliente').value = '';
-        document.getElementById('direccionCliente').value = '';
+        nombreInput.value = '';
+        telefonoInput.value = '';
+        direccionInput.value = '';
     }
 }
 
