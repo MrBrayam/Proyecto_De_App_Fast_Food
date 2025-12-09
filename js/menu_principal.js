@@ -187,7 +187,15 @@ async function cargarMetricasDashboard() {
 
     try {
         const [ventasResp, pedidosResp, clientesResp, platosResp] = await Promise.all([
-            fetch(`${API_BASE}/ventas/listar`).then(r => r.json()),
+            fetch(`${API_BASE}/ventas/listar`)
+                .then(r => {
+                    logDebug('Ventas response status:', r.status);
+                    return r.json();
+                })
+                .then(data => {
+                    logDebug('Ventas data:', data);
+                    return data;
+                }),
             fetch(`${API_BASE}/pedidos/listar`).then(r => r.json()),
             fetch(`${API_BASE}/clientes/listar`).then(r => r.json()),
             fetch(`${API_BASE}/platos/listar`).then(r => r.json())

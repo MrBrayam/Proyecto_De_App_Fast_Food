@@ -1,12 +1,12 @@
 // ===== VISUALIZAR CAJAS - LÓGICA =====
 
-const API_BASE = '/Proyecto_De_App_Fast_Food/api';
 let cajas = [];
+let ventas = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
-    cargarCajas();
+    cargarCajasYVentas();
     inicializarEventos();
 });
 
@@ -38,21 +38,62 @@ function inicializarEventos() {
     }
 }
 
-async function cargarCajas() {
+// Cargar cajas y ventas simultáneamente
+async function cargarCajasYVentas() {
     try {
-        const resp = await fetch(`${API_BASE}/caja/listar`);
-        const data = await resp.json();
+        // Cargar cajas
+        const respCajas = await fetch(`${API_BASE}/caja/listar`);
+        const dataCajas = await respCajas.json();
 
-        if (!resp.ok || !data.exito || !data.items) {
-            throw new Error(data.mensaje || 'No se pudo cargar cajas');
+        if (!respCajas.ok || !dataCajas.exito || !dataCajas.items) {
+            throw new Error(dataCajas.mensaje || 'No se pudo cargar cajas');
         }
 
-        cajas = data.items;
+        cajas = dataCajas.items;
+
+        // Cargar ventas
+        const respVentas = await fetch(`${API_BASE}/ventas/listar`);
+        const dataVentas = await respVentas.json();
+
+        if (respVentas.ok && dataVentas.exito) {
+            ventas = dataVentas.items || [];
+            console.log('Ventas cargadas:', ventas.length);
+        } else {
+            ventas = [];
+            console.warn('No se pudo cargar ventas');
+        }
+
+        // Calcular monto final para cada caja
+        calcularMontosFinal();
         renderTabla(cajas);
     } catch (err) {
-        console.error(err);
+        console.error('Error al cargar cajas y ventas:', err);
         renderTabla([]);
     }
+}
+
+// Calcular monto final sumando ventas a monto inicial
+function calcularMontosFinal() {
+    cajas.forEach(caja => {
+        const montoInicial = Number(caja.MontoInicial || 0);
+        
+        // Sumar todas las ventas realizadas con esta caja
+        const ventasCaja = ventas.filter(v => {
+            const codCajaVenta = (v.CodCaja || '').toString();
+            const codCajaActual = (caja.CodCaja || '').toString();
+            return codCajaVenta === codCajaActual;
+        });
+
+        // Calcular total de ventas
+        const totalVentas = ventasCaja.reduce((sum, venta) => {
+            return sum + Number(venta.Total || venta.MontoTotal || venta.Monto || 0);
+        }, 0);
+
+        // Monto final = Monto Inicial + Total de Ventas
+        caja.MontoFinalCalculado = montoInicial + totalVentas;
+        
+        console.log(`Caja ${caja.CodCaja}: Inicial=${montoInicial}, Ventas=${totalVentas}, Final=${caja.MontoFinalCalculado}`);
+    });
 }
 
 function filtrarPorFecha(fecha) {
@@ -80,11 +121,20 @@ function renderTabla(data) {
 
     data.forEach(caja => {
         const tr = document.createElement('tr');
+        
+        // Usar monto final calculado si está disponible, sino usar el de la BD
+        let montoFinalDisplay = '-';
+        if (caja.MontoFinalCalculado !== undefined) {
+            montoFinalDisplay = 'S/ ' + Number(caja.MontoFinalCalculado).toFixed(2);
+        } else if (caja.MontoFinal !== null && caja.MontoFinal !== undefined) {
+            montoFinalDisplay = 'S/ ' + Number(caja.MontoFinal).toFixed(2);
+        }
+        
         tr.innerHTML = `
             <td>${caja.CodCaja || ''}</td>
             <td>${caja.NombreUsuario || caja.Usuario || ''}</td>
             <td>S/ ${Number(caja.MontoInicial || 0).toFixed(2)}</td>
-            <td>${caja.MontoFinal !== null && caja.MontoFinal !== undefined ? 'S/ ' + Number(caja.MontoFinal).toFixed(2) : '-'}</td>
+            <td>${montoFinalDisplay}</td>
             <td>${formatearFecha(caja.Fecha || caja.FechaApertura)}</td>
             <td>${caja.HoraApertura || ''}</td>
             <td>${badgeEstado(caja.Estado)}</td>

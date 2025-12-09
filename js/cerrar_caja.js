@@ -1,6 +1,5 @@
 // ===== CERRAR CAJA - LÓGICA =====
 
-const API_BASE = '/Proyecto_De_App_Fast_Food/api';
 let idUsuario = null;
 let cajasAbiertas = [];
 
@@ -59,16 +58,23 @@ async function cargarCajasAbiertas() {
         const resp = await fetch(`${API_BASE}/caja/listar`);
         const data = await resp.json();
 
+        console.log('Respuesta de cajas:', data);
+
         if (!resp.ok || !data.exito) {
             throw new Error('No se pudieron cargar las cajas');
         }
 
         // Filtrar solo cajas abiertas
-        cajasAbiertas = data.items.filter(caja => caja.Estado === 'abierta');
+        cajasAbiertas = data.items.filter(caja => {
+            const estado = (caja.Estado || '').toLowerCase();
+            return estado === 'abierta' || estado === 'activa';
+        });
+
+        console.log('Cajas abiertas/activas encontradas:', cajasAbiertas);
 
         if (cajasAbiertas.length === 0) {
             selectCaja.innerHTML = '<option value="">No hay cajas abiertas</option>';
-            alert('No hay cajas abiertas para cerrar');
+            console.warn('No hay cajas abiertas para cerrar');
             return;
         }
 
@@ -76,9 +82,11 @@ async function cargarCajasAbiertas() {
         cajasAbiertas.forEach(caja => {
             const option = document.createElement('option');
             option.value = caja.CodCaja;
-            option.textContent = `${caja.CodCaja} - ${caja.Turno} (${caja.FechaApertura || caja.Fecha})`;
+            option.textContent = `${caja.CodCaja} - ${caja.Turno || 'Sin turno'} (${caja.FechaApertura || caja.Fecha || 'Sin fecha'})`;
             selectCaja.appendChild(option);
         });
+
+        console.log('Cajas cargadas en select:', cajasAbiertas.length);
 
         // Si solo hay una caja abierta, seleccionarla automáticamente
         if (cajasAbiertas.length === 1) {

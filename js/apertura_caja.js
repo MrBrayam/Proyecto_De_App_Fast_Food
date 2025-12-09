@@ -1,6 +1,5 @@
 // ===== APERTURA DE CAJA - LÓGICA =====
 
-const API_BASE = '/Proyecto_De_App_Fast_Food/api';
 let idUsuario = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -74,6 +73,8 @@ async function cargarCajas() {
         const resp = await fetch(`${API_BASE}/caja/listar`);
         const data = await resp.json();
 
+        console.log('Respuesta de cajas:', data);
+
         if (!resp.ok || !data.exito) {
             throw new Error('No se pudieron cargar las cajas');
         }
@@ -94,20 +95,34 @@ async function cargarCajas() {
             }
         });
 
+        console.log('Cajas únicas:', Array.from(cajasUnicas.values()));
+
         selectCaja.innerHTML = '<option value="">Seleccionar caja</option>';
         selectCaja.innerHTML += '<option value="NUEVA">+ Crear nueva caja</option>';
         
         cajasUnicas.forEach(caja => {
-            // Solo mostrar cajas cerradas para reabrir
-            if (caja.Estado === 'cerrada') {
-                const option = document.createElement('option');
-                option.value = caja.CodCaja;
-                option.textContent = `${caja.CodCaja} (Cerrada - Último cierre: ${caja.Fecha})`;
-                option.dataset.montoFinal = caja.MontoFinal || '';
-                option.dataset.estado = caja.Estado;
-                selectCaja.appendChild(option);
+            // Mostrar todas las cajas (activas y cerradas)
+            const option = document.createElement('option');
+            option.value = caja.CodCaja;
+            
+            const estado = (caja.Estado || 'cerrada').toLowerCase();
+            let texto = caja.CodCaja;
+            
+            if (estado === 'activa') {
+                texto += ` (Activa - Abierta: ${caja.Fecha})`;
+            } else if (estado === 'cerrada') {
+                texto += ` (Cerrada - Último cierre: ${caja.Fecha})`;
+            } else {
+                texto += ` (${caja.Estado})`;
             }
+            
+            option.textContent = texto;
+            option.dataset.montoFinal = caja.MontoFinal || '';
+            option.dataset.estado = caja.Estado;
+            selectCaja.appendChild(option);
         });
+        
+        console.log('Cajas cargadas en select');
     } catch (error) {
         console.error('Error al cargar cajas:', error);
         selectCaja.innerHTML = '<option value="">Error al cargar cajas</option>';
