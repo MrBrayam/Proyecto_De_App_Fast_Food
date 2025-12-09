@@ -1,0 +1,441 @@
+.mis-pedidos-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.mis-pedidos-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mis-pedidos-header h1 {
+    color: #ff5733;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Filtros */
+.filtros-section {
+    background: rgba(26, 29, 46, 0.95);
+    border: 1px solid rgba(255, 87, 51, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filtro-btn {
+    padding: 0.6rem 1.2rem;
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    background: transparent;
+    color: #fff;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filtro-btn:hover,
+.filtro-btn.active {
+    background: #ff5733;
+    border-color: #ff5733;
+    color: #1a1d2e;
+}
+
+/* Grid de pedidos */
+.pedidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.pedido-card {
+    background: rgba(26, 29, 46, 0.95);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pedido-card:hover {
+    border-color: #ff5733;
+    box-shadow: 0 8px 32px rgba(255, 87, 51, 0.2);
+    transform: translateY(-4px);
+}
+
+.pedido-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.pedido-numero {
+    color: #ffc857;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.estado-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.estado-pendiente {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.estado-preparando {
+    background: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+}
+
+.estado-listo {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+}
+
+.estado-entregado {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+}
+
+.estado-cancelado {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+.pedido-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-item {
+    font-size: 0.9rem;
+}
+
+.info-label {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0.2rem;
+}
+
+.info-value {
+    color: #fff;
+    font-weight: 600;
+}
+
+.pedido-total {
+    font-size: 1.4rem;
+    color: #ff5733;
+    font-weight: 700;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.pedido-acciones {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.btn-detalles {
+    flex: 1;
+    padding: 0.6rem;
+    background: linear-gradient(135deg, #ff5733, #ffc857);
+    color: #1a1d2e;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.btn-detalles:hover {
+    transform: scale(1.02);
+}
+
+.btn-repetir {
+    flex: 1;
+    padding: 0.6rem;
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-repetir:hover {
+    background: #4caf50;
+    color: #fff;
+}
+
+/* Estados vacío */
+.pedidos-vacio {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(26, 29, 46, 0.95);
+    border: 2px dashed rgba(255, 87, 51, 0.3);
+    border-radius: 12px;
+    display: none;
+}
+
+.pedidos-vacio i {
+    font-size: 3rem;
+    color: #ff5733;
+    margin-bottom: 1rem;
+}
+
+.pedidos-vacio h3 {
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.pedidos-vacio p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.5rem;
+}
+
+.btn-hacer-pedido {
+    background: linear-gradient(135deg, #ff5733, #ffc857);
+    color: #1a1d2e;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.btn-hacer-pedido:hover {
+    transform: scale(1.05);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 87, 51, 0.2);
+    border-top: 4px solid #ff5733;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modal de detalles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-contenido {
+    background: rgba(26, 29, 46, 0.98);
+    border: 2px solid rgba(255, 87, 51, 0.3);
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.modal-header h2 {
+    color: #ff5733;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.btn-cerrar-modal {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.btn-cerrar-modal:hover {
+    color: #ff5733;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.detalle-info {
+    background: rgba(44, 47, 62, 0.8);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.1);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.info-row .value {
+    color: #ffc857;
+    font-weight: 600;
+}
+
+.detalle-items {
+    background: rgba(44, 47, 62, 0.8);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 87, 51, 0.2);
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 87, 51, 0.1);
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+.item-nombre {
+    flex: 1;
+    color: #fff;
+    font-weight: 500;
+}
+
+.item-cantidad {
+    color: #ffc857;
+    margin: 0 1.5rem;
+    font-weight: 600;
+}
+
+.item-precio {
+    color: #ff5733;
+    font-weight: 600;
+    min-width: 100px;
+    text-align: right;
+}
+
+.modal-footer {
+    padding: 2rem;
+    border-top: 1px solid rgba(255, 87, 51, 0.2);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-cerrar {
+    background: linear-gradient(135deg, #ff5733, #ffc857);
+    color: #1a1d2e;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.btn-cerrar:hover {
+    transform: scale(1.05);
+}
+
+/* Botón volver al menú principal */
+.btn-home {
+    background: #ff5733;
+    border: none;
+    color: #fff;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(255, 87, 51, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-home:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(255, 87, 51, 0.35);
+}
+
+.titulo-items {
+    margin-top: 2rem;
+    color: #ff5733;
+}
+
+.detalle-vacio {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+    .mis-pedidos-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .pedidos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pedido-info {
+        grid-template-columns: 1fr;
+    }
+}
