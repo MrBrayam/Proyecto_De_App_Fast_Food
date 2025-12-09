@@ -1257,17 +1257,17 @@ class ReporteController extends Controller
             $stmt->execute($params);
             $gastosPorProveedor = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Gastos por categoría de producto comprado
+            // Gastos por descripción de productos comprados (los 10 principales)
             $queryCategorias = "SELECT 
-                                    COALESCE(p.Categoria, 'Sin Categoría') as Categoria,
-                                    COUNT(DISTINCT c.IdCompra) as NumeroCompras,
+                                    dc.Descripcion as Categoria,
+                                    COUNT(*) as NumeroCompras,
                                     COALESCE(SUM(dc.Total), 0) as TotalGastado
                                 FROM Compras c
                                 INNER JOIN DetalleCompra dc ON c.IdCompra = dc.IdCompra
-                                LEFT JOIN Productos p ON dc.IdProducto = p.IdProducto
-                                WHERE $whereClause
-                                GROUP BY COALESCE(p.Categoria, 'Sin Categoría')
-                                ORDER BY TotalGastado DESC";
+                                WHERE $whereClause AND dc.Descripcion IS NOT NULL AND dc.Descripcion != ''
+                                GROUP BY dc.Descripcion
+                                ORDER BY TotalGastado DESC
+                                LIMIT 10";
             $stmt = $db->prepare($queryCategorias);
             $stmt->execute($params);
             $gastosPorCategoria = $stmt->fetchAll(PDO::FETCH_ASSOC);
