@@ -63,6 +63,7 @@ return [
     'mesas/actualizar-estado' => [MesaController::class, 'actualizarEstado'],
     'pedidos/registrar' => [PedidoController::class, 'registrar'],
     'pedidos/listar' => [PedidoController::class, 'listar'],
+    'pedidos/listar-por-cliente' => [PedidoController::class, 'listarPorCliente'],
     'pedidos/buscar' => [PedidoController::class, 'buscar'],
     'pedidos/actualizar-estado' => [PedidoController::class, 'actualizarEstado'],
     'platos/registrar' => [PlatoController::class, 'registrar'],

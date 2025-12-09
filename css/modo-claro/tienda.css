@@ -297,6 +297,18 @@
     }
 }
 
+/* Light theme overrides for btn-pedidos */
+.btn-pedidos {
+    background: rgba(76, 175, 80, 0.15) !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+}
+
+.btn-pedidos:hover {
+    background: #4caf50 !important;
+    color: #fff !important;
+}
+
 /* Light theme overrides for usuario-info and theme button */
 .usuario-info {
     background: rgba(226, 232, 240, 0.8) !important;

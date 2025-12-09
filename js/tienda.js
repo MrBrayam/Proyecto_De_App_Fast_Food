@@ -56,7 +56,12 @@ function handleAgregarClick(e) {
             const precioText = card.querySelector('.precio-actual')?.textContent || 'S/. 0';
             const precio = parseFloat(precioText.replace('S/. ', ''));
             
+            // Buscar el producto en productosDisponibles para obtener su ID
+            const productoEnBD = productosDisponibles.find(p => p.nombre === nombre);
+            const idPlato = productoEnBD?.id || 0;
+            
             agregarAlCarrito({
+                id: idPlato,
                 nombre: nombre,
                 precio: precio,
                 cantidad: 1
@@ -437,18 +442,100 @@ function actualizarResumen() {
 }
 
 // Finalizar pedido
-function finalizarPedido() {
+async function finalizarPedido() {
     if (carrito.length === 0) {
         alert('Tu carrito está vacío');
         return;
     }
     
-    const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0) + 5;
-    alert(`Pedido finalizado. Total: S/. ${total.toFixed(2)}`);
+    // Obtener datos del cliente
+    let clienteActual = sessionStorage.getItem('clienteActual') || localStorage.getItem('clienteActual');
     
-    carrito = [];
-    actualizarCarrito();
-    toggleCarrito();
+    if (!clienteActual) {
+        alert('No hay cliente autenticado. Por favor, inicia sesión nuevamente.');
+        window.location.href = '../html/login_cliente.html';
+        return;
+    }
+    
+    try {
+        const cliente = JSON.parse(clienteActual);
+        
+        // Preparar detalles del pedido
+        const detalles = carrito.map((item, index) => ({
+            idPlato: item.id || 0,
+            codProducto: `PLATO-${item.id || (index + 1)}`,
+            descripcionProducto: item.nombre,
+            cantidad: item.cantidad,
+            precioUnitario: item.precio,
+            subtotal: item.precio * item.cantidad
+        }));
+        
+        const subTotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+        const delivery = 5.00;
+        const total = subTotal + delivery;
+        
+        // Preparar datos del pedido según la PA pa_registrar_pedido
+        const pedidoData = {
+            numDocumentos: cliente.numDocumento || cliente.NumDocumento,
+            tipoServicio: 'delivery',
+            numMesa: null,
+            idCliente: cliente.idCliente || cliente.IdCliente,
+            nombreCliente: cliente.nombres || cliente.nombre || cliente.Nombres,
+            direccionCliente: cliente.direccion || cliente.Direccion || '',
+            telefonoCliente: cliente.telefono || cliente.Telefono || '',
+            idUsuario: 1, // Usuario por defecto (sistema)
+            subTotal: subTotal,
+            descuento: 0,
+            total: total,
+            estado: 'pendiente',
+            observaciones: 'Pedido realizado por cliente en tienda online',
+            detalles: detalles
+        };
+        
+        // Mostrar indicador de carga
+        const btnFinalizar = document.querySelector('.btn-finalizar');
+        const textoOriginal = btnFinalizar.textContent;
+        btnFinalizar.textContent = 'Procesando...';
+        btnFinalizar.disabled = true;
+        
+        // Enviar pedido a la API
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/pedidos/registrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(pedidoData)
+        });
+        
+        const resultado = await response.json();
+        
+        if (resultado.exito) {
+            mostrarNotificacion(`✓ Pedido #${resultado.pedido.IdPedido} creado exitosamente`);
+            
+            // Limpiar carrito
+            carrito = [];
+            actualizarCarrito();
+            toggleCarrito();
+            
+            // Mostrar confirmación
+            setTimeout(() => {
+                alert(`Pedido confirmado!\nNúmero de pedido: #${resultado.pedido.IdPedido}\nTotal: S/. ${total.toFixed(2)}\n\nTu pedido será entregado en 30-45 minutos.`);
+                
+                // Redirigir a mis pedidos
+                window.location.href = '../html/mis_pedidos.html';
+            }, 1500);
+        } else {
+            alert(`Error al registrar pedido: ${resultado.mensaje}`);
+            btnFinalizar.textContent = textoOriginal;
+            btnFinalizar.disabled = false;
+        }
+    } catch (error) {
+        console.error('Error al finalizar pedido:', error);
+        alert('Error al procesar el pedido. Por favor, intenta de nuevo.');
+        const btnFinalizar = document.querySelector('.btn-finalizar');
+        btnFinalizar.textContent = 'Finalizar Pedido';
+        btnFinalizar.disabled = false;
+    }
 }
 
 // Mostrar notificación
@@ -571,6 +658,11 @@ function logout() {
         // Si falla la API, redirigir igual
         window.location.href = '../html/login_cliente.html';
     });
+}
+
+// Ir a mis pedidos
+function irAMisPedidos() {
+    window.location.href = '../html/mis_pedidos.html';
 }
 
 document.head.appendChild(style);

@@ -81,6 +81,32 @@ class PedidoController
         }
     }
 
+    public function listarPorCliente()
+    {
+        try {
+            $idCliente = isset($_GET['idCliente']) ? (int)$_GET['idCliente'] : 0;
+            
+            if ($idCliente <= 0) {
+                http_response_code(400);
+                echo json_encode(['exito' => false, 'mensaje' => 'ID de cliente inválido']);
+                return;
+            }
+
+            $pedidoModel = new Pedido();
+            $pedidos = $pedidoModel->listarPorCliente($idCliente);
+
+            http_response_code(200);
+            echo json_encode([
+                'exito' => true,
+                'items' => $pedidos,
+                'cantidad' => count($pedidos)
+            ]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
     public function buscar()
     {
         // Agregar CORS headers

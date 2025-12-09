@@ -87,6 +87,41 @@ class Pedido
         return $rows;
     }
 
+    public function listarPorCliente(int $idCliente)
+    {
+        $db = Database::connection();
+        
+        try {
+            $sql = 'SELECT 
+                        IdPedido,
+                        NumDocumentos,
+                        TipoServicio,
+                        NumMesa,
+                        IdCliente,
+                        NombreCliente,
+                        DireccionCliente,
+                        TelefonoCliente,
+                        IdUsuario,
+                        SubTotal,
+                        Descuento,
+                        Total,
+                        Estado,
+                        FechaPedido,
+                        Observaciones
+                    FROM Pedidos
+                    WHERE IdCliente = ' . intval($idCliente) . '
+                    ORDER BY FechaPedido DESC';
+            
+            $stmt = $db->query($sql);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $rows;
+        } catch (Exception $e) {
+            error_log('Error en listarPorCliente: ' . $e->getMessage());
+            return [];
+        }
+    }
+
     public function buscarPorId(int $idPedido)
     {
         $db = Database::connection();
