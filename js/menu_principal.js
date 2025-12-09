@@ -404,6 +404,9 @@ function renderPedidosRecientes(dataPedidos) {
     // RESPONSIVE - Ajustes al redimensionar
     // ============================================
     window.addEventListener('resize', function() {
+        // Si la página actual no tiene sidebar, evitar errores
+        if (!sidebar) return;
+
         if (window.innerWidth > 768) {
             sidebar.classList.remove('active');
             

@@ -121,6 +121,27 @@ class PromocionController
     {
         header('Content-Type: application/json; charset=utf-8');
         $idPromocion = $_GET['id'] ?? null;
+        $codigo = $_GET['codigo'] ?? null;
+
+        if ($codigo) {
+            // Búsqueda por código (nombre) o por id si es numérico
+            $model = new Promocion();
+            $promocion = $model->buscarPorCodigo($codigo);
+
+            if (!$promocion && is_numeric($codigo)) {
+                $promocion = $model->buscar((int)$codigo);
+            }
+
+            if (!$promocion) {
+                http_response_code(404);
+                echo json_encode(['success'=>false,'message'=>'Código de promoción no encontrado']);
+                return;
+            }
+
+            http_response_code(200);
+            echo json_encode(['success'=>true,'data'=>$promocion]);
+            return;
+        }
 
         if (!$idPromocion) {
             http_response_code(400);

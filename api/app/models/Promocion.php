@@ -92,6 +92,19 @@ class Promocion
         }
     }
 
+    public function buscarPorCodigo($codigo)
+    {
+        try {
+            $db = Database::connection();
+            $stmt = $db->prepare('SELECT * FROM promociones WHERE NombrePromocion = ? LIMIT 1');
+            $stmt->execute([$codigo]);
+            $promocion = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $promocion ?: null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
     public function eliminar($idPromocion)
     {
         try {

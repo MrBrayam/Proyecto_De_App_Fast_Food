@@ -2,7 +2,6 @@
    JAVASCRIPT PARA REGISTRAR PROMOCIONES
    ============================================ */
 
-const API_BASE = '/Proyecto_De_App_Fast_Food/api';
 let idUsuario = null;
 let promocionEditando = null;
 

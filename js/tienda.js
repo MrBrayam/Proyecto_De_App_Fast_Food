@@ -6,11 +6,14 @@
 let carrito = [];
 let productosDisponibles = [];
 let filtroActivo = 'todos';
+let descuentoAplicado = 0;
+let codigoAplicado = null;
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     cargarUsuarioInfo();
     setupLogout();
+    cargarPromociones();
     cargarProductos().then(() => {
         inicializarEventos();
     });
@@ -107,6 +110,10 @@ function reinitializarEventosGenerales() {
     if (rangeSlider) {
         rangeSlider.removeEventListener('change', filtrarProductos);
         rangeSlider.addEventListener('change', filtrarProductos);
+        rangeSlider.removeEventListener('input', actualizarDisplayPrecio);
+        rangeSlider.addEventListener('input', actualizarDisplayPrecio);
+        // Actualizar el display al iniciar
+        actualizarDisplayPrecio();
     }
 
     // Buscar productos
@@ -121,6 +128,13 @@ function reinitializarEventosGenerales() {
     if (selectOrdenar) {
         selectOrdenar.removeEventListener('change', ordenarProductos);
         selectOrdenar.addEventListener('change', ordenarProductos);
+    }
+
+    // Botón aplicar código de descuento
+    const btnAplicar = document.querySelector('.carrito-codigo .btn-aplicar');
+    if (btnAplicar) {
+        btnAplicar.removeEventListener('click', aplicarDescuento);
+        btnAplicar.addEventListener('click', aplicarDescuento);
     }
 
     // Botón finalizar pedido
@@ -140,6 +154,175 @@ function handleFavoritoClick(e) {
             ? '<i class="fas fa-heart"></i>' 
             : '<i class="far fa-heart"></i>';
     }
+}
+
+// Cargar promociones desde la BD
+async function cargarPromociones() {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/promociones/listar');
+        const data = await response.json();
+        
+        console.log('Respuesta de promociones:', data);
+        
+        if (data.exito && data.items && data.items.length > 0) {
+            renderizarPromociones(data.items);
+        } else {
+            console.log('No hay promociones activas');
+        }
+    } catch (error) {
+        console.error('Error cargando promociones:', error);
+    }
+}
+
+// Variables del slider
+let promoIndex = 0;
+let autoSliderInterval = null;
+
+// Renderizar promociones en el slider
+function renderizarPromociones(promociones) {
+    const sliderContainer = document.querySelector('.slider-promociones');
+    if (!sliderContainer) return;
+    
+    // Limpiar promociones existentes
+    const slidesExistentes = sliderContainer.querySelectorAll('.slide-promo');
+    slidesExistentes.forEach(slide => slide.remove());
+    
+    console.log('Renderizando promociones:', promociones);
+    
+    // Filtrar solo promociones activas
+    const promoActivas = promociones.filter(p => p.Estado === 'activa');
+    
+    if (promoActivas.length === 0) {
+        console.log('No hay promociones activas');
+        return;
+    }
+    
+    // Agregar nuevas promociones
+    promoActivas.forEach((promo, index) => {
+        const slide = document.createElement('div');
+        slide.className = `slide-promo ${index === 0 ? 'active' : ''}`;
+        
+        // Campos de la base de datos
+        const nombre = promo.NombrePromocion || 'Promoción especial';
+        const descripcion = promo.Descripcion || 'Aprovecha esta promoción';
+        const descuento = promo.Descuento || '';
+        const tipo = promo.TipoPromocion || '';
+        
+        let descuentoText = '¡Oferta!';
+        if (descuento && tipo === 'porcentaje') {
+            descuentoText = `${descuento}% OFF`;
+        } else if (descuento && tipo === 'monto') {
+            descuentoText = `${descuento} OFF`;
+        } else if (descuento) {
+            descuentoText = descuento;
+        }
+        
+        // Usar el ID como código o el nombre si no hay ID
+        const codigo = promo.IdPromocion || nombre;
+        
+        slide.innerHTML = `
+            <div class="promo-content">
+                <span class="promo-badge">${descuentoText}</span>
+                <h2>${nombre}</h2>
+                <p>${descripcion}</p>
+                <button class="btn-promo" onclick="aplicarPromocion('${codigo}')">Ver más</button>
+            </div>
+            <div class="promo-image">
+                <i class="fas fa-tag"></i>
+            </div>
+        `;
+        
+        sliderContainer.appendChild(slide);
+    });
+    
+    // Crear indicadores
+    crearIndicadores(promoActivas.length);
+    
+    // Iniciar auto-slider
+    iniciarAutoSlider(promoActivas.length);
+}
+
+// Crear indicadores del slider
+function crearIndicadores(cantidad) {
+    const indicatorsContainer = document.querySelector('.slider-indicators');
+    if (!indicatorsContainer) return;
+    
+    indicatorsContainer.innerHTML = '';
+    
+    for (let i = 0; i < cantidad; i++) {
+        const indicator = document.createElement('div');
+        indicator.className = `slider-indicator ${i === 0 ? 'active' : ''}`;
+        indicator.onclick = () => irAPromocion(i);
+        indicatorsContainer.appendChild(indicator);
+    }
+}
+
+// Iniciar auto-slider
+function iniciarAutoSlider(cantidad) {
+    if (cantidad <= 1) return;
+    
+    // Limpiar intervalo anterior si existe
+    if (autoSliderInterval) {
+        clearInterval(autoSliderInterval);
+    }
+    
+    // Cambiar automáticamente cada 5 segundos
+    autoSliderInterval = setInterval(() => {
+        promoIndex = (promoIndex + 1) % cantidad;
+        mostrarPromocion(promoIndex);
+    }, 5000);
+}
+
+// Mostrar promoción específica
+function mostrarPromocion(index) {
+    const slides = document.querySelectorAll('.slide-promo');
+    const indicators = document.querySelectorAll('.slider-indicator');
+    
+    if (slides.length === 0) return;
+    
+    // Remover clase active de todos
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(ind => ind.classList.remove('active'));
+    
+    // Agregar clase active al actual
+    slides[index].classList.add('active');
+    indicators[index].classList.add('active');
+    
+    promoIndex = index;
+}
+
+// Ir a promoción anterior
+function previoPromocion() {
+    const slides = document.querySelectorAll('.slide-promo');
+    const cantidad = slides.length;
+    if (cantidad <= 1) return;
+    
+    promoIndex = (promoIndex - 1 + cantidad) % cantidad;
+    mostrarPromocion(promoIndex);
+    
+    // Reiniciar auto-slider
+    iniciarAutoSlider(cantidad);
+}
+
+// Ir a siguiente promoción
+function siguientePromocion() {
+    const slides = document.querySelectorAll('.slide-promo');
+    const cantidad = slides.length;
+    if (cantidad <= 1) return;
+    
+    promoIndex = (promoIndex + 1) % cantidad;
+    mostrarPromocion(promoIndex);
+    
+    // Reiniciar auto-slider
+    iniciarAutoSlider(cantidad);
+}
+
+// Ir a promoción específica
+function irAPromocion(index) {
+    mostrarPromocion(index);
+    
+    const slides = document.querySelectorAll('.slide-promo');
+    iniciarAutoSlider(slides.length);
 }
 
 // Cargar productos (desde la API)
@@ -267,6 +450,89 @@ function usarProductosPorDefecto() {
         { id: 8, nombre: 'Tequeños de Queso', categoria: 'entradas', precio: 13.50, cantidad: 15, estado: 'disponible', descripcion: 'Relleno de queso' }
     ];
     renderizarProductosDesdeAPI();
+}
+
+// Actualizar display del precio
+function actualizarDisplayPrecio() {
+    const rangeSlider = document.querySelector('.range-slider');
+    const precioDisplay = document.querySelector('#precioActual');
+    
+    if (!rangeSlider || !precioDisplay) return;
+    
+    const valor = parseInt(rangeSlider.value);
+    
+    if (valor === 100) {
+        precioDisplay.textContent = 'S/. 100+';
+    } else {
+        precioDisplay.textContent = `S/. ${valor}`;
+    }
+}
+
+// Aplicar descuento por código
+async function aplicarDescuento() {
+    const inputPromo = document.querySelector('.carrito-codigo input');
+    const codigo = inputPromo?.value?.trim();
+    
+    if (!codigo) {
+        mostrarNotificacion('Por favor ingresa un código de descuento');
+        return;
+    }
+    
+    try {
+        // Buscar la promoción por código
+        const response = await fetch(`${API_BASE}/promociones/buscar?codigo=${encodeURIComponent(codigo)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const resultado = await response.json();
+        
+        if (resultado.success && resultado.data) {
+            const promocion = resultado.data;
+            
+            // Verificar si la promoción está activa
+            if (promocion.Estado !== 'activa') {
+                mostrarNotificacion('Este código de promoción no está disponible');
+                return;
+            }
+            
+            // Calcular el descuento según el tipo
+            const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            let descuento = 0;
+            
+            if (promocion.TipoPromocion === 'porcentaje') {
+                descuento = (subtotal * parseFloat(promocion.Descuento)) / 100;
+            } else if (promocion.TipoPromocion === 'monto') {
+                descuento = parseFloat(promocion.Descuento);
+            }
+            
+            // Aplicar el descuento
+            descuentoAplicado = Math.min(descuento, subtotal); // No permitir descuento mayor que el subtotal
+            codigoAplicado = codigo;
+            
+            // Actualizar el carrito
+            actualizarResumen();
+            
+            mostrarNotificacion(`¡Descuento aplicado! ${promocion.Descuento}${promocion.TipoPromocion === 'porcentaje' ? '%' : ''} OFF`);
+            inputPromo.value = ''; // Limpiar el input
+        } else {
+            mostrarNotificacion('Código de descuento no válido');
+        }
+    } catch (error) {
+        console.error('Error al aplicar descuento:', error);
+        mostrarNotificacion('Error al procesar el código de descuento');
+    }
+}
+
+// Aplicar promoción directamente desde el banner lateral
+function aplicarPromocionDirecta(codigo) {
+    const inputPromo = document.querySelector('.carrito-codigo input');
+    if (inputPromo) {
+        inputPromo.value = codigo;
+        aplicarDescuento();
+    }
 }
 
 // Filtrar productos
@@ -428,14 +694,13 @@ function eliminarDelCarrito(index) {
 // Actualizar resumen
 function actualizarResumen() {
     const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    const descuento = 0;
     const delivery = carrito.length > 0 ? 5.00 : 0;
-    const total = subtotal - descuento + delivery;
+    const total = subtotal - descuentoAplicado + delivery;
     
     const resumenLineas = document.querySelectorAll('.resumen-linea');
     if (resumenLineas.length >= 4) {
         resumenLineas[0].querySelector('span:last-child').textContent = `S/. ${subtotal.toFixed(2)}`;
-        resumenLineas[1].querySelector('span:last-child').textContent = `-S/. ${descuento.toFixed(2)}`;
+        resumenLineas[1].querySelector('span:last-child').textContent = `-S/. ${descuentoAplicado.toFixed(2)}`;
         resumenLineas[2].querySelector('span:last-child').textContent = `S/. ${delivery.toFixed(2)}`;
         resumenLineas[3].querySelector('span:last-child').textContent = `S/. ${total.toFixed(2)}`;
     }
@@ -472,7 +737,7 @@ async function finalizarPedido() {
         
         const subTotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
         const delivery = 5.00;
-        const total = subTotal + delivery;
+        const total = subTotal - descuentoAplicado + delivery;
         
         // Preparar datos del pedido según la PA pa_registrar_pedido
         const pedidoData = {
@@ -485,7 +750,7 @@ async function finalizarPedido() {
             telefonoCliente: cliente.telefono || cliente.Telefono || '',
             idUsuario: 1, // Usuario por defecto (sistema)
             subTotal: subTotal,
-            descuento: 0,
+            descuento: descuentoAplicado,
             total: total,
             estado: 'pendiente',
             observaciones: 'Pedido realizado por cliente en tienda online',
@@ -663,6 +928,20 @@ function logout() {
 // Ir a mis pedidos
 function irAMisPedidos() {
     window.location.href = '../html/mis_pedidos.html';
+}
+
+// Aplicar promoción
+function aplicarPromocion(codigo) {
+    const inputPromo = document.querySelector('.carrito-codigo input');
+    if (inputPromo) {
+        inputPromo.value = codigo;
+        // Simular clic en botón aplicar
+        const btnAplicar = document.querySelector('.carrito-codigo .btn-aplicar');
+        if (btnAplicar) {
+            btnAplicar.click();
+        }
+    }
+    mostrarNotificacion(`Código de promoción: ${codigo}`);
 }
 
 document.head.appendChild(style);

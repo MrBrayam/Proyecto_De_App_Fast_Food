@@ -73,6 +73,10 @@
     <!-- Banner de promociones -->
     <section class="banner-promociones">
         <div class="container-banner">
+            <button class="slider-control slider-prev" onclick="previoPromocion()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
             <div class="slider-promociones">
                 <div class="slide-promo active">
                     <div class="promo-content">
@@ -86,6 +90,12 @@
                     </div>
                 </div>
             </div>
+            
+            <button class="slider-control slider-next" onclick="siguientePromocion()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="slider-indicators"></div>
         </div>
     </section>
 
@@ -100,7 +110,10 @@
                     <div class="filtro-group">
                         <h4>Precio</h4>
                         <div class="precio-range">
-                            <input type="range" min="0" max="100" value="100" class="range-slider">
+                            <input type="range" min="0" max="100" value="100" class="range-slider" id="priceSlider">
+                            <div class="precio-display">
+                                <span class="precio-actual" id="precioActual">S/. 100+</span>
+                            </div>
                             <div class="precio-labels">
                                 <span>S/. 0</span>
                                 <span>S/. 100+</span>
@@ -150,7 +163,9 @@
                         <i class="fas fa-percentage"></i>
                         <h4>Descuento especial</h4>
                         <p>20% OFF en tu primera compra</p>
-                        <span class="codigo-descuento">Código: BIENVENIDO20</span>
+                        <span class="codigo-descuento" style="cursor: pointer;" onclick="aplicarPromocionDirecta('BIENVENIDO20')">
+                            Código: BIENVENIDO20
+                        </span>
                     </div>
                 </div>
             </aside>
@@ -305,6 +320,7 @@
         </div>
     </footer>
     <script src="../js/theme-manager.js"></script>
+    <script src="../js/menu_principal.js"></script>
     <script src="../js/tienda.js"></script>
 </body>
 </html>
