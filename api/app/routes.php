@@ -18,6 +18,10 @@ require_once __DIR__ . '/controllers/PromocionController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
+    'clientes/login' => [ClienteController::class, 'login'],
+    'clientes/registro' => [ClienteController::class, 'registro'],
+    'clientes/verificar-usuario' => [ClienteController::class, 'verificarUsuario'],
+    'clientes/logout' => [ClienteController::class, 'logout'],
     'ventas/registrar' => [VentaController::class, 'registrar'],
     'ventas/listar' => [VentaController::class, 'listar'],
     'ventas/buscar' => [VentaController::class, 'buscar'],

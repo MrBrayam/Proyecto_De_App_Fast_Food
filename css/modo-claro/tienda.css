@@ -296,3 +296,33 @@
         font-size: 16px;
     }
 }
+
+/* Light theme overrides for usuario-info and theme button */
+.usuario-info {
+    background: rgba(226, 232, 240, 0.8) !important;
+    border: 1px solid rgba(37, 99, 235, 0.2) !important;
+}
+
+.usuario-nombre {
+    color: #1e293b !important;
+}
+
+.btn-logout {
+    color: #2563eb !important;
+}
+
+.btn-logout:hover {
+    color: #1e40af !important;
+}
+
+.btn-theme {
+    background: rgba(226, 232, 240, 0.8) !important;
+    border: 1px solid rgba(37, 99, 235, 0.2) !important;
+    color: #2563eb !important;
+}
+
+.btn-theme:hover {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #1e40af !important;
+}
+
