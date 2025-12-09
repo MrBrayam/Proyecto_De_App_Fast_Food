@@ -16,7 +16,7 @@ class Plato
     public function registrar(array $data)
     {
         $db = Database::connection();
-        $stmt = $db->prepare('CALL pa_registrar_plato(?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $db->prepare('CALL pa_registrar_plato(?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             $data['codPlato'] ?? null,
             $data['nombre'] ?? null,
@@ -25,6 +25,7 @@ class Plato
             $data['tamano'] ?? 'personal',
             $data['precio'] ?? 0,
             $data['cantidad'] ?? 0,
+            $data['rutaImg'] ?? null,
             $data['estado'] ?? 'disponible',
         ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -37,6 +38,26 @@ class Plato
         $db = Database::connection();
         $stmt = $db->prepare('CALL pa_buscar_plato(?)');
         $stmt->execute([$codPlato]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        while ($stmt->nextRowset()) {}
+        return $result;
+    }
+
+    public function actualizar(array $data)
+    {
+        $db = Database::connection();
+        $stmt = $db->prepare('CALL pa_actualizar_plato(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([
+            $data['codPlato'] ?? null,
+            $data['nombre'] ?? null,
+            $data['descripcion'] ?? null,
+            $data['ingredientes'] ?? null,
+            $data['tamano'] ?? 'personal',
+            $data['precio'] ?? 0,
+            $data['cantidad'] ?? 0,
+            $data['rutaImg'] ?? null,
+            $data['estado'] ?? 'disponible',
+        ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         while ($stmt->nextRowset()) {}
         return $result;

@@ -67,6 +67,8 @@ return [
     'pedidos/buscar' => [PedidoController::class, 'buscar'],
     'pedidos/actualizar-estado' => [PedidoController::class, 'actualizarEstado'],
     'platos/registrar' => [PlatoController::class, 'registrar'],
+    'platos/actualizar' => [PlatoController::class, 'actualizar'],
+    'platos/subir-imagen' => [PlatoController::class, 'subirImagen'],
     'platos/listar' => [PlatoController::class, 'listar'],
     'platos/buscar' => [PlatoController::class, 'buscar'],
     'caja/abrir' => [CajaController::class, 'abrir'],

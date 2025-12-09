@@ -163,6 +163,7 @@ CREATE TABLE Platos (
     Tamano ENUM('personal', 'mediana', 'familiar', 'grande') DEFAULT 'personal',
     Precio DECIMAL(10,2) NOT NULL CHECK (Precio >= 0),
     Cantidad INT DEFAULT 0 CHECK (Cantidad >= 0),
+    RutaImg VARCHAR(2000),
     Estado ENUM('disponible', 'no_disponible') DEFAULT 'disponible',
     FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FechaActualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -1116,6 +1117,7 @@ CREATE PROCEDURE pa_registrar_plato(
     IN p_tamano ENUM('personal', 'mediana', 'familiar', 'grande'),
     IN p_precio DECIMAL(10,2),
     IN p_cantidad INT,
+    IN p_rutaImg VARCHAR(2000),
     IN p_estado ENUM('disponible', 'no_disponible')
 )
 BEGIN
@@ -1139,6 +1141,7 @@ BEGIN
         Tamano,
         Precio,
         Cantidad,
+        RutaImg,
         Estado
     ) VALUES (
         p_codPlato,
@@ -1148,6 +1151,7 @@ BEGIN
         p_tamano,
         p_precio,
         COALESCE(p_cantidad, 0),
+        NULLIF(p_rutaImg, ''),
         COALESCE(NULLIF(p_estado, ''), 'disponible')
     );
 
@@ -1179,6 +1183,7 @@ BEGIN
         Tamano,
         Precio,
         Cantidad,
+        RutaImg,
         Estado,
         FechaCreacion,
         FechaActualizacion
@@ -1205,12 +1210,63 @@ BEGIN
         Tamano,
         Precio,
         Cantidad,
+        RutaImg,
         Estado,
         FechaCreacion,
         FechaActualizacion
     FROM Platos
     WHERE CodPlato = p_codPlato
     LIMIT 1;
+END //
+DELIMITER ;
+
+-- ============================================
+-- PA: ACTUALIZAR PLATO
+-- ============================================
+DROP PROCEDURE IF EXISTS pa_actualizar_plato;
+DELIMITER //
+CREATE PROCEDURE pa_actualizar_plato(
+    IN p_codPlato VARCHAR(50),
+    IN p_nombre VARCHAR(150),
+    IN p_descripcion TEXT,
+    IN p_ingredientes TEXT,
+    IN p_tamano ENUM('personal', 'mediana', 'familiar', 'grande'),
+    IN p_precio DECIMAL(10,2),
+    IN p_cantidad INT,
+    IN p_rutaImg VARCHAR(2000),
+    IN p_estado ENUM('disponible', 'no_disponible')
+)
+BEGIN
+    START TRANSACTION;
+
+    IF p_codPlato IS NULL OR p_codPlato = '' OR p_nombre IS NULL OR p_nombre = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Código y nombre del plato son requeridos';
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM Platos WHERE CodPlato = p_codPlato) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El plato no existe';
+    END IF;
+
+    UPDATE Platos
+    SET 
+        Nombre = p_nombre,
+        Descripcion = NULLIF(p_descripcion, ''),
+        Ingredientes = NULLIF(p_ingredientes, ''),
+        Tamano = p_tamano,
+        Precio = p_precio,
+        Cantidad = COALESCE(p_cantidad, 0),
+        RutaImg = COALESCE(NULLIF(p_rutaImg, ''), RutaImg),
+        Estado = COALESCE(NULLIF(p_estado, ''), 'disponible'),
+        FechaActualizacion = CURRENT_TIMESTAMP
+    WHERE CodPlato = p_codPlato;
+
+    COMMIT;
+
+    SELECT JSON_OBJECT(
+        'CodPlato', p_codPlato,
+        'Nombre', p_nombre,
+        'mensaje', 'Plato actualizado exitosamente'
+    ) AS resultado;
 END //
 DELIMITER ;
 

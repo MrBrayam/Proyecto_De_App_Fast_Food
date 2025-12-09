@@ -1,5 +1,6 @@
 let platosOriginal = [];
 let platosFiltrados = [];
+let platoSeleccionado = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputBuscar = document.getElementById('inputBuscar');
     const selectFiltro = document.getElementById('selectFiltro');
     const btnRegistrar = document.getElementById('btnRegistrar');
+    const btnEditarDetalle = document.getElementById('btnEditarDetalle');
 
     if (btnBuscar) btnBuscar.addEventListener('click', filtrarPlatos);
     if (inputBuscar) inputBuscar.addEventListener('input', filtrarPlatos);
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnRegistrar) btnRegistrar.addEventListener('click', () => {
         window.location.href = 'registrar_platos.html';
     });
+    if (btnEditarDetalle) btnEditarDetalle.addEventListener('click', editarPlatoSeleccionado);
 
     cargarPlatos();
 });
@@ -85,9 +88,13 @@ function renderizarPlatos(lista) {
     lista.forEach(plato => {
         const card = document.createElement('div');
         card.className = 'plato-card';
+        
+        // Usar imagen local si existe, sino usar ícono de pizza
+        const imagenSrc = plato.RutaImg ? plato.RutaImg : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E';
+        
         card.innerHTML = `
             <div class="plato-imagen">
-                <img src="https://via.placeholder.com/200/ff8c00/ffffff?text=🍕" alt="${plato.Nombre || 'Plato'}">
+                <img src="${imagenSrc}" alt="${plato.Nombre || 'Plato'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E'">
             </div>
             <div class="plato-info">
                 <div class="plato-header">
@@ -121,6 +128,7 @@ function renderizarPlatos(lista) {
 }
 
 function verDetalles(plato) {
+    platoSeleccionado = plato;
     document.getElementById('detalleCodigo').textContent = plato.CodPlato || '-';
     document.getElementById('detalleNombre').textContent = plato.Nombre || '-';
     document.getElementById('detalleTamano').textContent = plato.Tamano || '-';
@@ -133,6 +141,18 @@ function verDetalles(plato) {
     if (modal) {
         modal.classList.add('active');
     }
+}
+
+function editarPlatoSeleccionado() {
+    if (!platoSeleccionado) return;
+
+    try {
+        sessionStorage.setItem('platoEditando', JSON.stringify(platoSeleccionado));
+    } catch (error) {
+        console.error('No se pudo guardar el plato en sesión:', error);
+    }
+
+    window.location.href = 'registrar_platos.html?editar=' + encodeURIComponent(platoSeleccionado.CodPlato || '');
 }
 
 function cerrarModal() {
