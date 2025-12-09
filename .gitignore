@@ -52,6 +52,7 @@ __pycache__/
 *.db
 *.sqlite
 *.sqlite3
+*.sql
 
 # ============================================
 # ARCHIVOS ESPECÍFICOS A IGNORAR
@@ -83,3 +84,5 @@ notas.txt
 !.gitkeep
 !index.html
 !README.md
+
+*.jpg

@@ -15,6 +15,7 @@ require_once __DIR__ . '/controllers/PedidoController.php';
 require_once __DIR__ . '/controllers/PlatoController.php';
 require_once __DIR__ . '/controllers/CajaController.php';
 require_once __DIR__ . '/controllers/PromocionController.php';
+require_once __DIR__ . '/controllers/ReporteController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
@@ -80,4 +81,7 @@ return [
     'promociones/actualizar' => [PromocionController::class, 'actualizar'],
     'promociones/buscar' => [PromocionController::class, 'buscar'],
     'promociones/eliminar' => [PromocionController::class, 'eliminar'],
+    'reportes/ventas-por-periodo' => [ReporteController::class, 'ventasPorPeriodo'],
+    'reportes/ventas-por-metodo-pago' => [ReporteController::class, 'ventasPorMetodoPago'],
+    'reportes/tendencia-ventas' => [ReporteController::class, 'tendenciaVentas'],
 ];

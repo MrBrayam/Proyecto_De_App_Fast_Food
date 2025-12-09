@@ -3,6 +3,9 @@
    Solo maneja fecha/hora como estructura estándar
    ============================================ */
 
+// API_BASE definido en menu_principal.js
+// const API_BASE = '/Proyecto_De_App_Fast_Food/api';
+
 // Función para actualizar fecha y hora
 function actualizarFechaHora() {
     const ahora = new Date();
@@ -173,13 +176,27 @@ function configurarEventListeners() {
         // Mostrar/ocultar campos de fecha personalizada
         const fechaPersonalizada = document.querySelector('.fecha-personalizada');
         if (this.value === 'personalizado') {
-            fechaPersonalizada.style.display = 'block';
+            if (fechaPersonalizada) {
+                fechaPersonalizada.style.display = 'block';
+            }
+            // No cargar datos aún, esperar a que el usuario ingrese las fechas
         } else {
-            fechaPersonalizada.style.display = 'none';
+            if (fechaPersonalizada) {
+                fechaPersonalizada.style.display = 'none';
+            }
+            actualizarContenidoReporte();
         }
-        
-        actualizarContenidoReporte();
     });
+    
+    // Event listeners para fechas personalizadas
+    const fechaFinInput = document.getElementById('fechaFin');
+    if (fechaFinInput) {
+        fechaFinInput.addEventListener('change', function() {
+            if (periodoActual === 'personalizado') {
+                actualizarContenidoReporte();
+            }
+        });
+    }
 
     // Botón generar reporte
     document.getElementById('btnGenerar').addEventListener('click', generarReporte);
@@ -244,12 +261,53 @@ function cargarTipoReporteDefault() {
 
 // Actualizar contenido del reporte según el tipo y período seleccionado
 function actualizarContenidoReporte() {
-    const datos = obtenerDatosReporte();
-    actualizarTituloVisualizacion();
-    actualizarEstadisticas(datos);
-    actualizarTabla(datos);
-    actualizarResumen(datos);
-    actualizarGraficos();
+    if (tipoReporteActual === 'ventas') {
+        cargarReporteVentasDesdeAPI();
+    } else {
+        const datos = obtenerDatosReporte();
+        actualizarTituloVisualizacion();
+        actualizarEstadisticas(datos);
+        actualizarTabla(datos);
+        actualizarResumen(datos);
+        actualizarGraficos();
+    }
+}
+
+// Cargar reporte de ventas desde API
+async function cargarReporteVentasDesdeAPI() {
+    try {
+        let url = `${API_BASE}/reportes/ventas-por-periodo?periodo=${periodoActual}`;
+        
+        // Si es período personalizado, agregar fechas
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor, selecciona un rango de fechas');
+                return;
+            }
+            
+            url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        }
+        
+        const resp = await fetch(url);
+        const data = await resp.json();
+        
+        if (data.exito) {
+            actualizarTituloVisualizacion();
+            actualizarEstadisticasVentas(data.resumen);
+            actualizarTablaVentas(data.ventasPorProducto);
+            actualizarResumenVentas(data.resumen);
+            actualizarGraficosVentas(data);
+        } else {
+            console.error('Error al cargar reporte:', data.mensaje);
+            alert('Error al cargar el reporte de ventas');
+        }
+    } catch (error) {
+        console.error('Error al obtener reporte:', error);
+        alert('Error al conectar con el servidor');
+    }
 }
 
 // Actualizar título de visualización según el tipo de reporte
@@ -413,7 +471,6 @@ function generarReporte() {
 // Limpiar filtros
 function limpiarFiltros() {
     document.getElementById('periodo').value = 'mes';
-    document.getElementById('sucursal').value = 'todas';
     document.querySelector('.fecha-personalizada').style.display = 'none';
     document.getElementById('fechaInicio').value = '';
     document.getElementById('fechaFin').value = '';
@@ -464,9 +521,6 @@ function imprimirTabla() {
 function agregarAlHistorial() {
     const ahora = new Date();
     const fecha = ahora.toLocaleDateString('es-PE') + ' - ' + ahora.toLocaleTimeString('es-PE', {hour: '2-digit', minute: '2-digit'});
-    const sucursal = document.getElementById('sucursal').value;
-    const nombreSucursal = sucursal === 'todas' ? 'Todas las sucursales' : 
-                          sucursal.charAt(0).toUpperCase() + sucursal.slice(1);
     
     const iconos = {
         'ventas': 'fa-dollar-sign',
@@ -496,7 +550,6 @@ function agregarAlHistorial() {
                 <div class="historial-detalles">
                     <span class="historial-fecha">${fecha}</span>
                     <span class="historial-periodo">${obtenerNombrePeriodo()}</span>
-                    <span class="historial-sucursal">${nombreSucursal}</span>
                 </div>
             </div>
             <div class="historial-acciones">
@@ -1292,7 +1345,7 @@ function crearGraficosFinanciero() {
     document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
     document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Distribución de Ingresos';
     document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Estructura de Gastos';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Rentabilidad por Sucursal';
+    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Ganancias';
     
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
     chartPrincipal = new Chart(ctxPrincipal, {
@@ -1356,4 +1409,201 @@ function crearGraficosFinanciero() {
         <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Partido Alto - 35%</span></div>
         <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>La Banda de Shilcayo - 20%</span></div>
     `;
+}
+
+/* ============================================
+   FUNCIONES PARA REPORTE DE VENTAS DESDE API
+   ============================================ */
+
+// Actualizar estadísticas de ventas desde API
+function actualizarEstadisticasVentas(resumen) {
+    if (!resumen) {
+        document.getElementById('totalPeriodo').textContent = 'S/. 0.00';
+        document.getElementById('promedioDiario').textContent = 'S/. 0.00';
+        document.getElementById('variacion').textContent = '0%';
+        return;
+    }
+
+    const totalMonto = parseFloat(resumen.TotalMonto) || 0;
+    const totalVentas = parseInt(resumen.TotalVentas) || 0;
+    const clientesUnicos = parseInt(resumen.ClientesUnicos) || 0;
+    
+    document.getElementById('totalPeriodo').textContent = 'S/. ' + totalMonto.toFixed(2);
+    document.getElementById('promedioDiario').textContent = 'S/. ' + (totalVentas > 0 ? (totalMonto / totalVentas).toFixed(2) : '0.00');
+    document.getElementById('variacion').textContent = clientesUnicos + ' clientes';
+}
+
+// Actualizar tabla de ventas desde API
+function actualizarTablaVentas(ventasPorProducto) {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (!ventasPorProducto || ventasPorProducto.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay datos disponibles</td></tr>';
+        return;
+    }
+    
+    ventasPorProducto.forEach(venta => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${venta.Fecha || ''}</td>
+            <td>${venta.Concepto || ''}</td>
+            <td>${venta.Cantidad || 0}</td>
+            <td>S/. ${parseFloat(venta.Monto || 0).toFixed(2)}</td>
+            <td><span class="badge ${venta.Estado === 'pagado' ? 'badge-success' : 'badge-warning'}">${venta.Estado || 'Pendiente'}</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+// Actualizar resumen de ventas desde API
+function actualizarResumenVentas(resumen) {
+    if (!resumen) return;
+    
+    const efecto = parseFloat(resumen.VentasEfectivo) || 0;
+    const tarjeta = parseFloat(resumen.VentasTarjeta) || 0;
+    const yape = parseFloat(resumen.VentasYape) || 0;
+    const plin = parseFloat(resumen.VentasPlin) || 0;
+    
+    const resumenElement = document.querySelector('.resumen-data');
+    if (resumenElement) {
+        resumenElement.innerHTML = `
+            <div class="resumen-item">
+                <span class="resumen-label">Efectivo:</span>
+                <span class="resumen-valor">S/. ${efecto.toFixed(2)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Tarjeta:</span>
+                <span class="resumen-valor">S/. ${tarjeta.toFixed(2)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Yape:</span>
+                <span class="resumen-valor">S/. ${yape.toFixed(2)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Plin:</span>
+                <span class="resumen-valor">S/. ${plin.toFixed(2)}</span>
+            </div>
+        `;
+    }
+}
+
+// Actualizar gráficos de ventas desde API
+async function actualizarGraficosVentas(data) {
+    try {
+        // Gráfico de métodos de pago - DISTRIBUCIÓN PRINCIPAL
+        const respMetodos = await fetch(`${API_BASE}/reportes/ventas-por-metodo-pago?periodo=${periodoActual}`);
+        const dataMetodos = await respMetodos.json();
+        
+        if (dataMetodos.exito && dataMetodos.ventasPorMetodoPago) {
+            const labels = dataMetodos.ventasPorMetodoPago.map(m => capitalizarPrimera(m.TipoPago));
+            const valores = dataMetodos.ventasPorMetodoPago.map(m => parseFloat(m.TotalMonto) || 0);
+            const colores = ['#2ecc71', '#3498db', '#e74c3c', '#f39c12'];
+            
+            const canvas1 = document.getElementById('chartPrincipal');
+            if (canvas1) {
+                if (chartPrincipal) chartPrincipal.destroy();
+                chartPrincipal = new Chart(canvas1.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: colores.slice(0, labels.length),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+                
+                // Generar leyenda dinámica
+                generarLeyendaDoughnut('leyendaPrincipal', labels, valores, colores);
+            }
+        }
+        
+        // Gráfico de TOP 3 productos más vendidos
+        if (data.productosMasVendidos) {
+            const productosTop3 = data.productosMasVendidos.slice(0, 3);
+            const productos = productosTop3.map(p => p.Concepto);
+            const cantidades = productosTop3.map(p => parseInt(p.Cantidad) || 0);
+            
+            const canvas4 = document.getElementById('chartProductos');
+            if (canvas4) {
+                if (chartProductos) chartProductos.destroy();
+                chartProductos = new Chart(canvas4.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: productos,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: cantidades,
+                            backgroundColor: '#2ecc71',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+        
+        // Gráfico de productos MENOS vendidos
+        if (data.productosMasVendidos) {
+            // Tomar los últimos 3 (menos vendidos)
+            const productosBottom3 = data.productosMasVendidos.slice(-3).reverse();
+            const productosM = productosBottom3.map(p => p.Concepto);
+            const cantidadesM = productosBottom3.map(p => parseInt(p.Cantidad) || 0);
+            
+            const canvas5 = document.getElementById('chartProductosMenos');
+            if (canvas5) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas5.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: productosM,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: cantidadesM,
+                            backgroundColor: '#e74c3c',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar gráficos:', error);
+    }
+}
+
+// Función para generar leyenda dinámica de gráficos doughnut
+function generarLeyendaDoughnut(elementId, labels, valores, colores) {
+    const leyendaElement = document.getElementById(elementId);
+    if (!leyendaElement) return;
+    
+    let html = '';
+    labels.forEach((label, index) => {
+        const color = colores[index] || '#999';
+        const valor = valores[index] || 0;
+        const total = valores.reduce((a, b) => a + b, 0);
+        const porcentaje = total > 0 ? ((valor / total) * 100).toFixed(1) : 0;
+        
+        html += `
+            <div class="leyenda-item">
+                <span class="leyenda-color" style="background-color: ${color}"></span>
+                <span class="leyenda-label">${label}</span>
+                <span class="leyenda-valor">S/. ${valor.toFixed(2)} (${porcentaje}%)</span>
+            </div>
+        `;
+    });
+    
+    leyendaElement.innerHTML = html;
+}
+
+// Función auxiliar para capitalizar
+function capitalizarPrimera(texto) {
+    if (!texto) return '';
+    return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
 }
