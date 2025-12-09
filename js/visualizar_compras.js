@@ -64,7 +64,7 @@ function mostrarCompras(compras) {
     if (!compras || compras.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="4" class="mensaje-vacio">
+                <td colspan="6" class="mensaje-vacio">
                     <i class="fas fa-inbox"></i>
                     <p>No hay compras registradas</p>
                 </td>
@@ -78,11 +78,23 @@ function mostrarCompras(compras) {
         row.classList.add('compra-row');
         row.setAttribute('data-id', compra.IdCompra);
         
+        // Generar badge de estado
+        const estadoBadge = generarBadgeEstado(compra.Estado);
+        
+        // Generar botón Pagar (solo si está pendiente)
+        const botonPagar = compra.Estado === 'pendiente' 
+            ? `<button class="btn-pagar" onclick="confirmPago(${compra.IdCompra})" title="Confirmar pago">
+                <i class="fas fa-check"></i> Pagar
+               </button>`
+            : `<span class="sin-accion">-</span>`;
+        
         row.innerHTML = `
             <td>${compra.IdCompra || '-'}</td>
             <td>${compra.FechaCompra || '-'}</td>
             <td>${compra.RazonSocial || '-'}</td>
             <td>S/ ${parseFloat(compra.Total || 0).toFixed(2)}</td>
+            <td>${estadoBadge}</td>
+            <td>${botonPagar}</td>
         `;
         
         row.addEventListener('click', function() {
@@ -91,6 +103,75 @@ function mostrarCompras(compras) {
         
         tbody.appendChild(row);
     });
+}
+
+// Generar badge de estado con estilos
+function generarBadgeEstado(estado) {
+    const estados = {
+        'pendiente': { class: 'badge-pendiente', label: 'Pendiente' },
+        'recibido': { class: 'badge-recibido', label: 'Recibido' },
+        'cancelado': { class: 'badge-cancelado', label: 'Pagado' }
+    };
+    
+    const info = estados[estado] || { class: 'badge-pendiente', label: estado };
+    return `<span class="badge-estado ${info.class}">${info.label}</span>`;
+}
+
+// Confirmar pago de compra
+async function confirmPago(idCompra) {
+    if (!confirm('¿Está seguro que desea marcar esta compra como pagada?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/compras/actualizar-estado', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                IdCompra: idCompra,
+                Estado: 'cancelado'
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.exito) {
+            mostrarNotificacion('Pago confirmado exitosamente', 'success');
+            cargarCompras(); // Recargar tabla
+        } else {
+            mostrarNotificacion('Error al confirmar pago: ' + (data.mensaje || 'Error desconocido'), 'error');
+        }
+    } catch (error) {
+        console.error('Error al confirmar pago:', error);
+        mostrarNotificacion('Error de conexión al confirmar pago', 'error');
+    }
+}
+
+// Mostrar notificación (toast)
+function mostrarNotificacion(mensaje, tipo = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${tipo}`;
+    notification.textContent = mensaje;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background-color: ${tipo === 'success' ? '#4CAF50' : tipo === 'error' ? '#f44336' : '#2196F3'};
+        color: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease-in;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
 
 // Seleccionar fila de la tabla

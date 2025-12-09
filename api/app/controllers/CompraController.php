@@ -138,4 +138,58 @@ class CompraController {
             ]);
         }
     }
+    
+    public function actualizarEstado() {
+        header('Content-Type: application/json; charset=utf-8');
+        
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Método no permitido'
+                ]);
+                return;
+            }
+            
+            $data = json_decode(file_get_contents('php://input'), true);
+            
+            if (!$data) {
+                http_response_code(400);
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Datos inválidos o vacíos'
+                ]);
+                return;
+            }
+            
+            // Validar campos requeridos
+            if (empty($data['IdCompra']) || empty($data['Estado'])) {
+                http_response_code(400);
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'IdCompra y Estado son requeridos'
+                ]);
+                return;
+            }
+            
+            $resultado = Compra::actualizarEstado($data['IdCompra'], $data['Estado']);
+            
+            if ($resultado['exito']) {
+                http_response_code(200);
+                echo json_encode($resultado);
+            } else {
+                http_response_code(400);
+                echo json_encode($resultado);
+            }
+            
+        } catch (Exception $e) {
+            error_log("Error en CompraController::actualizarEstado() - " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor'
+            ]);
+        }
+    }
 }

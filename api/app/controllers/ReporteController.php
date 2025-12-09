@@ -244,5 +244,275 @@ class ReporteController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error al generar reporte', 'error' => $e->getMessage()], 500);
         }
     }
+
+    // ============================================
+    // REPORTES DE COMPRAS
+    // ============================================
+
+    public function comprasPorPeriodo(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $periodo = $_GET['periodo'] ?? 'mes';
+        $fechaInicio = $_GET['fechaInicio'] ?? '';
+        $fechaFin = $_GET['fechaFin'] ?? '';
+
+        try {
+            require_once __DIR__ . '/../core/Database.php';
+            $db = Database::connection();
+
+            $query = 'SELECT 
+                        DATE(c.FechaCompra) as Fecha,
+                        dc.Descripcion as Concepto,
+                        SUM(dc.Cantidad) as Cantidad,
+                        SUM(dc.Total) as Monto,
+                        c.Estado
+                    FROM Compras c
+                    INNER JOIN DetalleCompra dc ON c.IdCompra = dc.IdCompra
+                    WHERE 1=1';
+
+            $params = [];
+
+            // Aplicar filtro de periodo
+            if ($periodo === 'hoy') {
+                $query .= ' AND DATE(c.FechaCompra) = CURDATE()';
+            } elseif ($periodo === 'semana') {
+                $query .= ' AND WEEK(c.FechaCompra) = WEEK(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'mes') {
+                $query .= ' AND MONTH(c.FechaCompra) = MONTH(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $query .= ' AND DATE(c.FechaCompra) BETWEEN ? AND ?';
+                $params = [$fechaInicio, $fechaFin];
+            }
+
+            $query .= ' GROUP BY DATE(c.FechaCompra), dc.Descripcion, c.Estado
+                        ORDER BY DATE(c.FechaCompra) DESC, dc.Descripcion';
+
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+            $comprasPorProducto = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Obtener resumen general
+            $queryResumen = 'SELECT 
+                                COUNT(DISTINCT c.IdCompra) as TotalCompras,
+                                SUM(c.Total) as TotalMonto,
+                                AVG(c.Total) as PromedioCompra,
+                                COUNT(DISTINCT c.CodProveedor) as ProveedoresUnicos,
+                                MIN(DATE(c.FechaCompra)) as FechaInicio,
+                                MAX(DATE(c.FechaCompra)) as FechaFin
+                            FROM Compras c
+                            WHERE 1=1';
+
+            if ($periodo === 'hoy') {
+                $queryResumen .= ' AND DATE(c.FechaCompra) = CURDATE()';
+            } elseif ($periodo === 'semana') {
+                $queryResumen .= ' AND WEEK(c.FechaCompra) = WEEK(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'mes') {
+                $queryResumen .= ' AND MONTH(c.FechaCompra) = MONTH(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $queryResumen .= ' AND DATE(c.FechaCompra) BETWEEN ? AND ?';
+            }
+
+            $stmtResumen = $db->prepare($queryResumen);
+            if ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $stmtResumen->execute([$fechaInicio, $fechaFin]);
+            } else {
+                $stmtResumen->execute();
+            }
+            $resumen = $stmtResumen->fetch(PDO::FETCH_ASSOC);
+            
+            // Calcular días analizados
+            $diasAnalizados = 1;
+            if ($resumen['FechaInicio'] && $resumen['FechaFin']) {
+                $inicio = new DateTime($resumen['FechaInicio']);
+                $fin = new DateTime($resumen['FechaFin']);
+                $diasAnalizados = max(1, $inicio->diff($fin)->days + 1);
+            }
+            $resumen['DiasAnalizados'] = $diasAnalizados;
+            $resumen['PromedioDiario'] = $resumen['TotalMonto'] ? $resumen['TotalMonto'] / $diasAnalizados : 0;
+
+            // Obtener productos más comprados
+            $queryProductos = 'SELECT 
+                                dc.Descripcion as Concepto,
+                                SUM(dc.Cantidad) as Cantidad,
+                                SUM(dc.Total) as Monto
+                            FROM DetalleCompra dc
+                            INNER JOIN Compras c ON dc.IdCompra = c.IdCompra
+                            WHERE 1=1';
+
+            if ($periodo === 'hoy') {
+                $queryProductos .= ' AND DATE(c.FechaCompra) = CURDATE()';
+            } elseif ($periodo === 'semana') {
+                $queryProductos .= ' AND WEEK(c.FechaCompra) = WEEK(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'mes') {
+                $queryProductos .= ' AND MONTH(c.FechaCompra) = MONTH(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $queryProductos .= ' AND DATE(c.FechaCompra) BETWEEN ? AND ?';
+            }
+
+            $queryProductos .= ' GROUP BY dc.Descripcion
+                                ORDER BY Cantidad DESC LIMIT 10';
+
+            $stmtProductos = $db->prepare($queryProductos);
+            if ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $stmtProductos->execute([$fechaInicio, $fechaFin]);
+            } else {
+                $stmtProductos->execute();
+            }
+            $productosMasComprados = $stmtProductos->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->json([
+                'exito' => true,
+                'periodo' => $periodo,
+                'resumen' => $resumen,
+                'comprasPorProducto' => $comprasPorProducto,
+                'productosMasComprados' => $productosMasComprados,
+                'total' => count($comprasPorProducto)
+            ], 200);
+
+        } catch (Exception $e) {
+            error_log('Error en ReporteController::comprasPorPeriodo: ' . $e->getMessage());
+            $this->json(['exito' => false, 'mensaje' => 'Error al generar reporte', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function comprasPorProveedor(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $periodo = $_GET['periodo'] ?? 'mes';
+        $fechaInicio = $_GET['fechaInicio'] ?? '';
+        $fechaFin = $_GET['fechaFin'] ?? '';
+
+            try {
+                require_once __DIR__ . '/../core/Database.php';
+                $db = Database::connection();
+
+                $query = 'SELECT 
+                            COALESCE(p.Nombre, "Sin Proveedor") as NombreProveedor,
+                            COUNT(DISTINCT c.IdCompra) as CantidadCompras,
+                            SUM(c.Total) as TotalMonto,
+                            AVG(c.Total) as PromedioCompra
+                        FROM Compras c
+                        LEFT JOIN Proveedores p ON c.CodProveedor = p.IdProveedor
+                        WHERE 1=1';
+
+                $params = [];
+
+                if ($periodo === 'hoy') {
+                    $query .= ' AND DATE(c.FechaCompra) = CURDATE()';
+                } elseif ($periodo === 'semana') {
+                    $query .= ' AND WEEK(c.FechaCompra) = WEEK(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+                } elseif ($periodo === 'mes') {
+                    $query .= ' AND MONTH(c.FechaCompra) = MONTH(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+                } elseif ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                    $query .= ' AND DATE(c.FechaCompra) BETWEEN ? AND ?';
+                    $params = [$fechaInicio, $fechaFin];
+                }
+
+                $query .= ' GROUP BY COALESCE(p.Nombre, "Sin Proveedor")
+                            ORDER BY TotalMonto DESC';
+
+                $stmt = $db->prepare($query);
+                $stmt->execute($params);
+                $comprasPorProveedor = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->json([
+                'exito' => true,
+                'comprasPorProveedor' => $comprasPorProveedor
+            ], 200);
+
+        } catch (Exception $e) {
+            error_log('Error en ReporteController::comprasPorProveedor: ' . $e->getMessage());
+            $this->json(['exito' => false, 'mensaje' => 'Error al generar reporte', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function estadoCompras(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $periodo = $_GET['periodo'] ?? 'mes';
+        $fechaInicio = $_GET['fechaInicio'] ?? '';
+        $fechaFin = $_GET['fechaFin'] ?? '';
+
+        try {
+            require_once __DIR__ . '/../core/Database.php';
+            $db = Database::connection();
+
+            $query = 'SELECT 
+                        c.Estado,
+                        COUNT(DISTINCT c.IdCompra) as CantidadCompras,
+                        SUM(c.Total) as TotalMonto,
+                        AVG(c.Total) as PromedioCompra
+                    FROM Compras c
+                    WHERE 1=1';
+
+            $params = [];
+
+            if ($periodo === 'hoy') {
+                $query .= ' AND DATE(c.FechaCompra) = CURDATE()';
+            } elseif ($periodo === 'semana') {
+                $query .= ' AND WEEK(c.FechaCompra) = WEEK(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'mes') {
+                $query .= ' AND MONTH(c.FechaCompra) = MONTH(CURDATE()) AND YEAR(c.FechaCompra) = YEAR(CURDATE())';
+            } elseif ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $query .= ' AND DATE(c.FechaCompra) BETWEEN ? AND ?';
+                $params = [$fechaInicio, $fechaFin];
+            }
+
+            $query .= ' GROUP BY c.Estado
+                        ORDER BY TotalMonto DESC';
+
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+            $estadoCompras = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->json([
+                'exito' => true,
+                'estadoCompras' => $estadoCompras
+            ], 200);
+
+        } catch (Exception $e) {
+            error_log('Error en ReporteController::estadoCompras: ' . $e->getMessage());
+            $this->json(['exito' => false, 'mensaje' => 'Error al generar reporte', 'error' => $e->getMessage()], 500);
+        }
+    }
 }
 ?>

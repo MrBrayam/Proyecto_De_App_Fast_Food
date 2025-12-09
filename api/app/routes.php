@@ -46,6 +46,7 @@ return [
     'compras/registrar' => [CompraController::class, 'registrar'],
     'compras/listar' => [CompraController::class, 'listar'],
     'compras/buscar' => [CompraController::class, 'buscar'],
+    'compras/actualizar-estado' => [CompraController::class, 'actualizarEstado'],
     'inventario/productos' => [InventarioController::class, 'listarProductos'],
     'inventario/insumos' => [InventarioController::class, 'listarInsumos'],
     'inventario/suministros' => [InventarioController::class, 'listarSuministros'],
@@ -84,4 +85,7 @@ return [
     'reportes/ventas-por-periodo' => [ReporteController::class, 'ventasPorPeriodo'],
     'reportes/ventas-por-metodo-pago' => [ReporteController::class, 'ventasPorMetodoPago'],
     'reportes/tendencia-ventas' => [ReporteController::class, 'tendenciaVentas'],
+    'reportes/compras-por-periodo' => [ReporteController::class, 'comprasPorPeriodo'],
+    'reportes/compras-por-proveedor' => [ReporteController::class, 'comprasPorProveedor'],
+    'reportes/estado-compras' => [ReporteController::class, 'estadoCompras'],
 ];

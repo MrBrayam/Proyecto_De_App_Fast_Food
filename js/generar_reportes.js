@@ -256,13 +256,16 @@ function configurarEventListeners() {
 
 // Cargar tipo de reporte por defecto
 function cargarTipoReporteDefault() {
-    actualizarContenidoReporte();
+    // No cargar automáticamente para evitar precarga de gráficos
+    // El usuario debe seleccionar manualmente o hacer clic en generar
 }
 
 // Actualizar contenido del reporte según el tipo y período seleccionado
 function actualizarContenidoReporte() {
     if (tipoReporteActual === 'ventas') {
         cargarReporteVentasDesdeAPI();
+    } else if (tipoReporteActual === 'compras') {
+        cargarReporteComprasDesdeAPI();
     } else {
         const datos = obtenerDatosReporte();
         actualizarTituloVisualizacion();
@@ -303,6 +306,43 @@ async function cargarReporteVentasDesdeAPI() {
         } else {
             console.error('Error al cargar reporte:', data.mensaje);
             alert('Error al cargar el reporte de ventas');
+        }
+    } catch (error) {
+        console.error('Error al obtener reporte:', error);
+        alert('Error al conectar con el servidor');
+    }
+}
+
+// Cargar reporte de compras desde API
+async function cargarReporteComprasDesdeAPI() {
+    try {
+        let url = `${API_BASE}/reportes/compras-por-periodo?periodo=${periodoActual}`;
+        
+        // Si es período personalizado, agregar fechas
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor, selecciona un rango de fechas');
+                return;
+            }
+            
+            url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        }
+        
+        const resp = await fetch(url);
+        const data = await resp.json();
+        
+        if (data.exito) {
+            actualizarTituloVisualizacion();
+            actualizarEstadisticasCompras(data.resumen);
+            actualizarTablaCompras(data.comprasPorProducto);
+            actualizarResumenCompras(data.resumen);
+            actualizarGraficosCompras(data);
+        } else {
+            console.error('Error al cargar reporte:', data.mensaje);
+            alert('Error al cargar el reporte de compras');
         }
     } catch (error) {
         console.error('Error al obtener reporte:', error);
@@ -1490,6 +1530,87 @@ function actualizarResumenVentas(resumen) {
     }
 }
 
+// ============================================
+// FUNCIONES PARA REPORTE DE COMPRAS
+// ============================================
+
+// Actualizar estadísticas de compras desde API
+function actualizarEstadisticasCompras(resumen) {
+    if (!resumen) {
+        document.getElementById('totalPeriodo').textContent = 'S/. 0.00';
+        document.getElementById('promedioDiario').textContent = 'S/. 0.00';
+        document.getElementById('variacion').textContent = '0 proveedores';
+        document.getElementById('diasAnalizados').textContent = '0';
+        return;
+    }
+
+    const totalMonto = parseFloat(resumen.TotalMonto) || 0;
+    const promedioDiario = parseFloat(resumen.PromedioDiario) || 0;
+    const proveedoresUnicos = parseInt(resumen.ProveedoresUnicos) || 0;
+    const diasAnalizados = parseInt(resumen.DiasAnalizados) || 0;
+    
+    document.getElementById('totalPeriodo').textContent = 'S/. ' + totalMonto.toFixed(2);
+    document.getElementById('promedioDiario').textContent = 'S/. ' + promedioDiario.toFixed(2);
+    document.getElementById('variacion').textContent = proveedoresUnicos + ' proveedores';
+    document.getElementById('diasAnalizados').textContent = diasAnalizados;
+}
+
+// Actualizar tabla de compras desde API
+function actualizarTablaCompras(comprasPorProducto) {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (!comprasPorProducto || comprasPorProducto.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay datos disponibles</td></tr>';
+        return;
+    }
+    
+    comprasPorProducto.forEach(compra => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${compra.Fecha || ''}</td>
+            <td>${compra.Concepto || ''}</td>
+            <td>${compra.Cantidad || 0}</td>
+            <td>S/. ${parseFloat(compra.Monto || 0).toFixed(2)}</td>
+            <td><span class="badge ${compra.Estado === 'recibido' ? 'badge-success' : 'badge-warning'}">${compra.Estado || 'Pendiente'}</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+// Actualizar resumen de compras desde API
+function actualizarResumenCompras(resumen) {
+    if (!resumen) return;
+    
+    const totalMonto = parseFloat(resumen.TotalMonto) || 0;
+    const totalCompras = parseInt(resumen.TotalCompras) || 0;
+    const promedio = totalCompras > 0 ? (totalMonto / totalCompras) : 0;
+    
+    const resumenElement = document.querySelector('.resumen-data');
+    if (resumenElement) {
+        resumenElement.innerHTML = `
+            <div class="resumen-item">
+                <span class="resumen-label">Total Compras:</span>
+                <span class="resumen-valor">${totalCompras}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Monto Total:</span>
+                <span class="resumen-valor">S/. ${totalMonto.toFixed(2)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Promedio:</span>
+                <span class="resumen-valor">S/. ${promedio.toFixed(2)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Proveedores:</span>
+                <span class="resumen-valor">${resumen.ProveedoresUnicos || 0}</span>
+            </div>
+        `;
+    }
+}
+
 // Actualizar gráficos de ventas desde API
 async function actualizarGraficosVentas(data) {
     try {
@@ -1575,6 +1696,96 @@ async function actualizarGraficosVentas(data) {
         }
     } catch (error) {
         console.error('Error al cargar gráficos:', error);
+    }
+}
+
+// Actualizar gráficos de compras desde API
+async function actualizarGraficosCompras(data) {
+    try {
+        // Gráfico de estado de compras - DISTRIBUCIÓN PRINCIPAL
+        const respEstado = await fetch(`${API_BASE}/reportes/estado-compras?periodo=${periodoActual}`);
+        const dataEstado = await respEstado.json();
+        
+        if (dataEstado.exito && dataEstado.estadoCompras) {
+            const labels = dataEstado.estadoCompras.map(e => capitalizarPrimera(e.Estado));
+            const valores = dataEstado.estadoCompras.map(e => parseFloat(e.TotalMonto) || 0);
+            const colores = ['#2ecc71', '#f39c12', '#e74c3c', '#3498db'];
+            
+            const canvas1 = document.getElementById('chartPrincipal');
+            if (canvas1) {
+                if (chartPrincipal) chartPrincipal.destroy();
+                chartPrincipal = new Chart(canvas1.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: colores.slice(0, labels.length),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+                
+                // Generar leyenda dinámica
+                generarLeyendaDoughnut('leyendaPrincipal', labels, valores, colores);
+            }
+        }
+        
+        // Gráfico de TOP 3 productos más comprados
+        if (data.productosMasComprados) {
+            const productosTop3 = data.productosMasComprados.slice(0, 3);
+            const productos = productosTop3.map(p => p.Concepto);
+            const cantidades = productosTop3.map(p => parseInt(p.Cantidad) || 0);
+            
+            const canvas4 = document.getElementById('chartProductos');
+            if (canvas4) {
+                if (chartProductos) chartProductos.destroy();
+                chartProductos = new Chart(canvas4.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: productos,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: cantidades,
+                            backgroundColor: '#3498db',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+        
+        // Gráfico de proveedores con más compras
+        const respProveedores = await fetch(`${API_BASE}/reportes/compras-por-proveedor?periodo=${periodoActual}`);
+        const dataProveedores = await respProveedores.json();
+        
+        if (dataProveedores.exito && dataProveedores.comprasPorProveedor) {
+            const proveedoresTop3 = dataProveedores.comprasPorProveedor.slice(0, 3);
+            const proveedoresM = proveedoresTop3.map(p => p.NombreProveedor);
+            const montosM = proveedoresTop3.map(p => parseFloat(p.TotalMonto) || 0);
+            
+            const canvas5 = document.getElementById('chartProductosMenos');
+            if (canvas5) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas5.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: proveedoresM,
+                        datasets: [{
+                            label: 'Monto Total',
+                            data: montosM,
+                            backgroundColor: '#f39c12',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar gráficos de compras:', error);
     }
 }
 

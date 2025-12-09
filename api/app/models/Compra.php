@@ -181,4 +181,33 @@ class Compra {
             return false;
         }
     }
+    
+    // Actualizar estado de compra
+    public static function actualizarEstado($idCompra, $estado) {
+        try {
+            $db = Database::connection();
+            $sql = "UPDATE Compras SET Estado = :estado WHERE IdCompra = :idCompra";
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':estado', $estado, PDO::PARAM_STR);
+            $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return [
+                    'exito' => true,
+                    'mensaje' => 'Estado actualizado correctamente'
+                ];
+            } else {
+                return [
+                    'exito' => false,
+                    'mensaje' => 'No se encontró la compra o el estado ya era ese'
+                ];
+            }
+        } catch (PDOException $e) {
+            error_log("Error en Compra::actualizarEstado() - " . $e->getMessage());
+            return [
+                'exito' => false,
+                'mensaje' => 'Error al actualizar el estado: ' . $e->getMessage()
+            ];
+        }
+    }
 }
