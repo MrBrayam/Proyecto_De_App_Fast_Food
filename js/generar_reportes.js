@@ -50,90 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
    Lógica de negocio separada del archivo principal
    ============================================ */
 
-// Datos de ejemplo para los reportes
-const datosReportes = {
-    ventas: {
-        hoy: [
-            { fecha: '29/10/2025', concepto: 'Pizza Hawaiana', cantidad: 15, monto: 525.00, estado: 'Completado' },
-            { fecha: '29/10/2025', concepto: 'Pizza Pepperoni', cantidad: 12, monto: 480.00, estado: 'Completado' },
-            { fecha: '29/10/2025', concepto: 'Hamburguesa Clásica', cantidad: 8, monto: 200.00, estado: 'Completado' },
-            { fecha: '29/10/2025', concepto: 'Bebidas Variadas', cantidad: 25, monto: 125.00, estado: 'Completado' },
-            { fecha: '29/10/2025', concepto: 'Postres', cantidad: 6, monto: 72.00, estado: 'Completado' }
-        ],
-        semana: [
-            { fecha: '23-29/10/2025', concepto: 'Pizza Hawaiana', cantidad: 89, monto: 3115.00, estado: 'Completado' },
-            { fecha: '23-29/10/2025', concepto: 'Pizza Pepperoni', cantidad: 76, monto: 3040.00, estado: 'Completado' },
-            { fecha: '23-29/10/2025', concepto: 'Hamburguesa Clásica', cantidad: 52, monto: 1300.00, estado: 'Completado' },
-            { fecha: '23-29/10/2025', concepto: 'Bebidas Variadas', cantidad: 180, monto: 900.00, estado: 'Completado' },
-            { fecha: '23-29/10/2025', concepto: 'Postres', cantidad: 34, monto: 408.00, estado: 'Completado' }
-        ],
-        mes: [
-            { fecha: 'Octubre 2025', concepto: 'Pizza Hawaiana', cantidad: 350, monto: 12250.00, estado: 'Completado' },
-            { fecha: 'Octubre 2025', concepto: 'Pizza Pepperoni', cantidad: 298, monto: 11920.00, estado: 'Completado' },
-            { fecha: 'Octubre 2025', concepto: 'Hamburguesa Clásica', cantidad: 210, monto: 5250.00, estado: 'Completado' },
-            { fecha: 'Octubre 2025', concepto: 'Bebidas Variadas', cantidad: 720, monto: 3600.00, estado: 'Completado' },
-            { fecha: 'Octubre 2025', concepto: 'Postres', cantidad: 145, monto: 1740.00, estado: 'Completado' }
-        ]
-    },
-    compras: {
-        hoy: [
-            { fecha: '29/10/2025', concepto: 'Ingredientes Pizza', cantidad: 1, monto: 250.00, estado: 'Recibido' },
-            { fecha: '29/10/2025', concepto: 'Bebidas', cantidad: 1, monto: 180.00, estado: 'Recibido' },
-            { fecha: '29/10/2025', concepto: 'Envases', cantidad: 1, monto: 75.00, estado: 'Pendiente' }
-        ],
-        semana: [
-            { fecha: '23-29/10/2025', concepto: 'Ingredientes Pizza', cantidad: 5, monto: 1250.00, estado: 'Recibido' },
-            { fecha: '23-29/10/2025', concepto: 'Carnes', cantidad: 3, monto: 890.00, estado: 'Recibido' },
-            { fecha: '23-29/10/2025', concepto: 'Verduras', cantidad: 4, monto: 320.00, estado: 'Recibido' },
-            { fecha: '23-29/10/2025', concepto: 'Bebidas', cantidad: 2, monto: 360.00, estado: 'Recibido' },
-            { fecha: '23-29/10/2025', concepto: 'Envases', cantidad: 3, monto: 225.00, estado: 'Recibido' }
-        ],
-        mes: [
-            { fecha: 'Octubre 2025', concepto: 'Ingredientes Pizza', cantidad: 20, monto: 5000.00, estado: 'Recibido' },
-            { fecha: 'Octubre 2025', concepto: 'Carnes', cantidad: 15, monto: 4200.00, estado: 'Recibido' },
-            { fecha: 'Octubre 2025', concepto: 'Verduras', cantidad: 18, monto: 1440.00, estado: 'Recibido' },
-            { fecha: 'Octubre 2025', concepto: 'Bebidas', cantidad: 12, monto: 2160.00, estado: 'Recibido' },
-            { fecha: 'Octubre 2025', concepto: 'Envases', cantidad: 10, monto: 750.00, estado: 'Recibido' }
-        ]
-    },
-    inventario: {
-        hoy: [
-            { fecha: '29/10/2025', concepto: 'Harina', cantidad: 50, monto: 0, estado: 'Stock Bajo' },
-            { fecha: '29/10/2025', concepto: 'Queso Mozzarella', cantidad: 25, monto: 0, estado: 'Normal' },
-            { fecha: '29/10/2025', concepto: 'Tomate', cantidad: 80, monto: 0, estado: 'Normal' },
-            { fecha: '29/10/2025', concepto: 'Pepperoni', cantidad: 15, monto: 0, estado: 'Stock Bajo' },
-            { fecha: '29/10/2025', concepto: 'Coca Cola', cantidad: 120, monto: 0, estado: 'Normal' }
-        ]
-    },
-    clientes: {
-        mes: [
-            { fecha: 'Octubre 2025', concepto: 'Juan Pérez', cantidad: 12, monto: 450.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'María García', cantidad: 8, monto: 320.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'Carlos López', cantidad: 15, monto: 575.00, estado: 'VIP' },
-            { fecha: 'Octubre 2025', concepto: 'Ana Martín', cantidad: 6, monto: 180.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'Luis Torres', cantidad: 20, monto: 780.00, estado: 'VIP' }
-        ]
-    },
-    empleados: {
-        mes: [
-            { fecha: 'Octubre 2025', concepto: 'Roberto (Mesero)', cantidad: 145, monto: 2890.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'Patricia (Cajera)', cantidad: 0, monto: 3200.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'Carlos (Repartidor)', cantidad: 89, monto: 2650.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'María (Mesera)', cantidad: 132, monto: 2780.00, estado: 'Activo' },
-            { fecha: 'Octubre 2025', concepto: 'Fernando (Cajero)', cantidad: 0, monto: 3200.00, estado: 'Activo' }
-        ]
-    },
-    financiero: {
-        mes: [
-            { fecha: 'Octubre 2025', concepto: 'Ingresos por Ventas', cantidad: 1, monto: 34760.00, estado: 'Positivo' },
-            { fecha: 'Octubre 2025', concepto: 'Gastos Operativos', cantidad: 1, monto: -13550.00, estado: 'Normal' },
-            { fecha: 'Octubre 2025', concepto: 'Salarios', cantidad: 1, monto: -12000.00, estado: 'Normal' },
-            { fecha: 'Octubre 2025', concepto: 'Utilidad Neta', cantidad: 1, monto: 9210.00, estado: 'Positivo' },
-            { fecha: 'Octubre 2025', concepto: 'Impuestos', cantidad: 1, monto: -1658.00, estado: 'Normal' }
-        ]
-    }
-};
-
 // Variables globales
 let tipoReporteActual = 'ventas';
 let periodoActual = 'mes';
@@ -143,6 +59,47 @@ let chartSecundario = null;
 let chartTendencias = null;
 let chartProductos = null;
 let chartProductosMenos = null;
+
+// Función para actualizar títulos de gráficos según tipo de reporte
+function actualizarTitulosGraficos(tipoReporte) {
+    const titulos = {
+        ventas: {
+            principal: 'Distribución por Métodos de Pago',
+            segundo: 'Top 3 Productos Más Vendidos',
+            tercero: 'Productos Menos Vendidos'
+        },
+        compras: {
+            principal: 'Estado de Compras',
+            segundo: 'Top 3 Productos Más Comprados',
+            tercero: 'Top 3 Proveedores'
+        },
+        inventario: {
+            principal: 'Estado del Inventario',
+            segundo: 'Top 3 Productos Más Vendidos',
+            tercero: 'Top 3 Categorías por Valor'
+        },
+        clientes: {
+            principal: 'Distribución por Métodos de Pago',
+            segundo: 'Top 3 Clientes que Más Gastan',
+            tercero: 'Clientes en Posición 4-6'
+        },
+        financiero: {
+            principal: 'Flujo de Caja (Últimos 15 Días)',
+            segundo: 'Top 3 Proveedores con Más Gastos',
+            tercero: 'Top 3 Categorías con Más Gastos'
+        }
+    };
+    
+    const tituloConfig = titulos[tipoReporte] || titulos.ventas;
+    
+    const elementoPrincipal = document.getElementById('tituloGraficoPrincipal');
+    const elementoSegundo = document.getElementById('tituloGraficoSegundo');
+    const elementoTercero = document.getElementById('tituloGraficoTercero');
+    
+    if (elementoPrincipal) elementoPrincipal.textContent = tituloConfig.principal;
+    if (elementoSegundo) elementoSegundo.textContent = tituloConfig.segundo;
+    if (elementoTercero) elementoTercero.textContent = tituloConfig.tercero;
+}
 
 // Función de inicialización
 function init() {
@@ -266,6 +223,12 @@ function actualizarContenidoReporte() {
         cargarReporteVentasDesdeAPI();
     } else if (tipoReporteActual === 'compras') {
         cargarReporteComprasDesdeAPI();
+    } else if (tipoReporteActual === 'inventario') {
+        cargarReporteInventarioDesdeAPI();
+    } else if (tipoReporteActual === 'clientes') {
+        cargarReporteClientesDesdeAPI();
+    } else if (tipoReporteActual === 'financiero') {
+        cargarReporteFinancieroDesdeAPI();
     } else {
         const datos = obtenerDatosReporte();
         actualizarTituloVisualizacion();
@@ -350,6 +313,64 @@ async function cargarReporteComprasDesdeAPI() {
     }
 }
 
+// Cargar reporte de clientes desde API
+async function cargarReporteClientesDesdeAPI() {
+    try {
+        let url = `${API_BASE}/reportes/clientes-por-periodo?periodo=${periodoActual}`;
+        
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor, selecciona un rango de fechas');
+                return;
+            }
+            
+            url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        }
+        
+        const resp = await fetch(url);
+        const data = await resp.json();
+        
+        if (data.exito) {
+            actualizarTituloVisualizacion();
+            actualizarEstadisticasClientes(data.resumen);
+            actualizarTablaClientes(data.clientesTopGasto);
+            actualizarResumenClientes(data.resumen);
+            actualizarGraficosClientes(data);
+        } else {
+            console.error('Error al cargar reporte:', data.mensaje);
+            alert('Error al cargar el reporte de clientes');
+        }
+    } catch (error) {
+        console.error('Error al obtener reporte:', error);
+        alert('Error al conectar con el servidor');
+    }
+}
+
+// Cargar reporte de inventario desde API
+async function cargarReporteInventarioDesdeAPI() {
+    try {
+        const resp = await fetch(`${API_BASE}/reportes/inventario-por-categoria`);
+        const data = await resp.json();
+        
+        if (data.exito) {
+            actualizarTituloVisualizacion();
+            actualizarEstadisticasInventario(data.resumen);
+            actualizarTablaInventario(data.productosBajoStock);
+            actualizarResumenInventario(data.resumen);
+            actualizarGraficosInventario(data);
+        } else {
+            console.error('Error al cargar reporte:', data.mensaje);
+            alert('Error al cargar el reporte de inventario');
+        }
+    } catch (error) {
+        console.error('Error al obtener reporte:', error);
+        alert('Error al conectar con el servidor');
+    }
+}
+
 // Actualizar título de visualización según el tipo de reporte
 function actualizarTituloVisualizacion() {
     const titulos = {
@@ -374,103 +395,6 @@ function actualizarTituloVisualizacion() {
     if (tituloElement) {
         tituloElement.innerHTML = `<i class="fas ${iconos[tipoReporteActual]}"></i> ${titulos[tipoReporteActual]}`;
     }
-}
-
-// Obtener datos del reporte actual
-function obtenerDatosReporte() {
-    const tipoData = datosReportes[tipoReporteActual];
-    if (!tipoData) return [];
-    
-    // Mapear período a los datos disponibles
-    let periodo = periodoActual;
-    if (periodo === 'trimestre' || periodo === 'anio') {
-        periodo = 'mes'; // Usar datos del mes como fallback
-    }
-    
-    return tipoData[periodo] || tipoData.mes || [];
-}
-
-// Actualizar estadísticas
-function actualizarEstadisticas(datos) {
-    if (!datos || datos.length === 0) {
-        document.getElementById('totalPeriodo').textContent = 'S/. 0.00';
-        document.getElementById('promedioDiario').textContent = 'S/. 0.00';
-        document.getElementById('variacion').textContent = '0%';
-        document.getElementById('diasAnalizados').textContent = '0';
-        return;
-    }
-    
-    const total = datos.reduce((sum, item) => sum + Math.abs(item.monto), 0);
-    const promedio = total / datos.length;
-    const diasMap = {
-        'hoy': 1,
-        'semana': 7,
-        'mes': 30,
-        'trimestre': 90,
-        'anio': 365
-    };
-    const dias = diasMap[periodoActual] || 1;
-    
-    document.getElementById('totalPeriodo').textContent = formatearMoneda(total);
-    document.getElementById('promedioDiario').textContent = formatearMoneda(total / dias);
-    document.getElementById('variacion').textContent = '+12.5%';
-    document.getElementById('diasAnalizados').textContent = dias.toString();
-}
-
-// Actualizar tabla
-function actualizarTabla(datos) {
-    const tbody = document.querySelector('#tablaReporte tbody');
-    
-    if (!datos || datos.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="5" class="no-data">
-                    <i class="fas fa-info-circle"></i>
-                    No hay datos para mostrar. Genera un reporte para ver la información.
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
-    tbody.innerHTML = datos.map(item => `
-        <tr>
-            <td>${item.fecha}</td>
-            <td>${item.concepto}</td>
-            <td>${item.cantidad}</td>
-            <td>${formatearMoneda(Math.abs(item.monto))}</td>
-            <td>
-                <span class="badge ${obtenerClaseBadge(item.estado)}">
-                    ${item.estado}
-                </span>
-            </td>
-        </tr>
-    `).join('');
-    
-    // Actualizar información de paginación
-    document.getElementById('registrosDesde').textContent = '1';
-    document.getElementById('registrosHasta').textContent = datos.length.toString();
-    document.getElementById('totalRegistros').textContent = datos.length.toString();
-}
-
-// Actualizar resumen
-function actualizarResumen(datos) {
-    if (!datos || datos.length === 0) {
-        document.getElementById('periodoResumen').textContent = '-';
-        document.getElementById('totalRegistrosResumen').textContent = '0';
-        document.getElementById('valorMaximo').textContent = 'S/. 0.00';
-        document.getElementById('valorMinimo').textContent = 'S/. 0.00';
-        return;
-    }
-    
-    const montos = datos.map(item => Math.abs(item.monto));
-    const maximo = Math.max(...montos);
-    const minimo = Math.min(...montos);
-    
-    document.getElementById('periodoResumen').textContent = obtenerNombrePeriodo();
-    document.getElementById('totalRegistrosResumen').textContent = datos.length.toString();
-    document.getElementById('valorMaximo').textContent = formatearMoneda(maximo);
-    document.getElementById('valorMinimo').textContent = formatearMoneda(minimo);
 }
 
 // Actualizar vista activa
@@ -1614,6 +1538,9 @@ function actualizarResumenCompras(resumen) {
 // Actualizar gráficos de ventas desde API
 async function actualizarGraficosVentas(data) {
     try {
+        // Actualizar títulos de gráficos
+        actualizarTitulosGraficos('ventas');
+        
         // Gráfico de métodos de pago - DISTRIBUCIÓN PRINCIPAL
         const respMetodos = await fetch(`${API_BASE}/reportes/ventas-por-metodo-pago?periodo=${periodoActual}`);
         const dataMetodos = await respMetodos.json();
@@ -1645,7 +1572,7 @@ async function actualizarGraficosVentas(data) {
         }
         
         // Gráfico de TOP 3 productos más vendidos
-        if (data.productosMasVendidos) {
+        if (data.productosMasVendidos && data.productosMasVendidos.length > 0) {
             const productosTop3 = data.productosMasVendidos.slice(0, 3);
             const productos = productosTop3.map(p => p.Concepto);
             const cantidades = productosTop3.map(p => parseInt(p.Cantidad) || 0);
@@ -1670,11 +1597,34 @@ async function actualizarGraficosVentas(data) {
         }
         
         // Gráfico de productos MENOS vendidos
-        if (data.productosMasVendidos) {
+        if (data.productosMasVendidos && data.productosMasVendidos.length >= 3) {
             // Tomar los últimos 3 (menos vendidos)
             const productosBottom3 = data.productosMasVendidos.slice(-3).reverse();
             const productosM = productosBottom3.map(p => p.Concepto);
             const cantidadesM = productosBottom3.map(p => parseInt(p.Cantidad) || 0);
+            
+            const canvas5 = document.getElementById('chartProductosMenos');
+            if (canvas5) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas5.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: productosM,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: cantidadesM,
+                            backgroundColor: '#e74c3c',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        } else if (data.productosMasVendidos && data.productosMasVendidos.length > 0) {
+            // Si hay menos de 3 productos, mostrar todos como "menos vendidos"
+            const productosBottom = data.productosMasVendidos.slice().reverse();
+            const productosM = productosBottom.map(p => p.Concepto);
+            const cantidadesM = productosBottom.map(p => parseInt(p.Cantidad) || 0);
             
             const canvas5 = document.getElementById('chartProductosMenos');
             if (canvas5) {
@@ -1702,8 +1652,24 @@ async function actualizarGraficosVentas(data) {
 // Actualizar gráficos de compras desde API
 async function actualizarGraficosCompras(data) {
     try {
+        // Actualizar títulos de gráficos
+        actualizarTitulosGraficos('compras');
+        
+        // Construir URL con período y fechas si es necesario
+        let urlEstado = `${API_BASE}/reportes/estado-compras?periodo=${periodoActual}`;
+        let urlProveedores = `${API_BASE}/reportes/compras-por-proveedor?periodo=${periodoActual}`;
+        
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            if (fechaInicio && fechaFin) {
+                urlEstado += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+                urlProveedores += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            }
+        }
+        
         // Gráfico de estado de compras - DISTRIBUCIÓN PRINCIPAL
-        const respEstado = await fetch(`${API_BASE}/reportes/estado-compras?periodo=${periodoActual}`);
+        const respEstado = await fetch(urlEstado);
         const dataEstado = await respEstado.json();
         
         if (dataEstado.exito && dataEstado.estadoCompras) {
@@ -1733,7 +1699,7 @@ async function actualizarGraficosCompras(data) {
         }
         
         // Gráfico de TOP 3 productos más comprados
-        if (data.productosMasComprados) {
+        if (data.productosMasComprados && data.productosMasComprados.length > 0) {
             const productosTop3 = data.productosMasComprados.slice(0, 3);
             const productos = productosTop3.map(p => p.Concepto);
             const cantidades = productosTop3.map(p => parseInt(p.Cantidad) || 0);
@@ -1755,13 +1721,15 @@ async function actualizarGraficosCompras(data) {
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
                 });
             }
+        } else {
+            console.warn('No hay productos más comprados para mostrar');
         }
         
         // Gráfico de proveedores con más compras
-        const respProveedores = await fetch(`${API_BASE}/reportes/compras-por-proveedor?periodo=${periodoActual}`);
+        const respProveedores = await fetch(urlProveedores);
         const dataProveedores = await respProveedores.json();
         
-        if (dataProveedores.exito && dataProveedores.comprasPorProveedor) {
+        if (dataProveedores.exito && dataProveedores.comprasPorProveedor && dataProveedores.comprasPorProveedor.length > 0) {
             const proveedoresTop3 = dataProveedores.comprasPorProveedor.slice(0, 3);
             const proveedoresM = proveedoresTop3.map(p => p.NombreProveedor);
             const montosM = proveedoresTop3.map(p => parseFloat(p.TotalMonto) || 0);
@@ -1782,6 +1750,11 @@ async function actualizarGraficosCompras(data) {
                     },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
                 });
+            }
+        } else {
+            console.warn('No hay proveedores para mostrar en el gráfico');
+            if (dataProveedores.error) {
+                console.error('Error del servidor:', dataProveedores.error);
             }
         }
     } catch (error) {
@@ -1817,4 +1790,680 @@ function generarLeyendaDoughnut(elementId, labels, valores, colores) {
 function capitalizarPrimera(texto) {
     if (!texto) return '';
     return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+}// ============================================
+// REPORTES DE INVENTARIO - FUNCIONES
+// ============================================
+
+// Actualizar estadísticas de inventario
+function actualizarEstadisticasInventario(resumen) {
+    if (!resumen) {
+        document.getElementById('totalPeriodo').textContent = 'S/. 0.00';
+        document.getElementById('promedioDiario').textContent = '0';
+        document.getElementById('variacion').textContent = '0';
+        document.getElementById('diasAnalizados').textContent = '0';
+        return;
+    }
+
+    const valorInventario = parseFloat(resumen.ValorInventario) || 0;
+    const totalProductos = parseInt(resumen.TotalProductos) || 0;
+    const productosBajoStock = parseInt(resumen.ProductosBajoStock) || 0;
+    const stockTotal = parseInt(resumen.StockTotal) || 0;
+    
+    document.getElementById('totalPeriodo').textContent = 'S/. ' + valorInventario.toFixed(2);
+    document.getElementById('promedioDiario').textContent = totalProductos;
+    document.getElementById('variacion').textContent = productosBajoStock + ' bajo stock';
+    document.getElementById('diasAnalizados').textContent = stockTotal;
+}
+
+// Actualizar tabla de inventario (productos bajo stock)
+function actualizarTablaInventario(productosBajoStock) {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (!productosBajoStock || productosBajoStock.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay productos con bajo stock</td></tr>';
+        return;
+    }
+    
+    productosBajoStock.forEach(producto => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${producto.NombreProducto || ''}</td>
+            <td>${producto.Categoria || ''}</td>
+            <td>${producto.Stock || 0}</td>
+            <td>${producto.StockMinimo || 0}</td>
+            <td><span class="badge ${producto.Estado === 'disponible' ? 'badge-success' : producto.Estado === 'agotado' ? 'badge-danger' : 'badge-warning'}">${producto.Estado || ''}</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+// Actualizar resumen de inventario
+function actualizarResumenInventario(resumen) {
+    const resumenElement = document.querySelector('.resumen-general');
+    if (!resumenElement) return;
+    
+    const valorInventario = parseFloat(resumen.ValorInventario) || 0;
+    const totalProductos = parseInt(resumen.TotalProductos) || 0;
+    const productosBajoStock = parseInt(resumen.ProductosBajoStock) || 0;
+    const productosAgotados = parseInt(resumen.ProductosAgotados) || 0;
+    const stockTotal = parseInt(resumen.StockTotal) || 0;
+    
+    resumenElement.innerHTML = `
+        <h3>Resumen de Inventario</h3>
+        <div class="resumen-stats">
+            <div class="stat-item">
+                <span class="stat-label">Valor Total:</span>
+                <span class="stat-value">S/. ${valorInventario.toFixed(2)}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Productos:</span>
+                <span class="stat-value">${totalProductos}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Stock Total:</span>
+                <span class="stat-value">${stockTotal} unidades</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Bajo Stock:</span>
+                <span class="stat-value alert">${productosBajoStock} productos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Agotados:</span>
+                <span class="stat-value alert">${productosAgotados} productos</span>
+            </div>
+        </div>
+    `;
+}
+
+// Actualizar gráficos de inventario
+async function actualizarGraficosInventario(data) {
+    try {
+        // Actualizar títulos de gráficos
+        actualizarTitulosGraficos('inventario');
+        
+        // Gráfico de estado de productos - DISTRIBUCIÓN PRINCIPAL
+        const respEstado = await fetch(`${API_BASE}/reportes/inventario-por-estado`);
+        const dataEstado = await respEstado.json();
+        
+        if (dataEstado.exito && dataEstado.inventarioPorEstado) {
+            const labels = dataEstado.inventarioPorEstado.map(e => capitalizarPrimera(e.Estado.replace('_', ' ')));
+            const valores = dataEstado.inventarioPorEstado.map(e => parseFloat(e.ValorTotal) || 0);
+            const colores = ['#2ecc71', '#f39c12', '#e74c3c'];
+            
+            const canvas1 = document.getElementById('chartPrincipal');
+            if (canvas1) {
+                if (chartPrincipal) chartPrincipal.destroy();
+                chartPrincipal = new Chart(canvas1.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: colores.slice(0, labels.length),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+                
+                generarLeyendaDoughnut('leyendaPrincipal', labels, valores, colores);
+            }
+        }
+        
+        // Gráfico de TOP 3 productos más vendidos
+        if (data.productosTopVendidos) {
+            const productosTop3 = data.productosTopVendidos.slice(0, 3);
+            const productos = productosTop3.map(p => p.NombreProducto);
+            const cantidades = productosTop3.map(p => parseInt(p.TotalVendido) || 0);
+            
+            const canvas4 = document.getElementById('chartProductos');
+            if (canvas4) {
+                if (chartProductos) chartProductos.destroy();
+                chartProductos = new Chart(canvas4.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: productos,
+                        datasets: [{
+                            label: 'Cantidad Vendida',
+                            data: cantidades,
+                            backgroundColor: '#3498db',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+        
+        // Gráfico de categorías de productos
+        if (data.productosPorCategoria) {
+            const categoriasTop3 = data.productosPorCategoria.slice(0, 3);
+            const categorias = categoriasTop3.map(c => capitalizarPrimera(c.Categoria));
+            const valores = categoriasTop3.map(c => parseFloat(c.ValorTotal) || 0);
+            
+            const canvas5 = document.getElementById('chartProductosMenos');
+            if (canvas5) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas5.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: categorias,
+                        datasets: [{
+                            label: 'Valor en S/.',
+                            data: valores,
+                            backgroundColor: '#9b59b6',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar gráficos de inventario:', error);
+    }
+}
+
+// ============================================
+// REPORTES DE CLIENTES
+// ============================================
+
+// Actualizar estadísticas de clientes
+function actualizarEstadisticasClientes(resumen) {
+    if (!resumen) {
+        document.getElementById('totalPeriodo').textContent = 'S/. 0.00';
+        document.getElementById('promedioDiario').textContent = '0';
+        document.getElementById('variacion').textContent = '0';
+        document.getElementById('diasAnalizados').textContent = '0';
+        return;
+    }
+
+    const totalMonto = parseFloat(resumen.TotalMonto) || 0;
+    const totalClientes = parseInt(resumen.TotalClientes) || 0;
+    const totalPedidos = parseInt(resumen.TotalPedidos) || 0;
+    const promedioPedidosDiario = parseFloat(resumen.PromedioPedidosDiario) || 0;
+    
+    document.getElementById('totalPeriodo').textContent = 'S/. ' + totalMonto.toFixed(2);
+    document.getElementById('promedioDiario').textContent = promedioPedidosDiario.toFixed(1);
+    document.getElementById('variacion').textContent = totalClientes + ' clientes';
+    document.getElementById('diasAnalizados').textContent = totalPedidos;
+}
+
+// Actualizar tabla de clientes (top gastadores)
+function actualizarTablaClientes(clientesTopGasto) {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (!clientesTopGasto || clientesTopGasto.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay datos de clientes</td></tr>';
+        return;
+    }
+    
+    clientesTopGasto.forEach(cliente => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${cliente.Nombres || ''} ${cliente.Apellidos || ''}</td>
+            <td>${cliente.TotalPedidos || 0}</td>
+            <td>S/. ${parseFloat(cliente.TotalGastado || 0).toFixed(2)}</td>
+            <td>S/. ${parseFloat(cliente.PromedioGasto || 0).toFixed(2)}</td>
+            <td><span class="badge badge-success">Activo</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+// Actualizar resumen de clientes
+function actualizarResumenClientes(resumen) {
+    const resumenElement = document.querySelector('.resumen-general');
+    if (!resumenElement) return;
+    
+    const totalMonto = parseFloat(resumen.TotalMonto) || 0;
+    const totalClientes = parseInt(resumen.TotalClientes) || 0;
+    const totalPedidos = parseInt(resumen.TotalPedidos) || 0;
+    const promedioTicket = parseFloat(resumen.PromedioTicket) || 0;
+    
+    resumenElement.innerHTML = `
+        <h3>Resumen de Clientes</h3>
+        <div class="resumen-stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Ventas:</span>
+                <span class="stat-value">S/. ${totalMonto.toFixed(2)}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Clientes:</span>
+                <span class="stat-value">${totalClientes}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Pedidos:</span>
+                <span class="stat-value">${totalPedidos}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Ticket Promedio:</span>
+                <span class="stat-value">S/. ${promedioTicket.toFixed(2)}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Pedidos/Cliente:</span>
+                <span class="stat-value">${totalClientes > 0 ? (totalPedidos / totalClientes).toFixed(1) : 0}</span>
+            </div>
+        </div>
+    `;
+}
+
+// Actualizar gráficos de clientes
+async function actualizarGraficosClientes(data) {
+    try {
+        // Actualizar títulos de gráficos
+        actualizarTitulosGraficos('clientes');
+        
+        let urlMetodoPago = `${API_BASE}/reportes/clientes-por-metodo-pago?periodo=${periodoActual}`;
+        
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            if (fechaInicio && fechaFin) {
+                urlMetodoPago += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            }
+        }
+        
+        // Gráfico de métodos de pago - DISTRIBUCIÓN PRINCIPAL
+        const respMetodoPago = await fetch(urlMetodoPago);
+        const dataMetodoPago = await respMetodoPago.json();
+        
+        if (dataMetodoPago.exito && dataMetodoPago.clientesPorMetodoPago) {
+            const labels = dataMetodoPago.clientesPorMetodoPago.map(m => capitalizarPrimera(m.TipoPago));
+            const valores = dataMetodoPago.clientesPorMetodoPago.map(m => parseFloat(m.TotalMonto) || 0);
+            const colores = ['#2ecc71', '#3498db', '#f39c12', '#e74c3c'];
+            
+            const canvas1 = document.getElementById('chartPrincipal');
+            if (canvas1) {
+                if (chartPrincipal) chartPrincipal.destroy();
+                chartPrincipal = new Chart(canvas1.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: colores.slice(0, labels.length),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+                
+                generarLeyendaDoughnut('leyendaPrincipal', labels, valores, colores);
+            }
+        }
+        
+        // Gráfico de TOP 3 clientes que más gastan
+        if (data.clientesTopGasto && data.clientesTopGasto.length > 0) {
+            const clientesTop3 = data.clientesTopGasto.slice(0, 3);
+            const nombres = clientesTop3.map(c => `${c.Nombres} ${c.Apellidos}`);
+            const gastos = clientesTop3.map(c => parseFloat(c.TotalGastado) || 0);
+            
+            const canvas4 = document.getElementById('chartProductos');
+            if (canvas4) {
+                if (chartProductos) chartProductos.destroy();
+                chartProductos = new Chart(canvas4.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: nombres,
+                        datasets: [{
+                            label: 'Total Gastado',
+                            data: gastos,
+                            backgroundColor: '#3498db',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+        
+        // Gráfico de clientes 4-6 que más gastan (siguiente nivel)
+        if (data.clientesTopGasto && data.clientesTopGasto.length > 3) {
+            const clientesSiguientes = data.clientesTopGasto.slice(3, 6);
+            const nombresS = clientesSiguientes.map(c => `${c.Nombres} ${c.Apellidos}`);
+            const gastosS = clientesSiguientes.map(c => parseFloat(c.TotalGastado) || 0);
+            
+            const canvas5 = document.getElementById('chartProductosMenos');
+            if (canvas5) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas5.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: nombresS,
+                        datasets: [{
+                            label: 'Total Gastado',
+                            data: gastosS,
+                            backgroundColor: '#9b59b6',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        } else if (data.clientesTopGasto && data.clientesTopGasto.length > 0) {
+            // Si hay menos de 4 clientes, mostrar todos en el tercer gráfico
+            const clientesRestantes = data.clientesTopGasto.slice(1);
+            const nombresR = clientesRestantes.map(c => `${c.Nombres} ${c.Apellidos}`);
+            const gastosR = clientesRestantes.map(c => parseFloat(c.TotalGastado) || 0);
+            
+            const canvas5 = document.getElementById('chartProductosMenos');
+            if (canvas5) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas5.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: nombresR,
+                        datasets: [{
+                            label: 'Total Gastado',
+                            data: gastosR,
+                            backgroundColor: '#9b59b6',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar gráficos de clientes:', error);
+    }
+}
+
+// ============================================
+// REPORTES FINANCIEROS
+// ============================================
+
+// Cargar reporte financiero desde API
+async function cargarReporteFinancieroDesdeAPI() {
+    try {
+        let url = `${API_BASE}/reportes/resumen-financiero?periodo=${periodoActual}`;
+        
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            if (fechaInicio && fechaFin) {
+                url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            }
+        }
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.exito) {
+            actualizarEstadisticasFinancieras(data);
+            actualizarTablaFinanciera(data);
+            actualizarResumenFinanciero(data);
+            actualizarGraficosFinancieros(data);
+        } else {
+            console.error('Error al cargar reporte financiero:', data.mensaje);
+            if (data.error) {
+                console.error('Detalles del error:', data.error);
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar reporte:', error);
+    }
+}
+
+// Actualizar estadísticas financieras
+function actualizarEstadisticasFinancieras(data) {
+    const resumen = data.resumen;
+    
+    document.getElementById('totalPeriodo').textContent = `S/. ${parseFloat(resumen.TotalIngresos || 0).toFixed(2)}`;
+    document.getElementById('promedioDiario').textContent = `S/. ${(parseFloat(resumen.TotalIngresos || 0) / resumen.DiasAnalizados).toFixed(2)}`;
+    document.getElementById('variacion').textContent = `${parseFloat(resumen.MargenUtilidad || 0).toFixed(1)}%`;
+    document.getElementById('diasAnalizados').textContent = resumen.DiasAnalizados || 0;
+}
+
+// Actualizar tabla financiera
+function actualizarTablaFinanciera(data) {
+    const tbody = document.querySelector('#tablaReporte tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    // Cambiar encabezados
+    const thead = document.querySelector('#tablaReporte thead tr');
+    if (thead) {
+        thead.innerHTML = `
+            <th>Categoría</th>
+            <th>Total Ingresos</th>
+            <th>Número de Ventas</th>
+            <th>Promedio por Venta</th>
+        `;
+    }
+
+    if (data.categoriasIngresos && data.categoriasIngresos.length > 0) {
+        data.categoriasIngresos.forEach(cat => {
+            const row = document.createElement('tr');
+            const promedioVenta = cat.NumeroVentas > 0 ? (cat.TotalIngresos / cat.NumeroVentas) : 0;
+            
+            row.innerHTML = `
+                <td>${capitalizarPrimera(cat.Categoria)}</td>
+                <td>S/. ${parseFloat(cat.TotalIngresos).toFixed(2)}</td>
+                <td>${cat.NumeroVentas}</td>
+                <td>S/. ${parseFloat(promedioVenta).toFixed(2)}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    } else {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay datos para mostrar</td></tr>';
+    }
+}
+
+// Actualizar resumen financiero
+function actualizarResumenFinanciero(data) {
+    const resumenDiv = document.querySelector('.vista-resumen');
+    if (!resumenDiv) return;
+
+    const resumen = data.resumen;
+    const utilidadBruta = resumen.UtilidadBruta || 0;
+    const utilidadClass = utilidadBruta >= 0 ? 'positivo' : 'negativo';
+
+    resumenDiv.innerHTML = `
+        <div class="resumen-grid">
+            <div class="resumen-card">
+                <div class="resumen-icon" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="resumen-info">
+                    <h4>Total Ingresos</h4>
+                    <p class="resumen-valor">S/. ${parseFloat(resumen.TotalIngresos || 0).toFixed(2)}</p>
+                    <span class="resumen-detalle">${resumen.TotalVentas || 0} ventas realizadas</span>
+                </div>
+            </div>
+
+            <div class="resumen-card">
+                <div class="resumen-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="resumen-info">
+                    <h4>Total Egresos</h4>
+                    <p class="resumen-valor">S/. ${parseFloat(resumen.TotalEgresos || 0).toFixed(2)}</p>
+                    <span class="resumen-detalle">${resumen.TotalCompras || 0} compras realizadas</span>
+                </div>
+            </div>
+
+            <div class="resumen-card">
+                <div class="resumen-icon ${utilidadClass}" style="background: linear-gradient(135deg, ${utilidadBruta >= 0 ? '#3498db, #2980b9' : '#e67e22, #d35400'});">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="resumen-info">
+                    <h4>Utilidad Bruta</h4>
+                    <p class="resumen-valor ${utilidadClass}">S/. ${parseFloat(utilidadBruta).toFixed(2)}</p>
+                    <span class="resumen-detalle">Margen: ${parseFloat(resumen.MargenUtilidad || 0).toFixed(1)}%</span>
+                </div>
+            </div>
+
+            <div class="resumen-card">
+                <div class="resumen-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="resumen-info">
+                    <h4>Promedios</h4>
+                    <p class="resumen-valor">S/. ${parseFloat(resumen.PromedioVenta || 0).toFixed(2)}</p>
+                    <span class="resumen-detalle">Venta | S/. ${parseFloat(resumen.PromedioCompra || 0).toFixed(2)} Compra</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Actualizar gráficos financieros
+async function actualizarGraficosFinancieros(data) {
+    try {
+        // Actualizar títulos de gráficos
+        actualizarTitulosGraficos('financiero');
+        
+        // Destruir gráficos existentes
+        if (chartPrincipal) {
+            chartPrincipal.destroy();
+            chartPrincipal = null;
+        }
+        if (chartProductos) {
+            chartProductos.destroy();
+            chartProductos = null;
+        }
+        if (chartProductosMenos) {
+            chartProductosMenos.destroy();
+            chartProductosMenos = null;
+        }
+        
+        let urlFlujoCaja = `${API_BASE}/reportes/flujo-caja?periodo=${periodoActual}`;
+        let urlGastos = `${API_BASE}/reportes/gastos-operacionales?periodo=${periodoActual}`;
+        
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            if (fechaInicio && fechaFin) {
+                urlFlujoCaja += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+                urlGastos += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            }
+        }
+        
+        // Gráfico 1: Flujo de Caja (Ingresos vs Egresos) - Línea
+        const respFlujoCaja = await fetch(urlFlujoCaja);
+        const dataFlujoCaja = await respFlujoCaja.json();
+        
+        if (dataFlujoCaja.exito && dataFlujoCaja.flujoCaja) {
+            const ultimos15Dias = dataFlujoCaja.flujoCaja.slice(-15);
+            const fechas = ultimos15Dias.map(f => {
+                const fecha = new Date(f.Fecha + 'T00:00:00');
+                return fecha.toLocaleDateString('es-PE', { day: '2-digit', month: 'short' });
+            });
+            const ingresos = ultimos15Dias.map(f => parseFloat(f.Ingresos) || 0);
+            const egresos = ultimos15Dias.map(f => parseFloat(f.Egresos) || 0);
+            
+            const canvas1 = document.getElementById('chartPrincipal');
+            if (canvas1) {
+                if (chartPrincipal) chartPrincipal.destroy();
+                chartPrincipal = new Chart(canvas1.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: fechas,
+                        datasets: [
+                            {
+                                label: 'Ingresos',
+                                data: ingresos,
+                                borderColor: '#2ecc71',
+                                backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Egresos',
+                                data: egresos,
+                                borderColor: '#e74c3c',
+                                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { 
+                            legend: { display: true, position: 'top' }
+                        },
+                        scales: { 
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Gráfico 2: Top 3 Proveedores con más gastos
+        const respGastos = await fetch(urlGastos);
+        const dataGastos = await respGastos.json();
+        
+        if (dataGastos.exito && dataGastos.gastosPorProveedor && dataGastos.gastosPorProveedor.length > 0) {
+            const proveedoresTop3 = dataGastos.gastosPorProveedor.slice(0, 3);
+            const proveedores = proveedoresTop3.map(p => p.NombreProveedor);
+            const gastos = proveedoresTop3.map(p => parseFloat(p.TotalGastado) || 0);
+            
+            const canvas2 = document.getElementById('chartProductos');
+            if (canvas2) {
+                if (chartProductos) chartProductos.destroy();
+                chartProductos = new Chart(canvas2.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: proveedores,
+                        datasets: [{
+                            label: 'Total Gastado',
+                            data: gastos,
+                            backgroundColor: '#e74c3c',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { legend: { display: false } }, 
+                        scales: { y: { beginAtZero: true } } 
+                    }
+                });
+            }
+        }
+        
+        // Gráfico 3: Top 3 Categorías con más gastos
+        if (dataGastos.exito && dataGastos.gastosPorCategoria && dataGastos.gastosPorCategoria.length > 0) {
+            const categoriasTop3 = dataGastos.gastosPorCategoria.slice(0, 3);
+            const categorias = categoriasTop3.map(c => capitalizarPrimera(c.Categoria));
+            const gastosCat = categoriasTop3.map(c => parseFloat(c.TotalGastado) || 0);
+            
+            const canvas3 = document.getElementById('chartProductosMenos');
+            if (canvas3) {
+                if (chartProductosMenos) chartProductosMenos.destroy();
+                chartProductosMenos = new Chart(canvas3.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: categorias,
+                        datasets: [{
+                            label: 'Total Gastado',
+                            data: gastosCat,
+                            backgroundColor: '#f39c12',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { legend: { display: false } }, 
+                        scales: { y: { beginAtZero: true } } 
+                    }
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar gráficos financieros:', error);
+    }
 }

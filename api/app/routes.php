@@ -88,4 +88,13 @@ return [
     'reportes/compras-por-periodo' => [ReporteController::class, 'comprasPorPeriodo'],
     'reportes/compras-por-proveedor' => [ReporteController::class, 'comprasPorProveedor'],
     'reportes/estado-compras' => [ReporteController::class, 'estadoCompras'],
+    'reportes/inventario-por-categoria' => [ReporteController::class, 'inventarioPorCategoria'],
+    'reportes/inventario-por-estado' => [ReporteController::class, 'inventarioPorEstado'],
+    'reportes/rotacion-inventario' => [ReporteController::class, 'rotacionInventario'],
+    'reportes/clientes-por-periodo' => [ReporteController::class, 'clientesPorPeriodo'],
+    'reportes/clientes-por-metodo-pago' => [ReporteController::class, 'clientesPorMetodoPago'],
+    'reportes/clientes-por-tipo-pedido' => [ReporteController::class, 'clientesPorTipoPedido'],
+    'reportes/resumen-financiero' => [ReporteController::class, 'resumenFinanciero'],
+    'reportes/flujo-caja' => [ReporteController::class, 'flujoCaja'],
+    'reportes/gastos-operacionales' => [ReporteController::class, 'gastosOperacionales'],
 ];
