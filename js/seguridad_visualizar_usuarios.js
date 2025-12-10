@@ -102,9 +102,11 @@ function filtrarUsuarios() {
     mostrarUsuarios(usuariosFiltrados);
 }
 
-// Editar usuario (placeholder)
+// Editar usuario
 function editarUsuario(idUsuario) {
-    alert('Función editar usuario en desarrollo');
+    console.log('Editando usuario:', idUsuario);
+    // Redirigir a la página de registro con parámetro de edición
+    window.location.href = `seguridad_registrar_usuarios.html?editar=${idUsuario}`;
 }
 
 // Eliminar usuario (placeholder)

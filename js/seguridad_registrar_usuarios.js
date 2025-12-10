@@ -1,5 +1,9 @@
 // ===== SEGURIDAD - REGISTRAR USUARIO =====
 
+// Variables globales para modo edición
+let modoEdicion = false;
+let idUsuarioEditar = null;
+
 // Actualizar fecha y hora
 function actualizarFechaHora() {
     const ahora = new Date();
@@ -48,6 +52,62 @@ async function cargarPerfiles() {
     }
 }
 
+// Cargar datos del usuario para editar
+async function cargarUsuario(idUsuario) {
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/usuarios/buscar?id=${idUsuario}`);
+        const data = await response.json();
+        
+        if (data.exito && data.usuario) {
+            const usuario = data.usuario;
+            
+            // Cambiar a modo edición
+            modoEdicion = true;
+            idUsuarioEditar = idUsuario;
+            
+            // Cambiar título
+            const titulo = document.querySelector('.page-title');
+            if (titulo) {
+                titulo.innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuario';
+            }
+            
+            // Cambiar texto del botón
+            const btnSubmit = document.querySelector('button[type="submit"]');
+            if (btnSubmit) {
+                btnSubmit.innerHTML = '<i class="fas fa-save"></i> Actualizar Usuario';
+            }
+            
+            // Llenar formulario
+            document.getElementById('nombres').value = usuario.Nombres || '';
+            document.getElementById('apellidos').value = usuario.Apellidos || '';
+            document.getElementById('dni').value = usuario.DNI || '';
+            document.getElementById('telefono').value = usuario.Telefono || '';
+            document.getElementById('email').value = usuario.Email || '';
+            document.getElementById('usuario').value = usuario.Usuario || '';
+            document.getElementById('perfil').value = usuario.IdPerfil || '';
+            
+            // Hacer campos de contraseña opcionales en edición
+            const passwordField = document.getElementById('password');
+            const confirmarField = document.getElementById('confirmarPassword');
+            if (passwordField) passwordField.required = false;
+            if (confirmarField) confirmarField.required = false;
+            
+            // Agregar nota sobre contraseña
+            const passwordContainer = passwordField.closest('.form-group');
+            if (passwordContainer && !document.getElementById('passwordNote')) {
+                const note = document.createElement('small');
+                note.id = 'passwordNote';
+                note.style.color = '#ffc857';
+                note.textContent = 'Dejar en blanco para mantener la contraseña actual';
+                passwordContainer.appendChild(note);
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar usuario:', error);
+        alert('Error al cargar los datos del usuario');
+    }
+}
+
 // Validar DNI
 function validarDNI() {
     const dni = document.getElementById('dni').value;
@@ -81,6 +141,13 @@ function validarPassword() {
     const errorPass = document.getElementById('passwordError');
     const errorConfirm = document.getElementById('confirmarPasswordError');
     
+    // En modo edición, si no se ingresa contraseña, es válido
+    if (modoEdicion && password === '' && confirmar === '') {
+        errorPass.textContent = '';
+        errorConfirm.textContent = '';
+        return true;
+    }
+    
     if (password.length < 6) {
         errorPass.textContent = 'La contraseña debe tener al menos 6 caracteres';
         return false;
@@ -95,7 +162,7 @@ function validarPassword() {
     return true;
 }
 
-// Registrar usuario
+// Registrar o actualizar usuario
 async function registrarUsuario(event) {
     event.preventDefault();
     
@@ -112,10 +179,15 @@ async function registrarUsuario(event) {
         telefono: formData.get('telefono') || '000000000',
         email: formData.get('email'),
         nombreUsuario: formData.get('usuario'),
-        contrasena: formData.get('password'),
         idPerfil: parseInt(formData.get('perfil')),
         estado: formData.get('estado') || 'activo'
     };
+    
+    // Solo incluir contraseña si se ingresó
+    const password = formData.get('password');
+    if (password && password.trim() !== '') {
+        data.contrasena = password;
+    }
     
     // Validaciones
     if (!data.idPerfil || isNaN(data.idPerfil)) {
@@ -124,8 +196,26 @@ async function registrarUsuario(event) {
     }
     
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/registrar', {
-            method: 'POST',
+        let url, method;
+        
+        if (modoEdicion) {
+            // Modo edición
+            url = `/Proyecto_De_App_Fast_Food/api/usuarios/actualizar/${idUsuarioEditar}`;
+            method = 'PUT';
+        } else {
+            // Modo registro
+            url = '/Proyecto_De_App_Fast_Food/api/usuarios/registrar';
+            method = 'POST';
+            
+            // En modo registro, la contraseña es obligatoria
+            if (!data.contrasena) {
+                alert('La contraseña es obligatoria');
+                return;
+            }
+        }
+        
+        const response = await fetch(url, {
+            method: method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -135,15 +225,21 @@ async function registrarUsuario(event) {
         const result = await response.json();
         
         if (result.exito) {
-            alert(`✅ Usuario registrado exitosamente\n\nID: ${result.idUsuario}\nUsuario: ${result.nombreUsuario}\n\nPuede iniciar sesión con sus credenciales.`);
-            event.target.reset();
-            cargarPerfiles();
+            if (modoEdicion) {
+                alert(`✅ Usuario actualizado exitosamente`);
+                // Redirigir a visualizar usuarios
+                window.location.href = 'seguridad_visualizar_usuarios.html';
+            } else {
+                alert(`✅ Usuario registrado exitosamente\n\nID: ${result.idUsuario}\nUsuario: ${result.nombreUsuario}\n\nPuede iniciar sesión con sus credenciales.`);
+                event.target.reset();
+                cargarPerfiles();
+            }
         } else {
             alert('❌ Error: ' + result.mensaje);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('❌ Error al registrar el usuario. Verifique su conexión.');
+        alert('❌ Error al procesar la solicitud. Verifique su conexión.');
     }
 }
 
@@ -154,6 +250,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cargar perfiles
     cargarPerfiles();
+    
+    // Verificar si viene parámetro de edición
+    const urlParams = new URLSearchParams(window.location.search);
+    const idEditar = urlParams.get('editar');
+    
+    if (idEditar) {
+        cargarUsuario(idEditar);
+    }
     
     // Validaciones en tiempo real
     document.getElementById('dni').addEventListener('input', function() {

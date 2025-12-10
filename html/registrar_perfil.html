@@ -62,26 +62,56 @@
                         <div class="form-group">
                             <label class="form-label">Permisos del Perfil *</label>
                             <div class="permissions-grid">
+                                <!-- VENTAS -->
                                 <div class="permission-category">
                                     <h4>Ventas</h4>
                                     <label class="form-check">
                                         <input type="checkbox" name="perm_ventas_registrar" class="form-check-input">
-                                        <span class="form-check-label">Registrar Ventas</span>
+                                        <span class="form-check-label">Registrar Venta</span>
                                     </label>
                                     <label class="form-check">
                                         <input type="checkbox" name="perm_ventas_visualizar" class="form-check-input">
-                                        <span class="form-check-label">Visualizar Ventas</span>
+                                        <span class="form-check-label">Visualizar Venta</span>
                                     </label>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_ventas_modificar" class="form-check-input">
-                                        <span class="form-check-label">Modificar Ventas</span>
+                                        <input type="checkbox" name="perm_promociones_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Promociones</span>
                                     </label>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_ventas_eliminar" class="form-check-input">
-                                        <span class="form-check-label">Eliminar Ventas</span>
+                                        <input type="checkbox" name="perm_promociones_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Promociones</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_mesas_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Mesas</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_mesas_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Mesas</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_pedidos_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Pedidos</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_pedidos_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Pedidos</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_caja_apertura" class="form-check-input">
+                                        <span class="form-check-label">Apertura Caja</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_caja_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Caja</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_caja_cerrar" class="form-check-input">
+                                        <span class="form-check-label">Cerrar Caja</span>
                                     </label>
                                 </div>
 
+                                <!-- COMPRAS -->
                                 <div class="permission-category">
                                     <h4>Compras</h4>
                                     <label class="form-check">
@@ -93,68 +123,84 @@
                                         <span class="form-check-label">Visualizar Compras</span>
                                     </label>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_inventario_gestionar" class="form-check-input">
-                                        <span class="form-check-label">Gestionar Inventario</span>
+                                        <input type="checkbox" name="perm_inventario_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Inventario</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_insumo_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Insumo</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_proveedores_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Proveedores</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_proveedores_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Proveedores</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_producto_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Producto</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_producto_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Producto</span>
                                     </label>
                                 </div>
 
+                                <!-- USUARIOS -->
                                 <div class="permission-category">
                                     <h4>Usuarios</h4>
                                     <label class="form-check">
                                         <input type="checkbox" name="perm_usuarios_registrar" class="form-check-input">
-                                        <span class="form-check-label">Registrar Usuarios</span>
+                                        <span class="form-check-label">Registrar Usuario</span>
                                     </label>
                                     <label class="form-check">
                                         <input type="checkbox" name="perm_usuarios_visualizar" class="form-check-input">
                                         <span class="form-check-label">Visualizar Usuarios</span>
                                     </label>
+                                </div>
+
+                                <!-- CLIENTES -->
+                                <div class="permission-category">
+                                    <h4>Clientes</h4>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_usuarios_modificar" class="form-check-input">
-                                        <span class="form-check-label">Modificar Usuarios</span>
+                                        <input type="checkbox" name="perm_clientes_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Clientes</span>
                                     </label>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_usuarios_eliminar" class="form-check-input">
-                                        <span class="form-check-label">Eliminar Usuarios</span>
+                                        <input type="checkbox" name="perm_clientes_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Clientes</span>
                                     </label>
                                 </div>
 
+                                <!-- REPORTES -->
                                 <div class="permission-category">
                                     <h4>Reportes</h4>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_reportes_ventas" class="form-check-input">
-                                        <span class="form-check-label">Reportes de Ventas</span>
-                                    </label>
-                                    <label class="form-check">
-                                        <input type="checkbox" name="perm_reportes_compras" class="form-check-input">
-                                        <span class="form-check-label">Reportes de Compras</span>
-                                    </label>
-                                    <label class="form-check">
-                                        <input type="checkbox" name="perm_reportes_financieros" class="form-check-input">
-                                        <span class="form-check-label">Reportes Financieros</span>
+                                        <input type="checkbox" name="perm_reportes" class="form-check-input">
+                                        <span class="form-check-label">Generar Reportes</span>
                                     </label>
                                 </div>
 
-                                <div class="permission-category">
-                                    <h4>Clientes y Proveedores</h4>
-                                    <label class="form-check">
-                                        <input type="checkbox" name="perm_clientes_gestionar" class="form-check-input">
-                                        <span class="form-check-label">Gestionar Clientes</span>
-                                    </label>
-                                    <label class="form-check">
-                                        <input type="checkbox" name="perm_proveedores_gestionar" class="form-check-input">
-                                        <span class="form-check-label">Gestionar Proveedores</span>
-                                    </label>
-                                </div>
-
+                                <!-- SEGURIDAD -->
                                 <div class="permission-category">
                                     <h4>Seguridad</h4>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_perfiles_gestionar" class="form-check-input">
-                                        <span class="form-check-label">Gestionar Perfiles</span>
+                                        <input type="checkbox" name="perm_seguridad_usuarios_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Usuarios (Seguridad)</span>
                                     </label>
                                     <label class="form-check">
-                                        <input type="checkbox" name="perm_acceso_completo" class="form-check-input">
-                                        <span class="form-check-label">Acceso Completo</span>
+                                        <input type="checkbox" name="perm_seguridad_usuarios_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Usuarios (Seguridad)</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_perfiles_registrar" class="form-check-input">
+                                        <span class="form-check-label">Registrar Tipo de Perfil</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="checkbox" name="perm_perfiles_visualizar" class="form-check-input">
+                                        <span class="form-check-label">Visualizar Perfil</span>
                                     </label>
                                 </div>
                             </div>
