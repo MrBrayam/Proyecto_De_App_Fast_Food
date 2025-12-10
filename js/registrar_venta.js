@@ -202,8 +202,20 @@ async function cargarDetallePedido(idPedido) {
                         idPlato: detalle.IdPlato || 0
                     });
                 });
-                actualizarTablaProductos();
             }
+            
+            // Mostrar totales del pedido directamente
+            const subtotal = parseFloat(pedidoSeleccionado.SubTotal) || 0;
+            const descuento = parseFloat(pedidoSeleccionado.Descuento) || 0;
+            const total = parseFloat(pedidoSeleccionado.Total) || 0;
+            
+            // Calcular delivery (Total = SubTotal - Descuento + Delivery)
+            const delivery = total - (subtotal - descuento);
+            
+            document.getElementById('subtotalVenta').textContent = 'S/ ' + subtotal.toFixed(2);
+            document.getElementById('descuentoVenta').textContent = descuento > 0 ? '-S/ ' + descuento.toFixed(2) : 'S/ 0.00';
+            document.getElementById('deliveryVenta').textContent = 'S/ ' + (delivery > 0 ? delivery.toFixed(2) : '0.00');
+            document.getElementById('totalVenta').textContent = 'S/ ' + total.toFixed(2);
 
         } else {
             alert('Error al cargar detalles del pedido');
@@ -241,12 +253,24 @@ function actualizarTablaProductos() {
     });
 
     // Actualizar totales
-    const descuento = parseFloat(document.getElementById('inputDescuento').value) || 0;
-    const total = subTotal - descuento;
-
-    document.getElementById('subtotalVenta').textContent = 'S/ ' + subTotal.toFixed(2);
-    document.getElementById('descuentoVenta').textContent = 'S/ ' + descuento.toFixed(2);
-    document.getElementById('totalVenta').textContent = 'S/ ' + total.toFixed(2);
+    // Si hay un pedido cargado, usar sus valores directos
+    if (pedidoSeleccionado) {
+        const subtotal = parseFloat(pedidoSeleccionado.SubTotal) || 0;
+        const descuento = parseFloat(pedidoSeleccionado.Descuento) || 0;
+        const total = parseFloat(pedidoSeleccionado.Total) || 0;
+        const delivery = total - (subtotal - descuento);
+        
+        document.getElementById('subtotalVenta').textContent = 'S/ ' + subtotal.toFixed(2);
+        document.getElementById('descuentoVenta').textContent = descuento > 0 ? '-S/ ' + descuento.toFixed(2) : 'S/ 0.00';
+        document.getElementById('deliveryVenta').textContent = 'S/ ' + (delivery > 0 ? delivery.toFixed(2) : '0.00');
+        document.getElementById('totalVenta').textContent = 'S/ ' + total.toFixed(2);
+    } else {
+        // Si no hay pedido, calcular normalmente
+        document.getElementById('subtotalVenta').textContent = 'S/ ' + subTotal.toFixed(2);
+        document.getElementById('descuentoVenta').textContent = 'S/ 0.00';
+        document.getElementById('deliveryVenta').textContent = 'S/ 0.00';
+        document.getElementById('totalVenta').textContent = 'S/ ' + subTotal.toFixed(2);
+    }
 }
 
 // Eliminar producto de la tabla
@@ -290,9 +314,20 @@ async function registrarVenta() {
         idPlato: p.idPlato || 0
     }));
 
-    const subTotal = productosAgregados.reduce((sum, p) => sum + (p.cantidad * p.precio), 0);
-    const descuento = parseFloat(document.getElementById('inputDescuento').value) || 0;
-    const total = subTotal - descuento;
+    // Usar valores del pedido si existe, sino calcular
+    let subTotal, descuento, total;
+    
+    if (pedidoSeleccionado) {
+        // Usar valores del pedido original
+        subTotal = parseFloat(pedidoSeleccionado.SubTotal) || 0;
+        descuento = parseFloat(pedidoSeleccionado.Descuento) || 0;
+        total = parseFloat(pedidoSeleccionado.Total) || 0;
+    } else {
+        // Calcular desde los productos agregados
+        subTotal = productosAgregados.reduce((sum, p) => sum + (p.cantidad * p.precio), 0);
+        descuento = 0;
+        total = subTotal;
+    }
 
     const datosVenta = {
         idCliente: pedidoSeleccionado?.IdCliente || null,
@@ -450,6 +485,7 @@ function limpiarFormulario() {
     
     document.getElementById('subtotalVenta').textContent = 'S/ 0.00';
     document.getElementById('descuentoVenta').textContent = 'S/ 0.00';
+    document.getElementById('deliveryVenta').textContent = 'S/ 0.00';
     document.getElementById('totalVenta').textContent = 'S/ 0.00';
 }
 

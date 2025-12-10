@@ -341,12 +341,14 @@ async function cargarProductos() {
                 tamano: plato.Tamano || 'personal',
                 precio: parseFloat(plato.Precio),
                 cantidad: plato.Cantidad || 0,
+                stockMinimo: plato.StockMinimo || 10,
+                rutaImg: plato.RutaImg || '',
                 estado: plato.Estado,
                 categoria: obtenerCategoria(plato.Nombre)
             }));
             
             console.log('Productos cargados desde BD:', productosDisponibles.length);
-            console.log('Primeros 3 productos con IDs:', productosDisponibles.slice(0, 3).map(p => ({nombre: p.nombre, id: p.id})));
+            console.log('Primeros 3 productos:', productosDisponibles.slice(0, 3));
             renderizarProductosDesdeAPI();
         }
     } catch (error) {
@@ -394,28 +396,62 @@ function renderizarProductosDesdeAPI() {
 // Crear tarjeta de producto
 function crearTarjetaProducto(producto) {
     const card = document.createElement('div');
-    card.className = `producto-card ${producto.estado === 'disponible' ? '' : 'agotado'}`;
+    
+    // Verificar stock bajo
+    const cantidad = parseInt(producto.cantidad || producto.Cantidad || 0);
+    const stockMinimo = parseInt(producto.stockMinimo || producto.StockMinimo || 10);
+    const stockBajo = cantidad > 0 && cantidad <= stockMinimo;
+    const agotado = cantidad <= 0 || producto.estado === 'no_disponible' || producto.estado === 'agotado';
+    
+    card.className = `producto-card ${agotado ? 'agotado' : ''} ${stockBajo ? 'stock-bajo' : ''}`;
     card.dataset.categoria = producto.categoria;
     card.dataset.id = producto.id || 0;
     
-    console.log('Creando tarjeta para:', producto.nombre, 'con ID:', producto.id);
+    console.log('Creando tarjeta para:', producto.nombre, 'con ID:', producto.id, 'Stock:', cantidad);
     
-    const estadoDisponible = producto.estado === 'disponible';
-    const estadoBadge = estadoDisponible ? '' : '<span class="badge badge-agotado">Agotado</span>';
+    // Badges
+    let badges = '';
+    if (agotado) {
+        badges += '<span class="badge badge-agotado">Agotado</span>';
+    } else if (stockBajo) {
+        badges += `<span class="badge badge-stock-bajo">¡Últimas ${cantidad} unidades!</span>`;
+    }
+    
+    // Determinar imagen
+    let imagenHTML = '';
+    const rutaImg = producto.rutaImg || producto.RutaImg;
+    if (rutaImg && rutaImg !== '' && rutaImg !== 'null') {
+        imagenHTML = `<img src="${rutaImg}" alt="${producto.nombre}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                      <i class="fas fa-utensils" style="display:none;"></i>`;
+    } else {
+        // Iconos por categoría
+        const iconos = {
+            'pizzas': 'fa-pizza-slice',
+            'pastas': 'fa-utensils',
+            'ensaladas': 'fa-salad',
+            'bebidas': 'fa-glass-cheers',
+            'postres': 'fa-ice-cream',
+            'extras': 'fa-drumstick-bite',
+            'hamburguesas': 'fa-hamburger',
+            'entradas': 'fa-cheese'
+        };
+        const icono = iconos[producto.categoria] || 'fa-utensils';
+        imagenHTML = `<i class="fas ${icono}"></i>`;
+    }
     
     card.innerHTML = `
         <div class="producto-badges">
-            ${estadoBadge}
+            ${badges}
         </div>
-        <button class="btn-favorito" ${!estadoDisponible ? 'disabled' : ''}>
+        <button class="btn-favorito" ${agotado ? 'disabled' : ''}>
             <i class="far fa-heart"></i>
         </button>
         <div class="producto-imagen">
-            <i class="fas fa-pizza-slice"></i>
+            ${imagenHTML}
         </div>
         <div class="producto-info">
             <h3>${producto.nombre}</h3>
-            <p class="producto-descripcion">${producto.descripcion || 'Delicioso platillo'}</p>
+            <p class="producto-descripcion">${producto.descripcion || producto.Descripcion || 'Delicioso platillo'}</p>
             <div class="producto-rating">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -426,14 +462,14 @@ function crearTarjetaProducto(producto) {
             </div>
             <div class="producto-meta">
                 <span class="tiempo"><i class="far fa-clock"></i> ${Math.floor(Math.random() * 15) + 15} min</span>
-                <span class="calorias"><i class="fas fa-fire"></i> ${Math.floor(Math.random() * 500) + 400} kcal</span>
+                <span class="stock"><i class="fas fa-box"></i> Stock: ${cantidad}</span>
             </div>
             <div class="producto-footer">
                 <div class="precio-box">
                     <span class="precio-actual">S/. ${producto.precio.toFixed(2)}</span>
                 </div>
-                <button class="btn-agregar" ${!estadoDisponible ? 'disabled' : ''}>
-                    <i class="fas fa-plus"></i> ${estadoDisponible ? 'Agregar' : 'No disponible'}
+                <button class="btn-agregar" ${agotado ? 'disabled' : ''}>
+                    <i class="fas fa-plus"></i> ${agotado ? 'Agotado' : 'Agregar'}
                 </button>
             </div>
         </div>
@@ -731,14 +767,18 @@ async function finalizarPedido() {
         const cliente = JSON.parse(clienteActual);
         
         // Preparar detalles del pedido
-        const detalles = carrito.map((item, index) => ({
-            idPlato: item.id || 0,
-            codProducto: `PLATO-${item.id || (index + 1)}`,
-            descripcionProducto: item.nombre,
-            cantidad: item.cantidad,
-            precioUnitario: item.precio,
-            subtotal: item.precio * item.cantidad
-        }));
+        const detalles = carrito.map((item, index) => {
+            const itemId = parseInt(item.id) || 0;
+            return {
+                idPlato: itemId,
+                idProducto: null,
+                codProducto: itemId > 0 ? `PLATO-${itemId}` : `PROD-${index + 1}`,
+                descripcionProducto: item.nombre,
+                cantidad: parseInt(item.cantidad) || 1,
+                precioUnitario: parseFloat(item.precio) || 0,
+                subtotal: (parseFloat(item.precio) || 0) * (parseInt(item.cantidad) || 1)
+            };
+        });
         
         console.log('Detalles del pedido a enviar:', detalles);
         

@@ -150,14 +150,53 @@ async function verDetallesPedido(idPedido) {
                 tbody.innerHTML = '<tr><td colspan="4">Sin productos</td></tr>';
             }
             
-            // Calcular total
-            const total = (pedido.Detalles || []).reduce((sum, d) => {
-                const cantidad = parseFloat(d.Cantidad) || 0;
-                const precio = parseFloat(d.PrecioUnitario) || 0;
-                return sum + (cantidad * precio);
-            }, 0);
+            // Usar los valores del pedido (que ya incluyen descuento y delivery)
+            const subtotal = parseFloat(pedido.SubTotal) || 0;
+            const descuento = parseFloat(pedido.Descuento) || 0;
+            const total = parseFloat(pedido.Total) || 0;
             
+            // Calcular delivery (si el total es mayor que subtotal - descuento, significa que hay delivery)
+            const delivery = total - (subtotal - descuento);
             
+            // Actualizar HTML del resumen
+            const resumenHTML = `
+                <div class="resumen-linea">
+                    <span>Subtotal:</span>
+                    <span>S/ ${subtotal.toFixed(2)}</span>
+                </div>
+                ${descuento > 0 ? `
+                <div class="resumen-linea descuento">
+                    <span>Descuento:</span>
+                    <span>-S/ ${descuento.toFixed(2)}</span>
+                </div>` : ''}
+                ${delivery > 0 ? `
+                <div class="resumen-linea">
+                    <span>Delivery:</span>
+                    <span>S/ ${delivery.toFixed(2)}</span>
+                </div>` : ''}
+                <div class="resumen-linea total">
+                    <span>Total:</span>
+                    <span>S/ ${total.toFixed(2)}</span>
+                </div>
+            `;
+            
+            // Buscar o crear contenedor de resumen
+            let resumenContainer = document.querySelector('.detalle-resumen');
+            if (!resumenContainer) {
+                // Si no existe, insertarlo antes del total
+                const detalleTotal = document.getElementById('detalleTotal');
+                if (detalleTotal && detalleTotal.parentElement) {
+                    resumenContainer = document.createElement('div');
+                    resumenContainer.className = 'detalle-resumen';
+                    detalleTotal.parentElement.insertBefore(resumenContainer, detalleTotal.parentElement.firstChild);
+                }
+            }
+            
+            if (resumenContainer) {
+                resumenContainer.innerHTML = resumenHTML;
+            }
+            
+            // Actualizar el total final
             document.getElementById('detalleTotal').textContent = total.toFixed(2);
             
             // Mostrar modal

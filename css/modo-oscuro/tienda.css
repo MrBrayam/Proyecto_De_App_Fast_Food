@@ -731,6 +731,35 @@ body {
     color: #fff;
 }
 
+.badge-agotado {
+    background: rgba(107, 114, 128, 0.3);
+    color: #9ca3af;
+}
+
+.badge-stock-bajo {
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: #fff;
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.producto-card.stock-bajo {
+    border: 2px solid #f97316;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+}
+
+.producto-card.stock-bajo .producto-imagen {
+    border-bottom: 3px solid #f97316;
+}
+
 .badge-popular {
     background: linear-gradient(135deg, #ffc837, #ff8008);
     color: #1a1d2e;
@@ -771,6 +800,24 @@ body {
     margin-bottom: 1rem;
     font-size: 5rem;
     color: rgba(255, 87, 51, 0.3);
+    overflow: hidden;
+}
+
+.producto-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.producto-card:hover .producto-imagen img {
+    transform: scale(1.1);
+}
+
+.producto-imagen i {
+    font-size: 4rem;
+    color: rgba(255, 87, 51, 0.5);
+    opacity: 0.8;
 }
 
 .producto-info {

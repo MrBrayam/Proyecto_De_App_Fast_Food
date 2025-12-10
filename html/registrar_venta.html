@@ -98,29 +98,25 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <tr class="fila-subtotal">
+                            <td colspan="3">SUBTOTAL:</td>
+                            <td colspan="2"><strong id="subtotalVenta">S/ 0.00</strong></td>
+                        </tr>
+                        <tr class="fila-descuento">
+                            <td colspan="3">DESCUENTO:</td>
+                            <td colspan="2"><strong id="descuentoVenta">-S/ 0.00</strong></td>
+                        </tr>
+                        <tr class="fila-delivery">
+                            <td colspan="3">DELIVERY:</td>
+                            <td colspan="2"><strong id="deliveryVenta">S/ 0.00</strong></td>
+                        </tr>
+                        <tr class="fila-total">
+                            <td colspan="3">TOTAL:</td>
+                            <td colspan="2"><strong id="totalVenta">S/ 0.00</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
-            </div>
-
-            <!-- Resumen de Venta -->
-            <div class="venta-resumen">
-                <div class="resumen-row">
-                    <label>Descuento:</label>
-                    <input type="number" id="inputDescuento" value="0" min="0" step="0.01" onchange="actualizarTablaProductos()">
-                </div>
-                <div class="resumen-totales">
-                    <div class="resumen-item">
-                        <span>SUBTOTAL:</span>
-                        <span id="subtotalVenta">S/ 0.00</span>
-                    </div>
-                    <div class="resumen-item">
-                        <span>DESCUENTO:</span>
-                        <span id="descuentoVenta">S/ 0.00</span>
-                    </div>
-                    <div class="resumen-item total">
-                        <span>TOTAL:</span>
-                        <span id="totalVenta">S/ 0.00</span>
-                    </div>
-                </div>
             </div>
 
             <!-- Botones de Acción -->

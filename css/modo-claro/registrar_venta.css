@@ -198,6 +198,73 @@ select:focus {
 
 .venta-tabla tbody tr:hover { background: rgba(37, 99, 235, 0.06); }
 
+.venta-tabla tfoot {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-top: 2px solid rgba(37, 99, 235, 0.2);
+}
+
+.venta-tabla tfoot tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.venta-tabla tfoot tr:last-child {
+    border-bottom: none;
+}
+
+.venta-tabla tfoot td {
+    padding: 14px 10px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.venta-tabla tfoot .fila-subtotal td {
+    color: #475569;
+}
+
+.venta-tabla tfoot .fila-descuento td {
+    background: rgba(220, 38, 38, 0.05);
+    color: #dc2626;
+}
+
+.venta-tabla tfoot .fila-delivery td {
+    background: rgba(37, 99, 235, 0.05);
+    color: #2563eb;
+}
+
+.venta-tabla tfoot .fila-total td {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.05));
+    color: #1e40af;
+    font-size: 17px;
+    font-weight: 700;
+    border-top: 2px solid rgba(37, 99, 235, 0.3);
+}
+
+.descuento-input-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.descuento-input-group input {
+    background: white;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    border-radius: 6px;
+    padding: 6px 10px;
+    width: 100px;
+    color: #dc2626;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+}
+
+.descuento-input-group input:focus {
+    outline: none;
+    border-color: #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
 .btn-eliminar-producto {
     background: rgba(220, 38, 38, 0.1);
     color: #991b1b;
@@ -255,6 +322,37 @@ select:focus {
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+}
+
+.resumen-item.descuento-item {
+    background: rgba(220, 38, 38, 0.05);
+    border-color: rgba(220, 38, 38, 0.2);
+}
+
+.descuento-input-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.descuento-input-group input {
+    background: white;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    border-radius: 6px;
+    padding: 4px 8px;
+    width: 80px;
+    color: #dc2626;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+}
+
+.descuento-input-group input:focus {
+    outline: none;
+    border-color: #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
 }
 
 .resumen-item.total {
