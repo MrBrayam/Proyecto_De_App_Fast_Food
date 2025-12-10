@@ -46,12 +46,50 @@ class Pedido
     {
         $db = Database::connection();
         
-        error_log("Registrando detalle de pedido: " . json_encode([
-            'idPedido' => $idPedido,
-            'detalle' => $detalle
-        ]));
+        error_log("=== REGISTRANDO DETALLE DE PEDIDO ===");
+        error_log("IdPedido: " . $idPedido);
+        error_log("Detalle completo: " . json_encode($detalle));
+        error_log("IdPlato: " . ($detalle['idPlato'] ?? 'NULL') . " (vacío: " . (empty($detalle['idPlato']) ? 'SI' : 'NO') . ")");
+        error_log("IdProducto: " . ($detalle['idProducto'] ?? 'NULL') . " (vacío: " . (empty($detalle['idProducto']) ? 'SI' : 'NO') . ")");
         
         try {
+            $cantidad = intval($detalle['cantidad'] ?? 0);
+            
+            // VALIDAR STOCK ANTES de registrar el detalle
+            // Si es un plato, verificar stock de platos
+            if (!empty($detalle['idPlato']) && intval($detalle['idPlato']) > 0) {
+                $stmtStock = $db->prepare('SELECT IdPlato, Nombre, Cantidad FROM Platos WHERE IdPlato = ?');
+                $stmtStock->execute([$detalle['idPlato']]);
+                $plato = $stmtStock->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$plato) {
+                    throw new Exception("El plato no existe");
+                }
+                
+                $stockActual = intval($plato['Cantidad']);
+                
+                if ($stockActual < $cantidad) {
+                    throw new Exception("Stock insuficiente para '{$plato['Nombre']}'. Disponible: {$stockActual}, Solicitado: {$cantidad}");
+                }
+            }
+            
+            // Si es un producto, verificar stock de productos
+            if (!empty($detalle['idProducto']) && intval($detalle['idProducto']) > 0) {
+                $stmtStock = $db->prepare('SELECT IdProducto, NombreProducto, Stock FROM Productos WHERE IdProducto = ?');
+                $stmtStock->execute([$detalle['idProducto']]);
+                $producto = $stmtStock->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$producto) {
+                    throw new Exception("El producto no existe");
+                }
+                
+                $stockActual = intval($producto['Stock']);
+                
+                if ($stockActual < $cantidad) {
+                    throw new Exception("Stock insuficiente para '{$producto['NombreProducto']}'. Disponible: {$stockActual}, Solicitado: {$cantidad}");
+                }
+            }
+            
             // Registrar el detalle del pedido
             $stmt = $db->prepare('CALL pa_registrar_detalle_pedido(?, ?, ?, ?, ?, ?, ?)');
             
@@ -61,7 +99,7 @@ class Pedido
                 $detalle['idPlato'] ?? null,
                 $detalle['codProducto'] ?? null,
                 $detalle['descripcionProducto'] ?? null,
-                $detalle['cantidad'] ?? 0,
+                $cantidad,
                 $detalle['precioUnitario'] ?? 0
             ]);
 
@@ -70,40 +108,23 @@ class Pedido
             // Cerrar cursor del stored procedure
             $stmt->closeCursor();
             
-            // Debug: mostrar idPlato recibido
-            error_log("IdPlato recibido: " . ($detalle['idPlato'] ?? 'NULL') . " (tipo: " . gettype($detalle['idPlato'] ?? null) . ")");
+            // DESCONTAR STOCK después de registrar exitosamente
+            // Si es un plato, descontar stock
+            if (!empty($detalle['idPlato']) && intval($detalle['idPlato']) > 0 && $cantidad > 0) {
+                error_log("Intentando descontar stock de plato. IdPlato: {$detalle['idPlato']}, Cantidad: {$cantidad}");
+                $stmtUpdate = $db->prepare('UPDATE Platos SET Cantidad = Cantidad - ? WHERE IdPlato = ?');
+                $stmtUpdate->execute([$cantidad, $detalle['idPlato']]);
+                $filasAfectadas = $stmtUpdate->rowCount();
+                error_log("Stock descontado de Plato ID {$detalle['idPlato']}, Cantidad: {$cantidad}, Filas afectadas: {$filasAfectadas}");
+            }
             
-            // Si el detalle tiene un plato (IdPlato), descontar del stock
-            if (!empty($detalle['idPlato']) && intval($detalle['idPlato']) > 0) {
-                $cantidad = intval($detalle['cantidad'] ?? 0);
-                
-                if ($cantidad > 0) {
-                    // Verificar stock disponible
-                    $stmtStock = $db->prepare('SELECT Cantidad FROM Platos WHERE IdPlato = ?');
-                    $stmtStock->execute([$detalle['idPlato']]);
-                    $plato = $stmtStock->fetch(PDO::FETCH_ASSOC);
-                    
-                    if ($plato) {
-                        $stockActual = intval($plato['Cantidad']);
-                        
-                        if ($stockActual >= $cantidad) {
-                            // Descontar del stock
-                            $stmtUpdate = $db->prepare('UPDATE Platos SET Cantidad = Cantidad - ? WHERE IdPlato = ?');
-                            $stmtUpdate->execute([$cantidad, $detalle['idPlato']]);
-                            
-                            error_log("Stock descontado: Plato ID {$detalle['idPlato']}, Cantidad: {$cantidad}");
-                        } else {
-                            // Stock insuficiente
-                            error_log("Stock insuficiente para plato ID {$detalle['idPlato']}. Disponible: {$stockActual}, Solicitado: {$cantidad}");
-                            // Retornar el resultado del stored procedure pero con advertencia de stock
-                            if ($result && isset($result['resultado'])) {
-                                $resultData = json_decode($result['resultado'], true);
-                                $resultData['advertencia'] = 'Stock insuficiente, pedido registrado pero stock no descontado';
-                                return $resultData;
-                            }
-                        }
-                    }
-                }
+            // Si es un producto, descontar stock
+            if (!empty($detalle['idProducto']) && intval($detalle['idProducto']) > 0 && $cantidad > 0) {
+                error_log("Intentando descontar stock de producto. IdProducto: {$detalle['idProducto']}, Cantidad: {$cantidad}");
+                $stmtUpdate = $db->prepare('UPDATE Productos SET Stock = Stock - ? WHERE IdProducto = ?');
+                $stmtUpdate->execute([$cantidad, $detalle['idProducto']]);
+                $filasAfectadas = $stmtUpdate->rowCount();
+                error_log("Stock descontado de Producto ID {$detalle['idProducto']}, Cantidad: {$cantidad}, Filas afectadas: {$filasAfectadas}");
             }
             
             error_log("Resultado de registrar detalle: " . json_encode($result));
@@ -245,5 +266,33 @@ class Pedido
         $stmt->execute([$nuevoEstado, $idPedido]);
         
         return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Eliminar pedido
+     */
+    public function eliminar(int $idPedido)
+    {
+        $db = Database::connection();
+        
+        try {
+            // Verificar que el pedido existe
+            $stmt = $db->prepare('SELECT IdPedido FROM Pedidos WHERE IdPedido = ?');
+            $stmt->execute([$idPedido]);
+            $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$pedido) {
+                return false;
+            }
+            
+            // Eliminar el pedido (los detalles se eliminan automáticamente por ON DELETE CASCADE)
+            $stmt = $db->prepare('DELETE FROM Pedidos WHERE IdPedido = ?');
+            $stmt->execute([$idPedido]);
+            
+            return $stmt->rowCount() > 0;
+        } catch (Exception $e) {
+            error_log('Error al eliminar pedido: ' . $e->getMessage());
+            throw $e;
+        }
     }
 }

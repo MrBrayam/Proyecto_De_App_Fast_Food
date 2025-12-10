@@ -35,7 +35,9 @@ class ProductoController extends Controller
 
             $productosFormateados = array_map(function($producto) {
                 return [
+                    'IdProducto' => (int)$producto['IdProducto'],
                     'CodProducto' => $producto['CodProducto'],
+                    'NombreProducto' => $producto['NombreProducto'],
                     'Nombre' => $producto['NombreProducto'],
                     'Categoria' => $producto['Categoria'],
                     'Tamano' => $producto['Tamano'],

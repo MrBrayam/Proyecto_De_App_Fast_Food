@@ -59,16 +59,20 @@ function handleAgregarClick(e) {
             const precioText = card.querySelector('.precio-actual')?.textContent || 'S/. 0';
             const precio = parseFloat(precioText.replace('S/. ', ''));
             
-            // Obtener el ID del plato desde el data-id de la tarjeta
-            const idPlato = parseInt(card.dataset.id) || 0;
+            // Obtener datos desde los data-attributes de la tarjeta
+            const idCompleto = card.dataset.id || '0';
+            const tipo = card.dataset.tipo || 'plato';
+            const codProducto = card.dataset.codproducto || null;
             
-            console.log('Agregando al carrito:', { id: idPlato, nombre, precio });
+            console.log('Agregando al carrito:', { id: idCompleto, nombre, precio, tipo, codProducto });
             
             agregarAlCarrito({
-                id: idPlato,
+                id: idCompleto,
                 nombre: nombre,
                 precio: precio,
-                cantidad: 1
+                cantidad: 1,
+                tipo: tipo,
+                codProducto: codProducto
             });
             
             mostrarNotificacion(`${nombre} agregado al carrito`);
@@ -329,12 +333,20 @@ function irAPromocion(index) {
 // Cargar productos (desde la API)
 async function cargarProductos() {
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/platos/listar');
-        const data = await response.json();
+        // Cargar platos
+        const responsePlatos = await fetch('/Proyecto_De_App_Fast_Food/api/platos/listar');
+        const dataPlatos = await responsePlatos.json();
         
-        if (data.exito && data.platos) {
-            productosDisponibles = data.platos.map(plato => ({
-                id: plato.IdPlato,
+        // Cargar productos
+        const responseProductos = await fetch('/Proyecto_De_App_Fast_Food/api/productos/listar');
+        const dataProductos = await responseProductos.json();
+        
+        productosDisponibles = [];
+        
+        // Agregar platos
+        if (dataPlatos.exito && dataPlatos.platos) {
+            const platos = dataPlatos.platos.map(plato => ({
+                id: 'P-' + plato.IdPlato,
                 nombre: plato.Nombre,
                 descripcion: plato.Descripcion || '',
                 ingredientes: plato.Ingredientes || '',
@@ -344,13 +356,36 @@ async function cargarProductos() {
                 stockMinimo: plato.StockMinimo || 10,
                 rutaImg: plato.RutaImg || '',
                 estado: plato.Estado,
-                categoria: obtenerCategoria(plato.Nombre)
+                categoria: 'platos',
+                tipo: 'plato'
             }));
-            
-            console.log('Productos cargados desde BD:', productosDisponibles.length);
-            console.log('Primeros 3 productos:', productosDisponibles.slice(0, 3));
-            renderizarProductosDesdeAPI();
+            productosDisponibles = productosDisponibles.concat(platos);
         }
+        
+        // Agregar productos
+        if (dataProductos.exito && dataProductos.productos) {
+            const productos = dataProductos.productos.map(producto => ({
+                id: 'PR-' + (producto.IdProducto || producto.idProducto),
+                codProducto: producto.CodProducto || producto.codProducto,
+                nombre: producto.NombreProducto || producto.Nombre || producto.nombreProducto || '',
+                descripcion: producto.Descripcion || producto.descripcion || '',
+                ingredientes: '',
+                tamano: producto.Tamano || producto.tamano || 'na',
+                precio: parseFloat(producto.Precio || producto.precio),
+                cantidad: producto.Stock || producto.stock || 0,
+                stockMinimo: producto.StockMinimo || producto.stockMinimo || 10,
+                rutaImg: '',
+                estado: producto.Estado || producto.estado,
+                categoria: 'productos',
+                tipo: 'producto'
+            }));
+            productosDisponibles = productosDisponibles.concat(productos);
+        }
+        
+        console.log('Items cargados desde BD:', productosDisponibles.length);
+        console.log('Platos:', productosDisponibles.filter(p => p.tipo === 'plato').length);
+        console.log('Productos:', productosDisponibles.filter(p => p.tipo === 'producto').length);
+        renderizarProductosDesdeAPI();
     } catch (error) {
         console.error('Error cargando productos:', error);
         // Usar datos por defecto si falla
@@ -377,8 +412,22 @@ function renderizarProductosDesdeAPI() {
     const cardsExistentes = grid.querySelectorAll('.producto-card');
     cardsExistentes.forEach(card => card.remove());
     
+    // Filtrar según categoría activa
+    let productosFiltrados = productosDisponibles;
+    if (filtroActivo === 'platos') {
+        productosFiltrados = productosDisponibles.filter(p => p.tipo === 'plato');
+    } else if (filtroActivo === 'productos') {
+        productosFiltrados = productosDisponibles.filter(p => p.tipo === 'producto');
+    }
+    
+    // Filtrar productos sin stock (stock > 0)
+    productosFiltrados = productosFiltrados.filter(p => {
+        const stock = parseInt(p.cantidad) || 0;
+        return stock > 0;
+    });
+    
     // Agregar nuevas tarjetas
-    productosDisponibles.forEach(producto => {
+    productosFiltrados.forEach(producto => {
         const card = crearTarjetaProducto(producto);
         grid.appendChild(card);
     });
@@ -389,7 +438,7 @@ function renderizarProductosDesdeAPI() {
     // Actualizar contador
     const counter = document.querySelector('.productos-count');
     if (counter) {
-        counter.textContent = `${productosDisponibles.length} productos disponibles`;
+        counter.textContent = `${productosFiltrados.length} ${filtroActivo === 'platos' ? 'platos' : filtroActivo === 'productos' ? 'productos' : 'items'} disponibles`;
     }
 }
 
@@ -406,8 +455,10 @@ function crearTarjetaProducto(producto) {
     card.className = `producto-card ${agotado ? 'agotado' : ''} ${stockBajo ? 'stock-bajo' : ''}`;
     card.dataset.categoria = producto.categoria;
     card.dataset.id = producto.id || 0;
+    card.dataset.tipo = producto.tipo || 'plato';
+    card.dataset.codproducto = producto.codProducto || '';
     
-    console.log('Creando tarjeta para:', producto.nombre, 'con ID:', producto.id, 'Stock:', cantidad);
+    console.log('Creando tarjeta para:', producto.nombre, 'con ID:', producto.id, 'Tipo:', producto.tipo, 'CodProducto:', producto.codProducto, 'Stock:', cantidad);
     
     // Badges
     let badges = '';
@@ -631,12 +682,20 @@ function ordenarProductos(e) {
 
 // Agregar al carrito
 function agregarAlCarrito(producto) {
-    const itemExistente = carrito.find(item => item.nombre === producto.nombre);
+    const itemExistente = carrito.find(item => item.id === producto.id);
     
     if (itemExistente) {
         itemExistente.cantidad++;
     } else {
-        carrito.push(producto);
+        // Asegurarse de incluir el tipo y codProducto
+        carrito.push({
+            id: producto.id,
+            nombre: producto.nombre,
+            precio: producto.precio,
+            cantidad: producto.cantidad || 1,
+            tipo: producto.tipo || 'plato',
+            codProducto: producto.codProducto || null
+        });
     }
     
     actualizarCarrito();
@@ -767,17 +826,45 @@ async function finalizarPedido() {
         const cliente = JSON.parse(clienteActual);
         
         // Preparar detalles del pedido
-        const detalles = carrito.map((item, index) => {
-            const itemId = parseInt(item.id) || 0;
-            return {
-                idPlato: itemId,
-                idProducto: null,
-                codProducto: itemId > 0 ? `PLATO-${itemId}` : `PROD-${index + 1}`,
+        const detalles = carrito.map((item) => {
+            // Determinar si es plato o producto según el ID
+            const esPlato = item.tipo === 'plato' || (item.id && item.id.toString().startsWith('P-'));
+            const esProducto = item.tipo === 'producto' || (item.id && item.id.toString().startsWith('PR-'));
+            
+            // Extraer el ID numérico
+            let idNumerico = 0;
+            if (item.id) {
+                const idStr = item.id.toString();
+                if (idStr.startsWith('P-')) {
+                    idNumerico = parseInt(idStr.replace('P-', ''));
+                } else if (idStr.startsWith('PR-')) {
+                    idNumerico = parseInt(idStr.replace('PR-', ''));
+                } else {
+                    idNumerico = parseInt(idStr);
+                }
+            }
+            
+            const detalle = {
+                idPlato: esPlato ? idNumerico : null,
+                idProducto: esProducto ? idNumerico : null,
+                codProducto: esProducto ? (item.codProducto || item.id.toString().replace('PR-', '')) : `PLATO-${idNumerico}`,
                 descripcionProducto: item.nombre,
                 cantidad: parseInt(item.cantidad) || 1,
                 precioUnitario: parseFloat(item.precio) || 0,
                 subtotal: (parseFloat(item.precio) || 0) * (parseInt(item.cantidad) || 1)
             };
+            
+            console.log('Detalle del item:', {
+                nombre: item.nombre,
+                tipo: item.tipo,
+                id: item.id,
+                esPlato: esPlato,
+                esProducto: esProducto,
+                idNumerico: idNumerico,
+                detalle: detalle
+            });
+            
+            return detalle;
         });
         
         console.log('Detalles del pedido a enviar:', detalles);
@@ -829,6 +916,9 @@ async function finalizarPedido() {
             actualizarCarrito();
             toggleCarrito();
             
+            // Recargar productos para actualizar stock
+            await cargarProductos();
+            
             // Mostrar confirmación
             setTimeout(() => {
                 alert(`Pedido confirmado!\nNúmero de pedido: #${resultado.pedido.IdPedido}\nTotal: S/. ${total.toFixed(2)}\n\nTu pedido será entregado en 30-45 minutos.`);
@@ -837,13 +927,30 @@ async function finalizarPedido() {
                 window.location.href = '../html/mis_pedidos.html';
             }, 1500);
         } else {
-            alert(`Error al registrar pedido: ${resultado.mensaje}`);
+            // Manejar errores de stock insuficiente
+            const mensajeError = resultado.mensaje || 'Error al registrar pedido';
+            if (mensajeError.includes('Stock insuficiente') || mensajeError.includes('stock')) {
+                alert(`⚠️ ${mensajeError}\n\nPor favor, actualiza las cantidades en tu carrito.`);
+                // Recargar productos para actualizar el stock disponible
+                await cargarProductos();
+            } else {
+                alert(`Error al registrar pedido: ${mensajeError}`);
+            }
             btnFinalizar.textContent = textoOriginal;
             btnFinalizar.disabled = false;
         }
     } catch (error) {
         console.error('Error al finalizar pedido:', error);
-        alert('Error al procesar el pedido. Por favor, intenta de nuevo.');
+        let mensajeError = 'Error al procesar el pedido. Por favor, intenta de nuevo.';
+        
+        // Detectar si es error de stock
+        if (error.message && error.message.includes('Stock')) {
+            mensajeError = error.message;
+            // Recargar productos
+            await cargarProductos();
+        }
+        
+        alert(mensajeError);
         const btnFinalizar = document.querySelector('.btn-finalizar');
         btnFinalizar.textContent = 'Finalizar Pedido';
         btnFinalizar.disabled = false;

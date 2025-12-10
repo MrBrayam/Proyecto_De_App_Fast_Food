@@ -235,6 +235,18 @@
     transform: scale(1.01);
 }
 
+.tabla-pedidos tbody tr.fila-seleccionada {
+    background: rgba(255, 87, 51, 0.3) !important;
+    border-left: 4px solid #ff5733;
+    box-shadow: 0 0 10px rgba(255, 87, 51, 0.5);
+}
+
+.tabla-pedidos tbody tr.fila-seleccionada {
+    background: rgba(255, 87, 51, 0.3) !important;
+    border-left: 4px solid #ff5733;
+    box-shadow: 0 0 10px rgba(255, 87, 51, 0.5);
+}
+
 .tabla-pedidos tbody tr td {
     padding: 15px 20px;
     font-size: 14px;

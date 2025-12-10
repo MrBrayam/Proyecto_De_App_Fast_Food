@@ -206,13 +206,25 @@ function mostrarMensajeVacio() {
     document.getElementById('noDataMessage').style.display = 'flex';
 }
 
-// Editar producto - redirigir a registrar con código
+// Editar producto - guardar en sessionStorage y redirigir
 function editarProducto(codigoProducto) {
     if (!codigoProducto) {
         alert('Código de producto no válido');
         return;
     }
-    window.location.href = `registrar_producto.html?editar=${encodeURIComponent(codigoProducto)}`;
+    
+    // Buscar el producto en los datos cargados
+    const producto = productosGlobal.find(p => 
+        (p.CodProducto || p.codProducto) === codigoProducto
+    );
+    
+    if (producto) {
+        // Guardar en sessionStorage para cargar en el formulario
+        sessionStorage.setItem('editarProductoData', JSON.stringify(producto));
+        window.location.href = 'registrar_producto.html';
+    } else {
+        alert('Producto no encontrado');
+    }
 }
 
 // Confirmar eliminación

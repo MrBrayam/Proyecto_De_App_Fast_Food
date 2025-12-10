@@ -4,6 +4,7 @@
 let pedidos = [];
 let pedidosFiltrados = [];
 let pedidoActualEnModal = null; // Para guardar el ID del pedido en el modal
+let pedidoSeleccionado = null; // Para guardar el ID del pedido seleccionado en la tabla
 
 // Actualizar fecha y hora
 function actualizarFechaHora() {
@@ -77,14 +78,14 @@ function renderizarPedidos(datosPedidos) {
         }
         
         return `
-            <tr>
+            <tr onclick="seleccionarPedido(${pedido.IdPedido}, this)" style="cursor: pointer;">
                 <td>${pedido.IdPedido || index + 1}</td>
                 <td>${pedido.NumDocumentos || '-'}</td>
                 <td>${pedido.NombreCliente || 'Sin nombre'}</td>
                 <td>${fechaFormato}</td>
                 <td><span class="badge ${badgeClass}">${pedido.TipoServicio || 'local'}</span></td>
                 <td>
-                    <button class="btn-info" title="Ver detalles" onclick="verDetallesPedido(${pedido.IdPedido})">
+                    <button class="btn-info" title="Ver detalles" onclick="event.stopPropagation(); verDetallesPedido(${pedido.IdPedido})">
                         <i class="fas fa-eye"></i>
                     </button>
                 </td>
@@ -245,6 +246,53 @@ function cerrarModal() {
     }
 }
 
+// Seleccionar pedido de la tabla
+function seleccionarPedido(idPedido, fila) {
+    // Remover selección previa
+    const filasPrevias = document.querySelectorAll('#tablaPedidosBody tr');
+    filasPrevias.forEach(f => f.classList.remove('fila-seleccionada'));
+    
+    // Agregar selección a la fila actual
+    fila.classList.add('fila-seleccionada');
+    
+    // Guardar ID del pedido seleccionado
+    pedidoSeleccionado = idPedido;
+}
+
+// Eliminar pedido seleccionado
+async function eliminarPedido() {
+    if (!pedidoSeleccionado) {
+        alert('Por favor, selecciona un pedido de la tabla primero');
+        return;
+    }
+
+    if (!confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/pedidos/eliminar?id=${pedidoSeleccionado}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.exito) {
+            alert('Pedido eliminado exitosamente');
+            pedidoSeleccionado = null;
+            
+            // Recargar la lista de pedidos
+            cargarPedidos();
+        } else {
+            alert(data.mensaje || 'No se pudo eliminar el pedido');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al eliminar el pedido');
+    }
+}
+
 // Marcar pedido como entregado
 async function marcarComoEntregado() {
     if (!pedidoActualEnModal) {
@@ -304,6 +352,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (btnBuscar) {
         btnBuscar.addEventListener('click', filtrarPedidos);
+    }
+    
+    // Event listener para botón eliminar
+    const btnEliminar = document.getElementById('btnEliminar');
+    if (btnEliminar) {
+        btnEliminar.addEventListener('click', eliminarPedido);
     }
     
     // Cerrar modal al hacer clic fuera

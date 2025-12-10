@@ -77,6 +77,7 @@ return [
     'pedidos/listar-por-cliente' => [PedidoController::class, 'listarPorCliente'],
     'pedidos/buscar' => [PedidoController::class, 'buscar'],
     'pedidos/actualizar-estado' => [PedidoController::class, 'actualizarEstado'],
+    'pedidos/eliminar' => [PedidoController::class, 'eliminar'],
     'platos/registrar' => [PlatoController::class, 'registrar'],
     'platos/actualizar' => [PlatoController::class, 'actualizar'],
     'platos/subir-imagen' => [PlatoController::class, 'subirImagen'],
