@@ -3,6 +3,8 @@
    Solo funcionalidades de interfaz
    ============================================ */
 
+let mesaEditando = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Actualizar fecha y hora
     actualizarFechaHora();
@@ -15,14 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const btnLimpiar = document.querySelector('.btn-limpiar');
     if (btnLimpiar) {
-        btnLimpiar.addEventListener('click', function() {
-            form.reset();
-            generarNumeroMesaAutomatico();
+        btnLimpiar.addEventListener('click', function(e) {
+            e.preventDefault();
+            limpiarFormulario();
         });
     }
 
-    precargarMesaSiEdita();
-    generarNumeroMesaAutomatico();
+    // Detectar si estamos editando
+    const mesaData = sessionStorage.getItem('editarMesaData');
+    if (mesaData) {
+        cargarMesaParaEditar();
+    } else {
+        generarNumeroMesaAutomatico();
+    }
 });
 
 // Función para actualizar fecha y hora
@@ -49,28 +56,90 @@ function actualizarFechaHora() {
     }
 }
 
-function precargarMesaSiEdita() {
+function cargarMesaParaEditar() {
     const mesaData = sessionStorage.getItem('editarMesaData');
     if (!mesaData) return;
+    
     try {
         const mesa = JSON.parse(mesaData);
-        // Mostrar número sin permitir edición
-        const numeroMesaInput = document.getElementById('numeroMesa');
-        numeroMesaInput.value = mesa.numeroMesa || '';
         
-        document.getElementById('capacidad').value = mesa.capacidad || '';
-        document.getElementById('ubicacion').value = mesa.ubicacion || '';
-        document.getElementById('tipo').value = mesa.tipo || 'cuadrada';
-        document.getElementById('estado').value = mesa.estado || 'disponible';
-        document.getElementById('prioridad').value = mesa.prioridad || 'normal';
-        document.getElementById('ventana').checked = !!mesa.ventana;
-        document.getElementById('sillaBebe').checked = !!mesa.sillaBebe;
-        document.getElementById('accesible').checked = !!mesa.accesible;
-        document.getElementById('silenciosa').checked = !!mesa.silenciosa;
-        document.getElementById('observaciones').value = mesa.observaciones || '';
+        // Guardar ID de mesa editando
+        mesaEditando = mesa.id;
+        
+        // Cambiar título y botón
+        const titulo = document.querySelector('h1');
+        if (titulo) {
+            titulo.textContent = 'Editar Mesa';
+        }
+        
+        const btnGuardar = document.querySelector('.btn-guardar, button[type="submit"]');
+        if (btnGuardar) {
+            btnGuardar.textContent = 'Actualizar';
+        }
+        
+        // Cargar datos en el formulario
+        const numeroMesaInput = document.getElementById('numeroMesa');
+        if (numeroMesaInput) numeroMesaInput.value = mesa.numeroMesa || '';
+        
+        const capacidadInput = document.getElementById('capacidad');
+        if (capacidadInput) capacidadInput.value = mesa.capacidad || '';
+        
+        const ubicacionInput = document.getElementById('ubicacion');
+        if (ubicacionInput) ubicacionInput.value = mesa.ubicacion || '';
+        
+        const tipoInput = document.getElementById('tipo');
+        if (tipoInput) tipoInput.value = mesa.tipo || 'cuadrada';
+        
+        const estadoInput = document.getElementById('estado');
+        if (estadoInput) estadoInput.value = mesa.estado || 'disponible';
+        
+        const prioridadInput = document.getElementById('prioridad');
+        if (prioridadInput) prioridadInput.value = mesa.prioridad || 'normal';
+        
+        const ventanaInput = document.getElementById('ventana');
+        if (ventanaInput) ventanaInput.checked = !!mesa.ventana;
+        
+        const sillaBebeInput = document.getElementById('sillaBebe');
+        if (sillaBebeInput) sillaBebeInput.checked = !!mesa.sillaBebe;
+        
+        const accesibleInput = document.getElementById('accesible');
+        if (accesibleInput) accesibleInput.checked = !!mesa.accesible;
+        
+        const silenciosaInput = document.getElementById('silenciosa');
+        if (silenciosaInput) silenciosaInput.checked = !!mesa.silenciosa;
+        
+        const observacionesInput = document.getElementById('observaciones');
+        if (observacionesInput) observacionesInput.value = mesa.observaciones || '';
+        
     } catch (err) {
-        console.error('No se pudo precargar mesa:', err);
+        console.error('Error al cargar mesa para editar:', err);
     }
+}
+
+function limpiarFormulario() {
+    // Resetear formulario
+    const form = document.getElementById('formMesa');
+    if (form) {
+        form.reset();
+    }
+    
+    // Limpiar modo edición
+    mesaEditando = null;
+    sessionStorage.removeItem('editarMesaData');
+    
+    // Restaurar título y botón
+    const titulo = document.querySelector('h1');
+    if (titulo) {
+        titulo.textContent = 'Registrar Nueva Mesa';
+    }
+    
+    const btnGuardar = document.querySelector('.btn-guardar, button[type="submit"]');
+    if (btnGuardar) {
+        btnGuardar.textContent = 'Guardar';
+    }
+    
+    // Generar nuevo número de mesa
+    generarNumeroMesaAutomatico();
 }
 
 async function manejarSubmitMesa(e) {
@@ -108,6 +177,8 @@ async function manejarSubmitMesa(e) {
     };
 
     try {
+        // La misma ruta maneja tanto registro como actualización
+        // El stored procedure detecta si la mesa existe y actualiza o inserta
         const response = await fetch('/Proyecto_De_App_Fast_Food/api/mesas/registrar', {
             method: 'POST',
             headers: {
@@ -119,15 +190,17 @@ async function manejarSubmitMesa(e) {
         const data = await response.json();
 
         if (data.exito) {
-            alert('Mesa guardada correctamente');
+            alert(mesaEditando ? 'Mesa actualizada correctamente' : 'Mesa guardada correctamente');
             sessionStorage.removeItem('editarMesaData');
+            
+            // Redirigir siempre a visualizar
             window.location.href = '../html/visualizar_mesas.html';
         } else {
-            alert(data.mensaje || 'No se pudo registrar la mesa');
+            alert(data.mensaje || 'No se pudo guardar la mesa');
         }
     } catch (err) {
-        console.error('Error registrando mesa:', err);
-        alert('Error al registrar la mesa');
+        console.error('Error guardando mesa:', err);
+        alert('Error al guardar la mesa');
     }
 }
 

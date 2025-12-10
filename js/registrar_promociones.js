@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
     obtenerUsuarioActual();
     inicializarEventos();
     setFechaMinima();
+    
+    // Verificar si viene en modo edición
+    const urlParams = new URLSearchParams(window.location.search);
+    const idEditar = urlParams.get('editar');
+    
+    if (idEditar) {
+        cargarPromocionParaEditar(idEditar);
+    }
 });
 
 // Validar usuario autenticado
@@ -80,6 +88,15 @@ function inicializarEventos() {
         formPromocion.addEventListener('submit', (e) => {
             e.preventDefault();
             registrarPromocion();
+        });
+    }
+
+    // Botón limpiar
+    const btnLimpiar = document.querySelector('.btn-limpiar, .btn-cancelar, button[type="reset"]');
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function(e) {
+            e.preventDefault();
+            limpiarFormulario();
         });
     }
 
@@ -169,9 +186,15 @@ async function registrarPromocion() {
             throw new Error(data.mensaje || 'No se pudo registrar la promoción');
         }
 
-        alert(data.mensaje || 'Promoción registrada correctamente');
-        limpiarFormulario();
-        promocionEditando = null;
+        alert(data.mensaje || 'Promoción ' + (promocionEditando ? 'actualizada' : 'registrada') + ' correctamente');
+        
+        if (promocionEditando) {
+            // Si estaba editando, redirigir a visualizar
+            window.location.href = '/Proyecto_De_App_Fast_Food/html/visualizar_promociones.html';
+        } else {
+            // Si era nuevo registro, limpiar formulario
+            limpiarFormulario();
+        }
     } catch (err) {
         console.error(err);
         alert(err.message || 'Error al registrar promoción');
@@ -180,20 +203,103 @@ async function registrarPromocion() {
 
 // Limpiar formulario
 function limpiarFormulario() {
+    // Resetear modo edición
+    promocionEditando = null;
+    
+    // Limpiar URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // Resetear formulario
     document.getElementById('formPromocion')?.reset();
+    
+    // Restaurar texto del botón
     const btnGuardar = document.querySelector('.btn-guardar');
     if (btnGuardar) {
-        btnGuardar.textContent = '\uf0c7 Guardar';
+        btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar';
     }
-    promocionEditando = null;
+    
+    // Restaurar título
+    const titulo = document.querySelector('.page-title');
+    if (titulo) {
+        titulo.innerHTML = '<i class="fas fa-tags"></i> Registrar Nueva Promoción';
+    }
+    
+    // Limpiar sessionStorage
+    sessionStorage.removeItem('promocionEditando');
+    
     setFechaMinima();
+}
+
+// Cargar promoción para editar
+async function cargarPromocionParaEditar(idPromocion) {
+    try {
+        // Intentar obtener de sessionStorage primero
+        let promocion = null;
+        const promocionStorage = sessionStorage.getItem('promocionEditando');
+        
+        if (promocionStorage) {
+            try {
+                promocion = JSON.parse(promocionStorage);
+            } catch (e) {
+                promocion = null;
+            }
+        }
+        
+        // Si no está en storage, buscar en API
+        if (!promocion) {
+            const resp = await fetch(`/Proyecto_De_App_Fast_Food/api/promociones/buscar?id=${idPromocion}`);
+            const data = await resp.json();
+            
+            if (!resp.ok || !data.exito) {
+                throw new Error('No se pudo cargar la promoción');
+            }
+            
+            promocion = data.promocion;
+        }
+        
+        // Establecer modo edición
+        promocionEditando = idPromocion;
+        
+        // Cambiar título
+        const titulo = document.querySelector('.page-title');
+        if (titulo) {
+            titulo.innerHTML = '<i class="fas fa-edit"></i> Editar Promoción';
+        }
+        
+        // Cambiar texto del botón
+        const btnGuardar = document.querySelector('.btn-guardar');
+        if (btnGuardar) {
+            btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar';
+        }
+        
+        // Cargar datos en el formulario
+        document.getElementById('nombre').value = promocion.NombrePromocion || '';
+        document.getElementById('tipo').value = promocion.TipoPromocion || '';
+        document.getElementById('descuento').value = promocion.Descuento || '';
+        document.getElementById('estado').value = promocion.Estado || 'activo';
+        document.getElementById('fechaInicio').value = promocion.FechaInicio ? promocion.FechaInicio.split('T')[0] : '';
+        document.getElementById('fechaFin').value = promocion.FechaFin ? promocion.FechaFin.split('T')[0] : '';
+        document.getElementById('diasAplicables').value = promocion.DiasAplicables || '';
+        document.getElementById('horario').value = promocion.Horario || '';
+        document.getElementById('montoMinimo').value = promocion.MontoMinimo || '';
+        document.getElementById('usosMaximos').value = promocion.UsosMaximos || '';
+        document.getElementById('acumulable').value = promocion.Acumulable ? 'si' : 'no';
+        document.getElementById('descripcion').value = promocion.Descripcion || '';
+        
+    } catch (error) {
+        console.error('Error al cargar promoción:', error);
+        alert('Error al cargar la promoción: ' + error.message);
+        window.location.href = '/Proyecto_De_App_Fast_Food/html/registrar_promociones.html';
+    }
 }
 
 // Cancelar edición
 function cancelar() {
     if (promocionEditando) {
-        limpiarFormulario();
+        // Si está editando, redirigir a visualizar
+        window.location.href = '/Proyecto_De_App_Fast_Food/html/visualizar_promociones.html';
     } else {
+        // Si no está editando, volver al menú principal
         window.location.href = '/Proyecto_De_App_Fast_Food/html/menu_principal.html';
     }
 }

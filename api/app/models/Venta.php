@@ -46,10 +46,32 @@ class Venta
                 $this->descontarStockPlatos($db, $data['detalles']);
             }
 
+            // Actualizar monto gastado del cliente si existe
+            if ($result && $idCliente !== null && $idCliente > 0) {
+                $this->actualizarMontoGastadoCliente($db, $idCliente, $total);
+            }
+
             return $result ? $this->parsearResultado($result) : [];
         } catch (Exception $e) {
             error_log('Error en registrar venta: ' . $e->getMessage());
             return ['error' => 'Error al registrar venta'];
+        }
+    }
+
+    /**
+     * Actualizar monto gastado del cliente
+     */
+    private function actualizarMontoGastadoCliente($db, int $idCliente, float $montoVenta): void
+    {
+        try {
+            // Verificar si la columna MontoGastado existe en la tabla Clientes
+            $stmtUpdate = $db->prepare('UPDATE Clientes SET MontoGastado = MontoGastado + ? WHERE IdCliente = ?');
+            $stmtUpdate->execute([$montoVenta, $idCliente]);
+            
+            error_log("Monto gastado actualizado: Cliente ID {$idCliente}, Monto agregado: {$montoVenta}");
+        } catch (Exception $e) {
+            error_log('Error al actualizar monto gastado del cliente: ' . $e->getMessage());
+            // No lanzamos excepción para no afectar la venta ya registrada
         }
     }
 
