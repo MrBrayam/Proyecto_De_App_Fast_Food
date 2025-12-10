@@ -3,10 +3,16 @@
 // Funcionalidad del dashboard con sidebar y métricas
 // ============================================
 
+console.log('menu_principal.js cargado correctamente');
+
 const API_BASE = '/Proyecto_De_App_Fast_Food/api';
 const DEBUG_DASHBOARD = true; // poner en false para silenciar logs
 
+console.log('DEBUG_DASHBOARD:', DEBUG_DASHBOARD);
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded ejecutado en menu_principal');
+    
     // Elementos del DOM
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -165,7 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================
     // MÉTRICAS DEL DASHBOARD
     // ============================================
-    cargarMetricasDashboard();
+    console.log('Llamando a cargarMetricasDashboard...');
+    
+    // Esperar un momento para que el DOM esté completamente listo
+    setTimeout(() => {
+        console.log('Ejecutando cargarMetricasDashboard después de timeout');
+        cargarMetricasDashboard();
+    }, 100);
     
 
 // ------------------------------------------------
@@ -174,11 +186,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function logDebug(...args) {
     if (DEBUG_DASHBOARD) {
-        console.debug('[dashboard]', ...args);
+        console.log('[dashboard]', ...args);
     }
 }
 
 async function cargarMetricasDashboard() {
+    console.log('[dashboard] *** INICIO cargarMetricasDashboard ***');
     logDebug('Cargando métricas del dashboard...');
     setTextoSeguro('statVentasHoy', 'Cargando...');
     setTextoSeguro('statPedidosActivos', 'Cargando...');
@@ -186,26 +199,34 @@ async function cargarMetricasDashboard() {
     setTextoSeguro('statPlatos', 'Cargando...');
 
     try {
-        const [ventasResp, pedidosResp, clientesResp, platosResp] = await Promise.all([
-            fetch(`${API_BASE}/ventas/listar`)
-                .then(r => {
-                    logDebug('Ventas response status:', r.status);
-                    return r.json();
-                })
-                .then(data => {
-                    logDebug('Ventas data:', data);
-                    return data;
-                }),
+        logDebug('Iniciando fetch de ventas...');
+        const ventasResp = await fetch(`${API_BASE}/ventas/listar`)
+            .then(r => {
+                logDebug('Ventas response status:', r.status);
+                if (!r.ok) {
+                    throw new Error(`HTTP error! status: ${r.status}`);
+                }
+                return r.json();
+            })
+            .then(data => {
+                logDebug('Ventas data recibida:', data);
+                return data;
+            });
+
+        logDebug('Iniciando fetch de pedidos, clientes y platos...');
+        const [pedidosResp, clientesResp, platosResp] = await Promise.all([
             fetch(`${API_BASE}/pedidos/listar`).then(r => r.json()),
             fetch(`${API_BASE}/clientes/listar`).then(r => r.json()),
             fetch(`${API_BASE}/platos/listar`).then(r => r.json())
         ]);
 
+        logDebug('Actualizando métricas...');
         actualizarVentasHoy(ventasResp);
         actualizarPedidos(pedidosResp);
         actualizarClientes(clientesResp);
         actualizarPlatos(platosResp);
         renderPedidosRecientes(pedidosResp);
+        logDebug('Métricas actualizadas correctamente');
     } catch (error) {
         console.error('Error cargando métricas del dashboard:', error);
         setTextoSeguro('statVentasHoy', '--');
@@ -231,10 +252,48 @@ function obtenerLista(data, clavePrincipal, claveAlterna) {
 }
 
 function actualizarVentasHoy(dataVentas) {
-    const ventas = obtenerLista(dataVentas, 'items', 'ventas');
+    logDebug('Data ventas completa:', dataVentas);
+    
+    // Obtener el array de ventas
+    let ventas = [];
+    if (dataVentas) {
+        if (Array.isArray(dataVentas.items)) {
+            ventas = dataVentas.items;
+        } else if (Array.isArray(dataVentas.ventas)) {
+            ventas = dataVentas.ventas;
+        } else if (Array.isArray(dataVentas)) {
+            ventas = dataVentas;
+        }
+    }
+    
     logDebug('Ventas recibidas:', ventas.length);
-    const hoyISO = new Date().toISOString().slice(0, 10);
-    const ventasHoy = ventas.filter(v => (v.FechaVenta || '').slice(0, 10) === hoyISO);
+    
+    if (ventas.length > 0) {
+        logDebug('Primera venta ejemplo:', ventas[0]);
+    }
+    
+    // Obtener fecha de hoy en formato local YYYY-MM-DD
+    const hoy = new Date();
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, '0');
+    const day = String(hoy.getDate()).padStart(2, '0');
+    const hoyISO = `${year}-${month}-${day}`;
+    
+    logDebug('Fecha hoy (local):', hoyISO);
+    
+    // Filtrar ventas del día
+    const ventasHoy = ventas.filter(v => {
+        const fechaVenta = v.FechaVenta || '';
+        const fechaVentaISO = fechaVenta.slice(0, 10);
+        const coincide = fechaVentaISO === hoyISO;
+        if (coincide) {
+            logDebug('Venta del día:', v.CodVenta, fechaVentaISO, 'Total:', v.Total);
+        }
+        return coincide;
+    });
+    
+    logDebug('Ventas de hoy encontradas:', ventasHoy.length);
+    
     const totalHoy = ventasHoy.reduce((acc, v) => acc + (parseFloat(v.Total) || 0), 0);
     setTextoSeguro('statVentasHoy', `S/ ${totalHoy.toFixed(2)}`);
     setTextoSeguro('statVentasChange', `${ventasHoy.length} venta(s) hoy`);
@@ -305,10 +364,12 @@ function renderPedidosRecientes(dataPedidos) {
     }
     
     // ============================================
-    // MOSTRAR FECHA ACTUAL
+    // MOSTRAR FECHA ACTUAL Y HORA
     // ============================================
     if (currentDateElement) {
         updateCurrentDate();
+        // Actualizar cada segundo
+        setInterval(updateCurrentDate, 1000);
     }
     
     function updateCurrentDate() {
@@ -320,7 +381,12 @@ function renderPedidosRecientes(dataPedidos) {
             day: 'numeric' 
         };
         const formattedDate = now.toLocaleDateString('es-ES', options);
-        currentDateElement.textContent = formattedDate;
+        const formattedTime = now.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        currentDateElement.textContent = formattedDate + ' ' + formattedTime;
     }
     
     // ============================================
@@ -406,7 +472,7 @@ function renderPedidosRecientes(dataPedidos) {
     // ============================================
     // ACTUALIZACIÓN AUTOMÁTICA DE LA HORA
     // ============================================
-    setInterval(updateCurrentDate, 60000); // Actualizar cada minuto
+    // Ya está configurado arriba para actualizar cada segundo
     
     // ============================================
     // RESPONSIVE - Ajustes al redimensionar
