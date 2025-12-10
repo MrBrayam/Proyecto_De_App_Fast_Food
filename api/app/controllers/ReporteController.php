@@ -591,7 +591,7 @@ class ReporteController extends Controller
                                     SUM(dv.Cantidad) as TotalVendido,
                                     SUM(dv.Subtotal) as Ingresos
                                 FROM Productos p
-                                INNER JOIN DetalleVenta dv ON p.NombreProducto = dv.Linea
+                                INNER JOIN DetalleVenta dv ON p.CodProducto = dv.CodProducto
                                 INNER JOIN Ventas v ON dv.CodVenta = v.CodVenta
                                 WHERE v.Estado = "pagado"
                                 GROUP BY p.NombreProducto, p.Categoria, p.Stock
