@@ -163,6 +163,7 @@ CREATE TABLE Platos (
     Tamano ENUM('personal', 'mediana', 'familiar', 'grande') DEFAULT 'personal',
     Precio DECIMAL(10,2) NOT NULL CHECK (Precio >= 0),
     Cantidad INT DEFAULT 0 CHECK (Cantidad >= 0),
+    StockMinimo INT DEFAULT 10,
     RutaImg VARCHAR(2000),
     Estado ENUM('disponible', 'no_disponible') DEFAULT 'disponible',
     FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -1117,6 +1118,7 @@ CREATE PROCEDURE pa_registrar_plato(
     IN p_tamano ENUM('personal', 'mediana', 'familiar', 'grande'),
     IN p_precio DECIMAL(10,2),
     IN p_cantidad INT,
+    IN p_stockMinimo INT,
     IN p_rutaImg VARCHAR(2000),
     IN p_estado ENUM('disponible', 'no_disponible')
 )
@@ -1141,6 +1143,7 @@ BEGIN
         Tamano,
         Precio,
         Cantidad,
+        StockMinimo,
         RutaImg,
         Estado
     ) VALUES (
@@ -1151,6 +1154,7 @@ BEGIN
         p_tamano,
         p_precio,
         COALESCE(p_cantidad, 0),
+        COALESCE(p_stockMinimo, 10),
         NULLIF(p_rutaImg, ''),
         COALESCE(NULLIF(p_estado, ''), 'disponible')
     );
@@ -1176,6 +1180,7 @@ DELIMITER //
 CREATE PROCEDURE pa_listar_platos()
 BEGIN
     SELECT 
+        IdPlato,
         CodPlato,
         Nombre,
         Descripcion,
@@ -1183,6 +1188,7 @@ BEGIN
         Tamano,
         Precio,
         Cantidad,
+        StockMinimo,
         RutaImg,
         Estado,
         FechaCreacion,
@@ -1233,6 +1239,7 @@ CREATE PROCEDURE pa_actualizar_plato(
     IN p_tamano ENUM('personal', 'mediana', 'familiar', 'grande'),
     IN p_precio DECIMAL(10,2),
     IN p_cantidad INT,
+    IN p_stockMinimo INT,
     IN p_rutaImg VARCHAR(2000),
     IN p_estado ENUM('disponible', 'no_disponible')
 )
@@ -1255,6 +1262,7 @@ BEGIN
         Tamano = p_tamano,
         Precio = p_precio,
         Cantidad = COALESCE(p_cantidad, 0),
+        StockMinimo = COALESCE(p_stockMinimo, 10),
         RutaImg = COALESCE(NULLIF(p_rutaImg, ''), RutaImg),
         Estado = COALESCE(NULLIF(p_estado, ''), 'disponible'),
         FechaActualizacion = CURRENT_TIMESTAMP

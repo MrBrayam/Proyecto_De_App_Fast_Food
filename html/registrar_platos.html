@@ -76,8 +76,12 @@
                         <input type="number" id="searchPrecio" class="form-input" placeholder="0.00" min="0" step="0.01">
                     </div>
                     <div class="form-group">
-                        <label for="searchCantidad"><i class="fas fa-boxes"></i> Cantidad</label>
+                        <label for="searchCantidad"><i class="fas fa-boxes"></i> Stock Actual</label>
                         <input type="number" id="searchCantidad" class="form-input" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchStockMinimo"><i class="fas fa-exclamation-triangle"></i> Stock Mínimo</label>
+                        <input type="number" id="searchStockMinimo" class="form-input" placeholder="10" min="0" value="10">
                     </div>
                 </div>
 
@@ -103,13 +107,6 @@
                             <div id="imagenPreview" class="imagen-preview"></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" id="btnAnadir" class="btn-anadir">
-                        <i class="fas fa-plus-circle"></i>
-                        Añadir Plato
-                    </button>
                 </div>
             </section>
 

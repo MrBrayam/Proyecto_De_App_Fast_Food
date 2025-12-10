@@ -16,7 +16,7 @@ class Plato
     public function registrar(array $data)
     {
         $db = Database::connection();
-        $stmt = $db->prepare('CALL pa_registrar_plato(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $db->prepare('CALL pa_registrar_plato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             $data['codPlato'] ?? null,
             $data['nombre'] ?? null,
@@ -25,6 +25,7 @@ class Plato
             $data['tamano'] ?? 'personal',
             $data['precio'] ?? 0,
             $data['cantidad'] ?? 0,
+            $data['stockMinimo'] ?? 10,
             $data['rutaImg'] ?? null,
             $data['estado'] ?? 'disponible',
         ]);
@@ -46,7 +47,7 @@ class Plato
     public function actualizar(array $data)
     {
         $db = Database::connection();
-        $stmt = $db->prepare('CALL pa_actualizar_plato(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $db->prepare('CALL pa_actualizar_plato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             $data['codPlato'] ?? null,
             $data['nombre'] ?? null,
@@ -55,6 +56,7 @@ class Plato
             $data['tamano'] ?? 'personal',
             $data['precio'] ?? 0,
             $data['cantidad'] ?? 0,
+            $data['stockMinimo'] ?? 10,
             $data['rutaImg'] ?? null,
             $data['estado'] ?? 'disponible',
         ]);

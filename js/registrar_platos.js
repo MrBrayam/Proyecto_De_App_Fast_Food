@@ -172,6 +172,7 @@ async function registrarPlato() {
     const tamano = document.getElementById('searchTamano').value;
     const precio = parseFloat(document.getElementById('searchPrecio').value || '0');
     const cantidad = parseInt(document.getElementById('searchCantidad').value || '0', 10);
+    const stockMinimo = parseInt(document.getElementById('searchStockMinimo').value || '10', 10);
     const descripcion = document.getElementById('searchDescripcion').value.trim();
     const ingredientes = document.getElementById('searchIngredientes').value.trim();
     const inputImagen = document.getElementById('inputImagen');
@@ -220,6 +221,7 @@ async function registrarPlato() {
         tamano,
         precio,
         cantidad,
+        stockMinimo,
         rutaImg: rutaImg,
         estado: 'disponible'
     };
