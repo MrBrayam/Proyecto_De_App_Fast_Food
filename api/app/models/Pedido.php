@@ -8,35 +8,65 @@ class Pedido
      */
     public function registrar(array $data)
     {
-        $db = Database::connection();
-        $stmt = $db->prepare('CALL pa_registrar_pedido(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        try {
+            $db = Database::connection();
+            $stmt = $db->prepare('CALL pa_registrar_pedido(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
-        $stmt->execute([
-            $data['numDocumentos'] ?? null,
-            $data['tipoServicio'] ?? null,
-            $data['numMesa'] ?? null,
-            $data['idCliente'] ?? null,
-            $data['nombreCliente'] ?? null,
-            $data['direccionCliente'] ?? null,
-            $data['telefonoCliente'] ?? null,
-            $data['idUsuario'] ?? null,
-            $data['subTotal'] ?? 0,
-            $data['descuento'] ?? 0,
-            $data['total'] ?? 0,
-            $data['estado'] ?? 'pendiente',
-            $data['observaciones'] ?? null
-        ]);
+            // Asegurar que el estado sea válido
+            $estadoValido = isset($data['estado']) && in_array($data['estado'], ['pendiente', 'preparando', 'listo', 'entregado', 'cancelado']) 
+                ? $data['estado'] 
+                : 'pendiente';
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        // Cerrar todos los result sets del stored procedure
-        while ($stmt->nextRowset()) {}
+            error_log("=== PEDIDO MODEL - PARÁMETROS ===");
+            error_log("Estado válido: " . $estadoValido);
+            error_log("Descuento: " . ($data['descuento'] ?? 0));
+            error_log("Total: " . ($data['total'] ?? 0));
 
-        if ($result && isset($result['resultado'])) {
-            return json_decode($result['resultado'], true);
+            $params = [
+                $data['numDocumentos'] ?? null,
+                $data['tipoServicio'] ?? null,
+                $data['numMesa'] ?? null,
+                $data['idCliente'] ?? null,
+                $data['nombreCliente'] ?? null,
+                $data['direccionCliente'] ?? null,
+                $data['telefonoCliente'] ?? null,
+                $data['idUsuario'] ?? null,
+                $data['subTotal'] ?? 0,
+                $data['descuento'] ?? 0,
+                $data['total'] ?? 0,
+                $estadoValido,
+                $data['observaciones'] ?? null
+            ];
+
+            error_log("Parámetros completos: " . print_r($params, true));
+
+            $result = $stmt->execute($params);
+            
+            if (!$result) {
+                $errorInfo = $stmt->errorInfo();
+                error_log("=== ERROR SQL ===");
+                error_log("SQLSTATE: " . $errorInfo[0]);
+                error_log("Error Code: " . $errorInfo[1]);
+                error_log("Error Message: " . $errorInfo[2]);
+                throw new Exception("Error SQL: " . $errorInfo[2]);
+            }
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Cerrar todos los result sets del stored procedure
+            while ($stmt->nextRowset()) {}
+
+            if ($result && isset($result['resultado'])) {
+                return json_decode($result['resultado'], true);
+            }
+
+            return null;
+        } catch (PDOException $e) {
+            error_log("=== PDO EXCEPTION EN PEDIDO MODEL ===");
+            error_log("Mensaje: " . $e->getMessage());
+            error_log("Código: " . $e->getCode());
+            throw new Exception("Error en la base de datos: " . $e->getMessage());
         }
-
-        return null;
     }
 
     /**

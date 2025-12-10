@@ -10,6 +10,10 @@ class PedidoController
             $raw = mb_convert_encoding($raw, 'UTF-8', 'UTF-8, UTF-16LE, UTF-16BE, ISO-8859-1');
             $data = json_decode($raw, true);
 
+            // Log datos recibidos
+            error_log("=== PEDIDO CONTROLLER - DATOS RECIBIDOS ===");
+            error_log(print_r($data, true));
+
             if (empty($data['tipoServicio'])) {
                 http_response_code(400);
                 echo json_encode(['exito' => false, 'mensaje' => 'El tipo de servicio es obligatorio']);
@@ -58,8 +62,18 @@ class PedidoController
                 'mensaje' => 'Pedido registrado exitosamente'
             ]);
         } catch (Exception $e) {
+            error_log("=== ERROR EN PEDIDO CONTROLLER ===");
+            error_log("Mensaje: " . $e->getMessage());
+            error_log("Archivo: " . $e->getFile());
+            error_log("Línea: " . $e->getLine());
+            error_log("Trace: " . $e->getTraceAsString());
+            
             http_response_code(500);
-            echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+            echo json_encode([
+                'exito' => false, 
+                'mensaje' => 'Error: ' . $e->getMessage(),
+                'detalle' => $e->getFile() . ':' . $e->getLine()
+            ]);
         }
     }
 
