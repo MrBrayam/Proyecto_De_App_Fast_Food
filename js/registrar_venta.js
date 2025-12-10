@@ -198,7 +198,8 @@ async function cargarDetallePedido(idPedido) {
                         descripcion: detalle.DescripcionProducto,
                         cantidad: detalle.Cantidad,
                         precio: Number(detalle.PrecioUnitario) || 0,
-                        idDetalle: detalle.IdDetalle
+                        idDetalle: detalle.IdDetalle,
+                        idPlato: detalle.IdPlato || 0
                     });
                 });
                 actualizarTablaProductos();
@@ -285,7 +286,8 @@ async function registrarVenta() {
         linea: p.descripcion,
         descripcion: p.descripcion,
         cantidad: p.cantidad,
-        precio: p.precio
+        precio: p.precio,
+        idPlato: p.idPlato || 0
     }));
 
     const subTotal = productosAgregados.reduce((sum, p) => sum + (p.cantidad * p.precio), 0);
@@ -304,6 +306,7 @@ async function registrarVenta() {
     };
 
     console.log('[registrar_venta] Enviando venta:', datosVenta);
+    console.log('[registrar_venta] Detalles con IdPlato:', detalles.map(d => ({desc: d.descripcion, idPlato: d.idPlato})));
 
     try {
         const response = await fetch('/Proyecto_De_App_Fast_Food/api/ventas/registrar', {

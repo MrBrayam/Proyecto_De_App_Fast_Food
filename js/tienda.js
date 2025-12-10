@@ -59,9 +59,10 @@ function handleAgregarClick(e) {
             const precioText = card.querySelector('.precio-actual')?.textContent || 'S/. 0';
             const precio = parseFloat(precioText.replace('S/. ', ''));
             
-            // Buscar el producto en productosDisponibles para obtener su ID
-            const productoEnBD = productosDisponibles.find(p => p.nombre === nombre);
-            const idPlato = productoEnBD?.id || 0;
+            // Obtener el ID del plato desde el data-id de la tarjeta
+            const idPlato = parseInt(card.dataset.id) || 0;
+            
+            console.log('Agregando al carrito:', { id: idPlato, nombre, precio });
             
             agregarAlCarrito({
                 id: idPlato,
@@ -345,6 +346,7 @@ async function cargarProductos() {
             }));
             
             console.log('Productos cargados desde BD:', productosDisponibles.length);
+            console.log('Primeros 3 productos con IDs:', productosDisponibles.slice(0, 3).map(p => ({nombre: p.nombre, id: p.id})));
             renderizarProductosDesdeAPI();
         }
     } catch (error) {
@@ -394,6 +396,9 @@ function crearTarjetaProducto(producto) {
     const card = document.createElement('div');
     card.className = `producto-card ${producto.estado === 'disponible' ? '' : 'agotado'}`;
     card.dataset.categoria = producto.categoria;
+    card.dataset.id = producto.id || 0;
+    
+    console.log('Creando tarjeta para:', producto.nombre, 'con ID:', producto.id);
     
     const estadoDisponible = producto.estado === 'disponible';
     const estadoBadge = estadoDisponible ? '' : '<span class="badge badge-agotado">Agotado</span>';
@@ -734,6 +739,8 @@ async function finalizarPedido() {
             precioUnitario: item.precio,
             subtotal: item.precio * item.cantidad
         }));
+        
+        console.log('Detalles del pedido a enviar:', detalles);
         
         const subTotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
         const delivery = 5.00;

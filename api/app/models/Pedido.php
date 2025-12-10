@@ -51,30 +51,73 @@ class Pedido
             'detalle' => $detalle
         ]));
         
-        $stmt = $db->prepare('CALL pa_registrar_detalle_pedido(?, ?, ?, ?, ?, ?, ?)');
-        
-        $stmt->execute([
-            $idPedido,
-            $detalle['idProducto'] ?? null,
-            $detalle['idPlato'] ?? null,
-            $detalle['codProducto'] ?? null,
-            $detalle['descripcionProducto'] ?? null,
-            $detalle['cantidad'] ?? 0,
-            $detalle['precioUnitario'] ?? 0
-        ]);
+        try {
+            // Registrar el detalle del pedido
+            $stmt = $db->prepare('CALL pa_registrar_detalle_pedido(?, ?, ?, ?, ?, ?, ?)');
+            
+            $stmt->execute([
+                $idPedido,
+                $detalle['idProducto'] ?? null,
+                $detalle['idPlato'] ?? null,
+                $detalle['codProducto'] ?? null,
+                $detalle['descripcionProducto'] ?? null,
+                $detalle['cantidad'] ?? 0,
+                $detalle['precioUnitario'] ?? 0
+            ]);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        // Cerrar cursor
-        $stmt->closeCursor();
-        
-        error_log("Resultado de registrar detalle: " . json_encode($result));
-        
-        if ($result && isset($result['resultado'])) {
-            return json_decode($result['resultado'], true);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Cerrar cursor del stored procedure
+            $stmt->closeCursor();
+            
+            // Debug: mostrar idPlato recibido
+            error_log("IdPlato recibido: " . ($detalle['idPlato'] ?? 'NULL') . " (tipo: " . gettype($detalle['idPlato'] ?? null) . ")");
+            
+            // Si el detalle tiene un plato (IdPlato), descontar del stock
+            if (!empty($detalle['idPlato']) && intval($detalle['idPlato']) > 0) {
+                $cantidad = intval($detalle['cantidad'] ?? 0);
+                
+                if ($cantidad > 0) {
+                    // Verificar stock disponible
+                    $stmtStock = $db->prepare('SELECT Cantidad FROM Platos WHERE IdPlato = ?');
+                    $stmtStock->execute([$detalle['idPlato']]);
+                    $plato = $stmtStock->fetch(PDO::FETCH_ASSOC);
+                    
+                    if ($plato) {
+                        $stockActual = intval($plato['Cantidad']);
+                        
+                        if ($stockActual >= $cantidad) {
+                            // Descontar del stock
+                            $stmtUpdate = $db->prepare('UPDATE Platos SET Cantidad = Cantidad - ? WHERE IdPlato = ?');
+                            $stmtUpdate->execute([$cantidad, $detalle['idPlato']]);
+                            
+                            error_log("Stock descontado: Plato ID {$detalle['idPlato']}, Cantidad: {$cantidad}");
+                        } else {
+                            // Stock insuficiente
+                            error_log("Stock insuficiente para plato ID {$detalle['idPlato']}. Disponible: {$stockActual}, Solicitado: {$cantidad}");
+                            // Retornar el resultado del stored procedure pero con advertencia de stock
+                            if ($result && isset($result['resultado'])) {
+                                $resultData = json_decode($result['resultado'], true);
+                                $resultData['advertencia'] = 'Stock insuficiente, pedido registrado pero stock no descontado';
+                                return $resultData;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            error_log("Resultado de registrar detalle: " . json_encode($result));
+            
+            if ($result && isset($result['resultado'])) {
+                return json_decode($result['resultado'], true);
+            }
+
+            return null;
+            
+        } catch (Exception $e) {
+            error_log("Error al registrar detalle de pedido: " . $e->getMessage());
+            throw $e;
         }
-
-        return null;
     }
 
     public function listar()

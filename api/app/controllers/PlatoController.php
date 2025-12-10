@@ -33,6 +33,7 @@ class PlatoController extends Controller
             $platos = $model->listar();
             $respuesta = array_map(function ($plato) {
                 return [
+                    'IdPlato' => (int)($plato['IdPlato'] ?? 0),
                     'CodPlato' => $plato['CodPlato'],
                     'Nombre' => $plato['Nombre'],
                     'Descripcion' => $plato['Descripcion'],
