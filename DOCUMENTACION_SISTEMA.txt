@@ -1,0 +1,867 @@
+================================================================================
+                    DOCUMENTACIÓN DEL SISTEMA - KING'S PIZZA
+                         Sistema de Gestión Fast Food
+================================================================================
+
+================================================================================
+1. ARQUITECTURA DEL SISTEMA
+================================================================================
+
+ESTRUCTURA DE CARPETAS:
+-----------------------
+/Proyecto_De_App_Fast_Food/
+│
+├── index.html                    # Login de usuarios (requiere login empresa)
+├── login_empresa.html            # Login de empresa (PUNTO DE ENTRADA)
+│
+├── /html/                        # Todas las páginas del sistema
+├── /css/                         # Estilos de cada página
+├── /js/                          # Lógica de frontend
+├── /api/                         # Backend PHP (API REST)
+│   ├── /.htaccess               # Redirección a /public
+│   ├── /app/
+│   │   ├── /controllers/        # Controladores (lógica de negocio)
+│   │   ├── /models/             # No se usa, lógica en stored procedures
+│   │   └── routes.php           # Mapeo de URLs a controladores
+│   ├── /config/
+│   │   └── Database.php         # Conexión a MySQL
+│   └── /public/
+│       ├── /.htaccess           # Rutas limpias (sin index.php)
+│       └── index.php            # Punto de entrada API
+│
+└── /sql/
+    └── DataBase.sql             # Schema completo + stored procedures
+
+
+================================================================================
+2. FLUJO DE AUTENTICACIÓN
+================================================================================
+
+PASO 1: LOGIN DE EMPRESA
+-------------------------
+Archivo: login_empresa.html
+Endpoint: POST /api/auth/login-empresa
+
+1. Usuario abre: http://localhost/Proyecto_De_App_Fast_Food/login_empresa.html
+2. Ingresa: NombreEmpresa + Contraseña
+   - Default: "Kings Pizza" / "1234"
+3. JavaScript (js/login_empresa.js) envía POST a API
+4. AuthController::loginEmpresa() valida contra tabla Empresas
+5. Si correcto:
+   - Guarda en sessionStorage: {idEmpresa, nombreEmpresa}
+   - Redirige a index.html
+
+TABLA: Empresas
+Campos: IdEmpresa, NombreEmpresa, Contrasena, FechaCreacion
+
+
+PASO 2: LOGIN DE USUARIO
+-------------------------
+Archivo: index.html
+Endpoint: POST /api/auth/login
+
+1. index.html verifica sessionStorage('empresaData')
+   - Si NO existe → Redirige a login_empresa.html
+   - Si existe → Muestra formulario login
+2. Usuario ingresa: Correo + Contraseña
+3. JavaScript (js/login.js) envía POST a API
+4. AuthController::login() ejecuta SP: AutenticarUsuario
+5. Si correcto:
+   - Guarda token en localStorage
+   - Guarda datos usuario en sessionStorage
+   - Redirige según rol a menu_principal.html
+
+STORED PROCEDURE: AutenticarUsuario
+Parámetros: p_correo, p_contrasena
+Retorna: IdUsuario, Nombre, Rol, etc.
+
+
+PASO 3: SALIR DEL SISTEMA
+--------------------------
+Botón "🚪 Salir" en index.html
+
+Función: salirAEmpresa()
+1. Limpia sessionStorage.removeItem('empresaData')
+2. Limpia sessionStorage.clear()
+3. Redirige a login_empresa.html
+
+
+================================================================================
+3. SISTEMA DE ROLES
+================================================================================
+
+ROLES DISPONIBLES:
+- Administrador    → Acceso total
+- Cajero          → Ventas, caja
+- Mesero          → Pedidos, mesas
+- Repartidor      → Pedidos delivery
+
+Cada rol tiene permisos diferentes en menu_principal.html
+
+
+================================================================================
+4. FLUJO DE COMPRAS (INVENTARIO)
+================================================================================
+
+REGISTRAR COMPRA
+----------------
+Archivo: html/registrar_compras.html
+Endpoint: POST /api/compras
+
+FLUJO:
+1. Usuario selecciona Proveedor (de tabla Proveedores)
+2. Usuario selecciona Producto (de tabla Productos)
+3. Ingresa: Cantidad, Precio Unitario
+4. Sistema calcula: Total = Cantidad × PrecioUnitario
+5. Agrega productos a tabla temporal en frontend
+6. Al finalizar, envía array de productos a API
+7. ComprasController::create() ejecuta SP: RegistrarCompra
+8. SP actualiza Stock en tabla Productos
+9. Registra en tabla Compras + DetalleCompras
+
+STORED PROCEDURES:
+- RegistrarCompra: Inserta compra y actualiza inventario
+- ActualizarStock: Suma cantidad al stock existente
+
+TABLAS INVOLUCRADAS:
+- Compras: IdCompra, IdProveedor, FechaCompra, Total, IdUsuario
+- DetalleCompras: IdDetalle, IdCompra, IdProducto, Cantidad, PrecioUnitario
+- Productos: Stock aumenta con cada compra
+
+
+VISUALIZAR COMPRAS
+------------------
+Archivo: html/visualizar_compras.html
+Endpoint: GET /api/compras
+
+FLUJO:
+1. ComprasController::index() ejecuta SP: ListarCompras
+2. Retorna todas las compras con JOIN a Proveedores y Usuarios
+3. Frontend muestra tabla con: Fecha, Proveedor, Total, Usuario
+4. Botón "Ver Detalle" ejecuta SP: ObtenerDetalleCompra
+5. Muestra productos comprados en esa orden
+
+
+REPORTES DE COMPRAS
+-------------------
+Archivo: html/visualizar_reportes_de_compras.html (comentado actualmente)
+Endpoint: GET /api/reportes/compras
+
+Permite filtrar compras por fecha y generar PDF
+
+
+================================================================================
+5. FLUJO DE VENTAS (PUNTO DE VENTA)
+================================================================================
+
+REGISTRAR VENTA
+---------------
+Archivo: html/registrar_venta.html
+Endpoint: POST /api/ventas
+
+FLUJO:
+1. Usuario selecciona Cliente (opcional, tabla Clientes)
+2. Usuario selecciona Productos/Platos del catálogo
+3. Para cada item:
+   - Selecciona cantidad
+   - Sistema calcula subtotal
+   - Verifica stock disponible
+4. Sistema calcula:
+   - Subtotal = Σ(PrecioUnitario × Cantidad)
+   - Descuento (si aplica promoción)
+   - Total = Subtotal - Descuento
+5. Usuario selecciona Método de Pago (Efectivo, Tarjeta, etc)
+6. Envía a VentasController::create()
+7. SP: RegistrarVenta
+   - Inserta en tabla Ventas
+   - Inserta detalles en DetalleVentas
+   - Reduce Stock de productos
+   - Registra en Caja (movimiento de entrada)
+8. Sistema genera comprobante
+
+STORED PROCEDURES:
+- RegistrarVenta: Procesa venta completa
+- ReducirStock: Disminuye inventario
+- RegistrarMovimientoCaja: Suma dinero a caja
+
+TABLAS INVOLUCRADAS:
+- Ventas: IdVenta, IdCliente, FechaVenta, Total, MetodoPago, IdUsuario
+- DetalleVentas: IdDetalle, IdVenta, IdProducto/IdPlato, Cantidad, PrecioUnitario
+- Productos: Stock disminuye
+- Caja: TotalEfectivo/TotalTarjeta aumenta
+
+
+VISUALIZAR VENTAS
+-----------------
+Archivo: html/visualizar_venta.html
+Endpoint: GET /api/ventas
+
+FLUJO:
+1. VentasController::index() ejecuta SP: ListarVentas
+2. Muestra ventas con: Fecha, Cliente, Total, Método Pago, Cajero
+3. Botón "Ver Detalle" muestra productos vendidos
+4. Botón "Imprimir" genera comprobante
+
+
+REPORTES DE VENTAS
+------------------
+Archivo: html/visualizar_reportes_de_ventas.html (comentado actualmente)
+Endpoint: GET /api/reportes/ventas
+
+Filtros por: Fecha, Cajero, Método de Pago
+Genera PDF con totales
+
+
+================================================================================
+6. FLUJO DE TIENDA (E-COMMERCE)
+================================================================================
+
+CATÁLOGO PÚBLICO
+----------------
+Archivo: html/tienda.html
+Endpoint: GET /api/productos/catalogo
+
+FLUJO:
+1. Cliente (sin login) accede a tienda.html
+2. Sistema carga productos disponibles con stock > 0
+3. Muestra: Imagen, Nombre, Descripción, Precio
+4. Cliente puede:
+   - Ver detalles del producto
+   - Agregar al carrito (localStorage)
+   - Ajustar cantidades
+5. Carrito acumula productos seleccionados
+
+CARRITO DE COMPRAS:
+- Almacenado en localStorage del navegador
+- Estructura: [{idProducto, nombre, precio, cantidad, imagen}]
+- Persiste entre sesiones
+
+
+REALIZAR PEDIDO
+---------------
+Endpoint: POST /api/pedidos/tienda
+
+FLUJO:
+1. Cliente llena formulario:
+   - Nombre, Teléfono, Dirección
+   - Tipo: Delivery o Recojo en tienda
+2. Selecciona método de pago
+3. Envía carrito + datos a API
+4. PedidosController::createFromTienda()
+5. SP: RegistrarPedidoTienda
+   - Crea registro en Pedidos
+   - Estado inicial: "Pendiente"
+   - Inserta items en DetallePedidos
+   - Reduce stock (si es pago inmediato)
+6. Sistema genera código de pedido
+7. Cliente recibe confirmación
+
+
+GESTIÓN DE PEDIDOS (BACKEND)
+-----------------------------
+Archivo: html/visualizar_pedidos.html
+Endpoint: GET /api/pedidos
+
+FLUJO:
+1. Personal ve lista de pedidos con estados:
+   - Pendiente → Amarillo
+   - En Preparación → Azul
+   - Listo → Verde
+   - Entregado → Gris
+   - Cancelado → Rojo
+2. Puede cambiar estado del pedido
+3. Asignar repartidor (si es delivery)
+4. Marcar como completado
+5. SP: ActualizarEstadoPedido
+
+
+================================================================================
+7. GESTIÓN DE INVENTARIO
+================================================================================
+
+PRODUCTOS
+---------
+Registrar: html/registrar_producto.html
+Visualizar: html/visualizar_productos.html
+
+CAMPOS:
+- NombreProducto, Descripcion, Precio, Stock, Categoria, Imagen
+- StockMinimo (alerta de reorden)
+- Estado (Activo/Inactivo)
+
+SP RELACIONADOS:
+- RegistrarProducto
+- ActualizarProducto
+- EliminarProducto (soft delete)
+- ListarProductos
+- BuscarProductoPorNombre
+
+
+PLATOS (PRODUCTOS COMPUESTOS)
+------------------------------
+Registrar: html/registrar_platos.html
+Visualizar: html/visualizar_platos.html
+
+Un plato está compuesto de múltiples insumos:
+1. Crear plato base (Nombre, Descripción, Precio)
+2. Agregar insumos con cantidades
+3. Al vender un plato:
+   - Reduce stock de cada insumo
+   - Calcula costo basado en ingredientes
+   - Precio de venta es independiente
+
+TABLAS:
+- Platos: IdPlato, NombrePlato, Descripcion, Precio, Imagen
+- RecetaPlatos: IdPlato, IdInsumo, CantidadNecesaria
+
+
+INSUMOS
+-------
+Registrar: html/registrar_insumo.html
+
+Son productos que se usan en platos:
+- Harina, Queso, Salsa, etc.
+- No se venden directamente
+- Se compran a proveedores
+
+
+CONTROL DE STOCK
+----------------
+Archivo: html/visualizar_inventario.html
+Endpoint: GET /api/inventario
+
+FUNCIONALIDADES:
+1. Lista todos los productos con stock actual
+2. Alerta si Stock < StockMinimo (color rojo)
+3. Permite ajustes manuales de inventario
+4. SP: AjustarInventario
+5. Registra movimientos en tabla HistorialInventario
+
+
+================================================================================
+8. SISTEMA DE CAJA
+================================================================================
+
+APERTURA DE CAJA
+----------------
+Archivo: html/apertura_caja.html
+Endpoint: POST /api/caja/apertura
+
+FLUJO:
+1. Cajero ingresa monto inicial (base)
+2. Sistema registra:
+   - IdUsuario (cajero)
+   - FechaApertura
+   - MontoInicial
+   - Estado: "Abierta"
+3. SP: AperturaCaja
+4. Solo puede haber una caja abierta por cajero
+
+
+MOVIMIENTOS DE CAJA
+-------------------
+Durante el turno se registran automáticamente:
+- Ventas en efectivo → Entrada
+- Ventas con tarjeta → Entrada (separado)
+- Gastos → Salida
+- Retiros → Salida
+
+TABLA: MovimientosCaja
+Campos: IdMovimiento, IdCaja, Tipo, Monto, Concepto, Fecha
+
+
+CIERRE DE CAJA
+--------------
+Archivo: html/cerrar_caja.html
+Endpoint: POST /api/caja/cierre
+
+FLUJO:
+1. Sistema calcula automáticamente:
+   - Total Efectivo = MontoInicial + VentasEfectivo - Salidas
+   - Total Tarjeta = VentasTarjeta
+   - Total Esperado = TotalEfectivo + TotalTarjeta
+2. Cajero cuenta dinero físico
+3. Ingresa: MontoRealEfectivo, MontoRealTarjeta
+4. Sistema calcula diferencia (faltante/sobrante)
+5. SP: CerrarCaja
+6. Estado cambia a "Cerrada"
+7. Genera reporte de cierre
+
+
+VISUALIZAR CAJA
+---------------
+Archivo: html/visualizar_caja.html
+Endpoint: GET /api/caja
+
+Muestra todas las cajas con:
+- Fecha, Cajero, MontoInicial, MontoFinal, Diferencia, Estado
+
+
+================================================================================
+9. GESTIÓN DE CLIENTES
+================================================================================
+
+REGISTRAR CLIENTE
+-----------------
+Archivo: html/registrar_clientes.html
+Endpoint: POST /api/clientes
+
+DATOS:
+- Nombre, Apellido, Telefono, Email, Direccion, DNI
+- FechaRegistro (automático)
+
+Los clientes pueden:
+1. Registrarse en tienda online
+2. Ser registrados por cajero en punto de venta
+3. Acumular historial de compras
+
+
+VISUALIZAR CLIENTES
+-------------------
+Archivo: html/visualizar_clientes.html
+Endpoint: GET /api/clientes
+
+FUNCIONES:
+- Listar todos los clientes
+- Buscar por nombre/teléfono/DNI
+- Ver historial de compras por cliente
+- Editar/Eliminar cliente
+- SP: ListarClientes, BuscarCliente
+
+
+================================================================================
+10. GESTIÓN DE PROVEEDORES
+================================================================================
+
+REGISTRAR PROVEEDOR
+-------------------
+Archivo: html/registrar_proveedor.html
+Endpoint: POST /api/proveedores
+
+DATOS:
+- NombreProveedor, RUC, Telefono, Email, Direccion
+- Categoria (tipo de productos que suministra)
+- Estado (Activo/Inactivo)
+
+
+VISUALIZAR PROVEEDORES
+----------------------
+Archivo: html/visualizar_proveedores.html
+Endpoint: GET /api/proveedores
+
+FUNCIONES:
+- Listar proveedores activos
+- Ver historial de compras a cada proveedor
+- Calcular total comprado por proveedor
+- Editar/Eliminar proveedor
+
+
+================================================================================
+11. GESTIÓN DE USUARIOS
+================================================================================
+
+REGISTRAR USUARIO
+-----------------
+Archivo: html/registrar_usuario.html
+Endpoint: POST /api/usuarios
+
+Solo ADMINISTRADORES pueden crear usuarios
+
+DATOS:
+- Nombre, Apellido, Correo, Contrasena
+- Rol (Administrador, Cajero, Mesero, Repartidor)
+- Telefono, DNI
+- Estado (Activo/Inactivo)
+
+SP: RegistrarUsuario (encripta contraseña)
+
+
+VISUALIZAR USUARIOS
+-------------------
+Archivos:
+- html/ver_administradores.html
+- html/ver_cajeros.html
+- html/ver_meseros.html
+- html/ver_repartidores.html
+
+Cada vista filtra usuarios por rol
+
+
+SEGURIDAD
+---------
+Archivos:
+- html/seguridad_registrar_usuarios.html
+- html/seguridad_visualizar_usuarios.html
+
+Módulo especial para gestión de permisos
+
+
+================================================================================
+12. SISTEMA DE MESAS (RESTAURANTE)
+================================================================================
+
+REGISTRAR MESA
+--------------
+Archivo: html/registrar_mesas.html
+Endpoint: POST /api/mesas
+
+DATOS:
+- NumeroMesa, Capacidad, Ubicacion
+- Estado (Disponible, Ocupada, Reservada)
+
+
+GESTIÓN DE MESAS
+----------------
+Archivo: html/visualizar_mesas.html
+Endpoint: GET /api/mesas
+
+FLUJO:
+1. Mesero ve estado de todas las mesas
+2. Puede:
+   - Asignar mesa a cliente
+   - Cambiar estado (Disponible ↔ Ocupada)
+   - Registrar pedido para mesa
+   - Cerrar cuenta de mesa
+3. SP: ActualizarEstadoMesa
+
+
+PEDIDOS DE MESA
+---------------
+Archivo: html/registrar_pedidos.html
+Endpoint: POST /api/pedidos
+
+FLUJO:
+1. Mesero selecciona mesa
+2. Toma pedido de platos/bebidas
+3. Envía a cocina
+4. Estado: "En Preparación"
+5. Al entregar: "Servido"
+6. Al pagar: Genera venta y libera mesa
+
+
+================================================================================
+13. PROMOCIONES
+================================================================================
+
+REGISTRAR PROMOCIÓN
+-------------------
+Archivo: html/registrar_promociones.html
+Endpoint: POST /api/promociones
+
+TIPOS:
+- Descuento por producto (%)
+- 2x1
+- Combo (varios productos a precio especial)
+- Descuento por monto total
+
+DATOS:
+- NombrePromocion, Descripcion
+- TipoDescuento, PorcentajeDescuento
+- FechaInicio, FechaFin
+- ProductosAplicables
+- Estado (Activa/Inactiva)
+
+
+APLICAR PROMOCIÓN
+-----------------
+Al registrar venta:
+1. Sistema verifica promociones activas
+2. Compara productos en carrito
+3. Calcula mejor descuento aplicable
+4. Aplica automáticamente
+5. Muestra descuento en factura
+
+
+================================================================================
+14. REPORTES Y GANANCIAS
+================================================================================
+
+VISUALIZAR GANANCIAS
+--------------------
+Archivo: html/visualizar_ganancias.html
+Endpoint: GET /api/reportes/ganancias
+
+MÉTRICAS:
+- Ingresos por ventas (diario, mensual, anual)
+- Gastos por compras
+- Ganancia neta = Ingresos - Gastos
+- Gráficos de tendencias
+- Productos más vendidos
+- Clientes frecuentes
+
+
+GENERAR REPORTES
+----------------
+Archivo: html/generar_reportes.html
+Endpoint: POST /api/reportes/generar
+
+TIPOS DE REPORTES:
+- Ventas por periodo
+- Compras por proveedor
+- Inventario bajo stock
+- Rendimiento de cajeros
+- Productos más vendidos
+- Clientes top
+
+
+RENDIMIENTO DE TRABAJADORES
+---------------------------
+Archivo: html/visualizar_rendimiento_de_trabajador.html
+Endpoint: GET /api/reportes/rendimiento
+
+MÉTRICAS POR EMPLEADO:
+- Total ventas realizadas
+- Promedio de venta
+- Clientes atendidos
+- Eficiencia
+- Comisiones
+
+
+================================================================================
+15. ESTRUCTURA DE API
+================================================================================
+
+ENDPOINTS PRINCIPALES:
+----------------------
+
+AUTH:
+POST   /api/auth/login-empresa      # Login empresa
+POST   /api/auth/login              # Login usuario
+POST   /api/auth/logout             # Cerrar sesión
+
+PRODUCTOS:
+GET    /api/productos               # Listar todos
+GET    /api/productos/{id}          # Ver uno
+POST   /api/productos               # Crear
+PUT    /api/productos/{id}          # Actualizar
+DELETE /api/productos/{id}          # Eliminar
+
+VENTAS:
+GET    /api/ventas                  # Listar
+POST   /api/ventas                  # Registrar venta
+GET    /api/ventas/{id}             # Ver detalle
+
+COMPRAS:
+GET    /api/compras                 # Listar
+POST   /api/compras                 # Registrar compra
+GET    /api/compras/{id}            # Ver detalle
+
+CLIENTES:
+GET    /api/clientes                # Listar
+POST   /api/clientes                # Crear
+PUT    /api/clientes/{id}           # Actualizar
+DELETE /api/clientes/{id}           # Eliminar
+
+PEDIDOS:
+GET    /api/pedidos                 # Listar
+POST   /api/pedidos                 # Crear
+PUT    /api/pedidos/{id}/estado     # Cambiar estado
+
+CAJA:
+POST   /api/caja/apertura           # Abrir caja
+POST   /api/caja/cierre             # Cerrar caja
+GET    /api/caja/actual             # Ver caja actual
+
+
+FORMATO DE RESPUESTA:
+---------------------
+{
+    "success": true,
+    "data": { ... },
+    "mensaje": "Operación exitosa"
+}
+
+ERROR:
+{
+    "success": false,
+    "error": "Descripción del error",
+    "codigo": 400
+}
+
+
+================================================================================
+16. STORED PROCEDURES PRINCIPALES
+================================================================================
+
+AUTENTICACIÓN:
+- AutenticarUsuario(correo, contrasena)
+
+PRODUCTOS:
+- RegistrarProducto(...)
+- ActualizarProducto(...)
+- ListarProductos()
+- ActualizarStock(idProducto, cantidad)
+
+VENTAS:
+- RegistrarVenta(idCliente, productos[], metodoPago, idUsuario)
+- ListarVentas(fechaInicio, fechaFin)
+- ObtenerDetalleVenta(idVenta)
+
+COMPRAS:
+- RegistrarCompra(idProveedor, productos[], idUsuario)
+- ListarCompras()
+- ObtenerDetalleCompra(idCompra)
+
+CAJA:
+- AperturaCaja(idUsuario, montoInicial)
+- RegistrarMovimientoCaja(idCaja, tipo, monto, concepto)
+- CerrarCaja(idCaja, montoReal)
+
+INVENTARIO:
+- AjustarInventario(idProducto, cantidad, motivo)
+- ProductosBajoStock()
+
+
+================================================================================
+17. FLUJO COMPLETO - EJEMPLO DE USO
+================================================================================
+
+ESCENARIO: Venta de 2 pizzas y 1 bebida
+----------------------------------------
+
+1. APERTURA DE CAJA (Inicio de turno)
+   - Cajero: Carlos
+   - Monto inicial: S/100.00
+   - Hora: 8:00 AM
+
+2. CLIENTE LLEGA AL MOSTRADOR
+   - Cliente: Juan Pérez
+   - Hora: 12:30 PM
+
+3. CAJERO TOMA PEDIDO
+   - Accede a: registrar_venta.html
+   - Busca cliente: "Juan Pérez" (o crea nuevo)
+   - Agrega productos:
+     * 2x Pizza Hawaiana @ S/25.00 = S/50.00
+     * 1x Coca Cola 1L @ S/5.00 = S/5.00
+   - Subtotal: S/55.00
+   - Sistema verifica promoción activa: "2x1 en bebidas"
+   - Descuento aplicado: S/5.00
+   - Total final: S/50.00
+
+4. PROCESAMIENTO DE VENTA
+   - Cliente paga en efectivo: S/50.00
+   - Sistema ejecuta RegistrarVenta SP:
+     * Crea registro en Ventas
+     * Crea detalles en DetalleVentas
+     * Reduce stock:
+       - Pizza Hawaiana: 15 → 13
+       - Coca Cola: 30 → 29
+     * Registra movimiento en caja:
+       - Tipo: Entrada
+       - Monto: S/50.00
+       - Concepto: "Venta #125"
+   - Genera comprobante impreso
+   - Total en caja: S/150.00
+
+5. FIN DE TURNO - CIERRE DE CAJA
+   - Hora: 6:00 PM
+   - Sistema calcula:
+     * Monto inicial: S/100.00
+     * Ventas efectivo: S/450.00
+     * Ventas tarjeta: S/200.00
+     * Total esperado efectivo: S/550.00
+   - Cajero cuenta: S/550.00
+   - Diferencia: S/0.00 ✓
+   - Estado caja: "Cerrada"
+
+
+================================================================================
+18. ARCHIVOS IMPORTANTES
+================================================================================
+
+CONFIGURACIÓN:
+- api/config/Database.php        # Conexión MySQL
+- api/app/routes.php              # Rutas de API
+- api/.htaccess                   # Redirección
+- api/public/.htaccess            # URLs limpias
+
+CONTROLADORES PRINCIPALES:
+- api/app/controllers/AuthController.php
+- api/app/controllers/VentasController.php
+- api/app/controllers/ComprasController.php
+- api/app/controllers/ProductosController.php
+- api/app/controllers/CajaController.php
+- api/app/controllers/ClientesController.php
+
+JAVASCRIPT FRONTEND:
+- js/login.js                     # Login usuarios
+- js/login_empresa.js             # Login empresa
+- js/registrar_venta.js           # Punto de venta
+- js/registrar_compras.js         # Compras
+- js/visualizar_inventario.js    # Control stock
+- js/apertura_caja.js             # Caja
+- js/tienda.js                    # E-commerce
+
+BASE DE DATOS:
+- sql/DataBase.sql                # Schema completo + SPs + datos iniciales
+
+
+================================================================================
+19. SEGURIDAD
+================================================================================
+
+NIVELES DE PROTECCIÓN:
+1. Login de empresa (primer nivel)
+   - sessionStorage: empresaData
+   - Si no existe → Redirige a login_empresa.html
+
+2. Login de usuario (segundo nivel)
+   - localStorage: token de autenticación
+   - sessionStorage: datos de usuario
+   - Validación en cada página
+
+3. Validación de roles
+   - Permisos por tipo de usuario
+   - Restricción de endpoints en API
+   - Botones/secciones ocultos según rol
+
+4. Stored Procedures
+   - Lógica de negocio en base de datos
+   - Prevención de inyección SQL
+   - Validaciones de integridad
+
+
+CONTRASEÑAS:
+- Almacenadas con hash (no en texto plano)
+- Validación de complejidad
+- Recuperación por email (futuro)
+
+
+================================================================================
+20. MANTENIMIENTO Y BACKUP
+================================================================================
+
+RESPALDOS RECOMENDADOS:
+- Base de datos: Diario (automático)
+- Archivos subidos: Semanal
+- Configuración: Mensual
+
+LOGS:
+- Errores de sistema en api/logs/
+- Auditoría de cambios en tablas
+- Historial de movimientos críticos
+
+
+================================================================================
+FIN DE LA DOCUMENTACIÓN
+================================================================================
+
+NOTAS FINALES:
+- Sistema modular y escalable
+- Arquitectura MVC con API REST
+- Frontend en JavaScript vanilla
+- Backend en PHP 8+ con MySQL 8+
+- Stored Procedures para lógica de negocio
+- Diseño responsive para móviles
+- Soporte para múltiples empresas
+
+PRÓXIMAS MEJORAS SUGERIDAS:
+- [ ] Sistema de notificaciones push
+- [ ] Integración con pasarelas de pago
+- [ ] App móvil nativa
+- [ ] Dashboard con gráficos en tiempo real
+- [ ] Reportes automáticos por email
+- [ ] Integración con WhatsApp para pedidos
+- [ ] Sistema de fidelización de clientes
+- [ ] Control de mermas y desperdicios
