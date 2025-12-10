@@ -215,18 +215,58 @@ function mostrarMensajeVacio() {
 }
 
 // Editar proveedor
-function editarProveedor(codProveedor) {
-    window.location.href = `registrar_proveedor.html?cod=${codProveedor}`;
+async function editarProveedor(codProveedor) {
+    try {
+        // Buscar el proveedor en los datos cargados
+        const proveedor = proveedoresData.find(p => 
+            (p.CodProveedor || p.codProveedor) == codProveedor
+        );
+        
+        if (proveedor) {
+            // Guardar en sessionStorage para cargar en el formulario
+            sessionStorage.setItem('editarProveedorData', JSON.stringify(proveedor));
+            window.location.href = 'registrar_proveedor.html';
+        } else {
+            alert('No se encontró el proveedor');
+        }
+    } catch (error) {
+        console.error('Error al editar proveedor:', error);
+        alert('Error al cargar los datos del proveedor');
+    }
 }
 
 // Eliminar proveedor
-function eliminarProveedor(codProveedor) {
-    if (!confirm('¿Está seguro que desea eliminar este proveedor?')) return;
+async function eliminarProveedor(codProveedor) {
+    if (!confirm('¿Está seguro que desea eliminar este proveedor?\n\nEsta acción no se puede deshacer.')) {
+        return;
+    }
     
-    // TODO: Implementar eliminación por API
-    console.log('Eliminar proveedor:', codProveedor);
-    alert('Función de eliminación en desarrollo');
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/proveedores/eliminar?id=${codProveedor}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.exito) {
+            alert('Proveedor eliminado correctamente');
+            // Recargar la lista
+            cargarProveedores();
+        } else {
+            alert(data.mensaje || 'No se pudo eliminar el proveedor');
+        }
+    } catch (error) {
+        console.error('Error al eliminar proveedor:', error);
+        alert('Error al eliminar el proveedor');
+    }
 }
+
+// Hacer las funciones globales
+window.editarProveedor = editarProveedor;
+window.eliminarProveedor = eliminarProveedor;
 
 // Función placeholder para cerrar modal
 function cerrarModal() {

@@ -45,6 +45,8 @@ return [
     'proveedores/registrar' => [ProveedorController::class, 'registrar'],
     'proveedores/listar' => [ProveedorController::class, 'listar'],
     'proveedores/buscar' => [ProveedorController::class, 'buscar'],
+    'proveedores/actualizar' => [ProveedorController::class, 'actualizar'],
+    'proveedores/eliminar' => [ProveedorController::class, 'eliminar'],
     'productos/registrar' => [ProductoController::class, 'registrar'],
     'productos/listar' => [ProductoController::class, 'listar'],
     'productos/actualizar' => [ProductoController::class, 'actualizar'],

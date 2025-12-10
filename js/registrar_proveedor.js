@@ -3,6 +3,8 @@
    Maneja el registro completo de proveedores con validaciones
    ============================================ */
 
+let proveedorEditando = null;
+
 // Actualizar fecha y hora
 function actualizarFechaHora() {
     const ahora = new Date();
@@ -149,7 +151,9 @@ async function submitForm(e) {
     const submitButton = form.querySelector('button[type="submit"]');
     if (submitButton) {
         submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+        submitButton.innerHTML = proveedorEditando 
+            ? '<i class="fas fa-spinner fa-spin"></i> Actualizando...'
+            : '<i class="fas fa-spinner fa-spin"></i> Registrando...';
     }
     
     const data = {
@@ -173,9 +177,18 @@ async function submitForm(e) {
         estado: estado
     };
     
+    // Si estamos editando, agregar el ID
+    if (proveedorEditando) {
+        data.codProveedor = proveedorEditando;
+    }
+    
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/proveedores/registrar', {
-            method: 'POST',
+        const url = proveedorEditando 
+            ? '/Proyecto_De_App_Fast_Food/api/proveedores/actualizar'
+            : '/Proyecto_De_App_Fast_Food/api/proveedores/registrar';
+            
+        const response = await fetch(url, {
+            method: proveedorEditando ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -185,15 +198,18 @@ async function submitForm(e) {
         const result = await response.json();
         
         if (result.exito) {
-            alert(`¡Éxito!\nProveedor: ${result.razonSocial}\nCódigo: ${result.codProveedor}`);
-            form.reset();
+            alert(proveedorEditando 
+                ? `¡Proveedor actualizado exitosamente!\n${result.razonSocial || razonSocial}`
+                : `¡Éxito!\nProveedor: ${result.razonSocial}\nCódigo: ${result.codProveedor}`
+            );
+            sessionStorage.removeItem('editarProveedorData');
             window.location.href = 'visualizar_proveedores.html';
         } else {
             alert('Error: ' + (result.mensaje || 'Error desconocido'));
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al registrar el proveedor. Por favor, intente nuevamente.');
+        alert('Error al ' + (proveedorEditando ? 'actualizar' : 'registrar') + ' el proveedor. Por favor, intente nuevamente.');
     } finally {
         if (submitButton) {
             submitButton.disabled = false;
@@ -206,6 +222,68 @@ async function submitForm(e) {
 function limpiarFormulario() {
     if (confirm('¿Está seguro que desea limpiar el formulario?')) {
         document.getElementById('formProveedor').reset();
+        
+        // Limpiar modo edición
+        proveedorEditando = null;
+        sessionStorage.removeItem('editarProveedorData');
+        
+        // Restaurar título y botón
+        const titulo = document.querySelector('h1');
+        if (titulo) {
+            titulo.textContent = 'Registrar Nuevo Proveedor';
+        }
+        
+        const btnGuardar = document.querySelector('.btn-guardar, button[type="submit"]');
+        if (btnGuardar) {
+            btnGuardar.innerHTML = '<i class="fas fa-save"></i> Registrar Proveedor';
+        }
+    }
+}
+
+// Cargar proveedor para editar
+function cargarProveedorParaEditar() {
+    const proveedorData = sessionStorage.getItem('editarProveedorData');
+    if (!proveedorData) return;
+    
+    try {
+        const proveedor = JSON.parse(proveedorData);
+        
+        // Guardar ID del proveedor editando
+        proveedorEditando = proveedor.codProveedor || proveedor.CodProveedor;
+        
+        // Cambiar título y botón
+        const titulo = document.querySelector('h1');
+        if (titulo) {
+            titulo.textContent = 'Editar Proveedor';
+        }
+        
+        const btnGuardar = document.querySelector('.btn-guardar, button[type="submit"]');
+        if (btnGuardar) {
+            btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Proveedor';
+        }
+        
+        // Cargar datos en el formulario
+        document.getElementById('tipoDocumento').value = proveedor.tipoDoc || proveedor.TipoDoc || '';
+        document.getElementById('numeroDocumento').value = proveedor.numDoc || proveedor.NumDoc || '';
+        document.getElementById('razonSocial').value = proveedor.razonSocial || proveedor.RazonSocial || '';
+        document.getElementById('nombreComercial').value = proveedor.nombreComercial || proveedor.NombreComercial || '';
+        document.getElementById('categoria').value = proveedor.categoria || proveedor.Categoria || '';
+        document.getElementById('telefono').value = proveedor.telefono || proveedor.Telefono || '';
+        document.getElementById('telefonoSecundario').value = proveedor.telefonoSecundario || proveedor.TelefonoSecundario || '';
+        document.getElementById('email').value = proveedor.email || proveedor.Email || '';
+        document.getElementById('sitioWeb').value = proveedor.sitioWeb || proveedor.Sitio_Web || '';
+        document.getElementById('personaContacto').value = proveedor.personaContacto || proveedor.PersonaContacto || '';
+        document.getElementById('direccion').value = proveedor.direccion || proveedor.Direccion || '';
+        document.getElementById('ciudad').value = proveedor.ciudad || proveedor.Ciudad || '';
+        document.getElementById('distrito').value = proveedor.distrito || proveedor.Distrito || '';
+        document.getElementById('tiempoEntrega').value = proveedor.tiempoEntrega || proveedor.TiempoEntrega || '0';
+        document.getElementById('montoMinimo').value = proveedor.montoMinimo || proveedor.MontoMinimo || '0.00';
+        document.getElementById('descuento').value = proveedor.descuento || proveedor.Descuento || '0.00';
+        document.getElementById('observaciones').value = proveedor.nota || proveedor.Nota || '';
+        document.getElementById('estado').value = proveedor.estado || proveedor.Estado || 'activo';
+        
+    } catch (err) {
+        console.error('Error al cargar proveedor para editar:', err);
     }
 }
 
@@ -228,6 +306,12 @@ function soloNumeros(event) {
 document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
+    
+    // Verificar si estamos en modo edición
+    const proveedorData = sessionStorage.getItem('editarProveedorData');
+    if (proveedorData) {
+        cargarProveedorParaEditar();
+    }
     
     // Event listener para el formulario
     const form = document.getElementById('formProveedor');

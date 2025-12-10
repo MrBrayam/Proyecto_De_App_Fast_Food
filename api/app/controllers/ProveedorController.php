@@ -310,4 +310,127 @@ class ProveedorController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error al buscar proveedor'], 500);
         }
     }
+
+    /**
+     * Actualiza un proveedor existente
+     */
+    public function actualizar(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: PUT, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true) ?? [];
+
+        $codProveedor = isset($input['codProveedor']) ? (int)$input['codProveedor'] : null;
+
+        if (!$codProveedor) {
+            $this->json(['exito' => false, 'mensaje' => 'El código del proveedor es obligatorio'], 400);
+            return;
+        }
+
+        // Validar campos (igual que en registrar)
+        $tipoDoc = trim($input['tipoDoc'] ?? '');
+        $numDoc = trim($input['numDoc'] ?? '');
+        $razonSocial = trim($input['razonSocial'] ?? '');
+        $categoria = trim($input['categoria'] ?? '');
+        $telefono = trim($input['telefono'] ?? '');
+        $email = trim($input['email'] ?? '');
+        $personaContacto = trim($input['personaContacto'] ?? '');
+        $direccion = trim($input['direccion'] ?? '');
+
+        if (!$tipoDoc || !$numDoc || !$razonSocial || !$categoria || !$telefono || !$email || !$personaContacto || !$direccion) {
+            $this->json(['exito' => false, 'mensaje' => 'Todos los campos obligatorios deben estar completos'], 400);
+            return;
+        }
+
+        $model = new Proveedor();
+        try {
+            $resultado = $model->actualizar($codProveedor, [
+                'tipoDoc' => $tipoDoc,
+                'numDoc' => $numDoc,
+                'razonSocial' => $razonSocial,
+                'nombreComercial' => $input['nombreComercial'] ?? null,
+                'categoria' => $categoria,
+                'telefono' => $telefono,
+                'telefonoSecundario' => $input['telefonoSecundario'] ?? null,
+                'email' => $email,
+                'sitioWeb' => $input['sitioWeb'] ?? null,
+                'personaContacto' => $personaContacto,
+                'direccion' => $direccion,
+                'ciudad' => $input['ciudad'] ?? null,
+                'distrito' => $input['distrito'] ?? null,
+                'tiempoEntrega' => isset($input['tiempoEntrega']) ? (int)$input['tiempoEntrega'] : 0,
+                'montoMinimo' => isset($input['montoMinimo']) ? (float)$input['montoMinimo'] : 0.00,
+                'descuento' => isset($input['descuento']) ? (float)$input['descuento'] : 0.00,
+                'nota' => $input['nota'] ?? null,
+                'estado' => $input['estado'] ?? 'activo',
+            ]);
+
+            if ($resultado) {
+                $this->json([
+                    'exito' => true,
+                    'mensaje' => 'Proveedor actualizado exitosamente',
+                    'razonSocial' => $razonSocial,
+                ]);
+            } else {
+                $this->json(['exito' => false, 'mensaje' => 'No se pudo actualizar el proveedor'], 500);
+            }
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Elimina un proveedor
+     */
+    public function eliminar(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+
+        if (!$id) {
+            $this->json(['exito' => false, 'mensaje' => 'El ID del proveedor es obligatorio'], 400);
+            return;
+        }
+
+        $model = new Proveedor();
+        try {
+            $resultado = $model->eliminar($id);
+
+            if ($resultado) {
+                $this->json([
+                    'exito' => true,
+                    'mensaje' => 'Proveedor eliminado exitosamente',
+                ]);
+            } else {
+                $this->json(['exito' => false, 'mensaje' => 'No se pudo eliminar el proveedor'], 500);
+            }
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => $e->getMessage()], 400);
+        }
+    }
 }
