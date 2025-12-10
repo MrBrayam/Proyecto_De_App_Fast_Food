@@ -113,10 +113,10 @@ function mostrarProductos(productos) {
             <td>${stock}</td>
             <td><span class="badge ${estilo}">${estadoMostrar}</span></td>
             <td>
-                <button class="btn-icon btn-edit" title="Editar">
+                <button class="btn-icon btn-edit" onclick="editarProducto('${codigo}')" title="Editar">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn-icon btn-delete" title="Eliminar">
+                <button class="btn-icon btn-delete" onclick="confirmarEliminar('${codigo}')" title="Eliminar">
                     <i class="fas fa-trash"></i>
                 </button>
             </td>
@@ -204,4 +204,62 @@ function limpiarFiltros() {
 function mostrarMensajeVacio() {
     document.getElementById('productosTableBody').innerHTML = '';
     document.getElementById('noDataMessage').style.display = 'flex';
+}
+
+// Editar producto - redirigir a registrar con código
+function editarProducto(codigoProducto) {
+    if (!codigoProducto) {
+        alert('Código de producto no válido');
+        return;
+    }
+    window.location.href = `registrar_producto.html?editar=${encodeURIComponent(codigoProducto)}`;
+}
+
+// Confirmar eliminación
+function confirmarEliminar(codigoProducto) {
+    if (!codigoProducto) {
+        alert('Código de producto no válido');
+        return;
+    }
+    
+    const producto = productosGlobal.find(p => 
+        (p.CodProducto || p.codProducto) === codigoProducto
+    );
+    
+    if (!producto) {
+        alert('Producto no encontrado');
+        return;
+    }
+    
+    const nombreProducto = producto.Nombre || producto.nombre || codigoProducto;
+    const confirmacion = confirm(`¿Estás seguro de eliminar el producto "${nombreProducto}"?\n\nEsta acción no se puede deshacer.`);
+    
+    if (confirmacion) {
+        eliminarProducto(codigoProducto);
+    }
+}
+
+// Eliminar producto
+async function eliminarProducto(codigoProducto) {
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/productos/eliminar', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ codProducto: codigoProducto })
+        });
+        
+        const data = await response.json();
+        
+        if (data.exito) {
+            alert('Producto eliminado exitosamente');
+            cargarProductos(); // Recargar lista
+        } else {
+            alert('Error al eliminar producto: ' + (data.mensaje || 'Error desconocido'));
+        }
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        alert('Error al conectar con el servidor');
+    }
 }

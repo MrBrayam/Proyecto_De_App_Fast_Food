@@ -435,11 +435,43 @@ INSERT INTO Proveedores (TipoDoc, NumDoc, RazonSocial, NombreComercial, Categori
 
 -- Insertar Productos de ejemplo
 INSERT INTO Productos (CodProducto, NombreProducto, Categoria, Tamano, Precio, Costo, Stock, StockMinimo, TiempoPreparacion, CodigoBarras, Descripcion) VALUES
-('PIZZA001', 'Pizza Hawaiana', 'pizzas', 'mediana', 35.90, 18.00, 50, 10, 20, '7751234567890', 'Pizza con jamón y piña fresca'),
-('PIZZA002', 'Pizza Pepperoni', 'pizzas', 'mediana', 38.90, 20.00, 45, 10, 20, '7751234567891', 'Pizza con pepperoni italiano'),
-('PASTA001', 'Spaghetti Bolognese', 'pastas', 'na', 28.50, 14.00, 30, 8, 15, '7751234567892', 'Pasta con salsa bolognese casera'),
-('BEB001', 'Inca Kola 500ml', 'bebidas', 'na', 5.00, 2.50, 200, 50, 0, '7751234567893', 'Bebida gaseosa nacional'),
-('POST001', 'Tres Leches', 'postres', 'na', 12.50, 6.00, 25, 5, 10, '7751234567894', 'Postre tradicional peruano');
+-- BEBIDAS
+('BEB-001', 'Inca Kola 500ml', 'bebidas', 'na', 5.00, 2.50, 200, 50, 0, '7751234567001', 'Bebida gaseosa nacional'),
+('BEB-002', 'Coca Cola 500ml', 'bebidas', 'na', 5.00, 2.50, 180, 50, 0, '7751234567002', 'Bebida gaseosa clásica'),
+('BEB-003', 'Coca Cola 1.5L', 'bebidas', 'na', 8.50, 4.00, 120, 30, 0, '7751234567003', 'Bebida gaseosa familiar'),
+('BEB-004', 'Sprite 500ml', 'bebidas', 'na', 5.00, 2.50, 150, 40, 0, '7751234567004', 'Bebida gaseosa lima-limón'),
+('BEB-005', 'Fanta 500ml', 'bebidas', 'na', 5.00, 2.50, 140, 40, 0, '7751234567005', 'Bebida gaseosa sabor naranja'),
+('BEB-006', 'Agua Mineral 625ml', 'bebidas', 'na', 3.50, 1.50, 250, 60, 0, '7751234567006', 'Agua mineral sin gas'),
+('BEB-007', 'Chicha Morada 1L', 'bebidas', 'na', 10.00, 4.50, 80, 20, 5, '7751234567007', 'Bebida tradicional peruana'),
+('BEB-008', 'Limonada Natural 1L', 'bebidas', 'na', 12.00, 5.00, 60, 15, 5, '7751234567008', 'Limonada fresca preparada'),
+
+-- PASTAS
+('PASTA-001', 'Spaghetti Bolognese', 'pastas', 'na', 28.50, 14.00, 30, 8, 15, '7751234567101', 'Pasta con salsa bolognese casera'),
+('PASTA-002', 'Spaghetti Carbonara', 'pastas', 'na', 32.00, 16.00, 25, 8, 15, '7751234567102', 'Pasta con salsa carbonara cremosa'),
+('PASTA-003', 'Fettuccine Alfredo', 'pastas', 'na', 30.00, 15.00, 28, 8, 15, '7751234567103', 'Pasta con salsa alfredo'),
+('PASTA-004', 'Lasagna Bolognese', 'pastas', 'na', 35.00, 18.00, 20, 6, 25, '7751234567104', 'Lasagna con carne y queso'),
+('PASTA-005', 'Ravioles de Ricotta', 'pastas', 'na', 33.00, 17.00, 22, 6, 18, '7751234567105', 'Ravioles rellenos con salsa pomodoro'),
+
+-- ENSALADAS
+('ENS-001', 'Ensalada César', 'ensaladas', 'na', 22.00, 10.00, 40, 10, 8, '7751234567201', 'Lechuga, pollo, crutones y aderezo césar'),
+('ENS-002', 'Ensalada Caprese', 'ensaladas', 'na', 24.00, 12.00, 35, 10, 8, '7751234567202', 'Tomate, mozzarella, albahaca y aceite'),
+('ENS-003', 'Ensalada Mixta', 'ensaladas', 'na', 18.00, 8.00, 45, 12, 7, '7751234567203', 'Variedad de vegetales frescos'),
+('ENS-004', 'Ensalada Griega', 'ensaladas', 'na', 26.00, 13.00, 30, 8, 10, '7751234567204', 'Pepino, tomate, queso feta, aceitunas'),
+
+-- POSTRES
+('POST-001', 'Tres Leches', 'postres', 'na', 12.50, 6.00, 25, 8, 10, '7751234567301', 'Postre tradicional peruano'),
+('POST-002', 'Tiramisu', 'postres', 'na', 15.00, 7.50, 20, 6, 12, '7751234567302', 'Postre italiano con café y mascarpone'),
+('POST-003', 'Cheesecake de Fresa', 'postres', 'na', 14.00, 7.00, 22, 6, 10, '7751234567303', 'Tarta de queso con fresas'),
+('POST-004', 'Brownie con Helado', 'postres', 'na', 13.00, 6.50, 28, 8, 8, '7751234567304', 'Brownie caliente con helado de vainilla'),
+('POST-005', 'Volcán de Chocolate', 'postres', 'na', 16.00, 8.00, 18, 5, 15, '7751234567305', 'Volcán de chocolate caliente'),
+
+-- EXTRAS
+('EXT-001', 'Pan al Ajo (6 unid)', 'extras', 'na', 8.00, 3.50, 60, 15, 10, '7751234567401', 'Pan tostado con mantequilla de ajo'),
+('EXT-002', 'Chicken Wings (8 unid)', 'extras', 'na', 25.00, 12.00, 40, 10, 18, '7751234567402', 'Alitas de pollo picantes'),
+('EXT-003', 'Papas Fritas Grandes', 'extras', 'na', 10.00, 4.00, 80, 20, 12, '7751234567403', 'Papas fritas crujientes'),
+('EXT-004', 'Aros de Cebolla', 'extras', 'na', 12.00, 5.00, 50, 12, 15, '7751234567404', 'Aros de cebolla empanizados'),
+('EXT-005', 'Nuggets de Pollo (10 unid)', 'extras', 'na', 18.00, 8.00, 55, 15, 12, '7751234567405', 'Nuggets de pollo crujientes'),
+('EXT-006', 'Tequeños (6 unid)', 'extras', 'na', 15.00, 6.50, 45, 12, 15, '7751234567406', 'Tequeños de queso venezolanos');
 
 -- Insertar Platos especiales
 INSERT INTO Platos (CodPlato, Nombre, Descripcion, Ingredientes, Tamano, Precio, Cantidad) VALUES
