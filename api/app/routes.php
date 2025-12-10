@@ -19,6 +19,7 @@ require_once __DIR__ . '/controllers/ReporteController.php';
 
 return [
     'login' => [AuthController::class, 'login'],
+    'auth/login-empresa' => [AuthController::class, 'loginEmpresa'],
     'clientes/login' => [ClienteController::class, 'login'],
     'clientes/registro' => [ClienteController::class, 'registro'],
     'clientes/verificar-usuario' => [ClienteController::class, 'verificarUsuario'],

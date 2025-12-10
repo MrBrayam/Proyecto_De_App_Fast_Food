@@ -57,6 +57,73 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Login de empresa
+     */
+    public function loginEmpresa(): void {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        try {
+            $input = json_decode(file_get_contents('php://input'), true);
+            
+            if (!isset($input['nombreEmpresa']) || !isset($input['contrasena'])) {
+                $this->json(['exito' => false, 'mensaje' => 'Datos incompletos'], 400);
+                return;
+            }
+
+            $nombreEmpresa = trim($input['nombreEmpresa']);
+            $contrasena = $input['contrasena'];
+
+            $db = Database::connection();
+            
+            $query = 'SELECT IdEmpresa, NombreEmpresa, Contrasena 
+                     FROM Empresas 
+                     WHERE NombreEmpresa = :nombreEmpresa 
+                     LIMIT 1';
+            
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':nombreEmpresa', $nombreEmpresa);
+            $stmt->execute();
+            
+            $empresa = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$empresa) {
+                $this->json(['exito' => false, 'mensaje' => 'Empresa no encontrada'], 401);
+                return;
+            }
+
+            // Verificar contraseña
+            if ($empresa['Contrasena'] !== $contrasena) {
+                $this->json(['exito' => false, 'mensaje' => 'Contraseña incorrecta'], 401);
+                return;
+            }
+
+            // Login exitoso
+            $this->json([
+                'exito' => true,
+                'idEmpresa' => (int)$empresa['IdEmpresa'],
+                'nombreEmpresa' => $empresa['NombreEmpresa'],
+                'mensaje' => 'Acceso concedido'
+            ], 200);
+
+        } catch (Exception $e) {
+            error_log('Error en AuthController::loginEmpresa: ' . $e->getMessage());
+            $this->json(['exito' => false, 'mensaje' => 'Error en el servidor', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     private function generateToken(int $userId, string $perfil): string
     {
         $config = require __DIR__ . '/../config/config.php';

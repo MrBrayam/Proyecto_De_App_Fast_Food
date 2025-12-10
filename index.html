@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Iniciar Sesión - King's Pizza</title>
+
     
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="/Proyecto_De_App_Fast_Food/css/styles.css">
@@ -19,11 +20,14 @@
             <div class="login-header">
                 <div class="theme-toggle">
                     <button id="toggleTheme" class="btn-theme" title="Cambiar tema">
-                        <span class="theme-icon">🌙</span>
+                        <span class="theme-icon"></span>
+                    </button>
+                    <button id="btnSalir" class="btn-salir" title="Salir al login de empresa" onclick="salirAEmpresa()">
+                        <span> Salir</span>
                     </button>
                 </div>
                 <div class="login-logo">
-                    🍕
+                    
                 </div>
                 <h1 class="login-title">King's Pizza</h1>
                 <p class="login-subtitle">Sistema de Gestión de Pizzería</p>
@@ -33,7 +37,7 @@
             <div class="login-body">
                 <!-- Alerta de error (oculta por defecto) -->
                 <div id="loginAlert" class="login-alert error" style="display: none;">
-                    <span>⚠️</span>
+                    <span></span>
                     <span id="alertMessage">Usuario o contraseña incorrectos</span>
                 </div>
 
@@ -55,7 +59,7 @@
                                 minlength="3"
                                 maxlength="50"
                             >
-                            <span class="input-icon">👤</span>
+                            <span class="input-icon"></span>
                         </div>
                         <div class="form-error" id="usernameError"></div>
                     </div>
@@ -75,9 +79,9 @@
                                 minlength="6"
                                 maxlength="50"
                             >
-                            <span class="input-icon">🔒</span>
+                            <span class="input-icon"></span>
                             <button type="button" class="password-toggle" id="togglePassword" aria-label="Mostrar contraseña">
-                                👁️
+                                
                             </button>
                         </div>
                         <div class="form-error" id="passwordError"></div>
@@ -116,6 +120,26 @@
         </div>
     </div>
 
+        <!-- Validación de acceso desde empresa -->
+    <script>
+        // Verificar que el usuario haya pasado por el login de empresa
+        (function() {
+            const empresaData = sessionStorage.getItem('empresaData');
+            if (!empresaData) {
+                // Si no hay datos de empresa, redirigir al login de empresa
+                window.location.href = 'login_empresa.html';
+            }
+        })();
+        
+        // Función para salir al login de empresa
+        function salirAEmpresa() {
+            // Limpiar los datos de sesión
+            sessionStorage.removeItem('empresaData');
+            sessionStorage.clear();
+            // Redirigir al login de empresa
+            window.location.href = 'login_empresa.html';
+        }
+    </script>
     <!-- JavaScript -->
     <script src="/Proyecto_De_App_Fast_Food/js/login.js?v=2"></script>
     <script src="/Proyecto_De_App_Fast_Food/js/theme-manager.js"></script>

@@ -20,6 +20,12 @@ $scriptDir = dirname($_SERVER['SCRIPT_NAME']); // e.g. /Proyecto.../api/public
 $apiBase = preg_replace('#/public$#', '', $scriptDir); // e.g. /Proyecto.../api
 $path = trim(preg_replace('#^' . preg_quote($apiBase, '#') . '#', '', $uri), '/');
 
+// Debug temporal
+error_log("URI: $uri");
+error_log("Script Dir: $scriptDir");
+error_log("API Base: $apiBase");
+error_log("Path resolved: $path");
+
 if ($path === '') {
     http_response_code(404);
     echo json_encode(['exito' => false, 'mensaje' => 'Ruta no encontrada']);
@@ -28,7 +34,14 @@ if ($path === '') {
 
 if (!array_key_exists($path, $routes)) {
     http_response_code(404);
-    echo json_encode(['exito' => false, 'mensaje' => 'Ruta no encontrada']);
+    error_log("Ruta no encontrada: $path");
+    error_log("Rutas disponibles: " . implode(', ', array_keys($routes)));
+    echo json_encode([
+        'exito' => false, 
+        'mensaje' => 'Ruta no encontrada',
+        'path_solicitado' => $path,
+        'debug' => 'Revisar logs del servidor'
+    ]);
     exit;
 }
 
