@@ -187,4 +187,188 @@ class UsuarioController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error al obtener usuarios'], 500);
         }
     }
+
+    /**
+     * Busca un usuario por ID
+     */
+    public function buscar(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            $this->json(['exito' => false, 'mensaje' => 'ID no proporcionado'], 400);
+            return;
+        }
+
+        $model = new Usuario();
+        try {
+            $usuario = $model->buscar((int)$id);
+            
+            if (!$usuario) {
+                $this->json(['exito' => false, 'mensaje' => 'Usuario no encontrado'], 404);
+                return;
+            }
+
+            $usuarioFormateado = [
+                'idUsuario' => (int)$usuario['IdUsuario'],
+                'dni' => $usuario['Dni'],
+                'nombreCompleto' => $usuario['NombreCompleto'],
+                'telefono' => $usuario['Telefono'],
+                'email' => $usuario['Email'],
+                'nombreUsuario' => $usuario['NombreUsuario'],
+                'idPerfil' => (int)$usuario['IdPerfil'],
+                'nombrePerfil' => $usuario['NombrePerfil'],
+                'nivelAcceso' => $usuario['NivelAcceso'],
+                'estado' => $usuario['Estado'],
+                'fechaCreacion' => $usuario['FechaCreacion'],
+                'fechaActualizacion' => $usuario['FechaActualizacion'],
+            ];
+
+            $this->json(['exito' => true, 'usuario' => $usuarioFormateado]);
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error en la base de datos: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Actualiza un usuario existente
+     */
+    public function actualizar(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: PUT, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true) ?? [];
+        $id = $input['idUsuario'] ?? null;
+
+        if (!$id) {
+            $this->json(['exito' => false, 'mensaje' => 'ID del usuario no proporcionado'], 400);
+            return;
+        }
+
+        $model = new Usuario();
+        try {
+            $result = $model->actualizar((int)$id, [
+                'dni' => trim($input['dni'] ?? ''),
+                'nombreCompleto' => trim($input['nombreCompleto'] ?? ''),
+                'telefono' => trim($input['telefono'] ?? ''),
+                'email' => isset($input['email']) && $input['email'] !== '' ? trim($input['email']) : null,
+                'nombreUsuario' => trim($input['nombreUsuario'] ?? ''),
+                'idPerfil' => (int)($input['idPerfil'] ?? 0),
+                'estado' => trim($input['estado'] ?? 'activo'),
+            ]);
+
+            $this->json(['exito' => true, 'mensaje' => 'Usuario actualizado exitosamente']);
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error en la base de datos: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Cambia el estado de un usuario
+     */
+    public function cambiarEstado(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: PUT, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true) ?? [];
+        $id = $input['idUsuario'] ?? null;
+        $estado = $input['estado'] ?? null;
+
+        if (!$id) {
+            $this->json(['exito' => false, 'mensaje' => 'ID del usuario no proporcionado'], 400);
+            return;
+        }
+
+        if (!$estado || !in_array($estado, ['activo', 'inactivo', 'suspendido'])) {
+            $this->json(['exito' => false, 'mensaje' => 'Estado inválido'], 400);
+            return;
+        }
+
+        $model = new Usuario();
+        try {
+            $result = $model->cambiarEstado((int)$id, $estado);
+            
+            if ($result) {
+                $this->json(['exito' => true, 'mensaje' => 'Estado actualizado exitosamente']);
+            } else {
+                $this->json(['exito' => false, 'mensaje' => 'No se pudo actualizar el estado'], 400);
+            }
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error en la base de datos: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Elimina un usuario
+     */
+    public function eliminar(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            $this->json(['exito' => false, 'mensaje' => 'ID no proporcionado'], 400);
+            return;
+        }
+
+        $model = new Usuario();
+        try {
+            $result = $model->eliminar((int)$id);
+            
+            if ($result) {
+                $this->json(['exito' => true, 'mensaje' => 'Usuario eliminado exitosamente']);
+            } else {
+                $this->json(['exito' => false, 'mensaje' => 'No se pudo eliminar el usuario'], 400);
+            }
+        } catch (Throwable $e) {
+            $this->json(['exito' => false, 'mensaje' => 'Error en la base de datos: ' . $e->getMessage()], 500);
+        }
+    }
 }
+

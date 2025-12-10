@@ -247,20 +247,42 @@ Fecha de Registro: ${new Date(admin.fechaCreacion).toLocaleString('es-ES')}
 
 // Editar administrador
 function editarAdmin(idUsuario) {
-    // Redirigir a página de edición (pendiente de implementar)
-    alert(`Función de edición en desarrollo.\nID: ${idUsuario}`);
-    // window.location.href = `editar_usuario.html?id=${idUsuario}`;
+    // Redirigir a página de edición de usuario
+    window.location.href = `../html/registrar_usuario.html?editar=${idUsuario}`;
 }
 
 // Cambiar estado del administrador
-function cambiarEstadoAdmin(idUsuario, estadoActual) {
+async function cambiarEstadoAdmin(idUsuario, estadoActual) {
     const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
     const accion = nuevoEstado === 'activo' ? 'activar' : 'desactivar';
     
-    if (confirm(`¿Está seguro que desea ${accion} este administrador?`)) {
-        alert(`Función de cambio de estado en desarrollo.\nNuevo estado: ${nuevoEstado}`);
-        // Aquí iría la llamada al API para cambiar el estado
-        // Después de cambiar, recargar la lista
+    if (!confirm(`¿Está seguro que desea ${accion} este administrador?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/cambiar-estado', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                estado: nuevoEstado
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.exito) {
+            alert('✅ ' + data.mensaje);
+            cargarAdministradores();
+        } else {
+            alert('❌ Error: ' + data.mensaje);
+        }
+    } catch (error) {
+        console.error('Error al cambiar estado:', error);
+        alert('❌ Error de conexión al servidor');
     }
 }
 

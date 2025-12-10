@@ -109,10 +109,38 @@ function editarUsuario(idUsuario) {
     window.location.href = `seguridad_registrar_usuarios.html?editar=${idUsuario}`;
 }
 
-// Eliminar usuario (placeholder)
-function eliminarUsuario(idUsuario) {
-    if (confirm('¿Está seguro que desea eliminar este usuario?')) {
-        alert('Función eliminar usuario en desarrollo');
+// Eliminar usuario
+async function eliminarUsuario(idUsuario) {
+    const usuario = usuarios.find(u => u.idUsuario == idUsuario);
+    
+    if (!usuario) {
+        alert('❌ Usuario no encontrado');
+        return;
+    }
+    
+    if (!confirm(`¿Está seguro que desea eliminar al usuario "${usuario.nombreCompleto}"?\n\nEsta acción no se puede deshacer.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/Proyecto_De_App_Fast_Food/api/usuarios/eliminar?id=${idUsuario}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.exito) {
+            alert('✅ ' + data.mensaje);
+            cargarUsuarios(); // Recargar la lista
+        } else {
+            alert('❌ Error: ' + data.mensaje);
+        }
+    } catch (error) {
+        console.error('Error al eliminar usuario:', error);
+        alert('❌ Error de conexión al servidor');
     }
 }
 

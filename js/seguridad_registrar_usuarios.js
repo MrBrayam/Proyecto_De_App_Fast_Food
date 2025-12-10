@@ -78,19 +78,29 @@ async function cargarUsuario(idUsuario) {
             }
             
             // Llenar formulario
-            document.getElementById('nombres').value = usuario.Nombres || '';
-            document.getElementById('apellidos').value = usuario.Apellidos || '';
-            document.getElementById('dni').value = usuario.DNI || '';
-            document.getElementById('telefono').value = usuario.Telefono || '';
-            document.getElementById('email').value = usuario.Email || '';
-            document.getElementById('usuario').value = usuario.Usuario || '';
-            document.getElementById('perfil').value = usuario.IdPerfil || '';
+            document.getElementById('nombre').value = usuario.nombreCompleto || '';
+            document.getElementById('dni').value = usuario.dni || '';
+            document.getElementById('telefono').value = usuario.telefono || '';
+            document.getElementById('email').value = usuario.email || '';
+            document.getElementById('usuario').value = usuario.nombreUsuario || '';
+            document.getElementById('perfil').value = usuario.idPerfil || '';
+            document.getElementById('estado').value = usuario.estado || 'activo';
+            
+            // NO cargar contraseñas (seguridad)
+            document.getElementById('password').value = '';
+            document.getElementById('confirmarPassword').value = '';
             
             // Hacer campos de contraseña opcionales en edición
             const passwordField = document.getElementById('password');
             const confirmarField = document.getElementById('confirmarPassword');
-            if (passwordField) passwordField.required = false;
-            if (confirmarField) confirmarField.required = false;
+            if (passwordField) {
+                passwordField.required = false;
+                passwordField.type = 'password'; // Asegurar que esté oculta
+            }
+            if (confirmarField) {
+                confirmarField.required = false;
+                confirmarField.type = 'password'; // Asegurar que esté oculta
+            }
             
             // Agregar nota sobre contraseña
             const passwordContainer = passwordField.closest('.form-group');
@@ -200,8 +210,9 @@ async function registrarUsuario(event) {
         
         if (modoEdicion) {
             // Modo edición
-            url = `/Proyecto_De_App_Fast_Food/api/usuarios/actualizar/${idUsuarioEditar}`;
+            url = '/Proyecto_De_App_Fast_Food/api/usuarios/actualizar';
             method = 'PUT';
+            data.idUsuario = idUsuarioEditar;
         } else {
             // Modo registro
             url = '/Proyecto_De_App_Fast_Food/api/usuarios/registrar';
@@ -243,6 +254,64 @@ async function registrarUsuario(event) {
     }
 }
 
+// Limpiar formulario y resetear modo edición
+function limpiarFormulario() {
+    // Resetear variables de modo edición
+    modoEdicion = false;
+    idUsuarioEditar = null;
+    
+    // Limpiar URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // Resetear formulario
+    document.getElementById('formRegistrarUsuario').reset();
+    
+    // Restaurar título
+    const titulo = document.querySelector('.page-title');
+    if (titulo) {
+        titulo.innerHTML = '<i class="fas fa-user-plus"></i> Registrar Nuevo Usuario';
+    }
+    
+    // Restaurar texto del botón
+    const btnSubmit = document.querySelector('button[type="submit"]');
+    if (btnSubmit) {
+        btnSubmit.innerHTML = '<i class="fas fa-save"></i> Registrar Usuario';
+    }
+    
+    // Hacer contraseñas requeridas nuevamente y asegurar que estén ocultas
+    const passwordField = document.getElementById('password');
+    const confirmarField = document.getElementById('confirmarPassword');
+    if (passwordField) {
+        passwordField.required = true;
+        passwordField.type = 'password';
+        passwordField.value = '';
+    }
+    if (confirmarField) {
+        confirmarField.required = true;
+        confirmarField.type = 'password';
+        confirmarField.value = '';
+    }
+    
+    // Restablecer iconos de ver/ocultar contraseña si existen
+    const eyeIcons = document.querySelectorAll('.toggle-password i');
+    eyeIcons.forEach(icon => {
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    });
+    
+    // Eliminar nota de contraseña si existe
+    const passwordNote = document.getElementById('passwordNote');
+    if (passwordNote) passwordNote.remove();
+    
+    // Limpiar errores
+    document.querySelectorAll('.error-message').forEach(error => {
+        error.textContent = '';
+    });
+    
+    // Recargar perfiles
+    cargarPerfiles();
+}
+
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
     actualizarFechaHora();
@@ -275,4 +344,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Enviar formulario
     document.getElementById('formRegistrarUsuario').addEventListener('submit', registrarUsuario);
+    
+    // Botón limpiar
+    const btnLimpiar = document.querySelector('.btn-limpiar, .btn-secondary, button[type="reset"]');
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function(e) {
+            e.preventDefault();
+            limpiarFormulario();
+        });
+    }
 });

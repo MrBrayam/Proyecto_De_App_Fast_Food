@@ -117,4 +117,113 @@ class Usuario
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Busca un usuario por ID
+     * 
+     * @param int $id
+     * @return array|null
+     */
+    public function buscar(int $id): ?array
+    {
+        $conn = Database::connection();
+        
+        $stmt = $conn->prepare("
+            SELECT 
+                u.IdUsuario,
+                u.Dni,
+                u.NombreCompleto,
+                u.Telefono,
+                u.Email,
+                u.NombreUsuario,
+                u.IdPerfil,
+                p.NombrePerfil,
+                p.NivelAcceso,
+                u.Estado,
+                u.FechaCreacion,
+                u.FechaActualizacion
+            FROM Usuarios u
+            INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+            WHERE u.IdUsuario = ?
+            LIMIT 1
+        ");
+        
+        $stmt->execute([$id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $result ?: null;
+    }
+
+    /**
+     * Actualiza un usuario existente
+     * 
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function actualizar(int $id, array $data): bool
+    {
+        $conn = Database::connection();
+        
+        $stmt = $conn->prepare("
+            UPDATE Usuarios 
+            SET Dni = :dni,
+                NombreCompleto = :nombreCompleto,
+                Telefono = :telefono,
+                Email = :email,
+                NombreUsuario = :nombreUsuario,
+                IdPerfil = :idPerfil,
+                Estado = :estado
+            WHERE IdUsuario = :id
+        ");
+        
+        return $stmt->execute([
+            ':id' => $id,
+            ':dni' => $data['dni'],
+            ':nombreCompleto' => $data['nombreCompleto'],
+            ':telefono' => $data['telefono'],
+            ':email' => $data['email'],
+            ':nombreUsuario' => $data['nombreUsuario'],
+            ':idPerfil' => $data['idPerfil'],
+            ':estado' => $data['estado']
+        ]);
+    }
+
+    /**
+     * Cambia el estado de un usuario
+     * 
+     * @param int $id
+     * @param string $estado
+     * @return bool
+     */
+    public function cambiarEstado(int $id, string $estado): bool
+    {
+        $conn = Database::connection();
+        
+        $stmt = $conn->prepare("
+            UPDATE Usuarios 
+            SET Estado = :estado
+            WHERE IdUsuario = :id
+        ");
+        
+        return $stmt->execute([
+            ':id' => $id,
+            ':estado' => $estado
+        ]);
+    }
+
+    /**
+     * Elimina un usuario
+     * 
+     * @param int $id
+     * @return bool
+     */
+    public function eliminar(int $id): bool
+    {
+        $conn = Database::connection();
+        
+        $stmt = $conn->prepare("DELETE FROM Usuarios WHERE IdUsuario = ?");
+        return $stmt->execute([$id]);
+    }
 }
+

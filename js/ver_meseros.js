@@ -180,13 +180,38 @@ function verDetallesMesero(idUsuario) {
 }
 
 function editarMesero(idUsuario) {
-    alert(`Función de edición en desarrollo.\nID: ${idUsuario}`);
+    window.location.href = `../html/registrar_usuario.html?editar=${idUsuario}`;
 }
 
-function cambiarEstadoMesero(idUsuario, estadoActual) {
+async function cambiarEstadoMesero(idUsuario, estadoActual) {
     const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
-    if (confirm(`¿Está seguro que desea ${nuevoEstado === 'activo' ? 'activar' : 'desactivar'} este mesero?`)) {
-        alert(`Función de cambio de estado en desarrollo.`);
+    if (!confirm(`¿Está seguro que desea ${nuevoEstado === 'activo' ? 'activar' : 'desactivar'} este mesero?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/cambiar-estado', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                estado: nuevoEstado
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.exito) {
+            alert('✅ ' + data.mensaje);
+            cargarMeseros();
+        } else {
+            alert('❌ Error: ' + data.mensaje);
+        }
+    } catch (error) {
+        console.error('Error al cambiar estado:', error);
+        alert('❌ Error de conexión al servidor');
     }
 }
 
