@@ -64,9 +64,24 @@ try {
         ]
     );
     
-    // Buscar usuario directamente
+    // Buscar usuario con todos los permisos del perfil
     $stmt = $conexion->prepare(
-        "SELECT u.IdUsuario, u.Contrasena, u.NombreCompleto, u.IdPerfil, p.NombrePerfil, u.Estado 
+        "SELECT u.IdUsuario, u.Contrasena, u.NombreCompleto, u.IdPerfil, 
+                p.NombrePerfil, u.Estado,
+                p.PermisoVentasRegistrar, p.PermisoVentasVisualizar,
+                p.PermisoPromocionesRegistrar, p.PermisoPromocionesVisualizar,
+                p.PermisoMesasRegistrar, p.PermisoMesasVisualizar,
+                p.PermisoPedidosRegistrar, p.PermisoPedidosVisualizar,
+                p.PermisoCajaApertura, p.PermisoCajaVisualizar, p.PermisoCajaCerrar,
+                p.PermisoComprasRegistrar, p.PermisoComprasVisualizar,
+                p.PermisoInventarioVisualizar, p.PermisoInsumoRegistrar,
+                p.PermisoProveedoresRegistrar, p.PermisoProveedoresVisualizar,
+                p.PermisoProductoRegistrar, p.PermisoProductoVisualizar,
+                p.PermisoUsuariosRegistrar, p.PermisoUsuariosVisualizar,
+                p.PermisoClientesRegistrar, p.PermisoClientesVisualizar,
+                p.PermisoReportes,
+                p.PermisoSeguridadUsuariosRegistrar, p.PermisoSeguridadUsuariosVisualizar,
+                p.PermisoPerfilesRegistrar, p.PermisoPerfilesVisualizar
          FROM Usuarios u 
          JOIN Perfiles p ON u.IdPerfil = p.IdPerfil 
          WHERE u.NombreUsuario = :usuario AND u.Estado = 'activo' 
@@ -95,6 +110,38 @@ try {
     // Login exitoso - generar token JWT
     $token = generarTokenJWT($usuario_db['IdUsuario'], $usuario_db['NombrePerfil']);
     
+    // Construir objeto de permisos
+    $permisos = [
+        'registrarVenta' => (bool)$usuario_db['PermisoVentasRegistrar'],
+        'visualizarVenta' => (bool)$usuario_db['PermisoVentasVisualizar'],
+        'registrarPromociones' => (bool)$usuario_db['PermisoPromocionesRegistrar'],
+        'visualizarPromociones' => (bool)$usuario_db['PermisoPromocionesVisualizar'],
+        'registrarMesas' => (bool)$usuario_db['PermisoMesasRegistrar'],
+        'visualizarMesas' => (bool)$usuario_db['PermisoMesasVisualizar'],
+        'registrarPedidos' => (bool)$usuario_db['PermisoPedidosRegistrar'],
+        'visualizarPedidos' => (bool)$usuario_db['PermisoPedidosVisualizar'],
+        'aperturaCaja' => (bool)$usuario_db['PermisoCajaApertura'],
+        'visualizarCaja' => (bool)$usuario_db['PermisoCajaVisualizar'],
+        'cerrarCaja' => (bool)$usuario_db['PermisoCajaCerrar'],
+        'registrarCompras' => (bool)$usuario_db['PermisoComprasRegistrar'],
+        'visualizarCompras' => (bool)$usuario_db['PermisoComprasVisualizar'],
+        'visualizarInventario' => (bool)$usuario_db['PermisoInventarioVisualizar'],
+        'registrarInsumo' => (bool)$usuario_db['PermisoInsumoRegistrar'],
+        'registrarProveedores' => (bool)$usuario_db['PermisoProveedoresRegistrar'],
+        'visualizarProveedores' => (bool)$usuario_db['PermisoProveedoresVisualizar'],
+        'registrarProducto' => (bool)$usuario_db['PermisoProductoRegistrar'],
+        'visualizarProducto' => (bool)$usuario_db['PermisoProductoVisualizar'],
+        'registrarUsuarios' => (bool)$usuario_db['PermisoUsuariosRegistrar'],
+        'visualizarUsuarios' => (bool)$usuario_db['PermisoUsuariosVisualizar'],
+        'registrarClientes' => (bool)$usuario_db['PermisoClientesRegistrar'],
+        'visualizarClientes' => (bool)$usuario_db['PermisoClientesVisualizar'],
+        'generarReportes' => (bool)$usuario_db['PermisoReportes'],
+        'seguridadRegistrarUsuarios' => (bool)$usuario_db['PermisoSeguridadUsuariosRegistrar'],
+        'seguridadVisualizarUsuarios' => (bool)$usuario_db['PermisoSeguridadUsuariosVisualizar'],
+        'seguridadRegistrarPerfiles' => (bool)$usuario_db['PermisoPerfilesRegistrar'],
+        'seguridadVisualizarPerfiles' => (bool)$usuario_db['PermisoPerfilesVisualizar']
+    ];
+    
     $respuesta = [
         'exito' => true,
         'mensaje' => 'Autenticación exitosa',
@@ -102,7 +149,8 @@ try {
             'id' => (int)$usuario_db['IdUsuario'],
             'nombre' => $usuario_db['NombreCompleto'],
             'perfil' => $usuario_db['NombrePerfil'],
-            'idPerfil' => (int)$usuario_db['IdPerfil']
+            'idPerfil' => (int)$usuario_db['IdPerfil'],
+            'permisos' => $permisos
         ],
         'token' => $token
     ];

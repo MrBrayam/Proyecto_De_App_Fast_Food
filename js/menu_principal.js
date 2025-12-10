@@ -10,8 +10,135 @@ const DEBUG_DASHBOARD = true; // poner en false para silenciar logs
 
 console.log('DEBUG_DASHBOARD:', DEBUG_DASHBOARD);
 
+// ============================================
+// SISTEMA DE PERMISOS
+// ============================================
+function aplicarPermisos() {
+    // Obtener permisos del usuario - pueden estar en userPermisos o dentro de userSession
+    let userPermisos = JSON.parse(localStorage.getItem('userPermisos') || '{}');
+    const userSession = JSON.parse(localStorage.getItem('userSession') || '{}');
+    
+    // Si no hay permisos en userPermisos, intentar obtenerlos de userSession
+    if (Object.keys(userPermisos).length === 0 && userSession.permisos) {
+        userPermisos = userSession.permisos;
+    }
+    
+    console.log('=== SISTEMA DE PERMISOS ===');
+    console.log('Usuario:', userSession.nombre, '- Perfil:', userSession.perfil);
+    console.log('Permisos del usuario:', userPermisos);
+    console.log('Total de permisos:', Object.keys(userPermisos).length);
+    
+    // Si no hay permisos, mostrar advertencia y salir
+    if (Object.keys(userPermisos).length === 0) {
+        console.warn('⚠️ No se encontraron permisos para el usuario. Mostrando todo el menú por defecto.');
+        return;
+    }
+    
+    // Mapeo de data-permiso a permiso del backend
+    const permisoMap = {
+        'registrar-venta': 'registrarVenta',
+        'visualizar-venta': 'visualizarVenta',
+        'registrar-promociones': 'registrarPromociones',
+        'visualizar-promociones': 'visualizarPromociones',
+        'registrar-mesas': 'registrarMesas',
+        'visualizar-mesas': 'visualizarMesas',
+        'registrar-pedidos': 'registrarPedidos',
+        'visualizar-pedidos': 'visualizarPedidos',
+        'apertura-caja': 'aperturaCaja',
+        'visualizar-caja': 'visualizarCaja',
+        'cerrar-caja': 'cerrarCaja',
+        'registrar-compras': 'registrarCompras',
+        'visualizar-compras': 'visualizarCompras',
+        'registrar-inventario': 'registrarInventario',
+        'visualizar-inventario': 'visualizarInventario',
+        'registrar-insumo': 'registrarInsumo',
+        'registrar-proveedores': 'registrarProveedores',
+        'visualizar-proveedores': 'visualizarProveedores',
+        'registrar-producto': 'registrarProducto',
+        'registrar-usuarios': 'registrarUsuarios',
+        'visualizar-usuarios': 'visualizarUsuarios',
+        'registrar-clientes': 'registrarClientes',
+        'visualizar-clientes': 'visualizarClientes',
+        'generar-reportes': 'generarReportes',
+        'seguridad-registrar-usuarios': 'seguridadRegistrarUsuarios',
+        'seguridad-visualizar-usuarios': 'seguridadVisualizarUsuarios',
+        'seguridad-registrar-perfiles': 'seguridadRegistrarPerfiles',
+        'seguridad-visualizar-perfiles': 'seguridadVisualizarPerfiles'
+    };
+    
+    // Obtener todos los elementos con data-permiso
+    const elementosConPermiso = document.querySelectorAll('[data-permiso]');
+    
+    console.log(`Encontrados ${elementosConPermiso.length} elementos con permisos`);
+    
+    let ocultados = 0;
+    let mostrados = 0;
+    
+    elementosConPermiso.forEach(elemento => {
+        const permisoRequerido = elemento.getAttribute('data-permiso');
+        const permisoKey = permisoMap[permisoRequerido];
+        
+        if (!permisoKey) {
+            console.warn(`⚠️ Permiso no mapeado: ${permisoRequerido}`);
+            return;
+        }
+        
+        // Si el usuario NO tiene el permiso, ocultar el elemento
+        if (!userPermisos[permisoKey]) {
+            elemento.style.display = 'none';
+            ocultados++;
+            console.log(`❌ Permiso denegado: ${permisoRequerido} → ${permisoKey} = ${userPermisos[permisoKey]}`);
+        } else {
+            elemento.style.display = '';
+            mostrados++;
+            console.log(`✅ Permiso concedido: ${permisoRequerido} → ${permisoKey} = ${userPermisos[permisoKey]}`);
+        }
+    });
+    
+    console.log(`📊 Resumen: ${mostrados} elementos mostrados, ${ocultados} elementos ocultados`);
+    
+    // Ocultar secciones de menú si no tienen elementos visibles
+    const navItems = document.querySelectorAll('.nav-item.has-submenu');
+    navItems.forEach(navItem => {
+        const submenu = navItem.querySelector('.submenu');
+        if (submenu) {
+            // Revisar submenús de nivel 2 primero
+            const submenuItems = submenu.querySelectorAll('.submenu-item.has-submenu');
+            submenuItems.forEach(submenuItem => {
+                const submenuLevel2 = submenuItem.querySelector('.submenu.level-2');
+                if (submenuLevel2) {
+                    const elementosVisiblesLevel2 = Array.from(submenuLevel2.children).filter(
+                        child => child.style.display !== 'none'
+                    );
+                    
+                    // Si no hay elementos visibles en nivel 2, ocultar el submenu-item padre
+                    if (elementosVisiblesLevel2.length === 0) {
+                        submenuItem.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Ahora revisar el submenú principal
+            const elementosVisibles = Array.from(submenu.children).filter(
+                child => child.style.display !== 'none'
+            );
+            
+            // Si no hay elementos visibles en el submenú, ocultar todo el nav-item
+            if (elementosVisibles.length === 0) {
+                navItem.style.display = 'none';
+                console.log('Ocultando sección de menú sin permisos:', navItem.querySelector('.nav-link')?.textContent);
+            }
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded ejecutado en menu_principal');
+    
+    // Esperar a que el sidebar se cargue antes de aplicar permisos
+    setTimeout(() => {
+        aplicarPermisos();
+    }, 100);
     
     // Elementos del DOM
     const sidebar = document.getElementById('sidebar');

@@ -46,8 +46,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_venta.html" class="submenu-link">Registrar Venta</a></li>
-                                <li class="submenu-item"><a href="visualizar_venta.html" class="submenu-link">Visualizar Venta</a></li>
+                                <li class="submenu-item" data-permiso="registrar-venta"><a href="registrar_venta.html" class="submenu-link">Registrar Venta</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-venta"><a href="visualizar_venta.html" class="submenu-link">Visualizar Venta</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -56,8 +56,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_promociones.html" class="submenu-link">Registrar Promociones</a></li>
-                                <li class="submenu-item"><a href="visualizar_promociones.html" class="submenu-link">Visualizar Promociones</a></li>
+                                <li class="submenu-item" data-permiso="registrar-promociones"><a href="registrar_promociones.html" class="submenu-link">Registrar Promociones</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-promociones"><a href="visualizar_promociones.html" class="submenu-link">Visualizar Promociones</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -66,8 +66,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_mesas.html" class="submenu-link">Registrar Mesas</a></li>
-                                <li class="submenu-item"><a href="visualizar_mesas.html" class="submenu-link">Visualizar Mesas</a></li>
+                                <li class="submenu-item" data-permiso="registrar-mesas"><a href="registrar_mesas.html" class="submenu-link">Registrar Mesas</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-mesas"><a href="visualizar_mesas.html" class="submenu-link">Visualizar Mesas</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -76,8 +76,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_pedidos.html" class="submenu-link">Registrar Pedidos</a></li>
-                                <li class="submenu-item"><a href="visualizar_pedidos.html" class="submenu-link">Visualizar Pedidos</a></li>
+                                <li class="submenu-item" data-permiso="registrar-pedidos"><a href="registrar_pedidos.html" class="submenu-link">Registrar Pedidos</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-pedidos"><a href="visualizar_pedidos.html" class="submenu-link">Visualizar Pedidos</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -86,8 +86,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_platos.html" class="submenu-link">Registrar Platos</a></li>
-                                <li class="submenu-item"><a href="visualizar_platos.html" class="submenu-link">Visualizar Platos</a></li>
+                                <li class="submenu-item" data-permiso="registrar-producto"><a href="registrar_platos.html" class="submenu-link">Registrar Platos</a></li>
+                                <li class="submenu-item" data-permiso="registrar-producto"><a href="visualizar_platos.html" class="submenu-link">Visualizar Platos</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -96,9 +96,9 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="apertura_caja.html" class="submenu-link">Apertura Caja</a></li>
-                                <li class="submenu-item"><a href="visualizar_caja.html" class="submenu-link">Visualizar Cajas</a></li>
-                                <li class="submenu-item"><a href="cerrar_caja.html" class="submenu-link">Cerrar Caja</a></li>
+                                <li class="submenu-item" data-permiso="apertura-caja"><a href="apertura_caja.html" class="submenu-link">Apertura Caja</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-caja"><a href="visualizar_caja.html" class="submenu-link">Visualizar Cajas</a></li>
+                                <li class="submenu-item" data-permiso="cerrar-caja"><a href="cerrar_caja.html" class="submenu-link">Cerrar Caja</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -118,8 +118,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_compras.html" class="submenu-link">Registrar Compras</a></li>
-                                <li class="submenu-item"><a href="visualizar_compras.html" class="submenu-link">Visualizar Compras</a></li>
+                                <li class="submenu-item" data-permiso="registrar-compras"><a href="registrar_compras.html" class="submenu-link">Registrar Compras</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-compras"><a href="visualizar_compras.html" class="submenu-link">Visualizar Compras</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -128,9 +128,9 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="visualizar_inventario.html" class="submenu-link">Visualizar Inventario</a></li>
-                                <li class="submenu-item"><a href="registrar_insumo.html" class="submenu-link">Registrar Insumo</a></li>
-                                <li class="submenu-item"><a href="registrar_suministros.html" class="submenu-link">Registrar Suministro</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-inventario"><a href="visualizar_inventario.html" class="submenu-link">Visualizar Inventario</a></li>
+                                <li class="submenu-item" data-permiso="registrar-insumo"><a href="registrar_insumo.html" class="submenu-link">Registrar Insumo</a></li>
+                                <li class="submenu-item" data-permiso="registrar-insumo"><a href="registrar_suministros.html" class="submenu-link">Registrar Suministro</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -139,8 +139,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedor</a></li>
-                                <li class="submenu-item"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedor</a></li>
+                                <li class="submenu-item" data-permiso="registrar-proveedores"><a href="registrar_proveedor.html" class="submenu-link">Registrar Proveedor</a></li>
+                                <li class="submenu-item" data-permiso="visualizar-proveedores"><a href="visualizar_proveedores.html" class="submenu-link">Visualizar Proveedor</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -149,8 +149,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_producto.html" class="submenu-link">Registrar Producto</a></li>
-                                <li class="submenu-item"><a href="visualizar_productos.html" class="submenu-link">Visualizar Producto</a></li>
+                                <li class="submenu-item" data-permiso="registrar-producto"><a href="registrar_producto.html" class="submenu-link">Registrar Producto</a></li>
+                                <li class="submenu-item" data-permiso="registrar-producto"><a href="visualizar_productos.html" class="submenu-link">Visualizar Producto</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -164,8 +164,8 @@ function cargarSidebar() {
                         <span class="nav-arrow">▼</span>
                     </a>
                     <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_usuario.html" class="submenu-link">Registrar Usuario</a></li>
-                        <li class="submenu-item has-submenu">
+                        <li class="submenu-item" data-permiso="registrar-usuarios"><a href="registrar_usuario.html" class="submenu-link">Registrar Usuario</a></li>
+                        <li class="submenu-item has-submenu" data-permiso="visualizar-usuarios">
                             <a href="#" class="submenu-link">
                                 <span class="submenu-text">Visualizar Usuarios</span>
                                 <span class="nav-arrow">▼</span>
@@ -188,13 +188,13 @@ function cargarSidebar() {
                         <span class="nav-arrow">▼</span>
                     </a>
                     <ul class="submenu">
-                        <li class="submenu-item"><a href="registrar_clientes.html" class="submenu-link">Registrar Clientes</a></li>
-                        <li class="submenu-item"><a href="visualizar_clientes.html" class="submenu-link">Visualizar Clientes</a></li>
+                        <li class="submenu-item" data-permiso="registrar-clientes"><a href="registrar_clientes.html" class="submenu-link">Registrar Clientes</a></li>
+                        <li class="submenu-item" data-permiso="visualizar-clientes"><a href="visualizar_clientes.html" class="submenu-link">Visualizar Clientes</a></li>
                     </ul>
                 </li>
                 
                 <!-- 6. Reportes -->
-                <li class="nav-item" data-title="Reportes">
+                <li class="nav-item" data-title="Reportes" data-permiso="generar-reportes">
                     <a href="generar_reportes.html" class="nav-link">
                         <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
                         <span class="nav-text">Generar Reportes</span>
@@ -215,8 +215,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
-                                <li class="submenu-item"><a href="seguridad_visualizar_usuarios.html" class="submenu-link">Visualizar Usuarios</a></li>
+                                <li class="submenu-item" data-permiso="seguridad-registrar-usuarios"><a href="seguridad_registrar_usuarios.html" class="submenu-link">Registrar Usuarios</a></li>
+                                <li class="submenu-item" data-permiso="seguridad-visualizar-usuarios"><a href="seguridad_visualizar_usuarios.html" class="submenu-link">Visualizar Usuarios</a></li>
                             </ul>
                         </li>
                         <li class="submenu-item has-submenu">
@@ -225,8 +225,8 @@ function cargarSidebar() {
                                 <span class="nav-arrow">▼</span>
                             </a>
                             <ul class="submenu level-2">
-                                <li class="submenu-item"><a href="registrar_perfil.html" class="submenu-link">Registrar Tipo de Perfil</a></li>
-                                <li class="submenu-item"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
+                                <li class="submenu-item" data-permiso="seguridad-registrar-perfiles"><a href="registrar_perfil.html" class="submenu-link">Registrar Tipo de Perfil</a></li>
+                                <li class="submenu-item" data-permiso="seguridad-visualizar-perfiles"><a href="visualizar_perfil.html" class="submenu-link">Visualizar Perfil</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -253,8 +253,29 @@ function cargarSidebar() {
     // Insertar el sidebar al inicio del body
     document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
     
+    // Cargar información del usuario
+    cargarInfoUsuario();
+    
     // Después de cargar el sidebar, inicializar el menu_principal.js si existe
     if (typeof initializeSidebar === 'function') {
         initializeSidebar();
+    }
+}
+
+// Función para cargar información del usuario en el sidebar
+function cargarInfoUsuario() {
+    const userSession = JSON.parse(localStorage.getItem('userSession') || '{}');
+    
+    if (userSession.nombre && userSession.perfil) {
+        const userNameElement = document.querySelector('.user-name');
+        const userRoleElement = document.querySelector('.user-role');
+        
+        if (userNameElement) {
+            userNameElement.textContent = userSession.nombre;
+        }
+        
+        if (userRoleElement) {
+            userRoleElement.textContent = userSession.perfil;
+        }
     }
 }

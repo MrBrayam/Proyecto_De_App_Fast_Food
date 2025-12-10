@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nombre: usuario.nombre,
             perfil: usuario.perfil,
             idPerfil: usuario.idPerfil,
+            permisos: usuario.permisos || {},
             loginTime: new Date().toISOString(),
             token: token
         };
@@ -148,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
             NombreCompleto: usuario.nombre,
             Perfil: usuario.perfil,
             IdPerfil: usuario.idPerfil,
+            Permisos: usuario.permisos || {},
             Token: token
         };
 
@@ -155,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('currentUser', JSON.stringify(sessionData));
         localStorage.setItem('authToken', token);
+        localStorage.setItem('userPermisos', JSON.stringify(usuario.permisos || {}));
         sessionStorage.setItem('usuario', JSON.stringify(sessionUser));
 
         // Si el usuario marcó "Recordarme", guardar preferencia
