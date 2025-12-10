@@ -1216,6 +1216,7 @@ BEGIN
         Tamano,
         Precio,
         Cantidad,
+        StockMinimo,
         RutaImg,
         Estado,
         FechaCreacion,

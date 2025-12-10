@@ -41,6 +41,7 @@ class PlatoController extends Controller
                     'Tamano' => $plato['Tamano'],
                     'Precio' => (float)$plato['Precio'],
                     'Cantidad' => (int)$plato['Cantidad'],
+                    'StockMinimo' => (int)($plato['StockMinimo'] ?? 10),
                     'RutaImg' => $plato['RutaImg'] ?? null,
                     'Estado' => $plato['Estado'],
                     'FechaCreacion' => $plato['FechaCreacion'],
@@ -77,6 +78,7 @@ class PlatoController extends Controller
         $tamano = trim($input['tamano'] ?? 'personal');
         $precio = isset($input['precio']) ? (float)$input['precio'] : 0;
         $cantidad = isset($input['cantidad']) ? (int)$input['cantidad'] : 0;
+        $stockMinimo = isset($input['stockMinimo']) ? (int)$input['stockMinimo'] : 10;
         $estado = trim($input['estado'] ?? 'disponible');
 
         if ($codPlato === '' || $nombre === '') {
@@ -105,6 +107,7 @@ class PlatoController extends Controller
                 'tamano' => $tamano,
                 'precio' => $precio,
                 'cantidad' => $cantidad,
+                'stockMinimo' => $stockMinimo,
                 'rutaImg' => $input['rutaImg'] ?? null,
                 'estado' => $estado,
             ]);
@@ -301,6 +304,7 @@ class PlatoController extends Controller
         $tamano = trim($input['tamano'] ?? 'personal');
         $precio = isset($input['precio']) ? (float)$input['precio'] : 0;
         $cantidad = isset($input['cantidad']) ? (int)$input['cantidad'] : 0;
+        $stockMinimo = isset($input['stockMinimo']) ? (int)$input['stockMinimo'] : 10;
         $estado = trim($input['estado'] ?? 'disponible');
 
         if ($codPlato === '' || $nombre === '') {
@@ -329,6 +333,7 @@ class PlatoController extends Controller
                 'tamano' => $tamano,
                 'precio' => $precio,
                 'cantidad' => $cantidad,
+                'stockMinimo' => $stockMinimo,
                 'rutaImg' => $input['rutaImg'] ?? null,
                 'estado' => $estado,
             ]);

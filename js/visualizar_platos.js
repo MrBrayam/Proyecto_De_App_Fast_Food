@@ -89,10 +89,24 @@ function renderizarPlatos(lista) {
         const card = document.createElement('div');
         card.className = 'plato-card';
         
+        // Verificar si el stock está bajo
+        const cantidad = parseInt(plato.Cantidad || 0);
+        const stockMinimo = parseInt(plato.StockMinimo || 10);
+        const stockBajo = cantidad <= stockMinimo;
+        
+        // Agregar clase si stock bajo
+        if (stockBajo) {
+            card.classList.add('stock-bajo');
+        }
+        
         // Usar imagen local si existe, sino usar ícono de pizza
         const imagenSrc = plato.RutaImg ? plato.RutaImg : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E';
         
+        // Crear badge de alerta si stock bajo
+        const stockBadge = stockBajo ? `<div class="stock-alert-badge"><i class="fas fa-exclamation-triangle"></i> Stock Bajo</div>` : '';
+        
         card.innerHTML = `
+            ${stockBadge}
             <div class="plato-imagen">
                 <img src="${imagenSrc}" alt="${plato.Nombre || 'Plato'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E'">
             </div>
@@ -108,7 +122,9 @@ function renderizarPlatos(lista) {
                 <div class="plato-detalles">
                     <span class="plato-tamano"><i class="fas fa-pizza-slice"></i> ${plato.Tamano || '-'}</span>
                     <span class="plato-precio"><i class="fas fa-tag"></i> S/. ${(plato.Precio ?? 0).toFixed(2)}</span>
-                    <span class="plato-cantidad"><i class="fas fa-boxes"></i> Stock: ${plato.Cantidad ?? 0}</span>
+                    <span class="plato-cantidad ${stockBajo ? 'stock-bajo-text' : ''}">
+                        <i class="fas fa-boxes"></i> Stock: ${cantidad}/${stockMinimo}
+                    </span>
                 </div>
                 <div class="plato-acciones">
                     <button class="btn-ver-detalles" data-cod="${plato.CodPlato}" title="Ver detalles">
@@ -133,7 +149,21 @@ function verDetalles(plato) {
     document.getElementById('detalleNombre').textContent = plato.Nombre || '-';
     document.getElementById('detalleTamano').textContent = plato.Tamano || '-';
     document.getElementById('detallePrecio').textContent = `S/ ${(plato.Precio ?? 0).toFixed(2)}`;
-    document.getElementById('detalleCantidad').textContent = plato.Cantidad ?? '-';
+    
+    const cantidad = parseInt(plato.Cantidad || 0);
+    const stockMinimo = parseInt(plato.StockMinimo || 10);
+    const detallesCantidad = document.getElementById('detalleCantidad');
+    detallesCantidad.textContent = `${cantidad} / ${stockMinimo}`;
+    
+    // Aplicar color si stock bajo
+    if (cantidad <= stockMinimo) {
+        detallesCantidad.style.color = '#ff6b6b';
+        detallesCantidad.style.fontWeight = 'bold';
+    } else {
+        detallesCantidad.style.color = '';
+        detallesCantidad.style.fontWeight = '';
+    }
+    
     document.getElementById('detalleDescripcion').textContent = plato.Descripcion || '-';
     document.getElementById('detalleIngredientes').textContent = plato.Ingredientes || '-';
 

@@ -105,6 +105,7 @@ function aplicarDatosPlato(plato) {
     document.getElementById('searchTamano').value = plato.Tamano || plato.tamano || '';
     document.getElementById('searchPrecio').value = plato.Precio ?? plato.precio ?? '';
     document.getElementById('searchCantidad').value = plato.Cantidad ?? plato.cantidad ?? '';
+    document.getElementById('searchStockMinimo').value = plato.StockMinimo ?? plato.stockMinimo ?? 10;
     document.getElementById('searchDescripcion').value = plato.Descripcion || plato.descripcion || '';
     document.getElementById('searchIngredientes').value = plato.Ingredientes || plato.ingredientes || '';
 
@@ -283,6 +284,7 @@ function limpiarFormulario() {
     document.getElementById('searchTamano').value = '';
     document.getElementById('searchPrecio').value = '';
     document.getElementById('searchCantidad').value = '';
+    document.getElementById('searchStockMinimo').value = '10';
     document.getElementById('searchDescripcion').value = '';
     document.getElementById('searchIngredientes').value = '';
     document.getElementById('inputImagen').value = '';

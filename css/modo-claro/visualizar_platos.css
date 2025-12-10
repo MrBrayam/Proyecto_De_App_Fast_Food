@@ -590,3 +590,62 @@
         font-size: 14px;
     }
 }
+
+/* ===== ALERTAS DE STOCK BAJO ===== */
+.plato-card.stock-bajo {
+    border: 2px solid #ff6b6b;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
+    }
+}
+
+.stock-alert-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+    animation: bounce-alert 1s ease-in-out infinite;
+}
+
+@keyframes bounce-alert {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.stock-bajo-text {
+    color: #ff6b6b !important;
+    font-weight: bold;
+    animation: text-warning 2s ease-in-out infinite;
+}
+
+@keyframes text-warning {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+

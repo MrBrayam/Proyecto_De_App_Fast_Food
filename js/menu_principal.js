@@ -319,6 +319,91 @@ function actualizarPlatos(dataPlatos) {
     logDebug('Platos recibidos:', platos.length);
     setTextoSeguro('statPlatos', platos.length.toString());
     setTextoSeguro('statPlatosChange', 'Disponibles en menú');
+    
+    // Actualizar alertas de stock bajo
+    actualizarAlertasStockBajo(platos);
+}
+
+function actualizarAlertasStockBajo(platos) {
+    const alertList = document.querySelector('.alert-list');
+    const notificationBadge = document.querySelector('.notification-badge');
+    
+    // Filtrar platos con stock bajo (cantidad <= stockMinimo)
+    const platosStockBajo = platos.filter(p => {
+        const cantidad = parseInt(p.Cantidad || 0);
+        const stockMinimo = parseInt(p.StockMinimo || 10);
+        return cantidad <= stockMinimo && cantidad >= 0;
+    });
+    
+    // Actualizar badge de la campana
+    if (notificationBadge) {
+        if (platosStockBajo.length > 0) {
+            notificationBadge.textContent = platosStockBajo.length;
+            notificationBadge.style.display = 'inline-block';
+        } else {
+            notificationBadge.style.display = 'none';
+        }
+    }
+    
+    // Actualizar panel de alertas
+    if (!alertList) return;
+    
+    // Limpiar alertas de stock existentes (conservar otras alertas)
+    const alertasExistentes = alertList.querySelectorAll('.alert-item:not([data-type="stock"])');
+    alertList.innerHTML = '';
+    
+    // Añadir alertas de stock bajo
+    if (platosStockBajo.length > 0) {
+        // Si hay muchos platos, mostrar resumen
+        if (platosStockBajo.length > 3) {
+            const alertItem = document.createElement('div');
+            alertItem.className = 'alert-item alert-warning';
+            alertItem.setAttribute('data-type', 'stock');
+            alertItem.innerHTML = `
+                <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                <span class="alert-text"><strong>${platosStockBajo.length} platos</strong> con stock bajo</span>
+            `;
+            alertItem.style.cursor = 'pointer';
+            alertItem.title = 'Click para ver inventario';
+            alertItem.addEventListener('click', () => {
+                window.location.href = 'visualizar_platos.html';
+            });
+            alertList.appendChild(alertItem);
+        } else {
+            // Mostrar cada plato individualmente
+            platosStockBajo.forEach(plato => {
+                const alertItem = document.createElement('div');
+                alertItem.className = 'alert-item alert-warning';
+                alertItem.setAttribute('data-type', 'stock');
+                const cantidad = parseInt(plato.Cantidad || 0);
+                const stockMinimo = parseInt(plato.StockMinimo || 10);
+                alertItem.innerHTML = `
+                    <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <span class="alert-text"><strong>${plato.Nombre}</strong>: Stock bajo (${cantidad}/${stockMinimo})</span>
+                `;
+                alertItem.style.cursor = 'pointer';
+                alertItem.title = 'Click para ver inventario';
+                alertItem.addEventListener('click', () => {
+                    window.location.href = 'visualizar_platos.html';
+                });
+                alertList.appendChild(alertItem);
+            });
+        }
+    }
+    
+    // Re-añadir otras alertas que no son de stock
+    alertasExistentes.forEach(alerta => alertList.appendChild(alerta));
+    
+    // Si no hay alertas, mostrar mensaje
+    if (alertList.children.length === 0) {
+        const alertItem = document.createElement('div');
+        alertItem.className = 'alert-item alert-success';
+        alertItem.innerHTML = `
+            <span class="alert-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="alert-text">No hay alertas pendientes</span>
+        `;
+        alertList.appendChild(alertItem);
+    }
 }
 
 function renderPedidosRecientes(dataPedidos) {
