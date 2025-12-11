@@ -10,11 +10,12 @@ class Suministro
     {
         $db = Database::connection();
         
-        $stmt = $db->prepare('CALL pa_registrar_suministro(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $db->prepare('CALL pa_registrar_suministro(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         
         $stmt->execute([
             $data['tipoSuministro'] ?? null,
             $data['nombreSuministro'] ?? null,
+            $data['codProveedor'] ?? null,
             $data['proveedor'] ?? null,
             $data['cantidad'] ?? 0,
             $data['unidadMedida'] ?? 'unidad',

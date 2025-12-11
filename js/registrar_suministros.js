@@ -47,6 +47,7 @@ async function registrarSuministro(e) {
     // Obtener valores del formulario
     const tipoSuministro = document.getElementById('tipoSuministro').value.trim();
     const nombreSuministro = document.getElementById('nombreSuministro').value.trim();
+    const codProveedor = document.getElementById('rucProveedor') ? document.getElementById('rucProveedor').value : null;
     const proveedor = document.getElementById('proveedor').value.trim();
     const cantidad = parseInt(document.getElementById('cantidad').value);
     const unidadMedida = document.getElementById('unidadMedida').value;
@@ -97,6 +98,7 @@ async function registrarSuministro(e) {
             body: JSON.stringify({
                 tipoSuministro,
                 nombreSuministro,
+                codProveedor: codProveedor ? parseInt(codProveedor) : null,
                 proveedor,
                 cantidad,
                 unidadMedida,
