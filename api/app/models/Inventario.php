@@ -36,22 +36,6 @@ class Inventario
     }
 
     /**
-     * Listar suministros del inventario
-     */
-    public function listarSuministros()
-    {
-        $db = Database::connection();
-        $stmt = $db->prepare('CALL pa_listar_suministros_inventario()');
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Ensure we close the cursor
-        while ($stmt->nextRowset()) {}
-        
-        return $result;
-    }
-
-    /**
      * Buscar producto por ID
      */
     public function buscarProductoPorId($idProducto)
@@ -70,17 +54,6 @@ class Inventario
         $db = Database::connection();
         $stmt = $db->prepare('SELECT * FROM Insumos WHERE CodInsumo = ?');
         $stmt->execute([$codInsumo]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Buscar suministro por ID
-     */
-    public function buscarSuministroPorId($idSuministro)
-    {
-        $db = Database::connection();
-        $stmt = $db->prepare('SELECT * FROM Suministros WHERE IdSuministro = ?');
-        $stmt->execute([$idSuministro]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

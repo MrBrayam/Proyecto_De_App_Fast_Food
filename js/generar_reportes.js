@@ -979,10 +979,10 @@ function crearGraficosCompras() {
     chartPrincipal = new Chart(ctxPrincipal, {
         type: 'doughnut',
         data: {
-            labels: ['Insumos', 'Suministros', 'Productos', 'Otros'],
+            labels: ['Insumos', 'Productos', 'Otros'],
             datasets: [{
-                data: [45, 15, 30, 10],
-                backgroundColor: ['#ff5733', '#ffc857', '#3498db', '#9b59b6'],
+                data: [50, 35, 15],
+                backgroundColor: ['#ff5733', '#3498db', '#9b59b6'],
                 borderWidth: 0
             }]
         },
@@ -996,10 +996,9 @@ function crearGraficosCompras() {
     });
     
     document.getElementById('leyendaPrincipal').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Insumos - 45%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Suministros - 15%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Productos - 30%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros - 10%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Insumos - 50%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Productos - 35%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros - 15%</span></div>
     `;
     
     // Gráfico Secundario: Top Proveedores
@@ -1007,10 +1006,10 @@ function crearGraficosCompras() {
     chartSecundario = new Chart(ctxSecundario, {
         type: 'doughnut',
         data: {
-            labels: ['Distribuidora ABC', 'Alimentos XYZ', 'Suministros DEF', 'Otros'],
+            labels: ['Distribuidora ABC', 'Alimentos XYZ', 'Otros'],
             datasets: [{
-                data: [35, 25, 20, 20],
-                backgroundColor: ['#27ae60', '#3498db', '#ff5733', '#9b59b6'],
+                data: [40, 35, 25],
+                backgroundColor: ['#27ae60', '#3498db', '#9b59b6'],
                 borderWidth: 0
             }]
         },
@@ -1024,10 +1023,9 @@ function crearGraficosCompras() {
     });
     
     document.getElementById('leyendaSecundario').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #27ae60;"></span><span>Distribuidora ABC - 35%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Alimentos XYZ - 25%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Suministros DEF - 20%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros - 20%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #27ae60;"></span><span>Distribuidora ABC - 40%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Alimentos XYZ - 35%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros - 25%</span></div>
     `;
     
     // Gráfico de Tendencias: Estado de Órdenes
@@ -1189,10 +1187,10 @@ function crearGraficosInventario() {
     chartSecundario = new Chart(ctxSecundario, {
         type: 'doughnut',
         data: {
-            labels: ['Ingredientes', 'Bebidas', 'Envases', 'Suministros'],
+            labels: ['Ingredientes', 'Bebidas', 'Envases'],
             datasets: [{
-                data: [45, 25, 20, 10],
-                backgroundColor: ['#ff5733', '#3498db', '#ffc857', '#9b59b6'],
+                data: [50, 30, 20],
+                backgroundColor: ['#ff5733', '#3498db', '#ffc857'],
                 borderWidth: 0
             }]
         },
@@ -1200,10 +1198,9 @@ function crearGraficosInventario() {
     });
     
     document.getElementById('leyendaSecundario').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Ingredientes - 45%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Bebidas - 25%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Ingredientes - 50%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Bebidas - 30%</span></div>
         <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Envases - 20%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Suministros - 10%</span></div>
     `;
     
     const ctxTendencias = document.getElementById('chartTendencias').getContext('2d');

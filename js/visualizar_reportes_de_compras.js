@@ -43,12 +43,11 @@ function inicializarGraficos() {
         chartCategorias = new Chart(ctxCategorias, {
             type: 'pie',
             data: {
-                labels: ['Insumos', 'Suministros', 'Productos', 'Otros'],
+                labels: ['Insumos', 'Productos', 'Otros'],
                 datasets: [{
-                    data: [3510, 1170, 2340, 780],
+                    data: [4680, 2340, 780],
                     backgroundColor: [
                         '#ff5733',
-                        '#ffc857',
                         '#3498db',
                         '#9b59b6'
                     ],
@@ -99,13 +98,12 @@ function inicializarGraficos() {
         chartProveedores = new Chart(ctxProveedores, {
             type: 'pie',
             data: {
-                labels: ['Distribuidora ABC', 'Alimentos XYZ', 'Suministros DEF', 'Otros'],
+                labels: ['Distribuidora ABC', 'Alimentos XYZ', 'Otros'],
                 datasets: [{
-                    data: [2730, 1950, 1560, 1560],
+                    data: [3120, 2340, 1340],
                     backgroundColor: [
                         '#27ae60',
                         '#3498db',
-                        '#ff5733',
                         '#9b59b6'
                     ],
                     borderColor: 'rgba(26, 29, 46, 0.8)',

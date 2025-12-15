@@ -129,9 +129,6 @@ async function cargarItemsPorTipo() {
         } else if (tipo === 'insumo') {
             endpoint = '/Proyecto_De_App_Fast_Food/api/insumos/listar';
             dataKey = 'insumos';
-        } else if (tipo === 'suministro') {
-            endpoint = '/Proyecto_De_App_Fast_Food/api/suministros/listar';
-            dataKey = 'suministros';
         }
         
         const response = await fetch(endpoint);
@@ -152,10 +149,6 @@ async function cargarItemsPorTipo() {
                 } else if (tipo === 'insumo') {
                     codigo = item.CodInsumo ?? item.codInsumo;
                     nombre = item.NombreInsumo ?? item.nombreInsumo ?? 'Insumo';
-                    precio = parseFloat(item.PrecioUnitario ?? 0).toFixed(2);
-                } else if (tipo === 'suministro') {
-                    codigo = item.IdSuministro ?? item.idSuministro;
-                    nombre = item.NombreSuministro ?? item.nombreSuministro ?? 'Suministro';
                     precio = parseFloat(item.PrecioUnitario ?? 0).toFixed(2);
                 }
                 

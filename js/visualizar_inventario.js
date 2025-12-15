@@ -3,7 +3,6 @@
 // Variables globales
 let productosData = [];
 let insumosData = [];
-let suministrosData = [];
 let tablaActual = 'productos';
 
 // Inicializar al cargar el DOM
@@ -19,16 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elegir pestaña inicial según query ?tab=
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
-    if (tabParam === 'suministros' || tabParam === 'insumos' || tabParam === 'productos') {
+    if (tabParam === 'insumos' || tabParam === 'productos') {
         document.getElementById('tabFilter').value = tabParam;
         tablaActual = tabParam;
     }
 
     // Cargar datos iniciales según pestaña activa
-    if (tablaActual === 'suministros') {
-        mostrarSeccion('suministros');
-        cargarSuministros();
-    } else if (tablaActual === 'insumos') {
+    if (tablaActual === 'insumos') {
         mostrarSeccion('insumos');
         cargarInsumos();
     } else {
@@ -41,10 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function mostrarSeccion(tab) {
     document.getElementById('productosSection').style.display = 'none';
     document.getElementById('insumosSection').style.display = 'none';
-    document.getElementById('suministrosSection').style.display = 'none';
     if (tab === 'productos') document.getElementById('productosSection').style.display = 'block';
     if (tab === 'insumos') document.getElementById('insumosSection').style.display = 'block';
-    if (tab === 'suministros') document.getElementById('suministrosSection').style.display = 'block';
 }
 
 // Cargar productos desde API
@@ -97,32 +91,7 @@ async function cargarInsumos() {
     }
 }
 
-// Cargar suministros desde API
-async function cargarSuministros() {
-    try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/inventario/suministros', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        const data = await response.json();
-        
-        if (data.exito && data.items) {
-            suministrosData = data.items;
-            renderizarSuministros(suministrosData);
-            actualizarEstadisticas();
-        } else {
-            mostrarMensaje('Error al cargar suministros', 'error');
-        }
-    } catch (error) {
-        console.error('Error al cargar suministros:', error);
-        mostrarMensaje('Error al conectar con el servidor', 'error');
-    }
-}
-
-// Renderizar productos en tabla
+// Cargar insumos desde API
 function renderizarProductos(items) {
     const tbody = document.getElementById('productosBody');
     
@@ -186,39 +155,6 @@ function renderizarInsumos(items) {
     `).join('');
 }
 
-// Renderizar suministros en tabla
-function renderizarSuministros(items) {
-    const tbody = document.getElementById('suministrosBody');
-    
-    if (items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="text-center">No hay suministros disponibles</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = items.map(suministro => `
-        <tr>
-            <td>${suministro.IdSuministro}</td>
-            <td>${suministro.TipoSuministro}</td>
-            <td>${suministro.NombreSuministro}</td>
-            <td>${suministro.Cantidad}</td>
-            <td>${suministro.UnidadMedida}</td>
-            <td>S/ ${parseFloat(suministro.PrecioUnitario).toFixed(2)}</td>
-            <td>S/ ${parseFloat(suministro.Total).toFixed(2)}</td>
-            <td>${suministro.FechaCompra}</td>
-            <td>
-                <span class="badge ${getEstadoBadgeClass(suministro.Estado)}">
-                    ${suministro.Estado}
-                </span>
-            </td>
-            <td>
-                <button class="btn-icon" onclick="verDetallesSuministro('${suministro.IdSuministro}')" title="Ver detalles">
-                    <i class="fas fa-eye"></i>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-}
-
 // Cambiar pestaña
 function cambiarPestana() {
     const tab = document.getElementById('tabFilter').value;
@@ -230,7 +166,6 @@ function cambiarPestana() {
     // Cargar datos si es necesario
     if (tab === 'productos' && productosData.length === 0) cargarProductos();
     else if (tab === 'insumos' && insumosData.length === 0) cargarInsumos();
-    else if (tab === 'suministros' && suministrosData.length === 0) cargarSuministros();
     
     filtrarDatos();
 }
@@ -258,14 +193,7 @@ function filtrarDatos() {
             return matchText && matchState;
         });
         renderizarInsumos(datosActuales);
-    } else if (tablaActual === 'suministros') {
-        datosActuales = suministrosData.filter(item => {
-            const matchText = item.NombreSuministro.toLowerCase().includes(searchText) ||
-                             item.IdSuministro.toString().toLowerCase().includes(searchText);
-            const matchState = !stateFilter || item.Estado === stateFilter;
-            return matchText && matchState;
-        });
-        renderizarSuministros(datosActuales);
+
     }
 }
 
@@ -282,9 +210,6 @@ function actualizarEstadisticas() {
     } else if (tablaActual === 'insumos') {
         total = insumosData.length;
         agotados = insumosData.filter(i => i.Estado === 'agotado').length;
-    } else if (tablaActual === 'suministros') {
-        total = suministrosData.length;
-        agotados = suministrosData.filter(s => s.Estado === 'agotado').length;
     }
     
     document.getElementById('totalItems').textContent = total;
@@ -382,60 +307,6 @@ function verDetallesInsumo(id) {
             <div class="detalle-item full-width">
                 <label>Observaciones:</label>
                 <span>${insumo.Observacion || 'Sin observaciones'}</span>
-            </div>
-        </div>
-    `;
-    modal.style.display = 'block';
-}
-
-// Ver detalles de suministro
-function verDetallesSuministro(id) {
-    const suministro = suministrosData.find(s => s.IdSuministro == id);
-    if (!suministro) return;
-    
-    const modal = document.getElementById('detallesModal');
-    document.getElementById('modalTitle').textContent = 'Detalles del Suministro';
-    document.getElementById('modalBody').innerHTML = `
-        <div class="detalle-grid">
-            <div class="detalle-item">
-                <label>ID:</label>
-                <span>${suministro.IdSuministro}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Tipo:</label>
-                <span>${suministro.TipoSuministro}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Nombre:</label>
-                <span>${suministro.NombreSuministro}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Proveedor:</label>
-                <span>${suministro.Proveedor}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Cantidad:</label>
-                <span>${suministro.Cantidad} ${suministro.UnidadMedida}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Precio Unitario:</label>
-                <span>S/ ${parseFloat(suministro.PrecioUnitario).toFixed(2)}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Total:</label>
-                <span class="total-highlight">S/ ${parseFloat(suministro.Total).toFixed(2)}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Fecha de Compra:</label>
-                <span>${suministro.FechaCompra}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Estado:</label>
-                <span class="badge ${getEstadoBadgeClass(suministro.Estado)}">${suministro.Estado}</span>
-            </div>
-            <div class="detalle-item full-width">
-                <label>Observaciones:</label>
-                <span>${suministro.Observaciones || 'Sin observaciones'}</span>
             </div>
         </div>
     `;
