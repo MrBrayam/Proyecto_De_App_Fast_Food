@@ -33,19 +33,32 @@ function actualizarFechaHora() {
 // Cargar meseros desde el API
 async function cargarMeseros() {
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/listar');
-        const data = await response.json();
+        // Cargar usuarios meseros
+        const responseUsuarios = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/listar');
+        const dataUsuarios = await responseUsuarios.json();
         
-        if (data.exito && data.usuarios) {
-            todosLosUsuarios = data.usuarios;
+        // Cargar estadísticas de meseros
+        const responseEstadisticas = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/estadisticas-meseros');
+        const dataEstadisticas = await responseEstadisticas.json();
+        
+        if (dataUsuarios.exito && dataUsuarios.usuarios && dataEstadisticas.exito) {
+            todosLosUsuarios = dataUsuarios.usuarios;
             meserosFiltrados = todosLosUsuarios.filter(usuario => 
                 usuario.nombrePerfil.toLowerCase() === 'mesero'
             );
             
-            mostrarMeseros(meserosFiltrados);
+            // Crear mapa de estadísticas por IdUsuario
+            const estadisticasMap = new Map();
+            if (dataEstadisticas.datos) {
+                dataEstadisticas.datos.forEach(stat => {
+                    estadisticasMap.set(stat.IdUsuario, stat);
+                });
+            }
+            
+            mostrarMeseros(meserosFiltrados, estadisticasMap);
             actualizarEstadisticas(meserosFiltrados);
         } else {
-            console.error('Error al cargar meseros:', data.mensaje);
+            console.error('Error al cargar meseros:', dataUsuarios.mensaje);
             mostrarMensajeVacio('Error al cargar los datos');
         }
     } catch (error) {
@@ -55,7 +68,7 @@ async function cargarMeseros() {
 }
 
 // Mostrar meseros en la tabla
-function mostrarMeseros(meseros) {
+function mostrarMeseros(meseros, estadisticasMap = new Map()) {
     const tbody = document.getElementById('tablaMeseros');
     
     if (!meseros || meseros.length === 0) {
@@ -73,10 +86,18 @@ function mostrarMeseros(meseros) {
     tbody.innerHTML = meseros.map(mesero => {
         const estadoClass = mesero.estado === 'activo' ? 'badge-activo' : 'badge-inactivo';
         const estadoIcon = mesero.estado === 'activo' ? 'fa-check-circle' : 'fa-times-circle';
-        const mesasAsignadas = Math.floor(Math.random() * 8) + 3;
-        const pedidosHoy = Math.floor(Math.random() * 25) + 5;
-        const propinasMes = (Math.random() * 500 + 200).toFixed(2);
-        const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde';
+        
+        // Obtener estadísticas reales o valores por defecto
+        const stats = estadisticasMap.get(mesero.idUsuario) || {
+            MesasAsignadas: 0,
+            PedidosHoy: 0,
+            PropinasMes: 0.00
+        };
+        
+        const mesasAsignadas = stats.MesasAsignadas || 0;
+        const pedidosHoy = stats.PedidosHoy || 0;
+        const propinasMes = parseFloat(stats.PropinasMes || 0).toFixed(2);
+        const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde'; // TODO: agregar campo Turno en BD
         
         return `
             <tr>

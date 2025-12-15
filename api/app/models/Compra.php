@@ -137,6 +137,7 @@ class Compra {
             foreach ($lineas as $linea) {
                 $sql = "INSERT INTO DetalleCompra (
                     IdCompra, 
+                    TipoItem,
                     Codigo, 
                     Descripcion, 
                     Empaque, 
@@ -144,7 +145,8 @@ class Compra {
                     PrecioUnitario, 
                     Total
                 ) VALUES (
-                    :idCompra, 
+                    :idCompra,
+                    :tipoItem, 
                     :codigo, 
                     :descripcion, 
                     :empaque, 
@@ -155,6 +157,7 @@ class Compra {
                 
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
+                $stmt->bindValue(':tipoItem', 'producto', PDO::PARAM_STR);
                 $stmt->bindValue(':codigo', $linea['codigo'] ?? '', PDO::PARAM_STR);
                 $stmt->bindValue(':descripcion', $linea['descripcion'] ?? '', PDO::PARAM_STR);
                 $stmt->bindValue(':empaque', $linea['empaque'] ?? '', PDO::PARAM_STR);
@@ -164,6 +167,7 @@ class Compra {
                 
                 error_log("Insertando detalle: " . json_encode([
                     'idCompra' => $idCompra,
+                    'tipoItem' => 'producto',
                     'codigo' => $linea['codigo'] ?? '',
                     'descripcion' => $linea['descripcion'] ?? '',
                     'empaque' => $linea['empaque'] ?? '',
@@ -173,6 +177,19 @@ class Compra {
                 ]));
                 
                 $stmt->execute();
+                
+                // Actualizar stock inmediatamente al registrar el detalle
+                if ($linea['codigo']) {
+                    $sqlUpdateStock = "UPDATE Productos 
+                                      SET Stock = Stock + :cantidad 
+                                      WHERE CodProducto = :codigo";
+                    $stmtStock = $db->prepare($sqlUpdateStock);
+                    $stmtStock->bindValue(':cantidad', $linea['cantidad'] ?? 0, PDO::PARAM_STR);
+                    $stmtStock->bindValue(':codigo', $linea['codigo'] ?? '', PDO::PARAM_STR);
+                    $stmtStock->execute();
+                    
+                    error_log("Stock actualizado para producto {$linea['codigo']}: +{$linea['cantidad']} unidades");
+                }
             }
             
             return true;
@@ -186,12 +203,38 @@ class Compra {
     public static function actualizarEstado($idCompra, $estado) {
         try {
             $db = Database::connection();
+            
+            // Primero obtener el estado actual
+            $sqlEstadoActual = "SELECT Estado FROM Compras WHERE IdCompra = :idCompra";
+            $stmtEstado = $db->prepare($sqlEstadoActual);
+            $stmtEstado->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
+            $stmtEstado->execute();
+            $estadoActual = $stmtEstado->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$estadoActual) {
+                return [
+                    'exito' => false,
+                    'mensaje' => 'No se encontró la compra'
+                ];
+            }
+            
+            // Actualizar el estado
             $sql = "UPDATE Compras SET Estado = :estado WHERE IdCompra = :idCompra";
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':estado', $estado, PDO::PARAM_STR);
             $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
             $stmt->execute();
+            
             if ($stmt->rowCount() > 0) {
+                // Si el estado cambió a 'pagado' o 'completado', aumentar stock
+                if (($estado === 'pagado' || $estado === 'completado') && 
+                    $estadoActual['Estado'] !== 'pagado' && 
+                    $estadoActual['Estado'] !== 'completado') {
+                    
+                    error_log("Actualizando stock para compra #$idCompra");
+                    self::actualizarStockPorCompra($db, $idCompra);
+                }
+                
                 return [
                     'exito' => true,
                     'mensaje' => 'Estado actualizado correctamente'
@@ -208,6 +251,42 @@ class Compra {
                 'exito' => false,
                 'mensaje' => 'Error al actualizar el estado: ' . $e->getMessage()
             ];
+        }
+    }
+    
+    // Método para actualizar stock de productos al confirmar compra
+    private static function actualizarStockPorCompra($db, $idCompra) {
+        try {
+            // Obtener todos los detalles de la compra
+            $sql = "SELECT Codigo, Cantidad, TipoItem FROM DetalleCompra WHERE IdCompra = :idCompra";
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
+            $stmt->execute();
+            $detalles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($detalles as $detalle) {
+                $codigo = $detalle['Codigo'];
+                $cantidad = floatval($detalle['Cantidad']);
+                $tipoItem = $detalle['TipoItem'];
+                
+                // Actualizar stock de productos
+                if ($tipoItem === 'producto') {
+                    $sqlUpdate = "UPDATE Productos 
+                                 SET Stock = Stock + :cantidad 
+                                 WHERE CodProducto = :codigo";
+                    $stmtUpdate = $db->prepare($sqlUpdate);
+                    $stmtUpdate->bindValue(':cantidad', $cantidad, PDO::PARAM_STR);
+                    $stmtUpdate->bindValue(':codigo', $codigo, PDO::PARAM_STR);
+                    $stmtUpdate->execute();
+                    
+                    error_log("Stock actualizado para producto $codigo: +$cantidad unidades");
+                }
+            }
+            
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error en Compra::actualizarStockPorCompra() - " . $e->getMessage());
+            return false;
         }
     }
 }

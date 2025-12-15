@@ -38,6 +38,7 @@ return [
     'usuarios/actualizar' => [UsuarioController::class, 'actualizar'],
     'usuarios/cambiar-estado' => [UsuarioController::class, 'cambiarEstado'],
     'usuarios/eliminar' => [UsuarioController::class, 'eliminar'],
+    'usuarios/estadisticas-meseros' => [UsuarioController::class, 'estadisticasMeseros'],
     'clientes/registrar' => [ClienteController::class, 'registrar'],
     'clientes/listar' => [ClienteController::class, 'listar'],
     'clientes/buscar' => [ClienteController::class, 'buscar'],
