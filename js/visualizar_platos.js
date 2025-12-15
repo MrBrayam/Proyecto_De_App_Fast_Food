@@ -59,11 +59,11 @@ function filtrarPlatos() {
 
     platosFiltrados = platosOriginal.filter(plato => {
         const mapa = {
-            nombre: plato.Nombre || '',
+            nombre: plato.NombrePlato || '',
             codigo: plato.CodPlato || '',
             tamano: plato.Tamano || '',
             precio: String(plato.Precio ?? ''),
-            cantidad: String(plato.Cantidad ?? '')
+            cantidad: String(plato.Stock ?? '')
         };
         const valor = (mapa[filtro] || '').toString().toLowerCase();
         return valor.includes(termino);
@@ -90,7 +90,7 @@ function renderizarPlatos(lista) {
         card.className = 'plato-card';
         
         // Verificar si el stock está bajo
-        const cantidad = parseInt(plato.Cantidad || 0);
+        const cantidad = parseInt(plato.Stock || 0);
         const stockMinimo = parseInt(plato.StockMinimo || 10);
         const stockBajo = cantidad <= stockMinimo;
         
@@ -100,7 +100,7 @@ function renderizarPlatos(lista) {
         }
         
         // Usar imagen local si existe, sino usar ícono de pizza
-        const imagenSrc = plato.RutaImg ? plato.RutaImg : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E';
+        const imagenSrc = plato.RutaImagen ? plato.RutaImagen : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E';
         
         // Crear badge de alerta si stock bajo
         const stockBadge = stockBajo ? `<div class="stock-alert-badge"><i class="fas fa-exclamation-triangle"></i> Stock Bajo</div>` : '';
@@ -108,11 +108,11 @@ function renderizarPlatos(lista) {
         card.innerHTML = `
             ${stockBadge}
             <div class="plato-imagen">
-                <img src="${imagenSrc}" alt="${plato.Nombre || 'Plato'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E'">
+                <img src="${imagenSrc}" alt="${plato.NombrePlato || 'Plato'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 dominant-baseline=%22middle%22%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E'">
             </div>
             <div class="plato-info">
                 <div class="plato-header">
-                    <h3 class="plato-nombre">${plato.Nombre || '-'}</h3>
+                    <h3 class="plato-nombre">${plato.NombrePlato || '-'}</h3>
                     <span class="plato-codigo">${plato.CodPlato || '-'}</span>
                 </div>
                 <p class="plato-descripcion">${plato.Descripcion || 'Sin descripción'}</p>
@@ -146,11 +146,11 @@ function renderizarPlatos(lista) {
 function verDetalles(plato) {
     platoSeleccionado = plato;
     document.getElementById('detalleCodigo').textContent = plato.CodPlato || '-';
-    document.getElementById('detalleNombre').textContent = plato.Nombre || '-';
+    document.getElementById('detalleNombre').textContent = plato.NombrePlato || '-';
     document.getElementById('detalleTamano').textContent = plato.Tamano || '-';
     document.getElementById('detallePrecio').textContent = `S/ ${(plato.Precio ?? 0).toFixed(2)}`;
     
-    const cantidad = parseInt(plato.Cantidad || 0);
+    const cantidad = parseInt(plato.Stock || 0);
     const stockMinimo = parseInt(plato.StockMinimo || 10);
     const detallesCantidad = document.getElementById('detalleCantidad');
     detallesCantidad.textContent = `${cantidad} / ${stockMinimo}`;

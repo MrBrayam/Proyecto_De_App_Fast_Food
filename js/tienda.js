@@ -347,14 +347,14 @@ async function cargarProductos() {
         if (dataPlatos.exito && dataPlatos.platos) {
             const platos = dataPlatos.platos.map(plato => ({
                 id: 'P-' + plato.IdPlato,
-                nombre: plato.Nombre,
+                nombre: plato.NombrePlato,
                 descripcion: plato.Descripcion || '',
                 ingredientes: plato.Ingredientes || '',
                 tamano: plato.Tamano || 'personal',
                 precio: parseFloat(plato.Precio),
-                cantidad: plato.Cantidad || 0,
+                cantidad: plato.Stock || 0,
                 stockMinimo: plato.StockMinimo || 10,
-                rutaImg: plato.RutaImg || '',
+                rutaImg: plato.RutaImagen || '',
                 estado: plato.Estado,
                 categoria: 'platos',
                 tipo: 'plato'
