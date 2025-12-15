@@ -62,6 +62,7 @@
                 <div class="filters">
                     <select id="tabFilter" class="filter-select">
                         <option value="productos">Productos</option>
+                        <option value="platos">Platos</option>
                     </select>
 
                     <select id="stateFilter" class="filter-select">
@@ -113,6 +114,36 @@
                         <tbody id="productosBody">
                             <tr>
                                 <td colspan="10" class="text-center">Cargando productos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla de Platos -->
+            <div class="table-section" id="platosSection" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-utensils"></i>
+                    Platos
+                </h2>
+                <div class="table-wrapper">
+                    <table class="table-datos" id="platosTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="platosBody">
+                            <tr>
+                                <td colspan="9" class="text-center">Cargando platos...</td>
                             </tr>
                         </tbody>
                     </table>
