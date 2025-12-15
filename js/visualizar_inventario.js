@@ -2,7 +2,6 @@
 
 // Variables globales
 let productosData = [];
-let insumosData = [];
 let tablaActual = 'productos';
 
 // Inicializar al cargar el DOM
@@ -18,27 +17,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elegir pestaña inicial según query ?tab=
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
-    if (tabParam === 'insumos' || tabParam === 'productos') {
+    if (tabParam === 'productos') {
         document.getElementById('tabFilter').value = tabParam;
         tablaActual = tabParam;
     }
 
-    // Cargar datos iniciales según pestaña activa
-    if (tablaActual === 'insumos') {
-        mostrarSeccion('insumos');
-        cargarInsumos();
-    } else {
-        tablaActual = 'productos';
-        mostrarSeccion('productos');
-        cargarProductos();
-    }
+    // Cargar datos iniciales
+    tablaActual = 'productos';
+    mostrarSeccion('productos');
+    cargarProductos();
 });
 
 function mostrarSeccion(tab) {
     document.getElementById('productosSection').style.display = 'none';
-    document.getElementById('insumosSection').style.display = 'none';
     if (tab === 'productos') document.getElementById('productosSection').style.display = 'block';
-    if (tab === 'insumos') document.getElementById('insumosSection').style.display = 'block';
 }
 
 // Cargar productos desde API
@@ -66,32 +58,7 @@ async function cargarProductos() {
     }
 }
 
-// Cargar insumos desde API
-async function cargarInsumos() {
-    try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/inventario/insumos', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        const data = await response.json();
-        
-        if (data.exito && data.items) {
-            insumosData = data.items;
-            renderizarInsumos(insumosData);
-            actualizarEstadisticas();
-        } else {
-            mostrarMensaje('Error al cargar insumos', 'error');
-        }
-    } catch (error) {
-        console.error('Error al cargar insumos:', error);
-        mostrarMensaje('Error al conectar con el servidor', 'error');
-    }
-}
-
-// Cargar insumos desde API
+// Renderizar productos en tabla
 function renderizarProductos(items) {
     const tbody = document.getElementById('productosBody');
     
@@ -124,37 +91,6 @@ function renderizarProductos(items) {
     `).join('');
 }
 
-// Renderizar insumos en tabla
-function renderizarInsumos(items) {
-    const tbody = document.getElementById('insumosBody');
-    
-    if (items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No hay insumos disponibles</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = items.map(insumo => `
-        <tr>
-            <td>${insumo.CodInsumo}</td>
-            <td>${insumo.NombreInsumo}</td>
-            <td>${insumo.Ubicacion || 'N/A'}</td>
-            <td>S/ ${parseFloat(insumo.PrecioUnitario).toFixed(2)}</td>
-            <td>${insumo.Vencimiento || 'N/A'}</td>
-            <td>
-                <span class="badge ${getEstadoBadgeClass(insumo.Estado)}">
-                    ${insumo.Estado}
-                </span>
-            </td>
-            <td>${insumo.Observacion || 'N/A'}</td>
-            <td>
-                <button class="btn-icon" onclick="verDetallesInsumo('${insumo.CodInsumo}')" title="Ver detalles">
-                    <i class="fas fa-eye"></i>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-}
-
 // Cambiar pestaña
 function cambiarPestana() {
     const tab = document.getElementById('tabFilter').value;
@@ -165,7 +101,6 @@ function cambiarPestana() {
     
     // Cargar datos si es necesario
     if (tab === 'productos' && productosData.length === 0) cargarProductos();
-    else if (tab === 'insumos' && insumosData.length === 0) cargarInsumos();
     
     filtrarDatos();
 }
@@ -185,15 +120,6 @@ function filtrarDatos() {
             return matchText && matchState;
         });
         renderizarProductos(datosActuales);
-    } else if (tablaActual === 'insumos') {
-        datosActuales = insumosData.filter(item => {
-            const matchText = item.NombreInsumo.toLowerCase().includes(searchText) ||
-                             item.CodInsumo.toString().toLowerCase().includes(searchText);
-            const matchState = !stateFilter || item.Estado === stateFilter;
-            return matchText && matchState;
-        });
-        renderizarInsumos(datosActuales);
-
     }
 }
 
@@ -207,9 +133,6 @@ function actualizarEstadisticas() {
         total = productosData.length;
         stockBajo = productosData.filter(p => p.EstadoStock === 'Stock Bajo').length;
         agotados = productosData.filter(p => p.EstadoStock === 'Agotado').length;
-    } else if (tablaActual === 'insumos') {
-        total = insumosData.length;
-        agotados = insumosData.filter(i => i.Estado === 'agotado').length;
     }
     
     document.getElementById('totalItems').textContent = total;
@@ -265,48 +188,6 @@ function verDetallesProducto(id) {
             <div class="detalle-item">
                 <label>Descripción:</label>
                 <span>${producto.Descripcion || 'N/A'}</span>
-            </div>
-        </div>
-    `;
-    modal.style.display = 'block';
-}
-
-// Ver detalles de insumo
-function verDetallesInsumo(id) {
-    const insumo = insumosData.find(i => i.CodInsumo == id);
-    if (!insumo) return;
-    
-    const modal = document.getElementById('detallesModal');
-    document.getElementById('modalTitle').textContent = 'Detalles del Insumo';
-    document.getElementById('modalBody').innerHTML = `
-        <div class="detalle-grid">
-            <div class="detalle-item">
-                <label>Código:</label>
-                <span>${insumo.CodInsumo}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Nombre:</label>
-                <span>${insumo.NombreInsumo}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Ubicación:</label>
-                <span>${insumo.Ubicacion || 'N/A'}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Precio Unitario:</label>
-                <span>S/ ${parseFloat(insumo.PrecioUnitario).toFixed(2)}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Vencimiento:</label>
-                <span>${insumo.Vencimiento || 'N/A'}</span>
-            </div>
-            <div class="detalle-item">
-                <label>Estado:</label>
-                <span class="badge ${getEstadoBadgeClass(insumo.Estado)}">${insumo.Estado}</span>
-            </div>
-            <div class="detalle-item full-width">
-                <label>Observaciones:</label>
-                <span>${insumo.Observacion || 'Sin observaciones'}</span>
             </div>
         </div>
     `;

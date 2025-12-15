@@ -51,7 +51,6 @@ function aplicarPermisos() {
         'visualizar-compras': 'visualizarCompras',
         'registrar-inventario': 'registrarInventario',
         'visualizar-inventario': 'visualizarInventario',
-        'registrar-insumo': 'registrarInsumo',
         'registrar-proveedores': 'registrarProveedores',
         'visualizar-proveedores': 'visualizarProveedores',
         'registrar-producto': 'registrarProducto',

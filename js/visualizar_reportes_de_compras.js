@@ -43,7 +43,7 @@ function inicializarGraficos() {
         chartCategorias = new Chart(ctxCategorias, {
             type: 'pie',
             data: {
-                labels: ['Insumos', 'Productos', 'Otros'],
+                labels: ['Productos', 'Otros'],
                 datasets: [{
                     data: [4680, 2340, 780],
                     backgroundColor: [

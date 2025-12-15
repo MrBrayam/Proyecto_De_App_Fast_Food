@@ -13,7 +13,7 @@ class Perfil
                 :pedidosRegistrar, :pedidosVisualizar,
                 :cajaApertura, :cajaVisualizar, :cajaCerrar,
                 :comprasRegistrar, :comprasVisualizar,
-                :inventarioVisualizar, :insumoRegistrar,
+                :inventarioVisualizar,
                 :proveedoresRegistrar, :proveedoresVisualizar,
                 :productoRegistrar, :productoVisualizar,
                 :usuariosRegistrar, :usuariosVisualizar,
@@ -44,7 +44,6 @@ class Perfil
         $stmt->bindValue(':comprasRegistrar', $data['comprasRegistrar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':comprasVisualizar', $data['comprasVisualizar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':inventarioVisualizar', $data['inventarioVisualizar'], PDO::PARAM_BOOL);
-        $stmt->bindValue(':insumoRegistrar', $data['insumoRegistrar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':proveedoresRegistrar', $data['proveedoresRegistrar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':proveedoresVisualizar', $data['proveedoresVisualizar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':productoRegistrar', $data['productoRegistrar'], PDO::PARAM_BOOL);
@@ -90,7 +89,7 @@ class Perfil
                     PermisoPedidosRegistrar, PermisoPedidosVisualizar,
                     PermisoCajaApertura, PermisoCajaVisualizar, PermisoCajaCerrar,
                     PermisoComprasRegistrar, PermisoComprasVisualizar,
-                    PermisoInventarioVisualizar, PermisoInsumoRegistrar,
+                    PermisoInventarioVisualizar,
                     PermisoProveedoresRegistrar, PermisoProveedoresVisualizar,
                     PermisoProductoRegistrar, PermisoProductoVisualizar,
                     PermisoUsuariosRegistrar, PermisoUsuariosVisualizar,
@@ -131,7 +130,6 @@ class Perfil
                 PermisoComprasRegistrar = :comprasRegistrar,
                 PermisoComprasVisualizar = :comprasVisualizar,
                 PermisoInventarioVisualizar = :inventarioVisualizar,
-                PermisoInsumoRegistrar = :insumoRegistrar,
                 PermisoProveedoresRegistrar = :proveedoresRegistrar,
                 PermisoProveedoresVisualizar = :proveedoresVisualizar,
                 PermisoProductoRegistrar = :productoRegistrar,
@@ -169,7 +167,6 @@ class Perfil
         $stmt->bindValue(':comprasRegistrar', $data['comprasRegistrar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':comprasVisualizar', $data['comprasVisualizar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':inventarioVisualizar', $data['inventarioVisualizar'], PDO::PARAM_BOOL);
-        $stmt->bindValue(':insumoRegistrar', $data['insumoRegistrar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':proveedoresRegistrar', $data['proveedoresRegistrar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':proveedoresVisualizar', $data['proveedoresVisualizar'], PDO::PARAM_BOOL);
         $stmt->bindValue(':productoRegistrar', $data['productoRegistrar'], PDO::PARAM_BOOL);

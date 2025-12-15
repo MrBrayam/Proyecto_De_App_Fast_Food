@@ -61,7 +61,6 @@ class PerfilController extends Controller
         $comprasRegistrar = (bool)($permisos['comprasRegistrar'] ?? false);
         $comprasVisualizar = (bool)($permisos['comprasVisualizar'] ?? false);
         $inventarioVisualizar = (bool)($permisos['inventarioVisualizar'] ?? false);
-        $insumoRegistrar = (bool)($permisos['insumoRegistrar'] ?? false);
         $proveedoresRegistrar = (bool)($permisos['proveedoresRegistrar'] ?? false);
         $proveedoresVisualizar = (bool)($permisos['proveedoresVisualizar'] ?? false);
         $productoRegistrar = (bool)($permisos['productoRegistrar'] ?? false);
@@ -101,7 +100,6 @@ class PerfilController extends Controller
                 'comprasRegistrar' => $comprasRegistrar,
                 'comprasVisualizar' => $comprasVisualizar,
                 'inventarioVisualizar' => $inventarioVisualizar,
-                'insumoRegistrar' => $insumoRegistrar,
                 'proveedoresRegistrar' => $proveedoresRegistrar,
                 'proveedoresVisualizar' => $proveedoresVisualizar,
                 'productoRegistrar' => $productoRegistrar,
@@ -174,7 +172,6 @@ class PerfilController extends Controller
                         'comprasRegistrar' => (bool)$perfil['PermisoComprasRegistrar'],
                         'comprasVisualizar' => (bool)$perfil['PermisoComprasVisualizar'],
                         'inventarioVisualizar' => (bool)$perfil['PermisoInventarioVisualizar'],
-                        'insumoRegistrar' => (bool)$perfil['PermisoInsumoRegistrar'],
                         'proveedoresRegistrar' => (bool)$perfil['PermisoProveedoresRegistrar'],
                         'proveedoresVisualizar' => (bool)$perfil['PermisoProveedoresVisualizar'],
                         'productoRegistrar' => (bool)$perfil['PermisoProductoRegistrar'],
@@ -258,7 +255,6 @@ class PerfilController extends Controller
                     'comprasRegistrar' => (bool)$perfil['PermisoComprasRegistrar'],
                     'comprasVisualizar' => (bool)$perfil['PermisoComprasVisualizar'],
                     'inventarioVisualizar' => (bool)$perfil['PermisoInventarioVisualizar'],
-                    'insumoRegistrar' => (bool)$perfil['PermisoInsumoRegistrar'],
                     'proveedoresRegistrar' => (bool)$perfil['PermisoProveedoresRegistrar'],
                     'proveedoresVisualizar' => (bool)$perfil['PermisoProveedoresVisualizar'],
                     'productoRegistrar' => (bool)$perfil['PermisoProductoRegistrar'],
@@ -356,7 +352,6 @@ class PerfilController extends Controller
                 'comprasRegistrar' => (bool)($permisos['comprasRegistrar'] ?? false),
                 'comprasVisualizar' => (bool)($permisos['comprasVisualizar'] ?? false),
                 'inventarioVisualizar' => (bool)($permisos['inventarioVisualizar'] ?? false),
-                'insumoRegistrar' => (bool)($permisos['insumoRegistrar'] ?? false),
                 'proveedoresRegistrar' => (bool)($permisos['proveedoresRegistrar'] ?? false),
                 'proveedoresVisualizar' => (bool)($permisos['proveedoresVisualizar'] ?? false),
                 'productoRegistrar' => (bool)($permisos['productoRegistrar'] ?? false),

@@ -43,7 +43,7 @@ function inicializarGraficos() {
         chartGastos = new Chart(ctxGastos, {
             type: 'pie',
             data: {
-                labels: ['Compras de Insumos', 'Salarios', 'Servicios', 'Otros'],
+                labels: ['Compras de Productos', 'Salarios', 'Servicios', 'Otros'],
                 datasets: [{
                     data: [4700, 2000, 800, 300],
                     backgroundColor: [

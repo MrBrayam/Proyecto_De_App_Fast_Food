@@ -159,7 +159,7 @@ function verPermisos(index) {
     if (perfil.permisos.comprasRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Compras</div>';
     if (perfil.permisos.comprasVisualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Compras</div>';
     if (perfil.permisos.inventarioVisualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Inventario</div>';
-    if (perfil.permisos.insumoRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Insumo</div>';
+
     if (perfil.permisos.proveedoresRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Proveedores</div>';
     if (perfil.permisos.proveedoresVisualizar) permisosHTML += '<div class="permission-item active">✓ Visualizar Proveedores</div>';
     if (perfil.permisos.productoRegistrar) permisosHTML += '<div class="permission-item active">✓ Registrar Producto</div>';

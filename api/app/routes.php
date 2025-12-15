@@ -8,7 +8,7 @@ require_once __DIR__ . '/controllers/ProveedorController.php';
 require_once __DIR__ . '/controllers/ProductoController.php';
 require_once __DIR__ . '/controllers/CompraController.php';
 require_once __DIR__ . '/controllers/InventarioController.php';
-require_once __DIR__ . '/controllers/InsumoController.php';
+
 require_once __DIR__ . '/controllers/MesaController.php';
 require_once __DIR__ . '/controllers/PedidoController.php';
 require_once __DIR__ . '/controllers/PlatoController.php';
@@ -57,12 +57,7 @@ return [
     'compras/buscar' => [CompraController::class, 'buscar'],
     'compras/actualizar-estado' => [CompraController::class, 'actualizarEstado'],
     'inventario/productos' => [InventarioController::class, 'listarProductos'],
-    'inventario/insumos' => [InventarioController::class, 'listarInsumos'],
     'inventario/producto' => [InventarioController::class, 'buscarProducto'],
-    'inventario/insumo' => [InventarioController::class, 'buscarInsumo'],
-    'insumos/registrar' => [InsumoController::class, 'registrar'],
-    'insumos/listar' => [InsumoController::class, 'listar'],
-    'insumos/buscar' => [InsumoController::class, 'buscar'],
     'mesas/registrar' => [MesaController::class, 'registrar'],
     'mesas/listar' => [MesaController::class, 'listar'],
     'mesas/buscar' => [MesaController::class, 'buscar'],

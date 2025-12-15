@@ -39,39 +39,6 @@ class InventarioController extends Controller
     }
 
     /**
-     * Listar insumos del inventario
-     * GET /api/inventario/insumos
-     */
-    public function listarInsumos(): void
-    {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            http_response_code(200);
-            return;
-        }
-
-        try {
-            $model = new Inventario();
-            $insumos = $model->listarInsumos();
-
-            $this->json([
-                'exito' => true,
-                'items' => $insumos,
-                'total' => count($insumos),
-                'mensaje' => 'Insumos listados correctamente'
-            ]);
-        } catch (Exception $e) {
-            $this->json([
-                'exito' => false,
-                'mensaje' => 'Error al listar insumos: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
      * Buscar producto por ID
      * GET /api/inventario/producto?id={id}
      */
@@ -111,50 +78,6 @@ class InventarioController extends Controller
             $this->json([
                 'exito' => false,
                 'mensaje' => 'Error al buscar producto: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Buscar insumo por ID
-     * GET /api/inventario/insumo?id={id}
-     */
-    public function buscarInsumo(): void
-    {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            http_response_code(200);
-            return;
-        }
-
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-
-        if (!$id) {
-            $this->json(['exito' => false, 'mensaje' => 'ID de insumo requerido'], 400);
-            return;
-        }
-
-        try {
-            $model = new Inventario();
-            $insumo = $model->buscarInsumoPorId($id);
-
-            if (!$insumo) {
-                $this->json(['exito' => false, 'mensaje' => 'Insumo no encontrado'], 404);
-                return;
-            }
-
-            $this->json([
-                'exito' => true,
-                'insumo' => $insumo,
-                'mensaje' => 'Insumo encontrado'
-            ]);
-        } catch (Exception $e) {
-            $this->json([
-                'exito' => false,
-                'mensaje' => 'Error al buscar insumo: ' . $e->getMessage()
             ], 500);
         }
     }

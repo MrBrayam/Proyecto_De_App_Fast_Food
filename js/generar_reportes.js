@@ -979,7 +979,7 @@ function crearGraficosCompras() {
     chartPrincipal = new Chart(ctxPrincipal, {
         type: 'doughnut',
         data: {
-            labels: ['Insumos', 'Productos', 'Otros'],
+            labels: ['Productos', 'Otros'],
             datasets: [{
                 data: [50, 35, 15],
                 backgroundColor: ['#ff5733', '#3498db', '#9b59b6'],
@@ -996,7 +996,7 @@ function crearGraficosCompras() {
     });
     
     document.getElementById('leyendaPrincipal').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Insumos - 50%</span></div>
+        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Productos - 50%</span></div>
         <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Productos - 35%</span></div>
         <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros - 15%</span></div>
     `;

@@ -202,6 +202,9 @@ async function cargarDetallePedido(idPedido) {
                         idPlato: detalle.IdPlato || 0
                     });
                 });
+                
+                // Actualizar la tabla visual con los productos
+                actualizarTablaProductos();
             }
             
             // Mostrar totales del pedido directamente
