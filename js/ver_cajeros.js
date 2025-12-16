@@ -31,16 +31,29 @@ function actualizarFechaHora() {
 
 async function cargarCajeros() {
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/listar');
-        const data = await response.json();
+        // Cargar usuarios cajeros
+        const responseUsuarios = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/listar');
+        const dataUsuarios = await responseUsuarios.json();
         
-        if (data.exito && data.usuarios) {
-            todosLosUsuarios = data.usuarios;
+        // Cargar estadísticas de cajeros
+        const responseEstadisticas = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/estadisticas-cajeros');
+        const dataEstadisticas = await responseEstadisticas.json();
+        
+        if (dataUsuarios.exito && dataUsuarios.usuarios && dataEstadisticas.exito) {
+            todosLosUsuarios = dataUsuarios.usuarios;
             cajerosFiltrados = todosLosUsuarios.filter(usuario => 
                 usuario.nombrePerfil.toLowerCase() === 'cajero'
             );
             
-            mostrarCajeros(cajerosFiltrados);
+            // Crear mapa de estadísticas por IdUsuario
+            const estadisticasMap = new Map();
+            if (dataEstadisticas.datos) {
+                dataEstadisticas.datos.forEach(stat => {
+                    estadisticasMap.set(stat.IdUsuario, stat);
+                });
+            }
+            
+            mostrarCajeros(cajerosFiltrados, estadisticasMap);
             actualizarEstadisticas(cajerosFiltrados);
         } else {
             mostrarMensajeVacio('Error al cargar los datos');
@@ -50,11 +63,11 @@ async function cargarCajeros() {
     }
 }
 
-function mostrarCajeros(cajeros) {
+function mostrarCajeros(cajeros, estadisticasMap) {
     const tbody = document.getElementById('tablaCajeros');
     
     if (!cajeros || cajeros.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 2rem;">
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem;">
             <i class="fas fa-inbox" style="font-size: 3rem; color: #666;"></i>
             <p>No se encontraron cajeros</p></td></tr>`;
         return;
@@ -63,11 +76,16 @@ function mostrarCajeros(cajeros) {
     tbody.innerHTML = cajeros.map(cajero => {
         const estadoClass = cajero.estado === 'activo' ? 'badge-activo' : 'badge-inactivo';
         const estadoIcon = cajero.estado === 'activo' ? 'fa-check-circle' : 'fa-times-circle';
-        const numeroCaja = Math.floor(Math.random() * 5) + 1;
-        const ventasHoy = Math.floor(Math.random() * 50) + 10;
-        const montoHoy = (Math.random() * 2000 + 500).toFixed(2);
-        const montoMes = (Math.random() * 15000 + 5000).toFixed(2);
-        const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde';
+        
+        // Obtener estadísticas reales o valores por defecto
+        const stats = estadisticasMap.get(cajero.idUsuario) || {
+            VentasHoy: 0,
+            MontoHoy: 0.00
+        };
+        
+        const ventasHoy = stats.VentasHoy || 0;
+        const montoHoy = parseFloat(stats.MontoHoy || 0).toFixed(2);
+        const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde'; // TODO: agregar campo Turno en BD
         
         return `
             <tr>
@@ -83,17 +101,11 @@ function mostrarCajeros(cajeros) {
                 </td>
                 <td><span class="badge badge-info"><i class="fas fa-store"></i> Principal</span></td>
                 <td style="text-align: center;">
-                    <strong style="font-size: 1.2rem; color: #2196F3;">Caja ${numeroCaja}</strong>
-                </td>
-                <td style="text-align: center;">
                     <strong style="font-size: 1.2rem; color: #4CAF50;">${ventasHoy}</strong><br>
                     <small>ventas</small>
                 </td>
                 <td style="text-align: center;">
                     <strong style="font-size: 1.2rem; color: #4CAF50;">S/. ${montoHoy}</strong>
-                </td>
-                <td style="text-align: center;">
-                    <strong style="font-size: 1.2rem; color: #FF9800;">S/. ${montoMes}</strong>
                 </td>
                 <td>
                     <span class="badge ${turno === 'Mañana' ? 'badge-warning' : 'badge-info'}">
