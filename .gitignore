@@ -5,8 +5,6 @@
 # Carpeta de base de datos local (contiene contraseña y jar)
 /BD/
 /bd/
-/sql/
-
 # Referencias y funcionalidades
 /referencias/
 /funcionalidades/
