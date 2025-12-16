@@ -31,16 +31,29 @@ function actualizarFechaHora() {
 
 async function cargarRepartidores() {
     try {
-        const response = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/listar');
-        const data = await response.json();
+        // Cargar usuarios repartidores
+        const responseUsuarios = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/listar');
+        const dataUsuarios = await responseUsuarios.json();
         
-        if (data.exito && data.usuarios) {
-            todosLosUsuarios = data.usuarios;
+        // Cargar estadísticas de repartidores
+        const responseEstadisticas = await fetch('/Proyecto_De_App_Fast_Food/api/usuarios/estadisticas-repartidores');
+        const dataEstadisticas = await responseEstadisticas.json();
+        
+        if (dataUsuarios.exito && dataUsuarios.usuarios && dataEstadisticas.exito) {
+            todosLosUsuarios = dataUsuarios.usuarios;
             repartidoresFiltrados = todosLosUsuarios.filter(usuario => 
                 usuario.nombrePerfil.toLowerCase() === 'repartidor'
             );
             
-            mostrarRepartidores(repartidoresFiltrados);
+            // Crear mapa de estadísticas por IdUsuario
+            const estadisticasMap = new Map();
+            if (dataEstadisticas.datos) {
+                dataEstadisticas.datos.forEach(stat => {
+                    estadisticasMap.set(stat.IdUsuario, stat);
+                });
+            }
+            
+            mostrarRepartidores(repartidoresFiltrados, estadisticasMap);
             actualizarEstadisticas(repartidoresFiltrados);
         } else {
             mostrarMensajeVacio('Error al cargar los datos');
@@ -50,11 +63,11 @@ async function cargarRepartidores() {
     }
 }
 
-function mostrarRepartidores(repartidores) {
+function mostrarRepartidores(repartidores, estadisticasMap) {
     const tbody = document.getElementById('tablaRepartidores');
     
     if (!repartidores || repartidores.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem;">
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem;">
             <i class="fas fa-inbox" style="font-size: 3rem; color: #666;"></i>
             <p>No se encontraron repartidores</p></td></tr>`;
         return;
@@ -63,11 +76,16 @@ function mostrarRepartidores(repartidores) {
     tbody.innerHTML = repartidores.map(repartidor => {
         const estadoClass = repartidor.estado === 'activo' ? 'badge-activo' : 'badge-inactivo';
         const estadoIcon = repartidor.estado === 'activo' ? 'fa-check-circle' : 'fa-times-circle';
-        const vehiculos = ['Moto Honda', 'Moto Yamaha', 'Moto Suzuki', 'Bicicleta'];
-        const vehiculo = vehiculos[Math.floor(Math.random() * vehiculos.length)];
-        const pedidosHoy = Math.floor(Math.random() * 30) + 5;
-        const propinasHoy = (Math.random() * 100 + 20).toFixed(2);
-        const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde';
+        
+        // Obtener estadísticas reales o valores por defecto
+        const stats = estadisticasMap.get(repartidor.idUsuario) || {
+            EntregasHoy: 0,
+            MontoHoy: 0.00
+        };
+        
+        const entregasHoy = stats.EntregasHoy || 0;
+        const montoHoy = parseFloat(stats.MontoHoy || 0).toFixed(2);
+        const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde'; // TODO: agregar campo Turno en BD
         
         return `
             <tr>
@@ -83,15 +101,11 @@ function mostrarRepartidores(repartidores) {
                 </td>
                 <td><span class="badge badge-info"><i class="fas fa-store"></i> Principal</span></td>
                 <td style="text-align: center;">
-                    <i class="fas fa-${vehiculo.includes('Moto') ? 'motorcycle' : 'bicycle'}" style="font-size: 1.5rem; color: #2196F3;"></i><br>
-                    <small>${vehiculo}</small>
+                    <strong style="font-size: 1.2rem; color: #4CAF50;">${entregasHoy}</strong><br>
+                    <small>entregas</small>
                 </td>
                 <td style="text-align: center;">
-                    <strong style="font-size: 1.2rem; color: #4CAF50;">${pedidosHoy}</strong><br>
-                    <small>pedidos</small>
-                </td>
-                <td style="text-align: center;">
-                    <strong style="font-size: 1.2rem; color: #FF9800;">S/. ${propinasHoy}</strong>
+                    <strong style="font-size: 1.2rem; color: #FF9800;">S/. ${montoHoy}</strong>
                 </td>
                 <td>
                     <span class="badge ${turno === 'Mañana' ? 'badge-warning' : 'badge-info'}">

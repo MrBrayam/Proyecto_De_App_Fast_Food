@@ -452,5 +452,46 @@ class UsuarioController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Obtiene estadísticas de repartidores (entregas hoy, monto hoy)
+     */
+    public function estadisticasRepartidores(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        try {
+            $db = Database::connection();
+            $stmt = $db->prepare("CALL pa_estadisticas_repartidores()");
+            $stmt->execute();
+            
+            $estadisticas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Cerrar cursor para liberar la conexión (requerido para stored procedures)
+            $stmt->closeCursor();
+            
+            $this->json([
+                'exito' => true, 
+                'datos' => $estadisticas
+            ]);
+        } catch (Throwable $e) {
+            $this->json([
+                'exito' => false, 
+                'mensaje' => 'Error al obtener estadísticas: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
 

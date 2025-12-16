@@ -40,6 +40,7 @@ return [
     'usuarios/eliminar' => [UsuarioController::class, 'eliminar'],
     'usuarios/estadisticas-meseros' => [UsuarioController::class, 'estadisticasMeseros'],
     'usuarios/estadisticas-cajeros' => [UsuarioController::class, 'estadisticasCajeros'],
+    'usuarios/estadisticas-repartidores' => [UsuarioController::class, 'estadisticasRepartidores'],
     'clientes/registrar' => [ClienteController::class, 'registrar'],
     'clientes/listar' => [ClienteController::class, 'listar'],
     'clientes/buscar' => [ClienteController::class, 'buscar'],
