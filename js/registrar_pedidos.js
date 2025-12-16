@@ -8,6 +8,29 @@ let idProductoActual = null;
 let idPlatoActual = null;
 let tipoItemActual = null; // 'producto' o 'plato'
 
+// Función para obtener el ID del usuario logueado
+function obtenerIdUsuarioLogueado() {
+    try {
+        // Intentar obtener desde sessionStorage
+        const usuarioSession = JSON.parse(sessionStorage.getItem('usuario') || '{}');
+        if (usuarioSession.IdUsuario) {
+            return usuarioSession.IdUsuario;
+        }
+        
+        // Intentar obtener desde localStorage
+        const userSession = JSON.parse(localStorage.getItem('userSession') || '{}');
+        if (userSession.id) {
+            return userSession.id;
+        }
+        
+        console.error('No se pudo obtener el IdUsuario del usuario logueado');
+        return null;
+    } catch (error) {
+        console.error('Error al obtener IdUsuario:', error);
+        return null;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Actualizar fecha y hora
     actualizarFechaHora();
@@ -387,7 +410,7 @@ async function registrarPedido() {
         nombreCliente,
         direccionCliente: direccionCliente || null,
         telefonoCliente: telefonoCliente || null,
-        idUsuario: 1, // TODO: obtener del login actual
+        idUsuario: obtenerIdUsuarioLogueado(),
         subTotal,
         descuento: 0,
         total: subTotal,

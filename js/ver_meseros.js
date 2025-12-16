@@ -74,7 +74,7 @@ function mostrarMeseros(meseros, estadisticasMap = new Map()) {
     if (!meseros || meseros.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="8" style="text-align: center; padding: 2rem;">
+                <td colspan="7" style="text-align: center; padding: 2rem;">
                     <i class="fas fa-inbox" style="font-size: 3rem; color: #666;"></i>
                     <p>No se encontraron meseros</p>
                 </td>
@@ -89,14 +89,12 @@ function mostrarMeseros(meseros, estadisticasMap = new Map()) {
         
         // Obtener estadísticas reales o valores por defecto
         const stats = estadisticasMap.get(mesero.idUsuario) || {
-            MesasAsignadas: 0,
             PedidosHoy: 0,
-            PropinasMes: 0.00
+            VentasHoy: 0.00
         };
         
-        const mesasAsignadas = stats.MesasAsignadas || 0;
         const pedidosHoy = stats.PedidosHoy || 0;
-        const propinasMes = parseFloat(stats.PropinasMes || 0).toFixed(2);
+        const ventasHoy = parseFloat(stats.VentasHoy || 0).toFixed(2);
         const turno = Math.random() > 0.5 ? 'Mañana' : 'Tarde'; // TODO: agregar campo Turno en BD
         
         return `
@@ -113,16 +111,12 @@ function mostrarMeseros(meseros, estadisticasMap = new Map()) {
                 </td>
                 <td><span class="badge badge-info"><i class="fas fa-store"></i> Principal</span></td>
                 <td style="text-align: center;">
-                    <strong style="font-size: 1.2rem; color: #2196F3;">${mesasAsignadas}</strong><br>
-                    <small>mesas</small>
-                </td>
-                <td style="text-align: center;">
                     <strong style="font-size: 1.2rem; color: #4CAF50;">${pedidosHoy}</strong><br>
                     <small>pedidos</small>
                 </td>
                 <td style="text-align: center;">
-                    <strong style="font-size: 1.2rem; color: #FF9800;">S/. ${propinasMes}</strong><br>
-                    <small>este mes</small>
+                    <strong style="font-size: 1.2rem; color: #FF9800;">S/. ${ventasHoy}</strong><br>
+                    <small>hoy</small>
                 </td>
                 <td>
                     <span class="badge ${turno === 'Mañana' ? 'badge-warning' : 'badge-info'}">
