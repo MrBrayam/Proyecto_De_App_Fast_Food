@@ -51,9 +51,6 @@ __pycache__/
 # Bases de datos locales
 *.db
 *.sqlite
-*.sqlite3
-*.sql
-
 # ============================================
 # ARCHIVOS ESPECÍFICOS A IGNORAR
 # ============================================
