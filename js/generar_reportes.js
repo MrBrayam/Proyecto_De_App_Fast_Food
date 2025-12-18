@@ -187,12 +187,38 @@ function configurarEventListeners() {
         filtrarTabla(this.value);
     });
 
-    // Botones de exportar e imprimir
-    document.getElementById('exportarTabla').addEventListener('click', exportarTabla);
-    document.getElementById('imprimirTabla').addEventListener('click', imprimirTabla);
-
+    // Botones de exportar e imprimir - Usar event delegation
+    console.log('[configurarEventListeners] Configurando event delegation para botones');
+    
+    document.body.addEventListener('click', function(e) {
+        console.log('[CLICK GLOBAL] Elemento clickeado:', e.target);
+        console.log('[CLICK GLOBAL] ID del elemento:', e.target.id);
+        console.log('[CLICK GLOBAL] Closest #exportarTabla:', e.target.closest('#exportarTabla'));
+        
+        // Botón Exportar
+        if (e.target.id === 'exportarTabla' || e.target.closest('#exportarTabla')) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[CLICK] Botón Exportar presionado');
+            exportarTabla();
+            return;
+        }
+        
+        // Botón Imprimir
+        if (e.target.id === 'imprimirTabla' || e.target.closest('#imprimirTabla')) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[CLICK] Botón Imprimir presionado');
+            imprimirTabla();
+            return;
+        }
+    });
+    
+    console.log('[configurarEventListeners] Event delegation configurado');
+    
     // Botón limpiar historial
-    document.getElementById('btnLimpiarHistorial').addEventListener('click', limpiarHistorial);
+    const btnLimpiarHistorial = document.getElementById('btnLimpiarHistorial');
+    if (btnLimpiarHistorial) btnLimpiarHistorial.addEventListener('click', limpiarHistorial);
 
     // Botones del historial
     document.querySelectorAll('.btn-historial-accion').forEach(btn => {
@@ -420,6 +446,10 @@ function generarReporte() {
     const btn = document.getElementById('btnGenerar');
     const originalText = btn.innerHTML;
     
+    // Obtener formato seleccionado
+    const formatoSeleccionado = document.querySelector('input[name="formato"]:checked')?.value || 'pdf';
+    console.log('[generarReporte] Formato seleccionado:', formatoSeleccionado);
+    
     // Mostrar estado de carga
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
     btn.disabled = true;
@@ -427,8 +457,8 @@ function generarReporte() {
     setTimeout(() => {
         actualizarContenidoReporte();
         
-        // Agregar al historial
-        agregarAlHistorial();
+        // Agregar al historial (comentado - no hay contenedor de historial)
+        // agregarAlHistorial();
         
         // Restaurar botón
         btn.innerHTML = originalText;
@@ -436,6 +466,15 @@ function generarReporte() {
         
         // Mostrar notificación de éxito
         mostrarNotificacion('Reporte generado exitosamente', 'success');
+        
+        // Exportar automáticamente si se seleccionó un formato
+        console.log('[generarReporte] Exportando automáticamente en formato:', formatoSeleccionado);
+        
+        // Esperar un momento antes de exportar para que la tabla se actualice
+        setTimeout(() => {
+            exportarReporteDirecto(formatoSeleccionado);
+        }, 500);
+        
     }, 1500);
 }
 
@@ -470,13 +509,343 @@ function filtrarTabla(termino) {
 
 // Exportar tabla
 function exportarTabla() {
-    const formato = document.querySelector('input[name="formato"]:checked').value;
+    console.log('[exportarTabla] Función llamada desde botón de tabla');
+    exportarReporteDirecto('tabla'); // Abre en nueva pestaña
+}
+
+// Exportar reporte directo según formato
+function exportarReporteDirecto(formato) {
+    console.log('[exportarReporteDirecto] Formato:', formato);
     
-    mostrarNotificacion(`Exportando tabla en formato ${formato.toUpperCase()}...`, 'info');
+    const tabla = document.getElementById('tablaReporte');
     
-    setTimeout(() => {
-        mostrarNotificacion(`Tabla exportada exitosamente en ${formato.toUpperCase()}`, 'success');
-    }, 1000);
+    // Verificar que hay datos en la tabla
+    const tbody = tabla.querySelector('tbody');
+    console.log('[exportarReporteDirecto] tbody rows:', tbody?.rows.length);
+    
+    if (!tbody || tbody.rows.length === 0 || tbody.querySelector('.no-data')) {
+        console.log('[exportarReporteDirecto] No hay datos para exportar');
+        mostrarNotificacion('No hay datos para exportar. Genera un reporte primero.', 'error');
+        return;
+    }
+    
+    try {
+        console.log('[exportarReporteDirecto] Preparando datos para exportación...');
+        
+        // Obtener encabezados
+        const thead = tabla.querySelector('thead');
+        const headers = Array.from(thead.querySelectorAll('th')).map(th => th.textContent.trim());
+        
+        // Obtener filas
+        const rows = Array.from(tbody.querySelectorAll('tr')).map(tr => 
+            Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim())
+        );
+        
+        // Preparar datos del reporte
+        const tipoReporte = tipoReporteActual.charAt(0).toUpperCase() + tipoReporteActual.slice(1);
+        const fecha = new Date().toLocaleDateString('es-PE');
+        
+        if (formato === 'tabla') {
+            // Abrir en nueva pestaña
+            const datosReporte = {
+                titulo: `Reporte de ${tipoReporte}`,
+                fecha: fecha,
+                periodo: periodoActual,
+                tipo: tipoReporteActual,
+                headers: headers,
+                rows: rows
+            };
+            
+            localStorage.setItem('reporteExportar', JSON.stringify(datosReporte));
+            const url = '/Proyecto_De_App_Fast_Food/html/imprimir_reporte.html';
+            window.open(url, '_blank');
+            
+            console.log('[exportarReporteDirecto] Reporte abierto en nueva pestaña');
+            mostrarNotificacion('✓ Reporte abierto en nueva pestaña', 'success');
+            
+        } else {
+            // Exportar directamente según formato
+            switch(formato) {
+                case 'pdf':
+                    exportarPDFDirecto(headers, rows, tipoReporte, fecha);
+                    mostrarNotificacion('✓ Descargando PDF - Revisa tu carpeta de Descargas', 'success');
+                    break;
+                case 'excel':
+                    exportarExcelDirecto(headers, rows, tipoReporte, fecha);
+                    mostrarNotificacion('✓ Descargando Excel - Revisa tu carpeta de Descargas', 'success');
+                    break;
+                case 'csv':
+                    exportarCSVDirecto(headers, rows, tipoReporte, fecha);
+                    mostrarNotificacion('✓ Descargando CSV - Revisa tu carpeta de Descargas', 'success');
+                    break;
+            }
+        }
+        
+    } catch (error) {
+        console.error('[exportarReporteDirecto] Error:', error);
+        mostrarNotificacion('Error al exportar la tabla', 'error');
+    }
+}
+
+// Exportar a PDF
+function exportarPDF(tabla) {
+    console.log('[exportarPDF] Iniciando exportación a PDF');
+    console.log('[exportarPDF] window.jspdf:', typeof window.jspdf);
+    
+    const { jsPDF } = window.jspdf;
+    console.log('[exportarPDF] jsPDF:', typeof jsPDF);
+    
+    const doc = new jsPDF('l', 'mm', 'a4'); // Landscape, mm, A4
+    console.log('[exportarPDF] Documento PDF creado');
+    
+    // Título del documento
+    const tipoReporte = tipoReporteActual.charAt(0).toUpperCase() + tipoReporteActual.slice(1);
+    const fecha = new Date().toLocaleDateString('es-PE');
+    
+    doc.setFontSize(16);
+    doc.text(`Reporte de ${tipoReporte}`, 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Fecha: ${fecha}`, 14, 22);
+    doc.text(`Período: ${periodoActual}`, 14, 27);
+    
+    // Obtener encabezados y datos
+    const thead = tabla.querySelector('thead');
+    const tbody = tabla.querySelector('tbody');
+    
+    const headers = Array.from(thead.querySelectorAll('th')).map(th => th.textContent.trim());
+    const rows = Array.from(tbody.querySelectorAll('tr')).map(tr => 
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim())
+    );
+    
+    // Generar tabla con autoTable
+    doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 32,
+        theme: 'grid',
+        styles: {
+            fontSize: 9,
+            cellPadding: 3,
+        },
+        headStyles: {
+            fillColor: [41, 128, 185],
+            textColor: 255,
+            fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        }
+    });
+    
+    // Guardar PDF
+    const nombreArchivo = `reporte_${tipoReporteActual}_${fecha.replace(/\//g, '-')}.pdf`;
+    doc.save(nombreArchivo);
+    
+    console.log('[exportarPDF] Archivo guardado:', nombreArchivo);
+    console.log('[exportarPDF] Ubicación: Carpeta de Descargas del navegador');
+}
+
+// Exportar a Excel
+function exportarExcel(tabla) {
+    console.log('[exportarExcel] Iniciando exportación a Excel');
+    console.log('[exportarExcel] XLSX:', typeof XLSX);
+    
+    const tipoReporte = tipoReporteActual.charAt(0).toUpperCase() + tipoReporteActual.slice(1);
+    const fecha = new Date().toLocaleDateString('es-PE');
+    console.log('[exportarExcel] Tipo:', tipoReporte, 'Fecha:', fecha);
+    
+    // Obtener encabezados y datos
+    const thead = tabla.querySelector('thead');
+    const tbody = tabla.querySelector('tbody');
+    
+    const headers = Array.from(thead.querySelectorAll('th')).map(th => th.textContent.trim());
+    const rows = Array.from(tbody.querySelectorAll('tr')).map(tr => 
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim())
+    );
+    
+    // Crear hoja de cálculo
+    const ws_data = [
+        [`Reporte de ${tipoReporte}`],
+        [`Fecha: ${fecha}`],
+        [`Período: ${periodoActual}`],
+        [], // Fila vacía
+        headers,
+        ...rows
+    ];
+    
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    
+    // Aplicar estilos básicos (ancho de columnas)
+    const colWidths = headers.map(() => ({ wch: 15 }));
+    ws['!cols'] = colWidths;
+    
+    // Crear libro y agregar hoja
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
+    
+    // Guardar archivo
+    const nombreArchivo = `reporte_${tipoReporteActual}_${fecha.replace(/\//g, '-')}.xlsx`;
+    XLSX.writeFile(wb, nombreArchivo);
+    
+    console.log('[exportarExcel] Archivo guardado:', nombreArchivo);
+    console.log('[exportarExcel] Ubicación: Carpeta de Descargas del navegador');
+}
+
+// Exportar a CSV
+function exportarCSV(tabla) {
+    console.log('[exportarCSV] Iniciando exportación a CSV');
+    const fecha = new Date().toLocaleDateString('es-PE');
+    console.log('[exportarCSV] Fecha:', fecha);
+    
+    // Obtener encabezados y datos
+    const thead = tabla.querySelector('thead');
+    const tbody = tabla.querySelector('tbody');
+    
+    const headers = Array.from(thead.querySelectorAll('th')).map(th => th.textContent.trim());
+    const rows = Array.from(tbody.querySelectorAll('tr')).map(tr => 
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim())
+    );
+    
+    // Construir contenido CSV
+    let csvContent = '';
+    
+    // Encabezado del reporte
+    csvContent += `Reporte de ${tipoReporteActual}\n`;
+    csvContent += `Fecha: ${fecha}\n`;
+    csvContent += `Período: ${periodoActual}\n\n`;
+    
+    // Encabezados de columnas
+    csvContent += headers.map(h => `"${h}"`).join(',') + '\n';
+    
+    // Filas de datos
+    rows.forEach(row => {
+        csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+    });
+    
+    // Crear blob y descargar
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const nombreArchivo = `reporte_${tipoReporteActual}_${fecha.replace(/\//g, '-')}.csv`;
+    link.setAttribute('href', url);
+    link.setAttribute('download', nombreArchivo);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    console.log('[exportarCSV] Archivo guardado:', nombreArchivo);
+    console.log('[exportarCSV] Ubicación: Carpeta de Descargas del navegador');
+}
+
+// ========== FUNCIONES DE EXPORTACIÓN DIRECTA ==========
+
+// Exportar PDF directamente
+function exportarPDFDirecto(headers, rows, tipoReporte, fecha) {
+    console.log('[exportarPDFDirecto] Iniciando...');
+    
+    if (typeof window.jspdf === 'undefined') {
+        console.error('[exportarPDFDirecto] jsPDF no está cargado');
+        mostrarNotificacion('Error: Biblioteca PDF no disponible', 'error');
+        return;
+    }
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'mm', 'a4');
+    
+    doc.setFontSize(16);
+    doc.text(`Reporte de ${tipoReporte}`, 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Fecha: ${fecha}`, 14, 22);
+    doc.text(`Período: ${periodoActual}`, 14, 27);
+    
+    doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 32,
+        theme: 'grid',
+        styles: {
+            fontSize: 9,
+            cellPadding: 3,
+        },
+        headStyles: {
+            fillColor: [41, 128, 185],
+            textColor: 255,
+            fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        }
+    });
+    
+    const nombreArchivo = `reporte_${tipoReporteActual}_${fecha.replace(/\//g, '-')}.pdf`;
+    doc.save(nombreArchivo);
+    
+    console.log('[exportarPDFDirecto] Archivo guardado:', nombreArchivo);
+}
+
+// Exportar Excel directamente
+function exportarExcelDirecto(headers, rows, tipoReporte, fecha) {
+    console.log('[exportarExcelDirecto] Iniciando...');
+    
+    if (typeof XLSX === 'undefined') {
+        console.error('[exportarExcelDirecto] XLSX no está cargado');
+        mostrarNotificacion('Error: Biblioteca Excel no disponible', 'error');
+        return;
+    }
+    
+    const ws_data = [
+        [`Reporte de ${tipoReporte}`],
+        [`Fecha: ${fecha}`],
+        [`Período: ${periodoActual}`],
+        [],
+        headers,
+        ...rows
+    ];
+    
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    const colWidths = headers.map(() => ({ wch: 15 }));
+    ws['!cols'] = colWidths;
+    
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
+    
+    const nombreArchivo = `reporte_${tipoReporteActual}_${fecha.replace(/\//g, '-')}.xlsx`;
+    XLSX.writeFile(wb, nombreArchivo);
+    
+    console.log('[exportarExcelDirecto] Archivo guardado:', nombreArchivo);
+}
+
+// Exportar CSV directamente
+function exportarCSVDirecto(headers, rows, tipoReporte, fecha) {
+    console.log('[exportarCSVDirecto] Iniciando...');
+    
+    let csvContent = '';
+    csvContent += `Reporte de ${tipoReporte}\n`;
+    csvContent += `Fecha: ${fecha}\n`;
+    csvContent += `Período: ${periodoActual}\n\n`;
+    csvContent += headers.map(h => `"${h}"`).join(',') + '\n';
+    
+    rows.forEach(row => {
+        csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+    });
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const nombreArchivo = `reporte_${tipoReporteActual}_${fecha.replace(/\//g, '-')}.csv`;
+    link.setAttribute('href', url);
+    link.setAttribute('download', nombreArchivo);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    console.log('[exportarCSVDirecto] Archivo guardado:', nombreArchivo);
 }
 
 // Imprimir tabla
@@ -538,6 +907,13 @@ function agregarAlHistorial() {
     `;
     
     const historialLista = document.querySelector('.historial-lista');
+    
+    // Si no existe el contenedor de historial, no hacer nada
+    if (!historialLista) {
+        console.log('[agregarAlHistorial] Contenedor de historial no encontrado');
+        return;
+    }
+    
     historialLista.insertAdjacentHTML('afterbegin', nuevoItem);
     
     // Configurar eventos para el nuevo item

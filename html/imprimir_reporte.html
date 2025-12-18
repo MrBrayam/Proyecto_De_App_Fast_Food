@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte - King's Pizza</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .reporte-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reporte-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c3e50;
+        }
+
+        .reporte-header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .reporte-header .empresa {
+            font-size: 20px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .reporte-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .reporte-info div {
+            flex: 1;
+        }
+
+        .reporte-info label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .reporte-info span {
+            color: #333;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        table tbody tr:hover {
+            background: #e9ecef;
+        }
+
+        table td {
+            padding: 10px 12px;
+            color: #333;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background: #e9ecef !important;
+            font-size: 16px;
+        }
+
+        .footer-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .no-print {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn-print {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .btn-print:hover {
+            background: #34495e;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+            
+            body {
+                padding: 0;
+            }
+
+            table {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        <button class="btn-print" onclick="exportarExcel()">📊 Descargar Excel</button>
+        <button class="btn-print" onclick="exportarCSV()">📄 Descargar CSV</button>
+        <button class="btn-print" onclick="window.close()">❌ Cerrar</button>
+    </div>
+
+    <div class="reporte-container">
+        <div class="reporte-header">
+            <div class="empresa">KING'S PIZZA</div>
+            <h1 id="tituloReporte">Reporte de Ventas</h1>
+        </div>
+
+        <div class="reporte-info">
+            <div>
+                <label>Fecha de Generación:</label>
+                <span id="fechaGeneracion">-</span>
+            </div>
+            <div>
+                <label>Período:</label>
+                <span id="periodoReporte">-</span>
+            </div>
+            <div>
+                <label>Tipo:</label>
+                <span id="tipoReporte">-</span>
+            </div>
+        </div>
+
+        <table id="tablaReporte">
+            <thead>
+                <tr id="theadRow">
+                    <!-- Se llenará dinámicamente -->
+                </tr>
+            </thead>
+            <tbody id="tbodyReporte">
+                <!-- Se llenará dinámicamente -->
+            </tbody>
+        </table>
+
+        <div class="footer-info">
+            <p>Reporte generado automáticamente por el Sistema King's Pizza</p>
+            <p>Fecha y hora de generación: <span id="fechaHoraCompleta"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // Obtener datos del localStorage
+        const datosReporte = JSON.parse(localStorage.getItem('reporteExportar'));
+        
+        if (!datosReporte) {
+            document.body.innerHTML = '<div style="text-align:center; padding:50px;"><h2>No hay datos para mostrar</h2><button onclick="window.close()">Cerrar</button></div>';
+        } else {
+            // Llenar información del reporte
+            document.getElementById('tituloReporte').textContent = datosReporte.titulo;
+            document.getElementById('fechaGeneracion').textContent = datosReporte.fecha;
+            document.getElementById('periodoReporte').textContent = datosReporte.periodo;
+            document.getElementById('tipoReporte').textContent = datosReporte.tipo;
+            document.getElementById('fechaHoraCompleta').textContent = new Date().toLocaleString('es-PE');
+
+            // Llenar encabezados
+            const theadRow = document.getElementById('theadRow');
+            datosReporte.headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                theadRow.appendChild(th);
+            });
+
+            // Llenar filas
+            const tbody = document.getElementById('tbodyReporte');
+            datosReporte.rows.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Función para exportar a Excel
+        function exportarExcel() {
+            const wb = XLSX.utils.table_to_book(document.getElementById('tablaReporte'));
+            const fecha = new Date().toLocaleDateString('es-PE').replace(/\//g, '-');
+            XLSX.writeFile(wb, `reporte_${datosReporte.tipo}_${fecha}.xlsx`);
+        }
+
+        // Función para exportar a CSV
+        function exportarCSV() {
+            let csv = datosReporte.headers.map(h => `"${h}"`).join(',') + '\n';
+            datosReporte.rows.forEach(row => {
+                csv += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            const fecha = new Date().toLocaleDateString('es-PE').replace(/\//g, '-');
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `reporte_${datosReporte.tipo}_${fecha}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
