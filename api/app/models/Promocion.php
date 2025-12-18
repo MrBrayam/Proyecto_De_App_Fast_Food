@@ -7,7 +7,7 @@ class Promocion
     {
         try {
             $db = Database::connection();
-            $stmt = $db->prepare('CALL pa_promocion_registrar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt = $db->prepare('CALL pa_promocion_registrar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             $stmt->execute([
                 $data['nombre'] ?? null,
                 $data['tipo'] ?? null,
@@ -20,7 +20,9 @@ class Promocion
                 $data['montoMinimo'] ?? 0,
                 $data['usosMaximos'] ?? null,
                 $data['acumulable'] ?? false,
-                $data['descripcion'] ?? null
+                $data['descripcion'] ?? null,
+                $data['idPlato'] ?? null,
+                $data['idProducto'] ?? null
             ]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             while ($stmt->nextRowset()) {}
@@ -51,7 +53,7 @@ class Promocion
     {
         try {
             $db = Database::connection();
-            $stmt = $db->prepare('CALL pa_promocion_actualizar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt = $db->prepare('CALL pa_promocion_actualizar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             $stmt->execute([
                 $data['idPromocion'] ?? null,
                 $data['nombre'] ?? null,
@@ -65,7 +67,9 @@ class Promocion
                 $data['montoMinimo'] ?? 0,
                 $data['usosMaximos'] ?? null,
                 $data['acumulable'] ?? false,
-                $data['descripcion'] ?? null
+                $data['descripcion'] ?? null,
+                $data['idPlato'] ?? null,
+                $data['idProducto'] ?? null
             ]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             while ($stmt->nextRowset()) {}

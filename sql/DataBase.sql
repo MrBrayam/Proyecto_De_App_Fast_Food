@@ -191,6 +191,8 @@ CREATE TABLE Promociones (
     NombrePromocion VARCHAR(150) NOT NULL,
     TipoPromocion ENUM('2x1', 'porcentaje', 'monto', 'horario', 'combo', 'especial') NOT NULL,
     Descuento VARCHAR(50) NOT NULL COMMENT 'Ej: 20% o S/10',
+    IdPlato INT NULL COMMENT 'Plato al que aplica la promoción',
+    IdProducto INT NULL COMMENT 'Producto al que aplica la promoción',
     Estado ENUM('activa', 'inactiva', 'programada') DEFAULT 'activa',
     FechaInicio DATE NOT NULL,
     FechaFin DATE NOT NULL,
@@ -202,7 +204,14 @@ CREATE TABLE Promociones (
     Acumulable BOOLEAN DEFAULT FALSE,
     Descripcion TEXT,
     FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FechaActualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    FechaActualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (IdPlato) REFERENCES Platos(IdPlato) ON DELETE CASCADE,
+    FOREIGN KEY (IdProducto) REFERENCES Productos(IdProducto) ON DELETE CASCADE,
+    CONSTRAINT chk_promocion_item_type CHECK (
+        (IdPlato IS NOT NULL AND IdProducto IS NULL) OR 
+        (IdPlato IS NULL AND IdProducto IS NOT NULL) OR
+        (IdPlato IS NULL AND IdProducto IS NULL)
+    )
 );
 
 -- ============================================
@@ -664,6 +673,8 @@ CREATE INDEX idx_ventas_tipo_pago ON Ventas(TipoPago);
 CREATE INDEX idx_compras_fecha ON Compras(FechaCompra);
 CREATE INDEX idx_proveedores_documento ON Proveedores(NumDoc);
 CREATE INDEX idx_promociones_fechas ON Promociones(FechaInicio, FechaFin);
+CREATE INDEX idx_promociones_plato ON Promociones(IdPlato);
+CREATE INDEX idx_promociones_producto ON Promociones(IdProducto);
 
 -- ============================================
 -- PA: REGISTRAR PERFIL
@@ -2333,16 +2344,19 @@ CREATE PROCEDURE pa_promocion_registrar(
     IN p_montoMinimo DECIMAL(10,2),
     IN p_usosMaximos INT,
     IN p_acumulable BOOLEAN,
-    IN p_descripcion TEXT
+    IN p_descripcion TEXT,
+    IN p_idPlato INT,
+    IN p_idProducto INT
 )
 BEGIN
     INSERT INTO Promociones (
         NombrePromocion, TipoPromocion, Descuento, Estado, FechaInicio, FechaFin,
-        DiasAplicables, Horario, MontoMinimo, UsosMaximos, Acumulable, Descripcion
+        DiasAplicables, Horario, MontoMinimo, UsosMaximos, Acumulable, Descripcion,
+        IdPlato, IdProducto
     ) VALUES (
         p_nombre, p_tipo, p_descuento, p_estado, p_fechaInicio, p_fechaFin,
         p_diasAplicables, p_horario, IFNULL(p_montoMinimo, 0), p_usosMaximos,
-        IFNULL(p_acumulable, FALSE), p_descripcion
+        IFNULL(p_acumulable, FALSE), p_descripcion, p_idPlato, p_idProducto
     );
     
     SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Promoción registrada correctamente', 'idPromocion', LAST_INSERT_ID()) AS resultado;
@@ -2359,7 +2373,8 @@ BEGIN
     SELECT 
         IdPromocion, NombrePromocion, TipoPromocion, Descuento, Estado,
         FechaInicio, FechaFin, DiasAplicables, Horario, MontoMinimo,
-        UsosMaximos, UsosCliente, Acumulable, Descripcion, FechaCreacion
+        UsosMaximos, UsosCliente, Acumulable, Descripcion, FechaCreacion,
+        IdPlato, IdProducto
     FROM Promociones
     ORDER BY FechaCreacion DESC;
 END //
@@ -2383,7 +2398,9 @@ CREATE PROCEDURE pa_promocion_actualizar(
     IN p_montoMinimo DECIMAL(10,2),
     IN p_usosMaximos INT,
     IN p_acumulable BOOLEAN,
-    IN p_descripcion TEXT
+    IN p_descripcion TEXT,
+    IN p_idPlato INT,
+    IN p_idProducto INT
 )
 BEGIN
     UPDATE Promociones SET
@@ -2398,7 +2415,9 @@ BEGIN
         MontoMinimo = IFNULL(p_montoMinimo, 0),
         UsosMaximos = p_usosMaximos,
         Acumulable = IFNULL(p_acumulable, FALSE),
-        Descripcion = p_descripcion
+        Descripcion = p_descripcion,
+        IdPlato = p_idPlato,
+        IdProducto = p_idProducto
     WHERE IdPromocion = p_idPromocion;
     
     SELECT JSON_OBJECT('exito', TRUE, 'mensaje', 'Promoción actualizada correctamente') AS resultado;
@@ -2415,7 +2434,8 @@ BEGIN
     SELECT 
         IdPromocion, NombrePromocion, TipoPromocion, Descuento, Estado,
         FechaInicio, FechaFin, DiasAplicables, Horario, MontoMinimo,
-        UsosMaximos, UsosCliente, Acumulable, Descripcion, FechaCreacion
+        UsosMaximos, UsosCliente, Acumulable, Descripcion, FechaCreacion,
+        IdPlato, IdProducto
     FROM Promociones
     WHERE IdPromocion = p_idPromocion
     LIMIT 1;

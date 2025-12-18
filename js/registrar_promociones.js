@@ -100,6 +100,28 @@ function inicializarEventos() {
         });
     }
 
+    // Evento para mostrar/ocultar selectores según tipo de aplicación
+    const tipoAplicacion = document.getElementById('tipoAplicacion');
+    if (tipoAplicacion) {
+        tipoAplicacion.addEventListener('change', function() {
+            const selectorPlato = document.getElementById('selectorPlato');
+            const selectorProducto = document.getElementById('selectorProducto');
+            
+            if (this.value === 'plato') {
+                selectorPlato.style.display = 'block';
+                selectorProducto.style.display = 'none';
+                cargarPlatos();
+            } else if (this.value === 'producto') {
+                selectorPlato.style.display = 'none';
+                selectorProducto.style.display = 'block';
+                cargarProductos();
+            } else {
+                selectorPlato.style.display = 'none';
+                selectorProducto.style.display = 'none';
+            }
+        });
+    }
+
     // Validar que fechaFin sea posterior a fechaInicio
     const fechaInicio = document.getElementById('fechaInicio');
     const fechaFin = document.getElementById('fechaFin');
@@ -110,6 +132,48 @@ function inicializarEventos() {
                 fechaFin.setAttribute('min', this.value);
             }
         });
+    }
+}
+
+// Cargar platos disponibles
+async function cargarPlatos() {
+    try {
+        const response = await fetch(`${API_BASE}/platos/listar`);
+        const data = await response.json();
+        
+        const selectPlato = document.getElementById('idPlato');
+        if (selectPlato && data.exito && data.items) {
+            selectPlato.innerHTML = '<option value="">Seleccionar plato...</option>';
+            data.items.forEach(plato => {
+                const option = document.createElement('option');
+                option.value = plato.IdPlato;
+                option.textContent = `${plato.Nombre} - S/ ${plato.Precio}`;
+                selectPlato.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error al cargar platos:', error);
+    }
+}
+
+// Cargar productos disponibles
+async function cargarProductos() {
+    try {
+        const response = await fetch(`${API_BASE}/productos/listar`);
+        const data = await response.json();
+        
+        const selectProducto = document.getElementById('idProducto');
+        if (selectProducto && data.exito && data.items) {
+            selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
+            data.items.forEach(producto => {
+                const option = document.createElement('option');
+                option.value = producto.IdProducto;
+                option.textContent = `${producto.NombreProducto} - S/ ${producto.Precio}`;
+                selectProducto.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error al cargar productos:', error);
     }
 }
 
@@ -137,10 +201,25 @@ async function registrarPromocion() {
     const usosMaximos = parseInt(document.getElementById('usosMaximos')?.value || 'null') || null;
     const acumulable = document.getElementById('acumulable')?.value === 'si' ? 1 : 0;
     const descripcion = document.getElementById('descripcion')?.value.trim() || null;
+    
+    // Nuevos campos
+    const tipoAplicacion = document.getElementById('tipoAplicacion')?.value;
+    const idPlato = tipoAplicacion === 'plato' ? (parseInt(document.getElementById('idPlato')?.value) || null) : null;
+    const idProducto = tipoAplicacion === 'producto' ? (parseInt(document.getElementById('idProducto')?.value) || null) : null;
 
     // Validar campos obligatorios
     if (!nombre || !tipo || !descuento || !estado || !fechaInicio || !fechaFin) {
         alert('Por favor complete todos los campos obligatorios (*)');
+        return;
+    }
+    
+    // Validar que si eligió plato/producto, haya seleccionado uno
+    if (tipoAplicacion === 'plato' && !idPlato) {
+        alert('Por favor seleccione un plato');
+        return;
+    }
+    if (tipoAplicacion === 'producto' && !idProducto) {
+        alert('Por favor seleccione un producto');
         return;
     }
 
@@ -162,7 +241,9 @@ async function registrarPromocion() {
         montoMinimo,
         usosMaximos,
         acumulable,
-        descripcion
+        descripcion,
+        idPlato,
+        idProducto
     };
 
     try {
@@ -285,6 +366,29 @@ async function cargarPromocionParaEditar(idPromocion) {
         document.getElementById('usosMaximos').value = promocion.UsosMaximos || '';
         document.getElementById('acumulable').value = promocion.Acumulable ? 'si' : 'no';
         document.getElementById('descripcion').value = promocion.Descripcion || '';
+        
+        // Cargar tipo de aplicación (nuevos campos)
+        const tipoAplicacion = document.getElementById('tipoAplicacion');
+        const selectorPlato = document.getElementById('selectorPlato');
+        const selectorProducto = document.getElementById('selectorProducto');
+        
+        if (promocion.IdPlato) {
+            tipoAplicacion.value = 'plato';
+            selectorPlato.style.display = 'block';
+            selectorProducto.style.display = 'none';
+            await cargarPlatos();
+            document.getElementById('idPlato').value = promocion.IdPlato;
+        } else if (promocion.IdProducto) {
+            tipoAplicacion.value = 'producto';
+            selectorPlato.style.display = 'none';
+            selectorProducto.style.display = 'block';
+            await cargarProductos();
+            document.getElementById('idProducto').value = promocion.IdProducto;
+        } else {
+            tipoAplicacion.value = 'general';
+            selectorPlato.style.display = 'none';
+            selectorProducto.style.display = 'none';
+        }
         
     } catch (error) {
         console.error('Error al cargar promoción:', error);

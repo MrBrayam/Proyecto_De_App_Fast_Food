@@ -36,7 +36,9 @@ class PromocionController
             'montoMinimo'=>$data['montoMinimo'] ?? 0,
             'usosMaximos'=>$data['usosMaximos'] ?? null,
             'acumulable'=>$data['acumulable'] ?? false,
-            'descripcion'=>$data['descripcion'] ?? null
+            'descripcion'=>$data['descripcion'] ?? null,
+            'idPlato'=>$data['idPlato'] ?? null,
+            'idProducto'=>$data['idProducto'] ?? null
         ]);
 
         if (!$res) {
@@ -98,6 +100,8 @@ class PromocionController
             'montoMinimo'=>$data['montoMinimo'] ?? 0,
             'usosMaximos'=>$data['usosMaximos'] ?? null,
             'acumulable'=>$data['acumulable'] ?? false,
+            'idPlato'=>$data['idPlato'] ?? null,
+            'idProducto'=>$data['idProducto'] ?? null,
             'descripcion'=>$data['descripcion'] ?? null
         ]);
 
