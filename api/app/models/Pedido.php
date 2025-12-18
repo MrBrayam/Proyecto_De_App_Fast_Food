@@ -10,7 +10,7 @@ class Pedido
     {
         try {
             $db = Database::connection();
-            $stmt = $db->prepare('CALL pa_registrar_pedido(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt = $db->prepare('CALL pa_registrar_pedido(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
             // Asegurar que el estado sea válido
             $estadoValido = isset($data['estado']) && in_array($data['estado'], ['pendiente', 'preparando', 'listo', 'entregado', 'cancelado']) 
@@ -20,6 +20,7 @@ class Pedido
             error_log("=== PEDIDO MODEL - PARÁMETROS ===");
             error_log("Estado válido: " . $estadoValido);
             error_log("Descuento: " . ($data['descuento'] ?? 0));
+            error_log("CostoDelivery: " . ($data['costoDelivery'] ?? 0));
             error_log("Total: " . ($data['total'] ?? 0));
             error_log("IdMesero: " . ($data['idMesero'] ?? 'NULL'));
 
@@ -35,6 +36,7 @@ class Pedido
                 $data['idUsuario'] ?? null,
                 $data['subTotal'] ?? 0,
                 $data['descuento'] ?? 0,
+                $data['costoDelivery'] ?? 0,
                 $data['total'] ?? 0,
                 $estadoValido,
                 $data['observaciones'] ?? null

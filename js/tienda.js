@@ -794,14 +794,14 @@ function eliminarDelCarrito(index) {
 // Actualizar resumen
 function actualizarResumen() {
     const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    const delivery = carrito.length > 0 ? 5.00 : 0;
-    const total = subtotal - descuentoAplicado + delivery;
+    const costoDelivery = carrito.length > 0 ? 5.00 : 0;
+    const total = subtotal - descuentoAplicado + costoDelivery;
     
     const resumenLineas = document.querySelectorAll('.resumen-linea');
     if (resumenLineas.length >= 4) {
         resumenLineas[0].querySelector('span:last-child').textContent = `S/. ${subtotal.toFixed(2)}`;
         resumenLineas[1].querySelector('span:last-child').textContent = `-S/. ${descuentoAplicado.toFixed(2)}`;
-        resumenLineas[2].querySelector('span:last-child').textContent = `S/. ${delivery.toFixed(2)}`;
+        resumenLineas[2].querySelector('span:last-child').textContent = `S/. ${costoDelivery.toFixed(2)}`;
         resumenLineas[3].querySelector('span:last-child').textContent = `S/. ${total.toFixed(2)}`;
     }
 }
@@ -870,8 +870,8 @@ async function finalizarPedido() {
         console.log('Detalles del pedido a enviar:', detalles);
         
         const subTotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-        const delivery = 5.00;
-        const total = subTotal - descuentoAplicado + delivery;
+        const costoDelivery = 5.00;
+        const total = subTotal - descuentoAplicado + costoDelivery;
         
         // Preparar datos del pedido según la PA pa_registrar_pedido
         const pedidoData = {
@@ -885,6 +885,7 @@ async function finalizarPedido() {
             idUsuario: 1, // Usuario por defecto (sistema)
             subTotal: subTotal,
             descuento: descuentoAplicado,
+            costoDelivery: costoDelivery,
             total: total,
             estado: 'pendiente',
             observaciones: 'Pedido realizado por cliente en tienda online',

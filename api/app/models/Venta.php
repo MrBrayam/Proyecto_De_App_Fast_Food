@@ -11,8 +11,13 @@ class Venta
         $idCliente = $data['idCliente'] ?? null;
         $idMesero = $data['idMesero'] ?? null;
         $tipoPago = $data['tipoPago'] ?? 'efectivo';
+        $tipoComprobante = $data['tipoComprobante'] ?? 'boleta';
+        $idMesero = $data['idMesero'] ?? null;
+        $tipoPago = $data['tipoPago'] ?? 'efectivo';
+        $tipoComprobante = $data['tipoComprobante'] ?? 'boleta';
         $subTotal = $data['subTotal'] ?? 0;
         $descuento = $data['descuento'] ?? 0;
+        $costoDelivery = $data['costoDelivery'] ?? 0;
         $total = $data['total'] ?? 0;
         $idUsuario = $data['idUsuario'] ?? 0;
         $codCaja = $data['codCaja'] ?? null;
@@ -22,16 +27,20 @@ class Venta
         // Log para debug
         error_log('Registrando venta con detalles: ' . $detalles);
         error_log('IdMesero en venta: ' . ($idMesero ?? 'NULL'));
+        error_log('TipoComprobante: ' . $tipoComprobante);
+        error_log('CostoDelivery: ' . $costoDelivery);
 
         try {
-            $stmt = $db->prepare('CALL pa_registrar_venta(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt = $db->prepare('CALL pa_registrar_venta(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             
             $stmt->execute([
                 $idCliente,
                 $idMesero,
                 $tipoPago,
+                $tipoComprobante,
                 $subTotal,
                 $descuento,
+                $costoDelivery,
                 $total,
                 $idUsuario,
                 $codCaja,

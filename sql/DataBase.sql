@@ -263,9 +263,12 @@ CREATE TABLE Pedidos (
     NombreCliente VARCHAR(200) NOT NULL,
     DireccionCliente TEXT NULL,
     TelefonoCliente VARCHAR(20) NULL,
+    TipoComprobante ENUM('boleta', 'factura', 'ninguno') DEFAULT 'boleta',
+    NumeroComprobante VARCHAR(50) UNIQUE NULL,
     IdUsuario INT NOT NULL COMMENT 'Usuario que registra',
     SubTotal DECIMAL(12,2) DEFAULT 0.00,
     Descuento DECIMAL(12,2) DEFAULT 0.00,
+    CostoDelivery DECIMAL(10,2) DEFAULT 0.00,
     Total DECIMAL(12,2) DEFAULT 0.00,
     Estado ENUM('pendiente', 'preparando', 'listo', 'entregado', 'cancelado') DEFAULT 'pendiente',
     FechaPedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -303,8 +306,11 @@ CREATE TABLE Ventas (
     IdCliente INT NULL,
     IdMesero INT NULL COMMENT 'Mesero que atendió',
     TipoPago ENUM('efectivo', 'tarjeta', 'yape', 'plin') NOT NULL,
+    TipoComprobante ENUM('boleta', 'factura', 'ninguno') DEFAULT 'boleta',
+    NumeroComprobante VARCHAR(50) UNIQUE NULL,
     SubTotal DECIMAL(12,2) DEFAULT 0.00,
     Descuento DECIMAL(12,2) DEFAULT 0.00,
+    CostoDelivery DECIMAL(10,2) DEFAULT 0.00,
     Total DECIMAL(12,2) DEFAULT 0.00,
     Propina DECIMAL(10,2) DEFAULT 0.00,
     IdUsuario INT NOT NULL COMMENT 'Cajero que registra',
@@ -516,6 +522,46 @@ SELECT
 FROM Pedidos p
 LEFT JOIN Clientes c ON p.IdCliente = c.IdCliente
 LEFT JOIN Usuarios u ON p.IdUsuario = u.IdUsuario;
+
+-- ============================================
+-- FUNCIONES AUXILIARES
+-- ============================================
+
+DELIMITER //
+
+-- Función para generar número de boleta automático
+DROP FUNCTION IF EXISTS fn_generar_numero_boleta//
+CREATE FUNCTION fn_generar_numero_boleta(tipo VARCHAR(10))
+RETURNS VARCHAR(50)
+DETERMINISTIC
+BEGIN
+    DECLARE serie VARCHAR(4);
+    DECLARE numero INT;
+    DECLARE numero_formateado VARCHAR(50);
+    
+    -- Determinar la serie según el tipo
+    SET serie = CASE 
+        WHEN tipo = 'boleta' THEN 'B001'
+        WHEN tipo = 'factura' THEN 'F001'
+        ELSE 'C001'
+    END;
+    
+    -- Obtener el último número usado para esta serie
+    SELECT COALESCE(MAX(CAST(SUBSTRING(NumeroComprobante, 6) AS UNSIGNED)), 0) + 1
+    INTO numero
+    FROM (
+        SELECT NumeroComprobante FROM Ventas WHERE NumeroComprobante LIKE CONCAT(serie, '-%')
+        UNION ALL
+        SELECT NumeroComprobante FROM Pedidos WHERE NumeroComprobante LIKE CONCAT(serie, '-%')
+    ) AS comprobantes;
+    
+    -- Formatear el número con ceros a la izquierda (8 dígitos)
+    SET numero_formateado = CONCAT(serie, '-', LPAD(numero, 8, '0'));
+    
+    RETURN numero_formateado;
+END//
+
+DELIMITER ;
 
 -- ============================================
 -- TRIGGERS
@@ -1671,6 +1717,7 @@ CREATE PROCEDURE pa_registrar_pedido(
     IN p_idUsuario INT,
     IN p_subTotal DECIMAL(12,2),
     IN p_descuento DECIMAL(12,2),
+    IN p_costoDelivery DECIMAL(10,2),
     IN p_total DECIMAL(12,2),
     IN p_estado ENUM('pendiente', 'preparando', 'listo', 'entregado', 'cancelado'),
     IN p_observaciones TEXT
@@ -1708,9 +1755,12 @@ BEGIN
         NombreCliente,
         DireccionCliente,
         TelefonoCliente,
+        TipoComprobante,
+        NumeroComprobante,
         IdUsuario,
         SubTotal,
         Descuento,
+        CostoDelivery,
         Total,
         Estado,
         Observaciones
@@ -1723,9 +1773,12 @@ BEGIN
         p_nombreCliente,
         NULLIF(p_direccionCliente, ''),
         NULLIF(p_telefonoCliente, ''),
+        'ninguno',
+        NULL,
         p_idUsuario,
         COALESCE(p_subTotal, 0.00),
         COALESCE(p_descuento, 0.00),
+        COALESCE(p_costoDelivery, 0.00),
         COALESCE(p_total, 0.00),
         COALESCE(p_estado, 'pendiente'),
         NULLIF(p_observaciones, '')
@@ -1735,7 +1788,7 @@ BEGIN
 
     COMMIT;
 
-    -- Retornar el pedido registrado
+    -- Retornar el pedido registrado sin número de comprobante
     SELECT JSON_OBJECT(
         'IdPedido', v_idPedido,
         'NumDocumentos', COALESCE(NULLIF(p_numDocumentos, ''), CONCAT('PED-', DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))),
@@ -1824,6 +1877,7 @@ BEGIN
         IdUsuario,
         SubTotal,
         Descuento,
+        CostoDelivery,
         Total,
         Estado,
         DATE_FORMAT(FechaPedido, '%Y-%m-%d %H:%i:%s') AS FechaPedido,
@@ -1919,8 +1973,10 @@ CREATE PROCEDURE pa_registrar_venta(
     IN p_idCliente INT,
     IN p_idMesero INT,
     IN p_tipoPago ENUM('efectivo', 'tarjeta', 'yape', 'plin'),
+    IN p_tipoComprobante ENUM('boleta', 'factura', 'ninguno'),
     IN p_subTotal DECIMAL(12,2),
     IN p_descuento DECIMAL(12,2),
+    IN p_costoDelivery DECIMAL(10,2),
     IN p_total DECIMAL(12,2),
     IN p_idUsuario INT,
     IN p_codCaja VARCHAR(50),
@@ -1929,6 +1985,7 @@ CREATE PROCEDURE pa_registrar_venta(
 )
 BEGIN
     DECLARE v_codVenta INT;
+    DECLARE v_numeroComprobante VARCHAR(50);
     DECLARE v_detalle_count INT;
     DECLARE v_i INT DEFAULT 0;
     DECLARE v_codProducto VARCHAR(50);
@@ -1957,13 +2014,23 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El usuario es obligatorio';
     END IF;
 
+    -- Generar número de comprobante solo si no es 'ninguno'
+    IF p_tipoComprobante != 'ninguno' THEN
+        SET v_numeroComprobante = fn_generar_numero_boleta(p_tipoComprobante);
+    ELSE
+        SET v_numeroComprobante = NULL;
+    END IF;
+
     -- Insertar la venta
     INSERT INTO Ventas (
         IdCliente,
         IdMesero,
         TipoPago,
+        TipoComprobante,
+        NumeroComprobante,
         SubTotal,
         Descuento,
+        CostoDelivery,
         Total,
         IdUsuario,
         CodCaja,
@@ -1973,8 +2040,11 @@ BEGIN
         NULLIF(p_idCliente, 0),
         NULLIF(p_idMesero, 0),
         p_tipoPago,
+        p_tipoComprobante,
+        v_numeroComprobante,
         p_subTotal,
         p_descuento,
+        COALESCE(p_costoDelivery, 0.00),
         p_total,
         p_idUsuario,
         NULLIF(p_codCaja, ''),
@@ -2028,6 +2098,7 @@ BEGIN
         'Descuento', p_descuento,
         'Total', p_total,
         'Estado', 'pagado',
+        'NumeroComprobante', (SELECT NumeroComprobante FROM Ventas WHERE CodVenta = v_codVenta),
         'mensaje', 'Venta registrada exitosamente'
     ) AS resultado;
 END //
@@ -2071,20 +2142,31 @@ BEGIN
     SELECT 
         v.CodVenta,
         v.IdCliente,
-        COALESCE(c.NombreCompleto, 'Sin cliente registrado') AS NombreCliente,
+        v.IdMesero,
+        COALESCE(c.NombreCompleto, 'Cliente General') AS NombreCliente,
+        COALESCE(c.NumDocumento, '') AS DNI,
+        COALESCE(c.Telefono, '') AS TelefonoCliente,
+        COALESCE(c.Direccion, '') AS DireccionCliente,
         v.TipoPago,
+        v.TipoComprobante,
+        v.NumeroComprobante,
         v.SubTotal,
         v.Descuento,
+        v.CostoDelivery,
         v.Total,
         v.IdUsuario,
         COALESCE(u.NombreCompleto, CONCAT('Usuario ID: ', v.IdUsuario)) AS NombreUsuario,
+        COALESCE(m.NombreCompleto, '') AS NombreMesero,
         v.CodCaja,
         v.Estado,
         DATE_FORMAT(v.FechaVenta, '%Y-%m-%d %H:%i:%s') AS FechaVenta,
-        v.Observaciones
+        v.Observaciones,
+        -- Intentar obtener el tipo de servicio del pedido asociado si existe
+        (SELECT p.TipoServicio FROM Pedidos p WHERE p.IdCliente = v.IdCliente ORDER BY p.IdPedido DESC LIMIT 1) AS TipoServicio
     FROM Ventas v
     LEFT JOIN Clientes c ON v.IdCliente = c.IdCliente
     LEFT JOIN Usuarios u ON v.IdUsuario = u.IdUsuario
+    LEFT JOIN Usuarios m ON v.IdMesero = m.IdUsuario
     WHERE v.CodVenta = p_codVenta
     LIMIT 1;
 END //

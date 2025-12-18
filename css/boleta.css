@@ -1,0 +1,220 @@
+/* Estilos para la boleta */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.boleta-container {
+    max-width: 80mm;
+    margin: 0 auto;
+    background: white;
+    padding: 10mm;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.boleta-header {
+    text-align: center;
+    border-bottom: 2px dashed #000;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 5px;
+}
+
+.boleta-header h1 {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.boleta-header p {
+    font-size: 11px;
+    margin: 2px 0;
+}
+
+.ruc {
+    font-weight: bold;
+    font-size: 12px !important;
+}
+
+.boleta-tipo {
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+    border: 2px solid #000;
+}
+
+.boleta-tipo h2 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.numero-comprobante {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.boleta-info {
+    margin: 15px 0;
+    font-size: 11px;
+}
+
+.boleta-info p {
+    margin: 5px 0;
+}
+
+.boleta-detalle {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 11px;
+}
+
+.boleta-detalle th {
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 5px 2px;
+    text-align: left;
+}
+
+.boleta-detalle td {
+    padding: 5px 2px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.boleta-detalle th:first-child,
+.boleta-detalle td:first-child {
+    width: 15%;
+    text-align: center;
+}
+
+.boleta-detalle th:nth-child(2),
+.boleta-detalle td:nth-child(2) {
+    width: 45%;
+}
+
+.boleta-detalle th:nth-child(3),
+.boleta-detalle td:nth-child(3),
+.boleta-detalle th:nth-child(4),
+.boleta-detalle td:nth-child(4) {
+    width: 20%;
+    text-align: right;
+}
+
+.boleta-totales {
+    margin: 15px 0;
+    padding-top: 10px;
+    border-top: 2px solid #000;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+.total-final {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #000;
+}
+
+.boleta-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px dashed #000;
+    font-size: 11px;
+}
+
+.boleta-footer p {
+    margin: 5px 0;
+}
+
+.codigo-qr {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+/* Botones de acción */
+.botones-accion {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-imprimir {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-imprimir:hover {
+    background-color: #45a049;
+}
+
+.btn-pdf {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-pdf:hover {
+    background-color: #0b7dda;
+}
+
+.btn-cerrar {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-cerrar:hover {
+    background-color: #da190b;
+}
+
+/* Estilos para impresión */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .boleta-container {
+        max-width: 80mm;
+        width: 80mm;
+        box-shadow: none;
+        margin: 0;
+        padding: 5mm;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+}

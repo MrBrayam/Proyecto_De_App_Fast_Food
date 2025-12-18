@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boleta de Venta - King's Pizza</title>
+    <link rel="stylesheet" href="../css/boleta.css">
+</head>
+<body>
+    <div class="boleta-container" id="boletaContainer">
+        <div class="boleta-header">
+            <img src="../img/logo.png" alt="King's Pizza" class="logo" onerror="this.style.display='none'">
+            <h1>KING'S PIZZA</h1>
+            <p class="ruc">RUC: 20123456789</p>
+            <p>Jr. Los Pinos 123 - Lima, Perú</p>
+            <p>Tel: (01) 123-4567</p>
+        </div>
+
+        <div class="boleta-tipo">
+            <h2 id="tipoComprobante">BOLETA DE VENTA ELECTRÓNICA</h2>
+            <p class="numero-comprobante" id="numeroComprobante">B001-00000001</p>
+        </div>
+
+        <div class="boleta-info">
+            <p><strong>Fecha:</strong> <span id="fechaVenta"></span></p>
+            <p><strong>Cliente:</strong> <span id="nombreCliente"></span></p>
+            <p><strong>DNI/RUC:</strong> <span id="documentoCliente"></span></p>
+            <p id="direccionRow"><strong>Dirección:</strong> <span id="direccionCliente"></span></p>
+            <p><strong>Tipo de Pago:</strong> <span id="tipoPago"></span></p>
+            <p><strong>Atendido por:</strong> <span id="nombreMesero"></span></p>
+        </div>
+
+        <table class="boleta-detalle">
+            <thead>
+                <tr>
+                    <th>Cant.</th>
+                    <th>Descripción</th>
+                    <th>P. Unit.</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="detalleItems">
+                <!-- Items dinámicos -->
+            </tbody>
+        </table>
+
+        <div class="boleta-totales">
+            <div class="total-row">
+                <span>SUBTOTAL:</span>
+                <span id="subtotal">S/ 0.00</span>
+            </div>
+            <div class="total-row" id="descuentoRow" style="display: none;">
+                <span>DESCUENTO:</span>
+                <span id="descuento">S/ 0.00</span>
+            </div>
+            <div class="total-row" id="deliveryRow" style="display: none;">
+                <span>DELIVERY:</span>
+                <span id="costoDelivery">S/ 0.00</span>
+            </div>
+            <div class="total-row total-final">
+                <span>TOTAL:</span>
+                <span id="total">S/ 0.00</span>
+            </div>
+        </div>
+
+        <div class="boleta-footer">
+            <p>¡Gracias por su compra!</p>
+            <p>Vuelva pronto</p>
+        </div>
+    </div>
+
+    <div class="botones-accion no-print">
+        <button onclick="imprimirBoleta()" class="btn btn-imprimir">
+            Imprimir
+        </button>
+        <button onclick="descargarPDF()" class="btn btn-pdf">
+            Descargar PDF
+        </button>
+        <button onclick="window.close()" class="btn btn-cerrar">
+            Cerrar
+        </button>
+    </div>
+
+    <script src="../js/boleta.js?v=6"></script>
+</body>
+</html>

@@ -105,6 +105,9 @@ class VentaController extends Controller
         $this->json([
             'exito' => true,
             'mensaje' => 'Venta registrada',
+            'venta' => [
+                'CodVenta' => $codVenta,
+            ],
             'codVenta' => $codVenta,
             'subTotal' => round($subTotal, 2),
             'descuento' => round($descuento, 2),

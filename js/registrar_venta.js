@@ -237,14 +237,12 @@ async function cargarDetallePedido(idPedido) {
             // Mostrar totales del pedido directamente
             const subtotal = parseFloat(pedidoSeleccionado.SubTotal) || 0;
             const descuento = parseFloat(pedidoSeleccionado.Descuento) || 0;
+            const costoDelivery = parseFloat(pedidoSeleccionado.CostoDelivery) || 0;
             const total = parseFloat(pedidoSeleccionado.Total) || 0;
-            
-            // Calcular delivery (Total = SubTotal - Descuento + Delivery)
-            const delivery = total - (subtotal - descuento);
             
             document.getElementById('subtotalVenta').textContent = 'S/ ' + subtotal.toFixed(2);
             document.getElementById('descuentoVenta').textContent = descuento > 0 ? '-S/ ' + descuento.toFixed(2) : 'S/ 0.00';
-            document.getElementById('deliveryVenta').textContent = 'S/ ' + (delivery > 0 ? delivery.toFixed(2) : '0.00');
+            document.getElementById('deliveryVenta').textContent = 'S/ ' + costoDelivery.toFixed(2);
             document.getElementById('totalVenta').textContent = 'S/ ' + total.toFixed(2);
 
         } else {
@@ -313,6 +311,7 @@ function eliminarProducto(index) {
 async function registrarVenta() {
     const tipoPago = document.getElementById('tipoPago').value.trim();
     const codCaja = document.getElementById('selectCaja').value.trim();
+    const tipoComprobante = document.getElementById('tipoComprobante').value.trim();
     
     if (tipoPago === '') {
         alert('Seleccione tipo de pago');
@@ -321,6 +320,11 @@ async function registrarVenta() {
 
     if (codCaja === '') {
         alert('Seleccione una caja');
+        return;
+    }
+
+    if (tipoComprobante === '') {
+        alert('Seleccione tipo de comprobante');
         return;
     }
 
@@ -334,6 +338,10 @@ async function registrarVenta() {
         return;
     }
 
+    // Obtener perfil del usuario actual
+    const perfilUsuario = obtenerPerfilUsuario();
+    const idUsuarioActual = idUsuario;
+
     // Preparar detalles para enviar
     const detalles = productosAgregados.map(p => ({
         codProducto: p.codProducto,
@@ -345,30 +353,30 @@ async function registrarVenta() {
     }));
 
     // Usar valores del pedido si existe, sino calcular
-    let subTotal, descuento, total;
+    let subTotal, descuento, costoDelivery, total;
     
     if (pedidoSeleccionado) {
         // Usar valores del pedido original
         subTotal = parseFloat(pedidoSeleccionado.SubTotal) || 0;
         descuento = parseFloat(pedidoSeleccionado.Descuento) || 0;
+        costoDelivery = parseFloat(pedidoSeleccionado.CostoDelivery) || 0;
         total = parseFloat(pedidoSeleccionado.Total) || 0;
     } else {
         // Calcular desde los productos agregados
         subTotal = productosAgregados.reduce((sum, p) => sum + (p.cantidad * p.precio), 0);
         descuento = 0;
+        costoDelivery = 0;
         total = subTotal;
     }
-
-    // Determinar si el usuario actual es un mesero
-    const perfilUsuario = obtenerPerfilUsuario();
-    const idUsuarioActual = idUsuario;
 
     const datosVenta = {
         idCliente: pedidoSeleccionado?.IdCliente || null,
         idMesero: perfilUsuario === 'mesero' ? idUsuarioActual : null,
         tipoPago: tipoPago,
+        tipoComprobante: tipoComprobante,
         subTotal: subTotal,
         descuento: descuento,
+        costoDelivery: costoDelivery,
         total: total,
         idUsuario: idUsuario,
         codCaja: codCaja,
@@ -423,8 +431,20 @@ async function registrarVenta() {
                 console.warn('[registrar_venta] No hay pedidoSeleccionado');
             }
 
-            // Mostrar mensaje de éxito DESPUÉS de actualizar la mesa
+            // Mostrar mensaje de éxito
             alert('Venta registrada exitosamente');
+
+            // Abrir boleta en nueva ventana solo si se seleccionó boleta o factura
+            const codVenta = datos.venta?.CodVenta || datos.codVenta;
+            console.log('[registrar_venta] Tipo comprobante:', tipoComprobante, 'CodVenta:', codVenta);
+            
+            if (tipoComprobante !== 'ninguno' && codVenta) {
+                const urlBoleta = `/Proyecto_De_App_Fast_Food/html/boleta.html?tipo=venta&id=${codVenta}`;
+                console.log('[registrar_venta] Abriendo boleta:', urlBoleta);
+                window.open(urlBoleta, '_blank', 'width=400,height=800');
+            } else {
+                console.log('[registrar_venta] No se abre boleta. TipoComprobante:', tipoComprobante, 'CodVenta:', codVenta);
+            }
             
             // Limpiar formulario
             limpiarFormulario();
