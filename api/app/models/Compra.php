@@ -111,7 +111,15 @@ class Compra {
         try {
             $db = Database::connection();
             
-            $sql = "SELECT * FROM Compras WHERE IdCompra = :idCompra";
+            $sql = "SELECT 
+                        c.*,
+                        u.NombreCompleto AS NombreUsuario,
+                        COALESCE(p.NombreComercial, p.RazonSocial) AS NombreProveedor,
+                        p.NumDoc AS NumDocProveedor
+                    FROM Compras c
+                    LEFT JOIN Usuarios u ON c.IdUsuario = u.IdUsuario
+                    LEFT JOIN Proveedores p ON c.CodProveedor = p.CodProveedor
+                    WHERE c.IdCompra = :idCompra";
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
             $stmt->execute();
@@ -128,6 +136,32 @@ class Compra {
             return [
                 'exito' => false,
                 'mensaje' => 'Error al buscar compra: ' . $e->getMessage()
+            ];
+        }
+    }
+    
+    public static function obtenerDetalle($idCompra) {
+        try {
+            $db = Database::connection();
+            
+            $sql = "SELECT * FROM DetalleCompra WHERE IdCompra = :idCompra ORDER BY IdDetalleCompra";
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':idCompra', $idCompra, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $detalles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return [
+                'exito' => true,
+                'detalles' => $detalles
+            ];
+            
+        } catch (PDOException $e) {
+            error_log("Error en Compra::obtenerDetalle() - " . $e->getMessage());
+            return [
+                'exito' => false,
+                'mensaje' => 'Error al obtener detalles de compra: ' . $e->getMessage(),
+                'detalles' => []
             ];
         }
     }

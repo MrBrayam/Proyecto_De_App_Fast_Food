@@ -192,4 +192,48 @@ class CompraController {
             ]);
         }
     }
+    
+    public function obtenerDetalle() {
+        header('Content-Type: application/json; charset=utf-8');
+        
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+                http_response_code(405);
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Método no permitido'
+                ]);
+                return;
+            }
+            
+            $idCompra = $_GET['id'] ?? null;
+            
+            if (empty($idCompra)) {
+                http_response_code(400);
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'ID de compra no proporcionado'
+                ]);
+                return;
+            }
+            
+            $resultado = Compra::obtenerDetalle($idCompra);
+            
+            if ($resultado['exito']) {
+                http_response_code(200);
+                echo json_encode($resultado);
+            } else {
+                http_response_code(404);
+                echo json_encode($resultado);
+            }
+            
+        } catch (Exception $e) {
+            error_log("Error en CompraController::obtenerDetalle() - " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor'
+            ]);
+        }
+    }
 }

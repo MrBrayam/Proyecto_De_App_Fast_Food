@@ -29,38 +29,72 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // Cargar datos de una venta
 async function cargarDatosVenta(codVenta) {
+    console.log('[boleta] Cargando venta ID:', codVenta);
+    
     try {
         const response = await fetch(`/Proyecto_De_App_Fast_Food/api/ventas/buscar?id=${codVenta}`);
         const datos = await response.json();
+        
+        console.log('[boleta] Respuesta venta:', datos);
 
         if (datos.exito && datos.venta) {
+            // Cargar detalles por separado
+            console.log('[boleta] Cargando detalles de venta...');
+            const responseDetalles = await fetch(`/Proyecto_De_App_Fast_Food/api/ventas/detalles?id=${codVenta}`);
+            const datosDetalles = await responseDetalles.json();
+            
+            console.log('[boleta] Respuesta detalles:', datosDetalles);
+            
+            if (datosDetalles.exito && datosDetalles.detalles) {
+                datos.venta.Detalles = datosDetalles.detalles.map(d => ({
+                    Cantidad: d.Cantidad,
+                    DescripcionProducto: d.Descripcion,
+                    PrecioUnitario: d.Precio,
+                    Subtotal: d.Subtotal
+                }));
+                console.log('[boleta] Detalles mapeados:', datos.venta.Detalles.length, 'items');
+            } else {
+                console.warn('[boleta] No se pudieron cargar detalles');
+                datos.venta.Detalles = [];
+            }
+            
             mostrarBoleta(datos.venta, 'venta');
         } else {
-            alert('Error al cargar los datos de la venta');
+            console.error('[boleta] Error en respuesta:', datos);
+            alert('Error al cargar los datos de la venta: ' + (datos.mensaje || 'Error desconocido'));
             window.close();
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error de conexión al cargar la venta');
+        console.error('[boleta] Error de conexión:', error);
+        alert('Error de conexión al cargar la venta: ' + error.message);
         window.close();
     }
 }
 
 // Cargar datos de un pedido
 async function cargarDatosPedido(idPedido) {
+    console.log('[boleta] Cargando pedido ID:', idPedido);
+    
     try {
         const response = await fetch(`/Proyecto_De_App_Fast_Food/api/pedidos/buscar?id=${idPedido}`);
         const datos = await response.json();
+        
+        console.log('[boleta] Respuesta pedido:', datos);
 
         if (datos.exito && datos.pedido) {
+            // Los pedidos ya traen los detalles
+            if (!datos.pedido.Detalles) {
+                datos.pedido.Detalles = [];
+            }
             mostrarBoleta(datos.pedido, 'pedido');
         } else {
-            alert('Error al cargar los datos del pedido');
+            console.error('[boleta] Error en respuesta pedido:', datos);
+            alert('Error al cargar los datos del pedido: ' + (datos.mensaje || 'Error desconocido'));
             window.close();
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error de conexión al cargar el pedido');
+        console.error('[boleta] Error de conexión:', error);
+        alert('Error de conexión al cargar el pedido: ' + error.message);
         window.close();
     }
 }
@@ -124,6 +158,10 @@ function mostrarBoleta(datos, tipo) {
             `;
             tbody.appendChild(tr);
         });
+    } else {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="4" style="text-align: center;">Sin detalles disponibles</td>';
+        tbody.appendChild(tr);
     }
 
     // Totales

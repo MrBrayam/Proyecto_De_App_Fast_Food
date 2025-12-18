@@ -429,6 +429,21 @@ async function registrarCompra() {
         if (data.exito) {
             mostrarMensaje('Compra registrada correctamente', 'success');
             
+            // Abrir boleta si se seleccionó tipo de comprobante
+            const tipoComprobante = document.getElementById('tipoComprobante').value;
+            const idCompra = data.idCompra;
+            
+            console.log('[registrar_compras] Tipo comprobante:', tipoComprobante, 'IdCompra:', idCompra);
+            
+            if (tipoComprobante && tipoComprobante !== '' && idCompra) {
+                const urlBoleta = `/Proyecto_De_App_Fast_Food/html/boleta_compra.html?id=${idCompra}`;
+                console.log('[registrar_compras] Abriendo boleta:', urlBoleta);
+                // Abrir en nueva pestaña en lugar de ventana popup
+                window.open(urlBoleta, '_blank');
+            } else {
+                console.log('[registrar_compras] No se abre boleta. TipoComprobante:', tipoComprobante, 'IdCompra:', idCompra);
+            }
+            
             // Limpiar formulario después de 2 segundos
             setTimeout(() => {
                 limpiarTodoFormulario();

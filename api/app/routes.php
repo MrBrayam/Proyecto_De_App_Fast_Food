@@ -58,6 +58,7 @@ return [
     'compras/registrar' => [CompraController::class, 'registrar'],
     'compras/listar' => [CompraController::class, 'listar'],
     'compras/buscar' => [CompraController::class, 'buscar'],
+    'compras/detalle' => [CompraController::class, 'obtenerDetalle'],
     'compras/actualizar-estado' => [CompraController::class, 'actualizarEstado'],
     'inventario/productos' => [InventarioController::class, 'listarProductos'],
     'inventario/producto' => [InventarioController::class, 'buscarProducto'],

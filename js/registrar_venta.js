@@ -432,23 +432,29 @@ async function registrarVenta() {
                 console.warn('[registrar_venta] No hay pedidoSeleccionado');
             }
 
-            // Mostrar mensaje de éxito
-            alert('Venta registrada exitosamente');
-
-            // Abrir boleta en nueva ventana solo si se seleccionó boleta o factura
+            // Mostrar mensaje de éxito primero (sin bloquear con alert)
+            console.log('[registrar_venta] Venta registrada exitosamente');
+            
+            // Abrir boleta si se seleccionó tipo de comprobante
             const codVenta = datos.venta?.CodVenta || datos.codVenta;
             console.log('[registrar_venta] Tipo comprobante:', tipoComprobante, 'CodVenta:', codVenta);
             
             if (tipoComprobante !== 'ninguno' && codVenta) {
                 const urlBoleta = `/Proyecto_De_App_Fast_Food/html/boleta.html?tipo=venta&id=${codVenta}`;
                 console.log('[registrar_venta] Abriendo boleta:', urlBoleta);
-                window.open(urlBoleta, '_blank', 'width=400,height=800');
+                // Abrir en nueva pestaña en lugar de ventana popup
+                window.open(urlBoleta, '_blank');
             } else {
                 console.log('[registrar_venta] No se abre boleta. TipoComprobante:', tipoComprobante, 'CodVenta:', codVenta);
             }
+
+            // Mostrar alert después de abrir boleta
+            alert('Venta registrada exitosamente');
             
-            // Limpiar formulario
-            limpiarFormulario();
+            // Limpiar formulario después de un breve delay
+            setTimeout(() => {
+                limpiarFormulario();
+            }, 1000);
         } else {
             alert('Error: ' + datos.mensaje);
         }
