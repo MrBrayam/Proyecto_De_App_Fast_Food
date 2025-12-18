@@ -1283,5 +1283,130 @@ class ReporteController extends Controller
             $this->json(['exito' => false, 'mensaje' => 'Error al generar reporte', 'error' => $e->getMessage()], 500);
         }
     }
+
+    // ============================================
+    // REPORTES DE MESEROS
+    // ============================================
+    
+    public function meserosPorPeriodo(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->json(['exito' => false, 'mensaje' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $periodo = $_GET['periodo'] ?? 'mes';
+        $fechaInicio = $_GET['fechaInicio'] ?? '';
+        $fechaFin = $_GET['fechaFin'] ?? '';
+
+        try {
+            require_once __DIR__ . '/../core/Database.php';
+            $db = Database::connection();
+
+            // Construir cláusula WHERE para el periodo
+            $whereClause = '1=1';
+            $params = [];
+
+            if ($periodo === 'hoy') {
+                $whereClause .= ' AND DATE(v.FechaVenta) = CURDATE()';
+            } elseif ($periodo === 'semana') {
+                $whereClause .= ' AND WEEK(v.FechaVenta) = WEEK(CURDATE()) AND YEAR(v.FechaVenta) = YEAR(CURDATE())';
+            } elseif ($periodo === 'mes') {
+                $whereClause .= ' AND MONTH(v.FechaVenta) = MONTH(CURDATE()) AND YEAR(v.FechaVenta) = YEAR(CURDATE())';
+            } elseif ($periodo === 'trimestre') {
+                $whereClause .= ' AND QUARTER(v.FechaVenta) = QUARTER(CURDATE()) AND YEAR(v.FechaVenta) = YEAR(CURDATE())';
+            } elseif ($periodo === 'anio') {
+                $whereClause .= ' AND YEAR(v.FechaVenta) = YEAR(CURDATE())';
+            } elseif ($periodo === 'personalizado' && $fechaInicio && $fechaFin) {
+                $whereClause .= ' AND DATE(v.FechaVenta) BETWEEN ? AND ?';
+                $params = [$fechaInicio, $fechaFin];
+            }
+
+            // Obtener estadísticas por mesero
+            $queryMeseros = "SELECT 
+                                u.IdUsuario,
+                                u.NombreCompleto as NombreMesero,
+                                u.Email as Correo,
+                                p.NombrePerfil as Rol,
+                                COUNT(DISTINCT v.CodVenta) as TotalPedidos,
+                                COALESCE(SUM(v.Total), 0) as TotalVentas,
+                                COALESCE(AVG(v.Total), 0) as PromedioVenta,
+                                MIN(DATE(v.FechaVenta)) as PrimeraVenta,
+                                MAX(DATE(v.FechaVenta)) as UltimaVenta
+                            FROM Usuarios u
+                            INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+                            INNER JOIN Ventas v ON u.IdUsuario = v.IdMesero
+                            WHERE p.NombrePerfil = 'mesero'
+                            AND v.Estado = 'pagado'
+                            AND $whereClause
+                            GROUP BY u.IdUsuario, u.NombreCompleto, u.Email, p.NombrePerfil
+                            ORDER BY TotalVentas DESC";
+            
+            $stmt = $db->prepare($queryMeseros);
+            $stmt->execute($params);
+            $meseros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Obtener resumen general
+            $queryResumen = "SELECT 
+                                COUNT(DISTINCT u.IdUsuario) as TotalMeseros,
+                                COUNT(DISTINCT v.CodVenta) as TotalPedidos,
+                                COALESCE(SUM(v.Total), 0) as TotalVentas,
+                                COALESCE(AVG(v.Total), 0) as PromedioVenta,
+                                COALESCE(SUM(v.Total) / COUNT(DISTINCT u.IdUsuario), 0) as PromedioVentasPorMesero
+                            FROM Usuarios u
+                            INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+                            INNER JOIN Ventas v ON u.IdUsuario = v.IdMesero
+                            WHERE p.NombrePerfil = 'mesero'
+                            AND v.Estado = 'pagado'
+                            AND $whereClause";
+            
+            $stmtResumen = $db->prepare($queryResumen);
+            $stmtResumen->execute($params);
+            $resumen = $stmtResumen->fetch(PDO::FETCH_ASSOC);
+
+            // Obtener distribución por día de la semana
+            $queryDias = "SELECT 
+                            DAYNAME(v.FechaVenta) as Dia,
+                            COUNT(DISTINCT v.CodVenta) as TotalPedidos,
+                            COALESCE(SUM(v.Total), 0) as TotalVentas
+                        FROM Ventas v
+                        INNER JOIN Usuarios u ON v.IdMesero = u.IdUsuario
+                        INNER JOIN Perfiles p ON u.IdPerfil = p.IdPerfil
+                        WHERE p.NombrePerfil = 'mesero'
+                        AND v.Estado = 'pagado'
+                        AND $whereClause
+                        GROUP BY DAYNAME(v.FechaVenta), DAYOFWEEK(v.FechaVenta)
+                        ORDER BY DAYOFWEEK(v.FechaVenta)";
+            
+            $stmtDias = $db->prepare($queryDias);
+            $stmtDias->execute($params);
+            $ventasPorDia = $stmtDias->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->json([
+                'exito' => true,
+                'meseros' => $meseros,
+                'resumen' => $resumen,
+                'ventasPorDia' => $ventasPorDia,
+                'periodo' => $periodo
+            ], 200);
+
+        } catch (Exception $e) {
+            error_log('Error en ReporteController::meserosPorPeriodo: ' . $e->getMessage());
+            $this->json([
+                'exito' => false, 
+                'mensaje' => 'Error al generar reporte de meseros', 
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
 ?>

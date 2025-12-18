@@ -97,6 +97,7 @@ return [
     'reportes/clientes-por-periodo' => [ReporteController::class, 'clientesPorPeriodo'],
     'reportes/clientes-por-metodo-pago' => [ReporteController::class, 'clientesPorMetodoPago'],
     'reportes/clientes-por-tipo-pedido' => [ReporteController::class, 'clientesPorTipoPedido'],
+    'reportes/meseros-por-periodo' => [ReporteController::class, 'meserosPorPeriodo'],
     'reportes/resumen-financiero' => [ReporteController::class, 'resumenFinanciero'],
     'reportes/flujo-caja' => [ReporteController::class, 'flujoCaja'],
     'reportes/gastos-operacionales' => [ReporteController::class, 'gastosOperacionales'],

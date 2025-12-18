@@ -83,6 +83,11 @@ function actualizarTitulosGraficos(tipoReporte) {
             segundo: 'Top 3 Clientes que Más Gastan',
             tercero: 'Clientes en Posición 4-6'
         },
+        empleados: {
+            principal: 'Top Meseros por Rendimiento',
+            segundo: 'Distribución por Turno',
+            tercero: 'Dinero Generado por Mesero'
+        },
         financiero: {
             principal: 'Flujo de Caja (Últimos 15 Días)',
             segundo: 'Top 3 Proveedores con Más Gastos',
@@ -227,6 +232,8 @@ function actualizarContenidoReporte() {
         cargarReporteInventarioDesdeAPI();
     } else if (tipoReporteActual === 'clientes') {
         cargarReporteClientesDesdeAPI();
+    } else if (tipoReporteActual === 'empleados') {
+        cargarReporteMeserosDesdeAPI();
     } else if (tipoReporteActual === 'financiero') {
         cargarReporteFinancieroDesdeAPI();
     } else {
@@ -745,15 +752,23 @@ function actualizarGraficos() {
 // Gráficos de Ventas
 function crearGraficosVentas() {
     // Mostrar todos los gráficos para ventas
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'block';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'block';
+    const grafico4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4)');
+    const grafico5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5)');
+    if (grafico4) grafico4.style.display = 'block';
+    if (grafico5) grafico5.style.display = 'block';
     
     // Actualizar títulos
-    document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Ventas por Categoría';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Métodos de Pago';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Tipo de Servicio';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4) .titulo-grafico').textContent = 'Productos Más Vendidos';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5) .titulo-grafico').textContent = 'Productos Menos Vendidos';
+    const titulo1 = document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico');
+    const titulo2 = document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico');
+    const titulo3 = document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico');
+    const titulo4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4) .titulo-grafico');
+    const titulo5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5) .titulo-grafico');
+    
+    if (titulo1) titulo1.textContent = 'Ventas por Categoría';
+    if (titulo2) titulo2.textContent = 'Métodos de Pago';
+    if (titulo3) titulo3.textContent = 'Tipo de Servicio';
+    if (titulo4) titulo4.textContent = 'Productos Más Vendidos';
+    if (titulo5) titulo5.textContent = 'Productos Menos Vendidos';
     
     // Gráfico Principal: Ventas por Categoría
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
@@ -966,13 +981,19 @@ function crearGraficosVentas() {
 // Gráficos de Compras
 function crearGraficosCompras() {
     // Ocultar el cuarto y quinto gráfico para este tipo de reporte
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    const grafico4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4)');
+    const grafico5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5)');
+    if (grafico4) grafico4.style.display = 'none';
+    if (grafico5) grafico5.style.display = 'none';
     
     // Actualizar títulos
-    document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Compras por Categoría';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Top Proveedores';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Estado de Órdenes';
+    const titulo1 = document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico');
+    const titulo2 = document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico');
+    const titulo3 = document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico');
+    
+    if (titulo1) titulo1.textContent = 'Compras por Categoría';
+    if (titulo2) titulo2.textContent = 'Top Proveedores';
+    if (titulo3) titulo3.textContent = 'Estado de Órdenes';
     
     // Gráfico Principal: Compras por Categoría
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
@@ -1058,109 +1079,146 @@ function crearGraficosCompras() {
 
 // Gráficos de Empleados
 function crearGraficosEmpleados() {
+    // Destruir gráficos existentes
+    if (chartPrincipal) chartPrincipal.destroy();
+    if (chartSecundario) chartSecundario.destroy();
+    if (chartTendencias) chartTendencias.destroy();
+    if (chartProductos) chartProductos.destroy();
+    if (chartProductosMenos) chartProductosMenos.destroy();
+    
     // Ocultar el cuarto y quinto gráfico para este tipo de reporte
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    const grafico4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4)');
+    const grafico5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5)');
+    if (grafico4) grafico4.style.display = 'none';
+    if (grafico5) grafico5.style.display = 'none';
     
     // Actualizar títulos
-    document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Top Empleados por Rendimiento';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Distribución por Turno';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Dinero Generado por Empleado';
+    const titulo1 = document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico');
+    const titulo2 = document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico');
+    const titulo3 = document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico');
+    
+    if (titulo1) titulo1.textContent = 'Top Empleados por Rendimiento';
+    if (titulo2) titulo2.textContent = 'Distribución por Turno';
+    if (titulo3) titulo3.textContent = 'Dinero Generado por Empleado';
     
     // Gráfico Principal: Top Empleados
-    const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
-    chartPrincipal = new Chart(ctxPrincipal, {
-        type: 'doughnut',
-        data: {
-            labels: ['Carlos Mendoza', 'Ana García', 'Luis Pérez', 'María Torres', 'Otros'],
-            datasets: [{
-                data: [25, 20, 18, 15, 22],
-                backgroundColor: ['#ff5733', '#ffc857', '#3498db', '#27ae60', '#9b59b6'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
+    const canvasPrincipal = document.getElementById('chartPrincipal');
+    if (canvasPrincipal) {
+        const ctxPrincipal = canvasPrincipal.getContext('2d');
+        chartPrincipal = new Chart(ctxPrincipal, {
+            type: 'doughnut',
+            data: {
+                labels: ['Carlos Mendoza', 'Ana García', 'Luis Pérez', 'María Torres', 'Otros'],
+                datasets: [{
+                    data: [25, 20, 18, 15, 22],
+                    backgroundColor: ['#ff5733', '#ffc857', '#3498db', '#27ae60', '#9b59b6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                }
             }
+        });
+        
+        const leyendaPrincipal = document.getElementById('leyendaPrincipal');
+        if (leyendaPrincipal) {
+            leyendaPrincipal.innerHTML = `
+                <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Carlos Mendoza</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Ana García</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Luis Pérez</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #27ae60;"></span><span>María Torres</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros</span></div>
+            `;
         }
-    });
-    
-    document.getElementById('leyendaPrincipal').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Carlos Mendoza</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Ana García</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Luis Pérez</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #27ae60;"></span><span>María Torres</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>Otros</span></div>
-    `;
+    }
     
     // Gráfico Secundario: Distribución por Turno
-    const ctxSecundario = document.getElementById('chartSecundario').getContext('2d');
-    chartSecundario = new Chart(ctxSecundario, {
-        type: 'doughnut',
-        data: {
-            labels: ['Mañana', 'Tarde', 'Noche'],
-            datasets: [{
-                data: [35, 40, 25],
-                backgroundColor: ['#ffc857', '#ff5733', '#3498db'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
+    const canvasSecundario = document.getElementById('chartSecundario');
+    if (canvasSecundario) {
+        const ctxSecundario = canvasSecundario.getContext('2d');
+        chartSecundario = new Chart(ctxSecundario, {
+            type: 'doughnut',
+            data: {
+                labels: ['Mañana', 'Tarde', 'Noche'],
+                datasets: [{
+                    data: [35, 40, 25],
+                    backgroundColor: ['#ffc857', '#ff5733', '#3498db'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                }
             }
+        });
+        
+        const leyendaSecundario = document.getElementById('leyendaSecundario');
+        if (leyendaSecundario) {
+            leyendaSecundario.innerHTML = `
+                <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Mañana - 35%</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Tarde - 40%</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Noche - 25%</span></div>
+            `;
         }
-    });
-    
-    document.getElementById('leyendaSecundario').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Mañana - 35%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Tarde - 40%</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Noche - 25%</span></div>
-    `;
+    }
     
     // Gráfico de Tendencias: Dinero Generado por Empleado
-    const ctxTendencias = document.getElementById('chartTendencias').getContext('2d');
-    chartTendencias = new Chart(ctxTendencias, {
-        type: 'doughnut',
-        data: {
-            labels: ['Carlos Mendoza', 'Ana García', 'Luis Pérez', 'María Torres'],
-            datasets: [{
-                data: [2850, 2650, 2400, 2100],
-                backgroundColor: ['#27ae60', '#3498db', '#ff5733', '#9b59b6'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
+    const canvasTendencias = document.getElementById('chartTendencias');
+    if (canvasTendencias) {
+        const ctxTendencias = canvasTendencias.getContext('2d');
+        chartTendencias = new Chart(ctxTendencias, {
+            type: 'doughnut',
+            data: {
+                labels: ['Carlos Mendoza', 'Ana García', 'Luis Pérez', 'María Torres'],
+                datasets: [{
+                    data: [2850, 2650, 2400, 2100],
+                    backgroundColor: ['#27ae60', '#3498db', '#ff5733', '#9b59b6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                }
             }
+        });
+        
+        const leyendaTendencias = document.getElementById('leyendaTendencias');
+        if (leyendaTendencias) {
+            leyendaTendencias.innerHTML = `
+                <div class="leyenda-item"><span class="color-box" style="background: #27ae60;"></span><span>Carlos - S/. 2,850</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Ana - S/. 2,650</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Luis - S/. 2,400</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>María - S/. 2,100</span></div>
+            `;
         }
-    });
-    
-    document.getElementById('leyendaTendencias').innerHTML = `
-        <div class="leyenda-item"><span class="color-box" style="background: #27ae60;"></span><span>Carlos - S/. 2,850</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Ana - S/. 2,650</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Luis - S/. 2,400</span></div>
-        <div class="leyenda-item"><span class="color-box" style="background: #9b59b6;"></span><span>María - S/. 2,100</span></div>
-    `;
+    }
 }
 
 // Gráficos de Inventario
 function crearGraficosInventario() {
     // Ocultar el cuarto y quinto gráfico para este tipo de reporte
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    const grafico4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4)');
+    const grafico5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5)');
+    if (grafico4) grafico4.style.display = 'none';
+    if (grafico5) grafico5.style.display = 'none';
     
-    document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Estado del Stock';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Categorías de Productos';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Productos Críticos';
+    const titulo1 = document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico');
+    const titulo2 = document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico');
+    const titulo3 = document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico');
+    
+    if (titulo1) titulo1.textContent = 'Estado del Stock';
+    if (titulo2) titulo2.textContent = 'Categorías de Productos';
+    if (titulo3) titulo3.textContent = 'Productos Críticos';
     
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
     chartPrincipal = new Chart(ctxPrincipal, {
@@ -1228,12 +1286,18 @@ function crearGraficosInventario() {
 // Gráficos de Clientes
 function crearGraficosClientes() {
     // Ocultar el cuarto y quinto gráfico para este tipo de reporte
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
+    const grafico4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4)');
+    const grafico5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5)');
+    if (grafico4) grafico4.style.display = 'none';
+    if (grafico5) grafico5.style.display = 'none';
     
-    document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Clasificación de Clientes';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Frecuencia de Compras';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Métodos de Contacto';
+    const titulo1 = document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico');
+    const titulo2 = document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico');
+    const titulo3 = document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico');
+    
+    if (titulo1) titulo1.textContent = 'Clasificación de Clientes';
+    if (titulo2) titulo2.textContent = 'Frecuencia de Compras';
+    if (titulo3) titulo3.textContent = 'Métodos de Contacto';
     
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
     chartPrincipal = new Chart(ctxPrincipal, {
@@ -1302,11 +1366,18 @@ function crearGraficosClientes() {
 // Gráficos Financieros
 function crearGraficosFinanciero() {
     // Ocultar el cuarto y quinto gráfico para este tipo de reporte
-    document.querySelector('#graficosGrid .grafico-card:nth-child(4)').style.display = 'none';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(5)').style.display = 'none';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico').textContent = 'Distribución de Ingresos';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico').textContent = 'Estructura de Gastos';
-    document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico').textContent = 'Ganancias';
+    const grafico4 = document.querySelector('#graficosGrid .grafico-card:nth-child(4)');
+    const grafico5 = document.querySelector('#graficosGrid .grafico-card:nth-child(5)');
+    if (grafico4) grafico4.style.display = 'none';
+    if (grafico5) grafico5.style.display = 'none';
+    
+    const titulo1 = document.querySelector('#graficosGrid .grafico-card:nth-child(1) .titulo-grafico');
+    const titulo2 = document.querySelector('#graficosGrid .grafico-card:nth-child(2) .titulo-grafico');
+    const titulo3 = document.querySelector('#graficosGrid .grafico-card:nth-child(3) .titulo-grafico');
+    
+    if (titulo1) titulo1.textContent = 'Distribución de Ingresos';
+    if (titulo2) titulo2.textContent = 'Estructura de Gastos';
+    if (titulo3) titulo3.textContent = 'Ganancias';
     
     const ctxPrincipal = document.getElementById('chartPrincipal').getContext('2d');
     chartPrincipal = new Chart(ctxPrincipal, {
@@ -2170,6 +2241,270 @@ async function actualizarGraficosClientes(data) {
         }
     } catch (error) {
         console.error('Error al cargar gráficos de clientes:', error);
+    }
+}
+
+// ============================================
+// REPORTES DE MESEROS
+// ============================================
+
+// Cargar reporte de meseros desde API
+async function cargarReporteMeserosDesdeAPI() {
+    try {
+        let url = `${API_BASE}/reportes/meseros-por-periodo?periodo=${periodoActual}`;
+        
+        if (periodoActual === 'personalizado') {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+            
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor, selecciona un rango de fechas');
+                return;
+            }
+            
+            url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        }
+        
+        const resp = await fetch(url);
+        const data = await resp.json();
+        
+        if (data.exito) {
+            actualizarTituloVisualizacion();
+            actualizarEstadisticasMeseros(data.resumen);
+            actualizarTablaMeseros(data.meseros);
+            actualizarResumenMeseros(data.resumen);
+            actualizarGraficosMeseros(data);
+        } else {
+            console.error('Error al cargar reporte:', data.mensaje);
+            // Usar datos de ejemplo si no hay datos del API
+            const datosEjemplo = {
+                resumen: {
+                    TotalVentas: 0,
+                    TotalPedidos: 0,
+                    TotalMeseros: 0,
+                    PromedioVentasPorMesero: 0
+                },
+                meseros: []
+            };
+            actualizarTituloVisualizacion();
+            actualizarEstadisticasMeseros(datosEjemplo.resumen);
+            actualizarTablaMeseros(datosEjemplo.meseros);
+            actualizarResumenMeseros(datosEjemplo.resumen);
+            crearGraficosEmpleados(); // Usar gráficos de ejemplo
+        }
+    } catch (error) {
+        console.error('Error al obtener reporte:', error);
+        alert('Error al conectar con el servidor');
+    }
+}
+
+// Actualizar estadísticas de meseros
+function actualizarEstadisticasMeseros(resumen) {
+    if (!resumen) {
+        document.getElementById('totalPeriodo').textContent = 'S/. 0.00';
+        document.getElementById('promedioDiario').textContent = '0';
+        document.getElementById('variacion').textContent = '0';
+        document.getElementById('diasAnalizados').textContent = '0';
+        return;
+    }
+
+    const totalVentas = parseFloat(resumen.TotalVentas) || 0;
+    const totalPedidos = parseInt(resumen.TotalPedidos) || 0;
+    const totalMeseros = parseInt(resumen.TotalMeseros) || 0;
+    const promedioVentasPorMesero = parseFloat(resumen.PromedioVentasPorMesero) || 0;
+    
+    document.getElementById('totalPeriodo').textContent = 'S/. ' + totalVentas.toFixed(2);
+    document.getElementById('promedioDiario').textContent = totalPedidos;
+    document.getElementById('variacion').textContent = totalMeseros + ' meseros';
+    document.getElementById('diasAnalizados').textContent = 'S/. ' + promedioVentasPorMesero.toFixed(2);
+}
+
+// Actualizar tabla de meseros
+function actualizarTablaMeseros(meseros) {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (!meseros || meseros.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay datos de meseros</td></tr>';
+        return;
+    }
+    
+    meseros.forEach(mesero => {
+        const fila = document.createElement('tr');
+        const totalVentas = parseFloat(mesero.TotalVentas || 0);
+        const totalPedidos = parseInt(mesero.TotalPedidos || 0);
+        const promedioPorPedido = totalPedidos > 0 ? (totalVentas / totalPedidos) : 0;
+        
+        fila.innerHTML = `
+            <td>${mesero.NombreMesero || 'Sin nombre'}</td>
+            <td>${totalPedidos}</td>
+            <td>S/. ${totalVentas.toFixed(2)}</td>
+            <td>S/. ${promedioPorPedido.toFixed(2)}</td>
+            <td><span class="badge badge-success">Activo</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+// Actualizar resumen de meseros
+function actualizarResumenMeseros(resumen) {
+    const resumenElement = document.querySelector('.resumen-general');
+    if (!resumenElement) return;
+    
+    const totalVentas = parseFloat(resumen.TotalVentas) || 0;
+    const totalPedidos = parseInt(resumen.TotalPedidos) || 0;
+    const totalMeseros = parseInt(resumen.TotalMeseros) || 0;
+    const promedioVentasPorMesero = parseFloat(resumen.PromedioVentasPorMesero) || 0;
+    const promedioTicket = totalPedidos > 0 ? (totalVentas / totalPedidos) : 0;
+    
+    resumenElement.innerHTML = `
+        <h3>Resumen de Meseros</h3>
+        <div class="resumen-stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Ventas:</span>
+                <span class="stat-value">S/. ${totalVentas.toFixed(2)}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Meseros:</span>
+                <span class="stat-value">${totalMeseros}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Pedidos:</span>
+                <span class="stat-value">${totalPedidos}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Promedio por Mesero:</span>
+                <span class="stat-value">S/. ${promedioVentasPorMesero.toFixed(2)}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Ticket Promedio:</span>
+                <span class="stat-value">S/. ${promedioTicket.toFixed(2)}</span>
+            </div>
+        </div>
+    `;
+}
+
+// Actualizar gráficos de meseros
+async function actualizarGraficosMeseros(data) {
+    try {
+        // Destruir gráficos existentes primero
+        if (chartPrincipal) chartPrincipal.destroy();
+        if (chartSecundario) chartSecundario.destroy();
+        if (chartTendencias) chartTendencias.destroy();
+        if (chartProductos) chartProductos.destroy();
+        if (chartProductosMenos) chartProductosMenos.destroy();
+        
+        // Actualizar títulos de gráficos
+        actualizarTitulosGraficos('empleados');
+        
+        // Usar los datos reales o llamar a la función con datos de ejemplo
+        if (data.meseros && data.meseros.length > 0) {
+            const topMeseros = data.meseros.slice(0, 5);
+            const labels = topMeseros.map(m => m.NombreMesero);
+            const valores = topMeseros.map(m => parseFloat(m.TotalVentas) || 0);
+            const colores = ['#ff5733', '#ffc857', '#3498db', '#27ae60', '#9b59b6'];
+            
+            // Gráfico Principal: Top Meseros
+            const canvas1 = document.getElementById('chartPrincipal');
+            if (canvas1) {
+                chartPrincipal = new Chart(canvas1.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: colores.slice(0, labels.length),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+                
+                // Actualizar leyenda
+                const leyendaPrincipal = document.getElementById('leyendaPrincipal');
+                if (leyendaPrincipal) {
+                    const leyenda = labels.map((label, i) => 
+                        `<div class="leyenda-item"><span class="color-box" style="background: ${colores[i]};"></span><span>${label} - S/. ${valores[i].toFixed(2)}</span></div>`
+                    ).join('');
+                    leyendaPrincipal.innerHTML = leyenda;
+                }
+            }
+            
+            // Gráfico Secundario y Tendencias con datos de ejemplo por ahora
+            crearGraficosEmpleadosSecundarios();
+        } else {
+            // Si no hay datos, crear gráficos de ejemplo
+            crearGraficosEmpleados();
+        }
+    } catch (error) {
+        console.error('Error al cargar gráficos de meseros:', error);
+        crearGraficosEmpleados();
+    }
+}
+
+// Crear gráficos secundarios de empleados
+function crearGraficosEmpleadosSecundarios() {
+    // Gráfico Secundario: Distribución por Turno (datos de ejemplo)
+    const ctxSecundario = document.getElementById('chartSecundario');
+    if (ctxSecundario) {
+        if (chartSecundario) chartSecundario.destroy();
+        chartSecundario = new Chart(ctxSecundario.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Mañana', 'Tarde', 'Noche'],
+                datasets: [{
+                    data: [35, 40, 25],
+                    backgroundColor: ['#ffc857', '#ff5733', '#3498db'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        
+        const leyendaSecundario = document.getElementById('leyendaSecundario');
+        if (leyendaSecundario) {
+            leyendaSecundario.innerHTML = `
+                <div class="leyenda-item"><span class="color-box" style="background: #ffc857;"></span><span>Mañana - 35%</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #ff5733;"></span><span>Tarde - 40%</span></div>
+                <div class="leyenda-item"><span class="color-box" style="background: #3498db;"></span><span>Noche - 25%</span></div>
+            `;
+        }
+    }
+    
+    // Gráfico de Tendencias (datos de ejemplo)
+    const ctxTendencias = document.getElementById('chartTendencias');
+    if (ctxTendencias) {
+        if (chartTendencias) chartTendencias.destroy();
+        chartTendencias = new Chart(ctxTendencias.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Pedidos',
+                    data: [45, 52, 48, 55, 60, 70, 65],
+                    backgroundColor: '#27ae60',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
     }
 }
 
