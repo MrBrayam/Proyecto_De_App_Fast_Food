@@ -11,8 +11,7 @@ ESTRUCTURA DE CARPETAS:
 -----------------------
 /Proyecto_De_App_Fast_Food/
 │
-├── index.html                    # Login de usuarios (requiere login empresa)
-├── login_empresa.html            # Login de empresa (PUNTO DE ENTRADA)
+├── index.html                    # Login de usuarios (PUNTO DE ENTRADA)
 │
 ├── /html/                        # Todas las páginas del sistema
 ├── /css/                         # Estilos de cada página
@@ -37,16 +36,15 @@ ESTRUCTURA DE CARPETAS:
 2. FLUJO DE AUTENTICACIÓN
 ================================================================================
 
-PASO 1: LOGIN DE EMPRESA
+PASO 1: LOGIN DE USUARIOS
 -------------------------
-Archivo: login_empresa.html
-Endpoint: POST /api/auth/login-empresa
+Archivo: index.html
+Endpoint: POST /api/auth/login
 
-1. Usuario abre: http://localhost/Proyecto_De_App_Fast_Food/login_empresa.html
-2. Ingresa: NombreEmpresa + Contraseña
-   - Default: "Kings Pizza" / "1234"
-3. JavaScript (js/login_empresa.js) envía POST a API
-4. AuthController::loginEmpresa() valida contra tabla Empresas
+1. Usuario abre: http://localhost/Proyecto_De_App_Fast_Food/index.html
+2. Ingresa: Usuario + Contraseña
+3. JavaScript (js/login.js) envía POST a API
+4. AuthController::login() valida credenciales
 5. Si correcto:
    - Guarda en sessionStorage: {idEmpresa, nombreEmpresa}
    - Redirige a index.html
@@ -55,14 +53,12 @@ TABLA: Empresas
 Campos: IdEmpresa, NombreEmpresa, Contrasena, FechaCreacion
 
 
-PASO 2: LOGIN DE USUARIO
+LOGIN DE USUARIO
 -------------------------
 Archivo: index.html
 Endpoint: POST /api/auth/login
 
-1. index.html verifica sessionStorage('empresaData')
-   - Si NO existe → Redirige a login_empresa.html
-   - Si existe → Muestra formulario login
+1. Usuario abre index.html y se muestra formulario de login
 2. Usuario ingresa: Correo + Contraseña
 3. JavaScript (js/login.js) envía POST a API
 4. AuthController::login() ejecuta SP: AutenticarUsuario
@@ -74,16 +70,6 @@ Endpoint: POST /api/auth/login
 STORED PROCEDURE: AutenticarUsuario
 Parámetros: p_correo, p_contrasena
 Retorna: IdUsuario, Nombre, Rol, etc.
-
-
-PASO 3: SALIR DEL SISTEMA
---------------------------
-Botón "🚪 Salir" en index.html
-
-Función: salirAEmpresa()
-1. Limpia sessionStorage.removeItem('empresaData')
-2. Limpia sessionStorage.clear()
-3. Redirige a login_empresa.html
 
 
 ================================================================================
@@ -786,7 +772,6 @@ CONTROLADORES PRINCIPALES:
 
 JAVASCRIPT FRONTEND:
 - js/login.js                     # Login usuarios
-- js/login_empresa.js             # Login empresa
 - js/registrar_venta.js           # Punto de venta
 - js/registrar_compras.js         # Compras
 - js/visualizar_inventario.js    # Control stock
@@ -802,11 +787,7 @@ BASE DE DATOS:
 ================================================================================
 
 NIVELES DE PROTECCIÓN:
-1. Login de empresa (primer nivel)
-   - sessionStorage: empresaData
-   - Si no existe → Redirige a login_empresa.html
-
-2. Login de usuario (segundo nivel)
+1. Login de usuario
    - localStorage: token de autenticación
    - sessionStorage: datos de usuario
    - Validación en cada página

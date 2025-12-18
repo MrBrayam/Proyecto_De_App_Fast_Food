@@ -197,8 +197,7 @@ Edita los permisos por rol en la base de datos, tabla `Perfiles`, o mediante la 
 ```
 Proyecto_De_App_Fast_Food/
 │
-├── 📄 index.html                 # Login de usuarios
-├── 📄 login_empresa.html         # Login de empresa (punto de entrada)
+├── 📄 index.html                 # Login de usuarios (punto de entrada)
 │
 ├── 📁 api/                       # Backend (API REST)
 │   ├── 📄 config.php            # Configuración de BD
@@ -247,7 +246,7 @@ Proyecto_De_App_Fast_Food/
 
 1. **Abrir el navegador** y navega a:
    ```
-   http://localhost/Proyecto_De_App_Fast_Food/login_empresa.html
+   http://localhost/Proyecto_De_App_Fast_Food/index.html
    ```
 
 2. **Login de Empresa:**
