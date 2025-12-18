@@ -1064,15 +1064,17 @@ function setupLogout() {
 }
 
 function logout() {
-    // Limpiar almacenamiento
+    // Limpiar SOLO almacenamiento de CLIENTE/TIENDA
     sessionStorage.removeItem('clienteActual');
     localStorage.removeItem('clienteActual');
+    
+    // NO tocar isLoggedIn, currentUser, userSession que son de empresa
     
     // Llamar API de logout si existe
     fetch('../api/clientes/logout', {
         method: 'POST'
     }).then(() => {
-        // Redirigir a login
+        // Redirigir a login de clientes
         window.location.href = '../html/login_cliente.html';
     }).catch(() => {
         // Si falla la API, redirigir igual

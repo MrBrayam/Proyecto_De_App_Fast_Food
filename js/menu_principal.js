@@ -606,9 +606,15 @@ function renderPedidosRecientes(dataPedidos) {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function() {
             if (confirm('¿Está seguro que desea cerrar sesión?')) {
-                // Limpiar datos de sesión
+                // Limpiar SOLO datos de sesión de empresa
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('currentUser');
+                localStorage.removeItem('userSession');
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userPermisos');
+                sessionStorage.removeItem('usuario');
+                
+                // NO tocar clienteActual que es de la tienda
                 
                 // Redirigir a la página de login
                 window.location.href = '../index.html';
@@ -712,8 +718,9 @@ function renderPedidosRecientes(dataPedidos) {
     // PREVENIR ACCESO NO AUTORIZADO
     // ============================================
     window.addEventListener('storage', function(e) {
+        // Solo reaccionar a cambios en las claves de empresa, ignorar clienteActual de tienda
         if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
-            // Si el estado de sesión cambia en otra pestaña, cerrar sesión
+            // Si el estado de sesión de EMPRESA cambia en otra pestaña, cerrar sesión
             window.location.href = '../index.html';
         }
     });
