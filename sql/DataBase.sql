@@ -10,16 +10,6 @@ CREATE DATABASE kings_pizza_db CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
 USE kings_pizza_db;
 
 -- ============================================
--- TABLA: EMPRESAS
--- ============================================
-CREATE TABLE Empresas (
-    IdEmpresa INT PRIMARY KEY AUTO_INCREMENT,
-    NombreEmpresa VARCHAR(200) NOT NULL UNIQUE,
-    Contrasena VARCHAR(255) NOT NULL,
-    FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- ============================================
 -- TABLA: PERFILES (ROLES DE USUARIO)
 -- ============================================
 CREATE TABLE Perfiles (
@@ -213,18 +203,6 @@ CREATE TABLE Promociones (
     Descripcion TEXT,
     FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FechaActualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
--- ============================================
--- TABLA: PROMOCION_PRODUCTOS (Relación M:N)
--- ============================================
-CREATE TABLE PromocionProducto (
-    IdPromocionProducto INT PRIMARY KEY AUTO_INCREMENT,
-    IdPromocion INT NOT NULL,
-    IdProducto INT NOT NULL,
-    FOREIGN KEY (IdPromocion) REFERENCES Promociones(IdPromocion) ON DELETE CASCADE,
-    FOREIGN KEY (IdProducto) REFERENCES Productos(IdProducto) ON DELETE CASCADE,
-    UNIQUE KEY unique_promocion_producto (IdPromocion, IdProducto)
 );
 
 -- ============================================

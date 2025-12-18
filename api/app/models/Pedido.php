@@ -238,6 +238,7 @@ class Pedido
                         IdUsuario,
                         SubTotal,
                         Descuento,
+                        CostoDelivery,
                         Total,
                         Estado,
                         FechaPedido,

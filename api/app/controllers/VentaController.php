@@ -78,7 +78,10 @@ class VentaController extends Controller
         }
 
         $descuento = isset($input['descuento']) ? (float)$input['descuento'] : 0.0;
-        $total = isset($input['total']) ? (float)$input['total'] : ($subTotal - $descuento);
+        $costoDelivery = isset($input['costoDelivery']) ? (float)$input['costoDelivery'] : 0.0;
+        $tipoComprobante = isset($input['tipoComprobante']) ? trim($input['tipoComprobante']) : 'boleta';
+        $idMesero = isset($input['idMesero']) ? (int)$input['idMesero'] : null;
+        $total = isset($input['total']) ? (float)$input['total'] : ($subTotal - $descuento + $costoDelivery);
         if ($total < 0) {
             $total = 0;
         }
@@ -87,9 +90,12 @@ class VentaController extends Controller
         try {
             $result = $model->registrar([
                 'idCliente' => $idCliente,
+                'idMesero' => $idMesero,
                 'tipoPago' => $tipoPago,
+                'tipoComprobante' => $tipoComprobante,
                 'subTotal' => round($subTotal, 2),
                 'descuento' => round($descuento, 2),
+                'costoDelivery' => round($costoDelivery, 2),
                 'total' => round($total, 2),
                 'idUsuario' => $idUsuario,
                 'codCaja' => $codCaja,

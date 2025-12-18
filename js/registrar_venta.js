@@ -285,12 +285,12 @@ function actualizarTablaProductos() {
     if (pedidoSeleccionado) {
         const subtotal = parseFloat(pedidoSeleccionado.SubTotal) || 0;
         const descuento = parseFloat(pedidoSeleccionado.Descuento) || 0;
+        const costoDelivery = parseFloat(pedidoSeleccionado.CostoDelivery) || 0;
         const total = parseFloat(pedidoSeleccionado.Total) || 0;
-        const delivery = total - (subtotal - descuento);
         
         document.getElementById('subtotalVenta').textContent = 'S/ ' + subtotal.toFixed(2);
         document.getElementById('descuentoVenta').textContent = descuento > 0 ? '-S/ ' + descuento.toFixed(2) : 'S/ 0.00';
-        document.getElementById('deliveryVenta').textContent = 'S/ ' + (delivery > 0 ? delivery.toFixed(2) : '0.00');
+        document.getElementById('deliveryVenta').textContent = 'S/ ' + costoDelivery.toFixed(2);
         document.getElementById('totalVenta').textContent = 'S/ ' + total.toFixed(2);
     } else {
         // Si no hay pedido, calcular normalmente
@@ -384,7 +384,8 @@ async function registrarVenta() {
     };
 
     console.log('[registrar_venta] Enviando venta:', datosVenta);
-    console.log('[registrar_venta] Detalles con IdPlato:', detalles.map(d => ({desc: d.descripcion, idPlato: d.idPlato})));
+    console.log('[registrar_venta] CostoDelivery en payload:', datosVenta.costoDelivery);
+    console.log('[registrar_venta] JSON que se enviará:', JSON.stringify(datosVenta));
 
     try {
         const response = await fetch('/Proyecto_De_App_Fast_Food/api/ventas/registrar', {
