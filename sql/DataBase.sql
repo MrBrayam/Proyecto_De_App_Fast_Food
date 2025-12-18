@@ -1664,6 +1664,7 @@ CREATE PROCEDURE pa_registrar_pedido(
     IN p_tipoServicio ENUM('local', 'delivery', 'para-llevar'),
     IN p_numMesa INT,
     IN p_idCliente INT,
+    IN p_idMesero INT,
     IN p_nombreCliente VARCHAR(200),
     IN p_direccionCliente TEXT,
     IN p_telefonoCliente VARCHAR(20),
@@ -1703,6 +1704,7 @@ BEGIN
         TipoServicio,
         NumMesa,
         IdCliente,
+        IdMesero,
         NombreCliente,
         DireccionCliente,
         TelefonoCliente,
@@ -1717,6 +1719,7 @@ BEGIN
         p_tipoServicio,
         NULLIF(p_numMesa, 0),
         NULLIF(p_idCliente, 0),
+        NULLIF(p_idMesero, 0),
         p_nombreCliente,
         NULLIF(p_direccionCliente, ''),
         NULLIF(p_telefonoCliente, ''),
@@ -1914,6 +1917,7 @@ DROP PROCEDURE IF EXISTS pa_registrar_venta;
 DELIMITER //
 CREATE PROCEDURE pa_registrar_venta(
     IN p_idCliente INT,
+    IN p_idMesero INT,
     IN p_tipoPago ENUM('efectivo', 'tarjeta', 'yape', 'plin'),
     IN p_subTotal DECIMAL(12,2),
     IN p_descuento DECIMAL(12,2),
@@ -1956,6 +1960,7 @@ BEGIN
     -- Insertar la venta
     INSERT INTO Ventas (
         IdCliente,
+        IdMesero,
         TipoPago,
         SubTotal,
         Descuento,
@@ -1966,6 +1971,7 @@ BEGIN
         Observaciones
     ) VALUES (
         NULLIF(p_idCliente, 0),
+        NULLIF(p_idMesero, 0),
         p_tipoPago,
         p_subTotal,
         p_descuento,

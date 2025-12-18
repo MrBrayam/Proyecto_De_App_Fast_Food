@@ -77,6 +77,33 @@ function obtenerUsuarioActual() {
     }
 }
 
+// Obtener el perfil del usuario actual
+function obtenerPerfilUsuario() {
+    // Intentar obtener desde sessionStorage
+    const sessionUserRaw = sessionStorage.getItem('usuario');
+    if (sessionUserRaw) {
+        try {
+            const usuario = JSON.parse(sessionUserRaw);
+            return usuario.perfil || usuario.Perfil || usuario.rol || usuario.Rol || null;
+        } catch (e) {
+            // Ignorar
+        }
+    }
+
+    // Fallback a localStorage
+    const localUserRaw = localStorage.getItem('userSession') || localStorage.getItem('currentUser');
+    if (localUserRaw) {
+        try {
+            const usuario = JSON.parse(localUserRaw);
+            return usuario.perfil || usuario.Perfil || usuario.rol || usuario.Rol || null;
+        } catch (e) {
+            // Ignorar
+        }
+    }
+
+    return null;
+}
+
 // Inicializar eventos
 function inicializarEventos() {
     // Buscar pedido con Enter
@@ -332,8 +359,13 @@ async function registrarVenta() {
         total = subTotal;
     }
 
+    // Determinar si el usuario actual es un mesero
+    const perfilUsuario = obtenerPerfilUsuario();
+    const idUsuarioActual = idUsuario;
+
     const datosVenta = {
         idCliente: pedidoSeleccionado?.IdCliente || null,
+        idMesero: perfilUsuario === 'mesero' ? idUsuarioActual : null,
         tipoPago: tipoPago,
         subTotal: subTotal,
         descuento: descuento,

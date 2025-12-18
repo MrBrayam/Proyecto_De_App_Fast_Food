@@ -31,6 +31,29 @@ function obtenerIdUsuarioLogueado() {
     }
 }
 
+// Función para obtener el perfil/rol del usuario logueado
+function obtenerPerfilUsuario() {
+    try {
+        // Intentar obtener desde sessionStorage
+        const usuarioSession = JSON.parse(sessionStorage.getItem('usuario') || '{}');
+        if (usuarioSession.Perfil || usuarioSession.NombrePerfil) {
+            return (usuarioSession.Perfil || usuarioSession.NombrePerfil).toLowerCase();
+        }
+        
+        // Intentar obtener desde localStorage
+        const userSession = JSON.parse(localStorage.getItem('userSession') || '{}');
+        if (userSession.perfil || userSession.nombrePerfil || userSession.rol) {
+            return (userSession.perfil || userSession.nombrePerfil || userSession.rol).toLowerCase();
+        }
+        
+        console.error('No se pudo obtener el perfil del usuario logueado');
+        return null;
+    } catch (error) {
+        console.error('Error al obtener perfil del usuario:', error);
+        return null;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Actualizar fecha y hora
     actualizarFechaHora();
@@ -402,15 +425,21 @@ async function registrarPedido() {
     }
 
     const subTotal = itemsPedido.reduce((acc, it) => acc + it.subtotal, 0);
+    
+    // Obtener ID del usuario y su perfil
+    const idUsuarioActual = obtenerIdUsuarioLogueado();
+    const perfilUsuario = obtenerPerfilUsuario(); // Obtener el perfil del usuario
+    
     const payload = {
         numDocumentos: dniCliente || '',
         tipoServicio,
         numMesa: numeroMesa ? parseInt(numeroMesa, 10) : null,
         idCliente: idClienteEncontrado || null,
+        idMesero: perfilUsuario === 'mesero' ? idUsuarioActual : null, // Si es mesero, usar su ID
         nombreCliente,
         direccionCliente: direccionCliente || null,
         telefonoCliente: telefonoCliente || null,
-        idUsuario: obtenerIdUsuarioLogueado(),
+        idUsuario: idUsuarioActual,
         subTotal,
         descuento: 0,
         total: subTotal,

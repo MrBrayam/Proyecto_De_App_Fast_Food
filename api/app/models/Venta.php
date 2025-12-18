@@ -9,6 +9,7 @@ class Venta
         
         // Preparar parámetros
         $idCliente = $data['idCliente'] ?? null;
+        $idMesero = $data['idMesero'] ?? null;
         $tipoPago = $data['tipoPago'] ?? 'efectivo';
         $subTotal = $data['subTotal'] ?? 0;
         $descuento = $data['descuento'] ?? 0;
@@ -20,12 +21,14 @@ class Venta
 
         // Log para debug
         error_log('Registrando venta con detalles: ' . $detalles);
+        error_log('IdMesero en venta: ' . ($idMesero ?? 'NULL'));
 
         try {
-            $stmt = $db->prepare('CALL pa_registrar_venta(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt = $db->prepare('CALL pa_registrar_venta(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             
             $stmt->execute([
                 $idCliente,
+                $idMesero,
                 $tipoPago,
                 $subTotal,
                 $descuento,
